@@ -1,0 +1,95 @@
+{
+	"rule": [],
+	"excludes": [
+		{
+			"code": "FUNCTION_HINT_MISSING"
+		},
+		{
+			"code": "STRUCT_ARRAY_NOTATION"
+		},
+		{
+			"code": "COMPONENT_HINT_MISSING"
+		},
+		{
+			"code": "ARG_HINT_MISSING_SCRIPT"
+		},
+		{
+			"code": "AVOID_USING_WRITEDUMP"
+		},
+		{
+			"code": "GLOBAL_VAR"
+		},
+		{
+			"code": "EXCESSIVE_FUNCTIONS"
+		},
+		{
+			"code": "UNQUOTED_STRUCT_KEY"
+		},
+		{
+			"code": "COMPONENT_INVALID_NAME"
+		},
+		{
+			"code": "UNUSED_LOCAL_VARIABLE"
+		},
+		{
+			"code": "LOCAL_LITERAL_VALUE_USED_TOO_OFTEN"
+		},
+		{
+			"code": "UNUSED_METHOD_ARGUMENT"
+		},
+		{
+			"code": "FUNCTION_TYPE_ANY"
+		},
+		{
+			"code": "MISSING_SEMI"
+		},
+		{
+			"code": "ARG_DEFAULT_MISSING"
+		},
+		{
+			"code": "ARG_VAR_MIXED"
+		},
+		{
+			"code": "VAR_HAS_PREFIX_OR_POSTFIX"
+		},
+		{
+			"code": "METHOD_TOO_WORDY"
+		},
+		{
+			"code": "METHOD_TOO_LONG"
+		},
+		{
+			"code": "VAR_INVALID_NAME"
+		},
+		{
+			"code": "METHOD_IS_TEMPORARY"
+		},
+		{
+			"code": "METHOD_INVALID_NAME"
+		},
+		{
+			"code": "ARG_TYPE_ANY"
+		},
+		{
+			"code": "GLOBAL_LITERAL_VALUE_USED_TOO_OFTEN"
+		},
+		{
+			"code": "ARG_VAR_CONFLICT"
+		},
+		{
+			"code": "METHOD_TOO_SHORT"
+		},
+		{
+			"code": "METHOD_ALLCAPS_NAME"
+		},
+		{
+			"code": "VAR_TOO_LONG"
+		},
+		{
+			"code": "METHOD_HAS_PREFIX_OR_POSTFIX"
+		}
+	],
+	"includes": [],
+	"inheritParent": false,
+	"parameters": {}
+}
