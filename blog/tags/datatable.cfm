@@ -1,4 +1,4 @@
-<cfsetting enablecfoutputonly="true">
+<cfsetting enablecfoutputonly=true>
 <!---
   Name         : datatable.cfm
   Author       : Raymond Camden
@@ -15,30 +15,30 @@
 --->
 
 <cfif thisTag.hasEndTag and thisTag.executionMode is "start">
-  <cfsetting enablecfoutputonly="false" />
+  <cfsetting enablecfoutputonly=false>
   <cfexit method="EXITTEMPLATE">
 </cfif>
 
-<cfparam name="ATTRIBUTES.data" type="query">
-<cfparam name="ATTRIBUTES.linkcol" default="#listFirst(ATTRIBUTES.data.columnList)#">
-<cfparam name="ATTRIBUTES.linkval" default="id">
-<cfparam name="ATTRIBUTES.list" default="#ATTRIBUTES.data.columnList#">
-<cfparam name="ATTRIBUTES.labellist" default="#ATTRIBUTES.list#">
-<cfparam name="ATTRIBUTES.defaultsort" default="">
-<cfparam name="ATTRIBUTES.defaultdir" default="asc">
-<cfparam name="URL.page" default="1">
-<cfparam name="URL.sort" default="#ATTRIBUTES.defaultsort#">
-<cfparam name="URL.dir" default="#ATTRIBUTES.defaultdir#">
-<cfparam name="ATTRIBUTES.queryString" default="">
-<cfparam name="ATTRIBUTES.deleteLink" default="#CGI.script_name#?#ATTRIBUTES.queryString#">
+<cfparam name="attributes.data" type="query">
+<cfparam name="attributes.linkcol" default="#listFirst(attributes.data.columnList)#">
+<cfparam name="attributes.linkval" default="id">
+<cfparam name="attributes.list" default="#attributes.data.columnList#">
+<cfparam name="attributes.labellist" default="#attributes.list#">
+<cfparam name="attributes.defaultsort" default="">
+<cfparam name="attributes.defaultdir" default="asc">
+<cfparam name="url.page" default="1">
+<cfparam name="url.sort" default="#attributes.defaultsort#">
+<cfparam name="url.dir" default="#attributes.defaultdir#">
+<cfparam name="attributes.queryString" default="">
+<cfparam name="attributes.deleteLink" default="#cgi.script_name#?#attributes.queryString#">
 
-<cfparam name="ATTRIBUTES.deleteMsg" default="Are you sure?">
-<cfparam name="ATTRIBUTES.noadd" default="false">
+<cfparam name="attributes.deleteMsg" default="Are you sure?">
+<cfparam name="attributes.noadd" default="false">
 
 <!--- show add? --->
-<cfparam name="ATTRIBUTES.showAdd" default="true">
+<cfparam name="attributes.showAdd" default="true">
 
-<cfparam name="ATTRIBUTES.perpage" default="20">
+<cfparam name="attributes.perpage" default="20">
 <cfset colWidths = structNew()>
 <cfset formatCols = structNew()>
 <cfset leftCols = structNew()>
@@ -47,10 +47,11 @@
 
 <!--- allow for datacol overrides --->
 <cfif structKeyExists(thisTag,"assocAttribs")>
-  <cfset ATTRIBUTES.list = "">
-  <cfset ATTRIBUTES.labellist = "">
+  <cfset attributes.list = "">
+  <cfset attributes.labellist = "">
+
   <cfloop index="x" from="1" to="#arrayLen(thisTag.assocAttribs)#">
-    <cfset ATTRIBUTES.list = listAppend(ATTRIBUTES.list, thisTag.assocAttribs[x].name)>
+    <cfset attributes.list = listAppend(attributes.list, thisTag.assocAttribs[x].name)>
     <cfif structKeyExists(thisTag.assocAttribs[x], "label")>
       <cfset label = thisTag.assocAttribs[x].label>
     <cfelse>
@@ -59,7 +60,7 @@
     <cfif structKeyExists(thisTag.assocAttribs[x], "format")>
       <cfset formatCols[thisTag.assocAttribs[x].name] = thisTag.assocAttribs[x].format>
     </cfif>
-    <cfset ATTRIBUTES.labellist = listAppend(ATTRIBUTES.labellist, label)>
+    <cfset attributes.labellist = listAppend(attributes.labellist, label)>
     <cfif structKeyExists(thisTag.assocAttribs[x], "width")>
       <cfset colWidths[label] = thisTag.assocAttribs[x].width>
     </cfif>
@@ -72,96 +73,121 @@
     <cfif structKeyExists(thisTag.assocAttribs[x], "sort") and not thisTag.assocAttribs[x].sort>
       <cfset dontSortList = listAppend(dontSortList, thisTag.assocAttribs[x].name)>
     </cfif>
+
   </cfloop>
 </cfif>
 
-<cfif URL.dir is not "asc" and URL.dir is not "desc">
-  <cfset URL.dir = "asc">
+
+<cfif url.dir is not "asc" and url.dir is not "desc">
+  <cfset url.dir = "asc">
 </cfif>
-<cfif len(trim(URL.sort)) and len(trim(URL.dir))>
-  <cfquery name="ATTRIBUTES.data" dbtype="query">
-    SELECT *
-      FROM ATTRIBUTES.data
-     ORDER BY #URL.sort# #URL.dir#
+
+<cfif len(trim(url.sort)) and len(trim(url.dir))>
+  <cfquery name="attributes.data" dbtype="query">
+  select   *
+  from  attributes.data
+  order by   #url.sort# #url.dir#
   </cfquery>
 </cfif>
-<cfif not isNumeric(URL.page) or URL.page lte 0>
-  <cfset URL.page = 1>
+
+<cfif not isNumeric(url.page) or url.page lte 0>
+  <cfset url.page = 1>
 </cfif>
-<cfif isDefined("URL.msg")>
-  <cfoutput><p><b>#URL.msg#</b></p></cfoutput>
+
+<cfif isDefined("url.msg")>
+  <cfoutput>
+  <p>
+  <b>#url.msg#</b>
+  </p>
+  </cfoutput>
 </cfif>
 
 <cfoutput>
+
 <script>
-  checksubmit = function() {
-    if (document.forms["listing"].mark.length == null) {
-      if (document["listing"].mark.checked) {
-        document.forms["listing"].submit();
-      }
-    }
-    for (i=0; i<document.forms["listing"].mark.length; i++) {
-      if(document.forms["listing"].mark[i].checked) document.forms["listing"].submit();
+function checksubmit() {
+  if(document.forms["listing"].mark.length == null) {
+    if(document["listing"].mark.checked) {
+      document.forms["listing"].submit();
     }
   }
-  checkAll = function(set) {
+  for(i=0; i < document.forms["listing"].mark.length; i++) {
+    if(document.forms["listing"].mark[i].checked) document.forms["listing"].submit();
+  }
+
+}
+
+$(document).ready(function() {
+  $("##checkalllink").click(function(e) {
     $(".itemcheckbox").each(function(item) {
-      if (set) $(this).attr("checked", "checked");
-      else $(this).removeAttr("checked");
+      $(this).attr("checked", "checked");
     });
-  }
+    e.preventDefault();
+  });
+
+  $("##decheckalllink").click(function(e) {
+    $(".itemcheckbox").each(function(item) {
+      $(this).removeAttr("checked");
+    });
+    e.preventDefault();
+  });
+
+});
 </script>
-<cfif ATTRIBUTES.data.RecordCount gt ATTRIBUTES.perpage>
+
+<cfif attributes.data.recordCount gt attributes.perpage>
   <p align="right">
-  &laquo;
-  <cfif URL.page gt 1>
-    <a href="#CGI.script_name#?page=#URL.page-1#&amp;sort=#urlEncodedFormat(URL.sort)#&amp;dir=#URL.dir#&amp;#ATTRIBUTES.querystring#">Previous</a>
+  [[
+  <cfif url.page gt 1>
+    <a href="#cgi.script_name#?page=#url.page-1#&amp;sort=#urlEncodedFormat(url.sort)#&amp;dir=#url.dir#&amp;#attributes.querystring#">Previous</a>
   <cfelse>
     Previous
   </cfif>
   --
-  <cfif URL.page * ATTRIBUTES.perpage lt ATTRIBUTES.data.RecordCount>
-    <a href="#CGI.script_name#?page=#URL.page+1#&amp;sort=#urlEncodedFormat(URL.sort)#&amp;dir=#URL.dir#&amp;#ATTRIBUTES.querystring#">Next</a>
+  <cfif url.page * attributes.perpage lt attributes.data.recordCount>
+    <a href="#cgi.script_name#?page=#url.page+1#&amp;sort=#urlEncodedFormat(url.sort)#&amp;dir=#url.dir#&amp;#attributes.querystring#">Next</a>
   <cfelse>
     Next
   </cfif>
-  &raquo;
+  ]]
   </p>
 </cfif>
 
-<form name="listing" action="#ATTRIBUTES.deletelink#" method="post">
-<table class="datagrid" width="100%" cellspacing="0">
-  <thead>
-    <tr>
-      <th class="icon" width="25"><cfinvoke component="#APPLICATION.CFC.CONTROLS#" method="create" type="juiIcon" src="bih-icon bih-icon-delete" title="Delete"/></th>
-      <cfset counter = 0>
-      <cfloop index="c" list="#ATTRIBUTES.labellist#">
-        <cfset counter = counter + 1>
-        <cfset col = listGetAt(ATTRIBUTES.list, counter)>
-        <cfif URL.sort is col and URL.dir is "asc"><cfset dir = "desc"><cfelse><cfset dir = "asc"></cfif>
-        <th <cfif structKeyExists(colWidths, c)>width="#colWidths[c]#"</cfif>>
-          <cfif not listFind(dontSortList, col)>
-            <a href="#CGI.script_name#?page=#URL.page#&amp;sort=#urlEncodedFormat(col)#&amp;dir=#dir#&amp;#ATTRIBUTES.querystring#">#c#</a>
-          <cfelse>
-            #c#
-          </cfif>
-        </th>
-      </cfloop>
-    </tr>
-  </thead>
+<p>
+<form name="listing" action="#attributes.deletelink#" method="post">
+<table cellspacing="0" cellpadding="5" class="adminListTable" border="0">
+  <tr class="adminListHeader">
+    <td width="30">&nbsp;</td>
+    <cfset counter = 0>
+    <cfloop index="c" list="#attributes.labellist#">
+      <cfset counter = counter + 1>
+      <cfset col = listGetAt(attributes.list, counter)>
+      <cfif url.sort is col and url.dir is "asc">
+        <cfset dir = "desc">
+      <cfelse>
+        <cfset dir = "asc">
+      </cfif>
+      <td <cfif structKeyExists(colWidths, c)>width="#colWidths[c]#"</cfif>>
+      <cfif not listFind(dontSortList, col)>
+      <a href="#cgi.script_name#?page=#url.page#&amp;sort=#urlEncodedFormat(col)#&amp;dir=#dir#&amp;#attributes.querystring#">#c#</a>
+      <cfelse>
+        #c#
+      </cfif>
+      </td>
+    </cfloop>
+  </tr>
 </cfoutput>
 
-<cfif ATTRIBUTES.data.RecordCount>
-  <tbody >
-  <cfset columnlist = ATTRIBUTES.data.columnlist>
-  <cfoutput query="ATTRIBUTES.data" startrow="#(URL.page-1)*ATTRIBUTES.perpage + 1#" maxrows="#ATTRIBUTES.perpage#">
-    <cfset theVal = ATTRIBUTES.data[ATTRIBUTES.linkval][currentRow]>
-    <cfset theLink = ATTRIBUTES.editlink & "?id=#theVal#">
-    <tr class="bih-grid-row-stripe#currentRow mod 2#">
-      <td><input type="checkbox" name="mark" value="#ATTRIBUTES.data[ATTRIBUTES.linkval][currentRow]#" class="itemcheckbox" /></td>
-      <cfloop index="c" list="#ATTRIBUTES.list#">
+<cfif attributes.data.recordCount>
+  <cfset columnlist = attributes.data.columnlist>
+  <cfoutput query="attributes.data" startrow="#(url.page-1)*attributes.perpage + 1#" maxrows="#attributes.perpage#">
+    <cfset theVal = attributes.data[attributes.linkval][currentRow]>
+    <cfset theLink = attributes.editlink & "?id=#theVal#">
+    <tr class="adminList#currentRow mod 2#">
+      <td width="20"><input type="checkbox" name="mark" value="#attributes.data[attributes.linkval][currentRow]#" class="itemcheckbox" /></td>
+      <cfloop index="c" list="#attributes.list#">
         <cfif not structKeyExists(colData, c)>
-          <cfset value = ATTRIBUTES.data[c][currentRow]>
+          <cfset value = attributes.data[c][currentRow]>
           <cfset value = htmlEditFormat(value)>
         <cfelse>
           <cfset value = colData[c]>
@@ -180,41 +206,54 @@
           <cfif findNoCase("$name$", value)>
             <cfset value = replace(value, "$name$", name, "all")>
           </cfif>
-          <cfif listFindNoCase(columnlist, "entryidfk")><cfset value = replace(value, "$entryidfk$", entryidfk, "all")></cfif>
+
+          <cfif listFindNoCase(columnlist, "fk_benid")><cfset value = replace(value, "$fk_benid$", fk_benid, "all")></cfif>
         </cfif>
+
         <cfif structKeyExists(formatCols, c) and value neq "">
           <cfswitch expression="#formatCols[c]#">
+
             <cfcase value="yesno">
               <cfset value = yesNoFormat(value)>
             </cfcase>
+
             <cfcase value="datetime">
-              <cfset value = udfUserDateFormat(value) & " " & timeFormat(value,"h:mm tt")>
+              <cfset value = dateFormat(value,"mm/dd/yy") & " " & timeFormat(value,"h:mm tt")>
             </cfcase>
+
             <cfcase value="date">
-              <cfset value = udfUserDateFormat(value)>
+              <cfset value = dateFormat(value,"mm/dd/yy")>
             </cfcase>
+
             <cfcase value="currency">
               <cfset value = dollarFormat(value)>
             </cfcase>
+
             <cfcase value="number">
               <cfset value = numberFormat(value)>
             </cfcase>
+
             <cfcase value="url">
               <cfset value = "<a href=""#value#"">#value#</a>">
             </cfcase>
+            s
           </cfswitch>
         </cfif>
+
         <cfif value is "">
           <cfset value = "&nbsp;">
         </cfif>
         <cfif structKeyExists(leftCols, c) and len(value) gt leftCols[c]>
           <cfset value = left(value, leftCols[c]) & "...">
         </cfif>
-        <cfif c is ATTRIBUTES.linkcol>
-          <td><a href="#ATTRIBUTES.editlink#?id=#ATTRIBUTES.data[ATTRIBUTES.linkval][currentRow]#&amp;#ATTRIBUTES.queryString#">#value#</a></td>
+
+        <td>
+        <cfif c is attributes.linkcol>
+        <a href="#attributes.editlink#?id=#attributes.data[attributes.linkval][currentRow]#&amp;#attributes.queryString#">#value#</a>
         <cfelse>
-          <td>#value#</td>
+        #value#
         </cfif>
+        </td>
       </cfloop>
     </tr>
   </cfoutput>
@@ -224,17 +263,17 @@
 
 <cfoutput>
 </table>
-<p>
-<div class="ui-widget ui-widget-content ui-corner-all right" style="padding: 5px">
-  <cfinvoke component="#APPLICATION.CFC.CONTROLS#" method="create" type="juiButton" class="ui-button-text-tiny" src="bih-icon bih-icon-checkall1" onclick="checkAll(1)" text="Check All"/>
-  <cfinvoke component="#APPLICATION.CFC.CONTROLS#" method="create" type="juiButton" class="ui-button-text-tiny" src="bih-icon bih-icon-checkall0" onclick="checkAll(0)" text="Uncheck All"/>
-  <cfif ATTRIBUTES.showAdd>
-    <cfinvoke component="#APPLICATION.CFC.CONTROLS#" method="create" type="juiButton" class="ui-button-text-tiny" src="bih-icon bih-icon-pencilnew" href="#ATTRIBUTES.editlink#?id=0&amp;#ATTRIBUTES.querystring#" text="Add #ATTRIBUTES.label#"/>
-  </cfif>
-  <cfinvoke component="#APPLICATION.CFC.CONTROLS#" method="create" type="juiButton" class="ui-button-text-tiny" src="bih-icon bih-icon-delete" onclick="checksubmit()" text="Delete Selected"/>
-</div>
-</p>
 </form>
+</p>
+
+<div class="buttonbar">
+<a href="" id="checkalllink" class="button">Check All</a>
+<a href="" id="decheckalllink" class="button">Uncheck All</a>
+<cfif attributes.showAdd><a href="#attributes.editlink#?id=0&amp;#attributes.querystring#" class="button">Add #attributes.label#</a></cfif>
+<a href="javascript:checksubmit()" class="button">Delete Selected</a>
+</div>
 </cfoutput>
-<cfsetting enablecfoutputonly="false" />
+
+<cfsetting enablecfoutputonly=false>
+
 <cfexit method="EXITTAG">

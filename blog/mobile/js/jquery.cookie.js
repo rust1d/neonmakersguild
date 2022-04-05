@@ -23,7 +23,7 @@
  *
  * @param String name The name of the cookie.
  * @param String value The value of the cookie.
- * @param Object options An object literal containing key/value pairs to provide optional cookie ATTRIBUTES.
+ * @param Object options An object literal containing key/value pairs to provide optional cookie attributes.
  * @option Number|Date expires Either an integer specifying the expiration date from now on in days or a Date object.
  *                             If a negative value is specified (e.g. a date in the past), the cookie will be deleted.
  *                             If set to null or omitted, the cookie will be a session cookie and will not be retained

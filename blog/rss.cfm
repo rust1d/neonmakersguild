@@ -1,5 +1,5 @@
 <cfsetting enablecfoutputonly=true showdebugoutput=false>
-<cfprocessingdirective pageencoding="utf-8" />
+<cfprocessingdirective pageencoding="utf-8">
 <!---
   Name         : RSS
   Author       : Raymond Camden
@@ -12,18 +12,18 @@
          : Rob Wilkerson added code to handle noting/returning headers for aggregators (rkc 4/19/07)
          http://musetracks.instantspot.com/blog/index.cfm/2007/4/19/BlogCFC-Enhancement
          : Fix bug where no entries - also support N categories (rkc 5/18/07)
-         : DanS fix for unreleased entries, cap URL.byentry to 35 (rkc 11/17/07)
+         : DanS fix for unreleased entries, cap url.byentry to 35 (rkc 11/17/07)
   Purpose     : Blog RSS feed.
 --->
 
-<cfif isDefined("URL.mode") and URL.mode is "full">
+<cfif isDefined("url.mode") and url.mode is "full">
   <cfset mode = "full">
 <cfelse>
   <cfset mode = "short">
 </cfif>
 
 <!--- only allow 1 or 2 --->
-<cfif isDefined("URL.version") and URL.version is 1>
+<cfif isDefined("url.version") and url.version is 1>
   <cfset version = 1>
 <cfelse>
   <cfset version = 2>
@@ -35,46 +35,46 @@
 
 <cfset additionalTitle = "">
 
-<cfif isDefined("URL.mode2")>
-  <cfif URL.mode2 is "day" and isDefined("URL.day") and isDefined("URL.month") and isDefined("URL.year")>
-    <cfset params.byDay = val(URL.day)>
-    <cfset params.byMonth = val(URL.month)>
-    <cfset params.byYear = val(URL.year)>
-  <cfelseif URL.mode2 is "month" and isDefined("URL.month") and isDefined("URL.year")>
-    <cfset params.byMonth = val(URL.month)>
-    <cfset params.byYear = val(URL.year)>
-  <cfelseif URL.mode2 is "cat" and isDefined("URL.catid")>
+<cfif isDefined("url.mode2")>
+  <cfif url.mode2 is "day" and isDefined("url.day") and isDefined("url.month") and isDefined("url.year")>
+    <cfset params.byDay = val(url.day)>
+    <cfset params.byMonth = val(url.month)>
+    <cfset params.byYear = val(url.year)>
+  <cfelseif url.mode2 is "month" and isDefined("url.month") and isDefined("url.year")>
+    <cfset params.byMonth = val(url.month)>
+    <cfset params.byYear = val(url.year)>
+  <cfelseif url.mode2 is "cat" and isDefined("url.catid")>
     <!--- can be a list --->
     <cfset additionalTitle = "">
     <cfset params.byCat = "">
-    <cfloop index="x" from="1" to="#listLen(URL.catid)#">
-      <cfset cat = listGetAt(URL.catid, x)>
+    <cfloop index="x" from="1" to="#listLen(url.catid)#">
+      <cfset cat = listGetAt(url.catid, x)>
       <!--- set to 35 --->
       <cfset cat = left(cat, 35)>
       <cfset params.byCat = listAppend(params.byCat, cat)>
       <cftry>
-        <cfset additionalTitle = additionalTitle & " - " & SESSION.BROG.getCategory(cat).bca_name>
+        <cfset additionalTitle = additionalTitle & " - " & application.blog.getCategory(cat).bca_category>
         <cfcatch></cfcatch>
       </cftry>
     </cfloop>
-  <cfelseif URL.mode2 is "entry">
-    <cfset params.byEntry = left(URL.entry,35)>
+  <cfelseif url.mode2 is "entry">
+    <cfset params.byEntry = left(url.entry,35)>
   </cfif>
 </cfif>
 
 <!--- Only cache if not isdefined mode 2 --->
 <!--- In other words, cache just the main view --->
 <!--- Therefore, our cache name needs to just care about mode and version --->
-<cfset cachename = SESSION.BROG.getProperty('name') & "_rss_" & mode & version>
-<cfif StructKeyExists(URL, "mode2")>
+<cfset cachename = application.applicationname & "_rss_" & mode & version>
+<cfif structKeyExists(url, "mode2")>
   <cfset disabled = true>
 <cfelse>
   <cfset disabled = false>
 </cfif>
 
 <cfsavecontent variable="variables.feedXML">
-<cfmodule template="tags/scopecache.cfm" cachename="#cachename#" scope="APPLICATION" timeout="#APPLICATION.BLOG.timeout#" disabled="#disabled#">
-  <cfoutput>#SESSION.BROG.generateRSS(mode=mode,params=params,version=version,additionalTitle=additionalTitle)#</cfoutput>
+<cfmodule template="tags/scopecache.cfm" cachename="#cachename#" scope="application" timeout="#application.timeout#" disabled="#disabled#">
+  <cfoutput>#application.blog.generateRSS(mode=mode,params=params,version=version,additionalTitle=additionalTitle)#</cfoutput>
 </cfmodule>
 </cfsavecontent>
 
@@ -87,7 +87,7 @@
 <cfset variables.ETag         = hash ( variables.lastModified ) />
 
 <cfset variables.request      = getHTTPRequestData() />
-<cfset variables.headers      = variables.REQUEST.headers />
+<cfset variables.headers      = variables.request.headers />
 
 <cfif structKeyExists ( variables.headers, 'If-Modified-Since' ) and variables.headers['If-Modified-Since'] eq variables.lastModified>
   <cfif structKeyExists ( variables.headers, 'If-None-Match' ) and variables.headers['If-None-Match'] eq variables.ETag>
@@ -102,11 +102,20 @@
 
   <cfcontent type="text/xml; charset=utf-8"><cfoutput>#variables.feedXML#</cfoutput>
   <cfcatch>
+    <cfmail to="#application.blog.getProperty("ownerEmail")#" from="#application.blog.getProperty("ownerEmail")#" subject="rss bug" type="html">
+    #application.resourceBundle.getResource("type")#=#cfcatch.type#
+    <hr>
+    #application.resourceBundle.getResource("message")#=#cfcatch.message#
+    <hr>
+    #application.resourceBundle.getResource("detail")#=#cfcatch.detail#
+    <cfdump var="#cfcatch#">
+    </cfmail>
     <!--- Logic is - if they filtered incorrectly, revert to default, if not, abort --->
-    <cfif CGI.query_string neq "">
+    <cfif cgi.query_string neq "">
       <cflocation url="rss.cfm">
     <cfelse>
       <cfabort>
     </cfif>
   </cfcatch>
 </cftry>
+

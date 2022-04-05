@@ -12,13 +12,13 @@
 
       <cfthread action="run" name="#arguments.blogurl#_#arguments.blogtitle#_#aurl#" blogtitle="#arguments.blogtitle#" blogurl="#arguments.blogurl#" aURL="#aURL#">
         <cfif aURL is "@technorati">
-          <cfset pingTechnorati(ATTRIBUTES.blogTitle, ATTRIBUTES.blogURL)>
+          <cfset pingTechnorati(attributes.blogTitle, attributes.blogURL)>
         <cfelseif aURL is "@weblogs">
-          <cfset pingweblogs(ATTRIBUTES.blogTitle, ATTRIBUTES.blogURL)>
+          <cfset pingweblogs(attributes.blogTitle, attributes.blogURL)>
         <cfelseif aURL is "@icerocket">
-          <cfset pingIceRocket(ATTRIBUTES.blogTitle, ATTRIBUTES.blogURL)>
+          <cfset pingIceRocket(attributes.blogTitle, attributes.blogURL)>
         <cfelse>
-          <cfhttp url="#ATTRIBUTES.aURL#" method="GET" resolveurl="false">
+          <cfhttp url="#attributes.aURL#" method="GET" resolveurl="false">
         </cfif>
       </cfthread>
 

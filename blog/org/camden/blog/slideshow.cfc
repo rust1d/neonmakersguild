@@ -59,8 +59,8 @@
     <cfloop index="x" from="1" to="#arrayLen(xmlPacket.slideshow.captions.xmlChildren)#">
       <cfset imageNode = xmlPacket.slideshow.captions.xmlChildren[x]>
       <cfif structKeyExists(imageNode.xmlAttributes, "name") and structKeyExists(imageNode.xmlAttributes, "caption")>
-        <cfset image.filename = imageNode.xmlATTRIBUTES.name>
-        <cfset image.caption = imageNode.xmlATTRIBUTES.caption>
+        <cfset image.filename = imageNode.xmlAttributes.name>
+        <cfset image.caption = imageNode.xmlAttributes.caption>
         <cfset result.images[image.filename] = image.caption>
       </cfif>
     </cfloop>

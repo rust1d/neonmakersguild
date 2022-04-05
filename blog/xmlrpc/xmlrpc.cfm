@@ -8,7 +8,7 @@
 
 <cfcontent type="text/xml; charset=utf-8">
 
-<cfsetting enablecfoutputonly="true">
+<cfsetting enablecfoutputonly=true>
 <!---
   Name         : C:\projects\blogcfc5\client\xmlrpc\xmlrpc.cfm
   Author       : Raymond Camden
@@ -20,20 +20,20 @@
          : fix for categories (rkc 10/12/06)
          : multiple udpates related to Captivate (rkc 10/31/06)
          : Another fix. Did someone say XML-RPC was a spec? Bull-pucky. (rkc 11/30/06)
-         : Fix so remote clients can see unreleased/future entries
+         : Fix so remote clients can see unben_released/future entries
 --->
 
-<cfif not isdefined("APPLICATION.BLOG.movabletype")>
-  <cfset APPLICATION.BLOG.movabletype=structNew()>
+<cfif not isdefined("application.movabletype")>
+  <cfset application.movabletype=structNew()>
 </cfif>
 
 <!---// should we escape/unescape <code> blocks from/to Text and HTML //--->
-<cfparam name="URL.parseMarkup" default="false" type="boolean" />
+<cfparam name="url.parseMarkup" default="false" type="boolean" />
 
 <cffunction name="translateCategory" returnType="uuid">
   <cfargument name="category" type="string" required="true">
 
-  <cfreturn SESSION.BROG.getCategoryByName(arguments.category)>
+  <cfreturn application.blog.getCategoryByName(arguments.category)>
 </cffunction>
 
 <cfset xmlrpc = createObject("component", "xmlrpc")>
@@ -52,9 +52,9 @@
 
   <cfcase value="blogger.getUsersBlogs,metaWeblog.getUsersBlogs">
     <cfset info = structNew()>
-    <cfset info["url"] = APPLICATION.PATH.ROOT>
+    <cfset info["url"] = application.rooturl>
     <cfset info["blogid"] = "$string" & "1">
-    <cfset info["blogName"] = SESSION.BROG.getProperty("name")>
+    <cfset info["blogName"] = application.blog.getProperty("name")>
     <cfset result = arrayNew(1)>
     <cfset result[1] = info>
 
@@ -69,9 +69,9 @@
     <cfset username = requestData.params[2]>
     <cfset password = requestData.params[3]>
 
-    <cfset StructInsert(APPLICATION.BLOG.movabletype,username,isMovabletype,true)>
+    <cfset StructInsert(application.movabletype,username,isMovabletype,true)>
 
-    <cfif SESSION.BROG.authenticate(username,password)>
+    <cfif application.blog.authenticate(username,password)>
       <!--- This remote method isn't secured, so no need for
           cflogin, but I still do the auth check above to
           ensure only proper remote clients call this.
@@ -79,22 +79,22 @@
 
       <cfset result = arrayNew(1)>
 
-      <cfset categories = SESSION.BROG.getCategories()>
+      <cfset categories = application.blog.getCategories()>
 
       <cfloop query="categories">
         <cfset info = structNew()>
 
         <cfif requestData.method is "metaWeblog.getCategories">
-          <cfset info["description"] = bca_name>
-          <cfset info["htmlUrl"] = "$string" & SESSION.BROG.makeCategoryLink(bca_bcaid)>
-          <cfset info["rssUrl"] = "$string" & "#APPLICATION.PATH.ROOT#/rss.cfm?mode=full&mode2=cat&catid=#bca_bcaid#">
+          <cfset info["description"] = bca_category>
+          <cfset info["htmlUrl"] = "$string" & application.blog.makeCategoryLink(bca_bcaid)>
+          <cfset info["rssUrl"] = "$string" & "#application.rootURL#/rss.cfm?mode=full&mode2=cat&catid=#bca_bcaid#">
 
-          <cfset info["title"] = bca_name>
+          <cfset info["title"] = bca_category>
           <!--- Added to make it work in Mars Edit --->
-          <cfset info["bca_name"] = bca_name>
+          <cfset info["bca_category"] = bca_category>
           <cfset info["bca_bcaid"] = bca_bcaid>
         <cfelse>
-          <cfset info["bca_name"] = bca_name>
+          <cfset info["bca_category"] = bca_category>
           <cfset info["bca_bcaid"] = bca_bcaid>
         </cfif>
         <cfset arrayAppend(result, info)>
@@ -112,18 +112,18 @@
     <cfset username = requestData.params[2]>
     <cfset password = requestData.params[3]>
 
-    <cfif SESSION.BROG.authenticate(username,password)>
+    <cfif application.blog.authenticate(username,password)>
       <!--- This remote method isn't secured, so no need for
           cflogin, but I still do the auth check above to
           ensure only proper remote clients call this.
 
-          Actually I lie. Sim noted that you won't get unreleased entries w/o this.
+          Actually I lie. Sim noted that you won't get unben_released entries w/o this.
       --->
       <cfloginuser name="#username#" password="#password#" roles="admin">
 
       <cfset params = structNew()>
       <cfset params.maxEntries = requestData.params[4]>
-      <cfset entries = SESSION.BROG.getEntries(params)>
+      <cfset entries = application.blog.getEntries(params)>
       <cfset entries = entries.entries />
       <cfset result = arrayNew(1)>
       <cfloop query="entries">
@@ -134,26 +134,26 @@
         <cfset item["postid"] = id>
         <cfset item["description"] = body>
 
-        <cfset item["link"] = SESSION.BROG.makeLink(id)>
-        <cfset item["permaLink"] = SESSION.BROG.makeLink(id)>
+        <cfset item["link"] = application.blog.makeLink(id)>
+        <cfset item["permaLink"] = application.blog.makeLink(id)>
         <cfset item["mt_excerpt"] = "">
         <cfset item["mt_text_more"]="">
 
-        <!--- Handle morebody --->
-        <cfif len(morebody)>
-          <cfif structKeyExists(APPLICATION.BLOG.movabletype, username) and structFind(APPLICATION.BLOG.movabletype, username) is "NO">
-            <cfset item["description"] = body & "<more/>" & morebody>
+        <!--- Handle ben_morebody --->
+        <cfif len(ben_morebody)>
+          <cfif structKeyExists(application.movabletype, username) and structFind(application.movabletype, username) is "NO">
+            <cfset item["description"] = body & "<more/>" & ben_morebody>
           <cfelse>
-            <cfset item["mt_text_more"] = morebody>
+            <cfset item["mt_text_more"] = ben_morebody>
           </cfif>
         </cfif>
 
-        <cfif URL.parseMarkup>
+        <cfif url.parseMarkup>
           <cfset item["description"] = xmlrpc.escapeMarkup(item["description"]) />
           <cfset item["mt_text_more"] = xmlrpc.escapeMarkup(item["mt_text_more"]) />
         </cfif>
 
-        <cfif allowcomments>
+        <cfif ben_allowcomments>
           <cfset item["mt_allow_comments"] = "$int1">
         <cfelse>
           <cfset item["mt_allow_comments"] = "$int0">
@@ -181,12 +181,12 @@
     <cfset username = requestData.params[2]>
     <cfset password = requestData.params[3]>
 
-    <cfif SESSION.BROG.authenticate(username,password)>
+    <cfif application.blog.authenticate(username,password)>
       <!--- This remote method isn't secured, so no need for
           cflogin, but I still do the auth check above to
           ensure only proper remote clients call this.
 
-          Actually I lie. Sim noted that you won't get unreleased entries w/o this.
+          Actually I lie. Sim noted that you won't get unben_released entries w/o this.
       --->
       <cfloginuser name="#username#" password="#password#" roles="admin">
 
@@ -194,7 +194,7 @@
           cflogin, but I still do the auth check above to
           ensure only proper remote clients call this.
       --->
-      <cfset entry = SESSION.BROG.getEntry(id,true)>
+      <cfset entry = application.blog.getEntry(id,true)>
       <cfset item = structNew()>
       <cfset item["title"] = entry.title>
       <cfset item["dateCreated"] = entry.posted>
@@ -202,25 +202,25 @@
       <cfset item["postid"] = entry.id>
       <cfset item["description"] = entry.body />
 
-      <cfset item["link"] = SESSION.BROG.makeLink(id)>
-      <cfset item["permaLink"] = SESSION.BROG.makeLink(id)>
+      <cfset item["link"] = application.blog.makeLink(id)>
+      <cfset item["permaLink"] = application.blog.makeLink(id)>
       <cfset item["mt_excerpt"] = "">
       <cfset item["mt_text_more"] = "">
 
-      <cfif len(entry.morebody)>
-        <cfif structKeyExists(APPLICATION.BLOG.movabletype, username) and structFind(APPLICATION.BLOG.movabletype, username) IS "NO">
-          <cfset item["description"] = entry.body & "<more/>" & entry.morebody>
+      <cfif len(entry.ben_morebody)>
+        <cfif structKeyExists(application.movabletype, username) and structFind(application.movabletype, username) IS "NO">
+          <cfset item["description"] = entry.body & "<more/>" & entry.ben_morebody>
         <cfelse>
-          <cfset item["mt_text_more"]=entry.morebody>
+          <cfset item["mt_text_more"]=entry.ben_morebody>
         </cfif>
       </cfif>
 
-      <cfif URL.parseMarkup>
+      <cfif url.parseMarkup>
         <cfset item["description"] = xmlrpc.escapeMarkup(item["description"]) />
         <cfset item["mt_text_more"] = xmlrpc.escapeMarkup(item["mt_text_more"]) />
       </cfif>
 
-      <cfif entry.allowcomments>
+      <cfif entry.ben_allowcomments>
         <cfset item["mt_allow_comments"] = "$int1">
       <cfelse>
         <cfset item["mt_allow_comments"] = "$int0">
@@ -248,9 +248,9 @@
     <cfset password = requestData.params[4]>
     <cfset publish = requestData.params[5]>
 
-    <cfif SESSION.BROG.authenticate(username,password)>
+    <cfif application.blog.authenticate(username,password)>
       <cfloginuser name="#username#" password="#password#" roles="admin">
-      <cfset SESSION.BROG.deleteEntry(postid)>
+      <cfset application.blog.deleteEntry(postid)>
       <cfset result = "$boolean1">
     <cfelse>
       <cfset result = "$boolean0">
@@ -278,20 +278,20 @@
         cflogin, but I still do the auth check above to
         ensure only proper remote clients call this.
 
-        Actually I lie. Sim noted that you won't get unreleased entries w/o this.
+        Actually I lie. Sim noted that you won't get unben_released entries w/o this.
     --->
     <cfloginuser name="#username#" password="#password#" roles="admin">
 
     <!---// get existing entry or create empty structure //--->
     <cfif structKeyExists(variables, "currentId")>
-      <cfset currentEntry = SESSION.BROG.getEntry(currentID, true) />
+      <cfset currentEntry = application.blog.getEntry(currentID, true) />
     <cfelse>
       <!---// create default values for any of the fields we might need to reference //--->
       <cfset currentEntry = structNew() />
-      <cfset currentEntry.enclosure = "" />
-      <cfset currentEntry.filesize = "0" />
-      <cfset currentEntry.mimetype = "" />
-      <cfset currentEntry.released = true />
+      <cfset currentEntry.ben_enclosure = "" />
+      <cfset currentEntry.ben_filesize = "0" />
+      <cfset currentEntry.ben_mimetype = "" />
+      <cfset currentEntry.ben_released = true />
     </cfif>
 
     <!---
@@ -300,7 +300,7 @@
     <cfset entry = structNew()>
     <cfset entry.title = bareentry.title>
     <cfset entry.body = bareentry.description>
-    <cfset APPLICATION.BLOG.body = htmleditformat(bareentry.description)>
+    <cfset application.body = htmleditformat(bareentry.description)>
     <!--- TODO: Handle <more/> --->
 
     <!---// replace the ellipse character with the HTML entity //--->
@@ -313,11 +313,11 @@
     <cfset entry.body = replace(entry.body, chr(150), "&##8211;", "all") />
     <cfset entry.body = replace(entry.body, "–", "&##8211;", "all") />
 
-    <cfif URL.parseMarkup>
+    <cfif url.parseMarkup>
       <cfset entry.body = xmlrpc.unescapeMarkup(entry.body) />
     </cfif>
 
-    <cfif structKeyExists(APPLICATION.BLOG.movabletype, username) and structFind(APPLICATION.BLOG.movabletype, username) IS "NO">
+    <cfif structKeyExists(application.movabletype, username) and structFind(application.movabletype, username) IS "NO">
       <!--- Handle potential <more/> --->
       <!--- fix by Andrew --->
       <cfset strMoreTag = "<more/>">
@@ -329,11 +329,11 @@
         <cfset moreText = "">
       </cfif>
 
-      <cfset entry.morebody = moretext>
+      <cfset entry.ben_morebody = moretext>
     <cfelse>
       <!--- Movabletype --->
       <cfif structKeyExists(bareentry, "mt_text_more")>
-        <cfset entry.morebody=bareentry.mt_text_more>
+        <cfset entry.ben_morebody=bareentry.mt_text_more>
       </cfif>
     </cfif>
 
@@ -349,29 +349,29 @@
     </cfif>
 
     <!---// if posted date is in the past, but we've just published the article, update posted date //--->
-    <cfif not currentEntry.released and published>
+    <cfif not currentEntry.ben_released and published>
       <cfif not structKeyExists(entry, "posted") or (dateCompare(entry.posted, now()) lt 0)>
         <cfset entry.posted = now() />
       </cfif>
     </cfif>
 
-    <!--- TODO: Fix allowcomments --->
+    <!--- TODO: Fix ben_allowcomments --->
     <cfif structKeyExists(bareentry,"mt_allow_comments") and isBoolean(bareentry.mt_allow_comments)>
-      <cfset entry.allowcomments = bareentry.mt_allow_comments>
+      <cfset entry.ben_allowcomments = bareentry.mt_allow_comments>
     <cfelse>
-      <cfset entry.allowcomments = true>
+      <cfset entry.ben_allowcomments = true>
     </cfif>
 
-    <!--- TODO: Allow enclosures -- currently keeps previous values --->
-    <cfset entry.enclosure = currentEntry.enclosure />
-    <cfset entry.filesize = currentEntry.filesize />
-    <cfset entry.mimetype = currentEntry.mimetype />
-    <cfset entry.released = published />
+    <!--- TODO: Allow ben_enclosures -- currently keeps previous values --->
+    <cfset entry.ben_enclosure = currentEntry.ben_enclosure />
+    <cfset entry.ben_filesize = currentEntry.ben_filesize />
+    <cfset entry.ben_mimetype = currentEntry.ben_mimetype />
+    <cfset entry.ben_released = published />
 
     <!---
     Contribute sends a fake post to generate a design template.
     We need to ensure that this fake post doesn't send an email.
-    Let's try making it not released and see if that works.
+    Let's try making it not ben_released and see if that works.
 
     Nope, that didn't work. Ok, adding a new "sendemail" entry.
     --->
@@ -379,12 +379,12 @@
       <cfset entry.sendemail = true>
     </cfif>
 
-    <cfif SESSION.BROG.authenticate(username, password)>
+    <cfif application.blog.authenticate(username, password)>
 
       <cfloginuser name="#username#" password="#password#" roles="admin">
 
       <cfif requestData.method is "metaWeblog.editPost">
-        <cfinvoke component="#SESSION.BROG#" method="saveEntry" returnVariable="newid">
+        <cfinvoke component="#application.blog#" method="saveEntry" returnVariable="newid">
           <cfinvokeargument name="id" value="#currentID#">
           <cfloop item="key" collection="#entry#">
             <cfinvokeargument name="#key#" value="#entry[key]#">
@@ -393,9 +393,9 @@
         <cfset entryid = currentID>
         <cfset result = "$boolean1">
       <cfelse>
-        <cfset entry.alias = SESSION.BROG.makeTitle(entry.title)>
+        <cfset entry.alias = application.blog.makeTitle(entry.title)>
 
-        <cfinvoke component="#SESSION.BROG#" method="addEntry" returnVariable="newid">
+        <cfinvoke component="#application.blog#" method="addEntry" returnVariable="newid">
           <cfloop item="key" collection="#entry#">
             <cfinvokeargument name="#key#" value="#entry[key]#">
           </cfloop>
@@ -417,7 +417,7 @@
       </cfif>
 
       <cfif len(catlist)>
-        <cfset SESSION.BROG.assignCategories(entryid, catlist)>
+        <cfset application.blog.assignCategories(entryid, catlist)>
       </cfif>
 
       <!--- clear cache --->
@@ -435,7 +435,7 @@
     <cfset username = requestData.params[2]>
     <cfset password = requestData.params[3]>
 
-    <cfif SESSION.BROG.authenticate(username,password)>
+    <cfif application.blog.authenticate(username,password)>
 
       <cfset upFileData = requestData.params[4].bits />
       <!---//
@@ -447,12 +447,16 @@
       <cfset upFileName = hash(requestData.params[4].name, "md5") & "." & listlast(requestData.params[4].name, ".") />
       <cfset upFileType = requestData.params[4].type />
 
-      <cfset destination = udfMakeDirIfNot("#APPLICATION.DISK.BLOGIMG#\#username#") />
+      <cfset destination = expandPath("../ben_enclosures") />
 
-      <cffile action="write" output="#upFileData#" file="#destination#\#upFileName#" />
+      <cfif not directoryExists(destination)>
+        <cfdirectory action="create" directory="#destination#" />
+      </cfif>
+
+      <cffile action="write" output="#upFileData#" file="#destination#/#upFileName#" />
 
       <cfset result = structNew() />
-      <cfset result["url"] = "$string" & "#APPLICATION.PATH.BLOGIMG#/#username#/#upFileName#" />
+      <cfset result["url"] = "$string" & "#application.rootURL#/ben_enclosures/#upFileName#" />
 
     <cfelse>
 
@@ -470,7 +474,7 @@
     <cfset username = requestData.params[2]>
     <cfset password = requestData.params[3]>
 
-    <cfif SESSION.BROG.authenticate(username,password)>
+    <cfif application.blog.authenticate(username,password)>
       <!--- This remote method isn't secured, so no need for
           cflogin, but I still do the auth check above to
           ensure only proper remote clients call this.
@@ -478,11 +482,11 @@
 
       <cfset result = arrayNew(1)>
 
-      <cfset categories = SESSION.BROG.getCategoriesForEntry(id=postid)>
+      <cfset categories = application.blog.getCategoriesForEntry(id=postid)>
 
       <cfloop query="categories">
         <cfset info = structNew()>
-          <cfset info["bca_name"] = bca_name>
+          <cfset info["bca_category"] = bca_category>
           <cfset info["bca_bcaid"] = bca_bcaid>
         <cfset arrayAppend(result, info)>
       </cfloop>
@@ -499,18 +503,18 @@
     <cfset username = requestData.params[2]>
     <cfset password = requestData.params[3]>
 
-    <cfif SESSION.BROG.authenticate(username,password)>
+    <cfif application.blog.authenticate(username,password)>
 
       <cfloginuser name="#username#" password="#password#" roles="admin">
 
       <cfif arrayLen(requestData.params) gte 4>
 
-        <cfset SESSION.BROG.removeCategories(postid)>
+        <cfset application.blog.removeCategories(postid)>
         <cfset catlist = "">
         <cfloop index="x" from="1" to="#arrayLen(requestData.params[4])#">
           <cfset catlist = listAppend(catlist, requestData.params[4][x].bca_bcaid)>
         </cfloop>
-        <cfset SESSION.BROG.assignCategories(postid, catlist)>
+        <cfset application.blog.assignCategories(postid, catlist)>
 
         <cfset result = "$boolean1">
 

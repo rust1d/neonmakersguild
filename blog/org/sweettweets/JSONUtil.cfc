@@ -198,7 +198,7 @@
                 <cfset qData = this.deserializeCustom(structVal, arguments.strictMapping) />
                 <cfset ar = StructKeyArray(qData) />
                 <cfloop from="1" to="#ArrayLen(ar)#" index="j">
-                  <cfloop from="1" to="#st.RecordCount#" index="qRows">
+                  <cfloop from="1" to="#st.recordcount#" index="qRows">
                     <cfset qCol = ar[j] />
                     <cfset QuerySetCell(st, qCol, qData[qCol][qRows], qRows) />
                   </cfloop>
@@ -292,7 +292,7 @@
     <cfset var i = 1 />
     <cfset var column = "" />
     <cfset var datakey = "" />
-    <cfset var RecordCountkey = "" />
+    <cfset var recordcountkey = "" />
     <cfset var columnlist = "" />
     <cfset var columnlistkey = "" />
     <cfset var columnJavaTypes = "" />
@@ -386,7 +386,7 @@
       <cfset dJSONString = ArrayNew(1) />
 
       <!--- Add query meta data --->
-      <cfset RecordCountKey = "ROWCOUNT" />
+      <cfset recordcountKey = "ROWCOUNT" />
       <cfset columnlistKey = "COLUMNS" />
       <cfset columnlist = "" />
       <cfset dataKey = "DATA" />
@@ -402,7 +402,7 @@
       </cfloop>
 
       <cfif arguments.serializeQueryByColumns>
-        <cfset ArrayAppend(dJSONString,'"#RecordCountKey#":' & _data.RecordCount) />
+        <cfset ArrayAppend(dJSONString,'"#recordcountKey#":' & _data.recordcount) />
         <cfset ArrayAppend(dJSONString,',"#columnlistKey#":[' & ListQualify(columnlist, '"') & ']') />
         <cfset ArrayAppend(dJSONString,',"#dataKey#":{') />
         <cfset colDel = "">
@@ -410,7 +410,7 @@
           <cfset ArrayAppend(dJSONString,colDel) />
           <cfset ArrayAppend(dJSONString,'"#column#":[') />
           <cfset rowDel = "">
-          <cfloop from="1" to="#_data.RecordCount#" index="i">
+          <cfloop from="1" to="#_data.recordcount#" index="i">
             <cfset ArrayAppend(dJSONString,rowDel) />
             <cfif arguments.strictMapping AND Len(columnJavaTypes[column])>
               <cfset tempVal = this.serializeCustom( JavaCast(columnJavaTypes[column],_data[column][i]), arguments.serializeQueryByColumns, arguments.strictMapping ) />
@@ -428,7 +428,7 @@
         <cfset ArrayAppend(dJSONString,'"#columnlistKey#":[' & ListQualify(columnlist, '"') & ']') />
         <cfset ArrayAppend(dJSONString,',"#dataKey#":[') />
         <cfset rowDel = "">
-        <cfloop from="1" to="#_data.RecordCount#" index="i">
+        <cfloop from="1" to="#_data.recordcount#" index="i">
           <cfset ArrayAppend(dJSONString,rowDel) />
           <cfset ArrayAppend(dJSONString,'[') />
           <cfset colDel = "">

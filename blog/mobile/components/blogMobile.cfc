@@ -1,4 +1,4 @@
-<cfcomponent displayName="blogMobile" output="false" hint="BlogCFC Mobile">
+﻿<cfcomponent displayName="blogMobile" output="false" hint="BlogCFC Mobile">
 
   <!--- Load utils immidiately. --->
   <cfset variables.utils = createObject("component", "org.camden.blog.utils")>
@@ -12,7 +12,7 @@
   <cffunction name="init" access="public" returnType="blogMobile" output="false"
         hint="Initialize the blog mobile settings">
 
-    <cfargument name="name" type="string" required="false" default="#APPLICATION.SETTING.blog#" hint="Blog name, defaults to Main Blog">
+    <cfargument name="name" type="string" required="false" default="default" hint="Blog name, defaults to default">
 
     <cfset var renderDir = "">
     <cfset var renderCFCs = "">
@@ -56,7 +56,11 @@
 
 
   <cffunction name="getCaptcha" returnformat="plain" output="false" access="remote">
-    <cfreturn APPLICATION.BLOG.captcha.createHashReference().hash />
+    <cfif application.useCaptcha>
+      <cfreturn application.captcha.createHashReference().hash />
+    </cfif>
+
+    <cfreturn "">
   </cffunction>
 
 

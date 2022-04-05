@@ -1,5 +1,5 @@
-<cfsetting enablecfoutputonly="true">
-<cfprocessingdirective pageencoding="utf-8" />
+<cfsetting enablecfoutputonly=true>
+<cfprocessingdirective pageencoding="utf-8">
 <!---
   Name         : textarea.cfm
   Author       : Raymond Camden
@@ -18,13 +18,13 @@
 --->
 
 <!--- Name of the form field. --->
-<cfparam name="ATTRIBUTES.fieldname">
+<cfparam name="attributes.fieldname">
 <!--- The value to use --->
-<cfparam name="ATTRIBUTES.value" default="">
+<cfparam name="attributes.value" default="">
 <!--- CSS class of the text area --->
-<cfparam name="ATTRIBUTES.class" default="">
+<cfparam name="attributes.class" default="">
 <!--- style class of the text area --->
-<cfparam name="ATTRIBUTES.style" default="">
+<cfparam name="attributes.style" default="">
 
 <!---
   NOTE: This is where you replace my code with your code. You may want to juse comment out my code
@@ -32,8 +32,8 @@
 --->
 
 <cfoutput>
-<textarea name="#ATTRIBUTES.fieldname#" id="#ATTRIBUTES.fieldname#" <cfif len(ATTRIBUTES.class)>class="#ATTRIBUTES.class#"</cfif><cfif len(ATTRIBUTES.style)>style="#ATTRIBUTES.style#"</cfif>>#ATTRIBUTES.value#</textarea>
+<textarea name="#attributes.fieldname#" id="#attributes.fieldname#" <cfif len(attributes.class)>class="#attributes.class#"</cfif><cfif len(attributes.style)>style="#attributes.style#"</cfif>>#attributes.value#</textarea>
 </cfoutput>
 
-<cfsetting enablecfoutputonly="false" />
+<cfsetting enablecfoutputonly=false>
 <cfexit method="exitTag" />

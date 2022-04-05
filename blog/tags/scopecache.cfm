@@ -32,7 +32,7 @@
           the tag isn't run (well, mostly, but don't worry).
   clearAll:    Removes all data from this scope. Exits the tag immidiately.
   disabled:    Allows for a quick exit out of the tag. How would this be used? You can
-          imagine using disabled="#REQUEST.disabled#" to allow for a quick way to
+          imagine using disabled="#request.disabled#" to allow for a quick way to
           turn on/off caching for the entire site. Of course, all calls to the tag
           would have to use the same value.
   r_cacheItems:  Returns a list of keys in the cache. Exists the tag when called. NOTICE! Some items
@@ -48,28 +48,28 @@
 --->
 
 <!--- allow for quick exit --->
-<cfif isDefined("ATTRIBUTES.disabled") and ATTRIBUTES.disabled>
+<cfif isDefined("attributes.disabled") and attributes.disabled>
   <cfexit method="exitTemplate">
 </cfif>
 
 <!--- Allow for cachename in case we use cfmodule --->
-<cfif isDefined("ATTRIBUTES.cachename")>
-  <cfset ATTRIBUTES.name = ATTRIBUTES.cachename>
+<cfif isDefined("attributes.cachename")>
+  <cfset attributes.name = attributes.cachename>
 </cfif>
 
 <!--- Must pass scope, and must be a valid value. --->
-<cfif not isDefined("ATTRIBUTES.scope") or not isSimpleValue(ATTRIBUTES.scope) or not listFindNoCase("APPLICATION,SESSION,SERVER,REQUEST,FILE",ATTRIBUTES.scope)>
+<cfif not isDefined("attributes.scope") or not isSimpleValue(attributes.scope) or not listFindNoCase("application,session,server,request,file",attributes.scope)>
   <cfthrow message="scopeCache: The scope attribute must be passed as one of: application, session, server, request, or file.">
 </cfif>
 
-<cfparam name="ATTRIBUTES.file" default="">
+<cfparam name="attributes.file" default="">
 
 <!--- create pointer to scope --->
-<cfif ATTRIBUTES.scope is not "file">
-  <cfset ptr = structGet(ATTRIBUTES.scope)>
+<cfif attributes.scope is not "file">
+  <cfset ptr = structGet(attributes.scope)>
 
   <!--- init cache root --->
-  <cflock scope="#ATTRIBUTES.scope#" type="readOnly" timeout="30">
+  <cflock scope="#attributes.scope#" type="readOnly" timeout="30">
     <cfif not structKeyExists(ptr,"scopeCache")>
       <cfset needInit = true>
     <cfelse>
@@ -78,7 +78,7 @@
   </cflock>
 
   <cfif needInit>
-    <cflock scope="#ATTRIBUTES.scope#" type="exclusive" timeout="30">
+    <cflock scope="#attributes.scope#" type="exclusive" timeout="30">
       <!--- check twice in cace another thread finished --->
       <cfif not structKeyExists(ptr,"scopeCache")>
         <cfset ptr["scopeCache"] = structNew()>
@@ -89,32 +89,32 @@
 </cfif>
 
 <!--- Do they simply want the keys? --->
-<cfif isDefined("ATTRIBUTES.r_cacheItems") and ATTRIBUTES.scope neq "file">
-  <cfset caller[ATTRIBUTES.r_cacheItems] = structKeyList(ptr.scopeCache)>
+<cfif isDefined("attributes.r_cacheItems") and attributes.scope neq "file">
+  <cfset caller[attributes.r_cacheItems] = structKeyList(ptr.scopeCache)>
   <cfexit method="exitTag">
 </cfif>
 
 <!--- Do they want to nuke it all? --->
-<cfif isDefined("ATTRIBUTES.clearAll") and ATTRIBUTES.scope neq "file">
+<cfif isDefined("attributes.clearAll") and attributes.scope neq "file">
   <cfset structClear(ptr["scopeCache"])>
   <cfexit method="exitTag">
 </cfif>
 
 <!--- Require name if we get this far. --->
-<cfif not isDefined("ATTRIBUTES.name") or not isSimpleValue(ATTRIBUTES.name)>
+<cfif not isDefined("attributes.name") or not isSimpleValue(attributes.name)>
   <cfthrow message="scopeCache: The name attribute must be passed as a string.">
 </cfif>
 
 <!--- The default timeout is no timeout, so we use the year 3999. We will have flying cars then. --->
-<cfparam name="ATTRIBUTES.timeout" default="#createDate(3999,1,1)#">
+<cfparam name="attributes.timeout" default="#createDate(3999,1,1)#">
 <!--- Default dependancy list --->
-<cfparam name="ATTRIBUTES.dependancies" default="" type="string">
+<cfparam name="attributes.dependancies" default="" type="string">
 
-<cfif not isDate(ATTRIBUTES.timeout) and (not isNumeric(ATTRIBUTES.timeout) or ATTRIBUTES.timeout lte 0)>
+<cfif not isDate(attributes.timeout) and (not isNumeric(attributes.timeout) or attributes.timeout lte 0)>
   <cfthrow message="scopeCache: The timeout attribute must be either a date/time or a number greater than zero.">
-<cfelseif isNumeric(ATTRIBUTES.timeout)>
+<cfelseif isNumeric(attributes.timeout)>
   <!--- convert seconds to a time --->
-  <cfset ATTRIBUTES.timeout = dateAdd("s",ATTRIBUTES.timeout,now())>
+  <cfset attributes.timeout = dateAdd("s",attributes.timeout,now())>
 </cfif>
 
 
@@ -123,12 +123,12 @@
 <!--- This variable determines if we run the caching. This is used when we clear a cache --->
 <cfset dontRun = false>
 
-<cfif isDefined("ATTRIBUTES.clear") and ATTRIBUTES.clear and thisTag.executionMode is "start">
-  <cfif ATTRIBUTES.scope neq "file" and structKeyExists(ptr.scopeCache,ATTRIBUTES.name)>
-    <cfset cleanup = ptr.scopeCache[ATTRIBUTES.name].dependancies>
-    <cfset structDelete(ptr.scopeCache,ATTRIBUTES.name)>
-  <cfelseif fileExists(ATTRIBUTES.file)>
-    <cffile action="delete" file="#ATTRIBUTES.file#">
+<cfif isDefined("attributes.clear") and attributes.clear and thisTag.executionMode is "start">
+  <cfif attributes.scope neq "file" and structKeyExists(ptr.scopeCache,attributes.name)>
+    <cfset cleanup = ptr.scopeCache[attributes.name].dependancies>
+    <cfset structDelete(ptr.scopeCache,attributes.name)>
+  <cfelseif fileExists(attributes.file)>
+    <cffile action="delete" file="#attributes.file#">
   </cfif>
   <cfset dontRun = true>
 </cfif>
@@ -136,36 +136,36 @@
 <cfif not dontRun>
   <cfif thisTag.executionMode is "start">
     <!--- determine if we have the info in cache already --->
-    <cfif ATTRIBUTES.scope neq "file" and structKeyExists(ptr.scopeCache,ATTRIBUTES.name)>
-      <cfif dateCompare(now(),ptr.scopeCache[ATTRIBUTES.name].timeout) is -1>
-        <cflock scope="#ATTRIBUTES.scope#" type="exclusive" timeout="30">
-          <cfset ptr.scopeCache[ATTRIBUTES.name].hitCount = ptr.scopeCache[ATTRIBUTES.name].hitCount + 1>
+    <cfif attributes.scope neq "file" and structKeyExists(ptr.scopeCache,attributes.name)>
+      <cfif dateCompare(now(),ptr.scopeCache[attributes.name].timeout) is -1>
+        <cflock scope="#attributes.scope#" type="exclusive" timeout="30">
+          <cfset ptr.scopeCache[attributes.name].hitCount = ptr.scopeCache[attributes.name].hitCount + 1>
         </cflock>
-        <cfif not isDefined("ATTRIBUTES.r_Data")>
-          <cfoutput>#ptr.scopeCache[ATTRIBUTES.name].value#</cfoutput>
+        <cfif not isDefined("attributes.r_Data")>
+          <cfoutput>#ptr.scopeCache[attributes.name].value#</cfoutput>
         <cfelse>
-          <cfset caller[ATTRIBUTES.r_Data] = ptr.scopeCache[ATTRIBUTES.name].value>
+          <cfset caller[attributes.r_Data] = ptr.scopeCache[attributes.name].value>
         </cfif>
         <cfexit method="exitTag">
       </cfif>
     <!--- Fix by Ken Gladden --->
-    <cfelseif (ATTRIBUTES.file is not "") and fileExists(ATTRIBUTES.file)>
+    <cfelseif (attributes.file is not "") and fileExists(attributes.file)>
       <!--- read the file in to check metadata --->
-      <cflock name="#ATTRIBUTES.file#" type="readonly" timeout="30">
-        <cffile action="read" file="#ATTRIBUTES.file#" variable="contents" charset="UTF-8">
+      <cflock name="#attributes.file#" type="readonly" timeout="30">
+        <cffile action="read" file="#attributes.file#" variable="contents" charset="UTF-8">
         <cfwddx action="wddx2cfml" input="#contents#" output="data">
       </cflock>
       <cfif dateCompare(now(),data.timeout) is -1>
-        <cfif not isDefined("ATTRIBUTES.r_Data")>
+        <cfif not isDefined("attributes.r_Data")>
           <cfoutput>#data.value#</cfoutput>
         <cfelse>
-          <cfset caller[ATTRIBUTES.r_Data] = data.value>
+          <cfset caller[attributes.r_Data] = data.value>
         </cfif>
         <cfif not structKeyExists(attributes, "suppressHitCount")>
-          <cflock name="#ATTRIBUTES.file#" type="exclusive" timeout="30">
+          <cflock name="#attributes.file#" type="exclusive" timeout="30">
             <cfset data.hitCount = data.hitCount + 1>
             <cfwddx action="cfml2wddx" input="#data#" output="packet">
-            <cffile action="write" file="#ATTRIBUTES.file#" output="#packet#" charset="UTF-8">
+            <cffile action="write" file="#attributes.file#" output="#packet#" charset="UTF-8">
           </cflock>
         </cfif>
         <cfexit method="exitTag">
@@ -173,42 +173,42 @@
     </cfif>
   <cfelse>
     <!--- It is possible I'm here because I'm refreshing. If so, check my dependancies --->
-    <cfif ATTRIBUTES.scope neq "file" and structKeyExists(ptr.scopeCache,ATTRIBUTES.name)>
-      <cfif structKeyExists(ptr.scopeCache[ATTRIBUTES.name],"dependancies")>
-        <cfset cleanup = listAppend(cleanup, ptr.scopeCache[ATTRIBUTES.name].dependancies)>
+    <cfif attributes.scope neq "file" and structKeyExists(ptr.scopeCache,attributes.name)>
+      <cfif structKeyExists(ptr.scopeCache[attributes.name],"dependancies")>
+        <cfset cleanup = listAppend(cleanup, ptr.scopeCache[attributes.name].dependancies)>
       </cfif>
     </cfif>
-    <cfif ATTRIBUTES.scope neq "file">
-      <cfset ptr.scopeCache[ATTRIBUTES.name] = structNew()>
-      <cfif not isDefined("ATTRIBUTES.data")>
-        <cfset ptr.scopeCache[ATTRIBUTES.name].value = thistag.generatedcontent>
+    <cfif attributes.scope neq "file">
+      <cfset ptr.scopeCache[attributes.name] = structNew()>
+      <cfif not isDefined("attributes.data")>
+        <cfset ptr.scopeCache[attributes.name].value = thistag.generatedcontent>
       <cfelse>
-        <cfset ptr.scopeCache[ATTRIBUTES.name].value = ATTRIBUTES.data>
+        <cfset ptr.scopeCache[attributes.name].value = attributes.data>
       </cfif>
-      <cfset ptr.scopeCache[ATTRIBUTES.name].timeout = ATTRIBUTES.timeout>
-      <cfset ptr.scopeCache[ATTRIBUTES.name].dependancies = ATTRIBUTES.dependancies>
-      <cfset ptr.scopeCache[ATTRIBUTES.name].hitCount = 0>
-      <cfset ptr.scopeCache[ATTRIBUTES.name].created = now()>
-      <cfif isDefined("ATTRIBUTES.r_Data")>
-        <cfset caller[ATTRIBUTES.r_Data] = ptr.scopeCache[ATTRIBUTES.name].value>
+      <cfset ptr.scopeCache[attributes.name].timeout = attributes.timeout>
+      <cfset ptr.scopeCache[attributes.name].dependancies = attributes.dependancies>
+      <cfset ptr.scopeCache[attributes.name].hitCount = 0>
+      <cfset ptr.scopeCache[attributes.name].created = now()>
+      <cfif isDefined("attributes.r_Data")>
+        <cfset caller[attributes.r_Data] = ptr.scopeCache[attributes.name].value>
       </cfif>
     <cfelse>
       <cfset data = structNew()>
-      <cfif not isDefined("ATTRIBUTES.data")>
+      <cfif not isDefined("attributes.data")>
         <cfset data.value = thistag.generatedcontent>
       <cfelse>
-        <cfset data.value = ATTRIBUTES.data>
+        <cfset data.value = attributes.data>
       </cfif>
-      <cfset data.timeout = ATTRIBUTES.timeout>
-      <cfset data.dependancies = ATTRIBUTES.dependancies>
+      <cfset data.timeout = attributes.timeout>
+      <cfset data.dependancies = attributes.dependancies>
       <cfset data.hitCount = 0>
       <cfset data.created = now()>
-      <cflock name="#ATTRIBUTES.file#" type="exclusive" timeout="30">
+      <cflock name="#attributes.file#" type="exclusive" timeout="30">
         <cfwddx action="cfml2wddx" input="#data#" output="packet">
-        <cffile action="write" file="#ATTRIBUTES.file#" output="#packet#" charset="UTF-8">
+        <cffile action="write" file="#attributes.file#" output="#packet#" charset="UTF-8">
       </cflock>
-      <cfif isDefined("ATTRIBUTES.r_Data")>
-        <cfset caller[ATTRIBUTES.r_Data] = data.value>
+      <cfif isDefined("attributes.r_Data")>
+        <cfset caller[attributes.r_Data] = data.value>
       </cfif>
     </cfif>
   </cfif>

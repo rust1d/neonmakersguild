@@ -8,7 +8,7 @@ component extends=BaseModel accessors=true {
   property name='ui_type'      type='string'   sqltype='varchar';
   property name='ui_dla'       type='date';
 
-  belongs_to(class: 'User',  key: 'ui_usid', relation: 'us_usid');
+  belongs_to(class: 'Users',  key: 'ui_usid', relation: 'us_usid');
 
   variables.image_longest_side = 1600; // ALL IMAGES WILL BE RESIZED BEFORE UPLOAD TO CDN
   variables.thumbnail_size = 300; // ALL IMAGES WILL BE RESIZED BEFORE UPLOAD TO CDN

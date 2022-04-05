@@ -1,6 +1,6 @@
 <cfscript>
   usid = router.decode('usid');
-  mUser = new app.models.User();
+  mUser = new app.models.Users();
   if (usid) mUser = mUser.find(usid);
 
   if (form.keyExists('btnSubmit')) {

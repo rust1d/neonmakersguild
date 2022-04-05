@@ -1,39 +1,59 @@
-<cfsetting enablecfoutputonly="true">
-<cfprocessingdirective pageencoding="utf-8" />
+<cfsetting enablecfoutputonly=true>
+<cfprocessingdirective pageencoding="utf-8">
+<!---
+  Name         : /client/admin/comments.cfm
+  Author       : Raymond Camden
+  Created      : 04/06/06
+  Last Updated : 7/13/06
+  History      : Support entrytitle (rkc 7/7/06)
+         : Show link (rkc 7/13/06)
+--->
 
-<cfparam name="FORM.search" default="">
+<cfparam name="form.search" default="">
+
 <!--- handle deletes --->
-<cfif structKeyExists(FORM, "mark")>
-	<cfloop index="u" list="#form.mark#">
-		<cfset SESSION.BROG.deleteComment(u)>
-	</cfloop>
+<cfif structKeyExists(form, "mark")>
+  <cfloop index="u" list="#form.mark#">
+    <cfset application.blog.deleteComment(u)>
+  </cfloop>
 </cfif>
 
-<cfif len(trim(FORM.search))>
-	<cfset comments = SESSION.BROG.getComments(sortdir="desc",search=FORM.search)>
+<cfif len(trim(form.search))>
+  <cfset comments = application.blog.getComments(sortdir="desc",search=form.search)>
 <cfelse>
-	<cfset comments = SESSION.BROG.getComments(sortdir="desc")>
+  <cfset comments = application.blog.getComments(sortdir="desc")>
 </cfif>
 
 <cfmodule template="../tags/adminlayout.cfm" title="Comments">
-	<cfoutput>
-	<p><cfif len(trim(form.search))>Your search returned<cfelse>Your blog currently has</cfif> #udfAddSWithCnt("comment", comments.RecordCount)#.</p>
-	<p>
-	<form action="x.comments.cfm" method="post">
-		Filter By Keyword
-		<input type="text" name="search" value="#FORM.search#">
-		<cfinvoke component="#APPLICATION.CFC.CONTROLS#" method="create" type="juiButton" class="ui-button-text-tiny" src="bih-icon bih-icon-filteradd" submit="true" title="Filter By Keyword"/>
-	</form>
-	</p>
-	</cfoutput>
-	<cfmodule template="../tags/datatable.cfm" data="#comments#" editlink="#APPLICATION.PATH.ROOT#/#qryBrewer.us_user#/blog/comment/p.brewer.cfm" label="Comments" linkcol="comment" defaultsort="posted" defaultdir="desc" showAdd="false">
-		<cfmodule template="../tags/datacol.cfm" label="<img title='View' class='bih-icon bih-icon-popout' src='#APPLICATION.PATH.IMG#/trans.gif'>" data="<a href=""#APPLICATION.PATH.ROOT#/index.cfm?mode=entry&entry=$entryidfk$##c$id$""><img title='View' class='bih-icon bih-icon-popout' src='#APPLICATION.PATH.IMG#/trans.gif'></a>" sort="false" width="25"/>
-		<cfmodule template="../tags/datacol.cfm" colname="name" label="Name" />
-		<cfmodule template="../tags/datacol.cfm" colname="entrytitle" label="Entry" left="100" />
-		<cfmodule template="../tags/datacol.cfm" colname="posted" label="Posted" format="datetime" />
-		<cfmodule template="../tags/datacol.cfm" colname="comment" label="Comment" left="200"/>
-	</cfmodule>
+
+  <cfoutput>
+  <p>
+  Your blog currently has
+    <cfif comments.recordCount gt 1>
+    #numberFormat(comments.recordcount)# comments.
+    <cfelseif comments.recordCount is 1>
+    1 comment.
+    <cfelse>
+    0 comments.
+    </cfif>
+  </p>
+
+  <p>
+  <form action="comments.cfm" method="post">
+  <input type="text" name="search" value="#form.search#"> <input type="submit" value="Filter by Keyword">
+  </form>
+  </p>
+  </cfoutput>
+
+  <cfmodule template="../tags/datatable.cfm" data="#comments#" editlink="comment.cfm" label="Comments"
+        linkcol="comment" defaultsort="posted" defaultdir="desc" showAdd="false">
+    <cfmodule template="../tags/datacol.cfm" colname="name" label="Name" width="150" />
+    <cfmodule template="../tags/datacol.cfm" colname="entrytitle" label="Entry" width="300" left="100" />
+    <cfmodule template="../tags/datacol.cfm" colname="posted" label="Posted" format="datetime" width="150" />
+    <cfmodule template="../tags/datacol.cfm" colname="comment" label="Comment" left="100"/>
+    <cfmodule template="../tags/datacol.cfm" label="View" data="<a href=""#application.rooturl#/index.cfm?mode=entry&entry=$bco_benid$##c$id$"">View</a>" sort="false"/>
+  </cfmodule>
 
 </cfmodule>
 
-<cfsetting enablecfoutputonly="false" />
+<cfsetting enablecfoutputonly=false>

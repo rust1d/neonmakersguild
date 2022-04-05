@@ -2,16 +2,17 @@
 <cfsetting showdebugoutput="false">
 
 <!---prevent load of config file--->
-<cfif listlast(CGI.script_name, "/") is "mobile.ini.cfm">
+<cfif listlast(cgi.script_name, "/") is "mobile.ini.cfm">
   <cfabort>
 </cfif>
 
 <!---include primary application--->
-<cfinclude template="../APPLICATION.BLOG.cfm">
+<cfinclude template="../Application.cfm">
 
-<cfif not isDefined('SESSION.BROGMobile') or isDefined('URL.reinit')>
-  <cfset SESSION.BROGMobile = createObject("component","components.blogMobile").init(SESSION.BROG.getProperty("name"))>
+<cfif not isDefined('application.blogMobile') or isDefined('url.reinit')>
+  <cfset application.blogMobile = createObject("component","components.blogMobile").init(application.blog.getProperty("name"))>
 </cfif>
 
-<cfset APPLICATION.BLOG.primaryTheme = "b"><!---SESSION.BROGMobile.getProperty("theme")--->
-<cfset APPLICATION.BLOG.mobilePageMax = 15>
+<cfset application.primaryTheme = "b"><!---application.blogMobile.getProperty("theme")--->
+<cfset application.mobilePageMax = 15>
+

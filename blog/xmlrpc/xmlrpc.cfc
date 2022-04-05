@@ -7,11 +7,11 @@
       - added support for fault packages to XMLRPC2CFML
       - added a little error checking
       - added support for typeless values
-      - added support for paranthetical tokens in addition to $token
+      - added support for paranthetical bsu_tokens in addition to $bsu_token
     - 2003-10-5:
       - added support for namespaced deserialization
   AUTHOR: Roger Benningfield (roger@agincourtmedia.com)
-  WEBLOG: http://admin.support.journURL.com/
+  WEBLOG: http://admin.support.journurl.com/
   This code is free of charge and without warranty. Use at your own risk.
   NOTE: If you make significant modifications or improvements to this component,
     send the resulting code to the author.

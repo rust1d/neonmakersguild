@@ -1,167 +1,168 @@
+﻿
 
-
-<cfif StructKeyExists(URL, "nomobile")>
-	<cfset redirLink = APPLICATION.PATH.ROOT>
-	<cftry>
-		<cfif StructKeyExists(URL, "postID")>
-			<cfset redirLink = SESSION.BROG.makeLink(URL.postID)>
-			<cfset SESSION.nomobile = true>
-		</cfif>
-		<cfcatch type="any"></cfcatch>
-	</cftry>
-	<cflocation url="#redirLink#" addtoken="true">
+<cfif structKeyExists(url, "nomobile")>
+  <cfset redirLink = application.rooturl>
+  <cftry>
+    <cfif structKeyExists(url, "postID")>
+      <cfset redirLink = application.blog.makeLink(url.postID)>
+      <cfset session.nomobile = true>
+    </cfif>
+    <cfcatch type="any"></cfcatch>
+  </cftry>
+  <cflocation url="#redirLink#" addtoken="true">
 </cfif>
 
 
-<cfset urlVars=reReplaceNoCase(trim(CGI.path_info), '.+\.cfm/? *', '')>
+<cfset urlVars=reReplaceNoCase(trim(cgi.path_info), '.+\.cfm/? *', '')>
 <cfif listlen(urlVars, '/') GT 1>
-	<!---attempt to load directly into a post--->
-	<cfmodule template="../tags/getmode.cfm" r_params="chkparams"/>
-	<cfset thePostID = SESSION.BROG.getEntries(chkparams)>
+  <!---attempt to load directly into a post--->
+  <cfmodule template="../tags/getmode.cfm" r_params="chkparams"/>
+  <cfset thePostID = application.blog.getEntries(chkparams)>
 
-	<!---we got a query back.. SES url contained a post--->
-	<cfif isQuery(thePostID.entries)>
-		<!---have to do this because mobile breaks on ses urls--->
-		<cfset SESSION.loadPost = thePostID.entries.id>
-		<cfheader statuscode="307" statustext="Temporary Redirect">
-		<meta http-equiv="refresh" content="0;url=<cfoutput>http://#CGI.SERVER_NAME##CGI.SCRIPT_NAME#</cfoutput>" />
-		<cfabort>
-	</cfif>
-<cfelseif isDefined('SESSION.loadPost')>
-	<cfset loadpost = SESSION.loadPost>
-	<cfset void = structDelete(session, "loadpost")>
+  <!---we got a query back.. SES url contained a post--->
+  <cfif isQuery(thePostID.entries)>
+    <!---have to do this because mobile breaks on ses urls--->
+    <cfset session.loadPost = thePostID.entries.id>
+    <cfheader statuscode="307" statustext="Temporary Redirect">
+    <meta http-equiv="refresh" content="0;url=<cfoutput>http://#cgi.SERVER_NAME##cgi.SCRIPT_NAME#</cfoutput>" />
+    <cfabort>
+  </cfif>
+<cfelseif isDefined('session.loadPost')>
+  <cfset loadpost = session.loadPost>
+  <cfset void = structDelete(session, "loadpost")>
 </cfif>
 
 
-<cfset isGAEnabled = len(SESSION.BROGMobile.getProperty("gaAccount"))>
+<cfset isGAEnabled = len(application.blogMobile.getProperty("gaAccount"))>
 
 
 <!DOCTYPE html>
 <html>
-	<head>
-	<title><cfoutput>#SESSION.BROG.getProperty("blogTitle")#</cfoutput></title>
+  <head>
+  <title><cfoutput>#application.blog.getProperty("blogTitle")#</cfoutput></title>
 
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a4/jquery.mobile-1.0a4.min.css" />
-	<script src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
-	<script src="http://code.jquery.com/mobile/1.0a4/jquery.mobile-1.0a4.min.js"></script>
+  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css" />
+  <script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+  <script src="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.js"></script>
 
-	<script src="./js/jquery.cookie.js"></script>
-	<script src="./js/jquery-textfill-0.1.js"></script>
-    	<script>
-		// Google Analytics tracker for this page view
-		<cfif isGAEnabled>
-		var _gaq = _gaq || [];
-		_gaq.push(['_setAccount', '<cfoutput>#SESSION.BROGMobile.getProperty("gaAccount")#</cfoutput>']);
-		_gaq.push(['_trackPageview']);
-		</cfif>
+  <script src="./js/jquery.cookie.js"></script>
+  <script src="./js/jquery-textfill-0.1.js"></script>
+      <script>
+    // Google Analytics tracker for this page view
+    <cfif isGAEnabled>
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', '<cfoutput>#application.blogMobile.getProperty("gaAccount")#</cfoutput>']);
+    _gaq.push(['_trackPageview']);
+    </cfif>
 
         $(function(){
 
-			// Google Analytics click trackers
-			<cfif isGAEnabled>
-			$('a[href]').click(function(){
-				var linksto = this.href;
-				var fullhref = $(this).attr('fullhref');
-				if (linksto.match(/\.(cfm)/)) _gaq.push(['_trackPageview',fullhref]);
-			});
-			</cfif>
+      // Google Analytics click trackers
+      <cfif isGAEnabled>
+      $('a[href]').click(function(){
+        var linksto = this.href;
+        var fullhref = $(this).attr('fullhref');
+        if (linksto.match(/\.(cfm)/)) _gaq.push(['_trackPageview',fullhref]);
+      });
+      </cfif>
 
-			// add shrink text to display so blog post title will fit into designated area
+      // add shrink text to display so blog post title will fit into designated area
             $('div').live('pageshow', function(){
                 $('.jtextfill').textfill({ maxFontPixels: 24 });
             });
 
-			// leave mobile version
-			$("#exitFooterButton").live('click tap', function(e) {
-				var postID = '';
-				var theURL = '';
-				var theUrlArray = '';
+      // leave mobile version
+      $("#exitFooterButton").live('click tap', function(e) {
+        var postID = '';
+        var theURL = '';
+        var theUrlArray = '';
 
-				// viewing a post... lets exit to it
-				if ($.mobile.activePage.attr('data-url').indexOf("postDetail" != -1)){
-					theURL = $.mobile.activePage.attr('data-url');
-					theUrlArray = theURL.split('=');
-					postID = '&postID=' + theUrlArray[1]
-				}
-				document.location.href = './index.cfm?nomobile=1' + postID;
-				e.preventDefault();
-			});
-			<cfif isDefined('loadPost')>
-				$.mobile.changePage({<cfoutput>url: './postDetail.cfm', data: 'post=#loadpost#', type: 'get'</cfoutput>})
-			</cfif>
+        // viewing a post... lets exit to it
+        if ($.mobile.activePage.attr('data-url').indexOf("postDetail" != -1)){
+          theURL = $.mobile.activePage.attr('data-url');
+          theUrlArray = theURL.split('=');
+          postID = '&postID=' + theUrlArray[1]
+        }
+        document.location.href = './index.cfm?nomobile=1' + postID;
+        e.preventDefault();
+      });
+      <cfif isDefined('loadPost')>
+        $.mobile.changePage({<cfoutput>url: './postDetail.cfm', data: 'post=#loadpost#', type: 'get'</cfoutput>})
+      </cfif>
 
         });
-    	</script>
+      </script>
 
-		<!---custom css to handle footer icons--->
-		<style type="text/css">
-			.nav-footer-custom-icons .ui-btn .ui-btn-inner { padding-top: 35px !important; }
-			.nav-footer-custom-icons .ui-btn .ui-icon { width: 30px!important; height: 30px!important; margin-left: -15px !important; box-shadow: none!important; -moz-box-shadow: none!important; -webkit-box-shadow: none!important; -webkit-border-radius: none !important; border-radius: none !important; }
-			#aboutFooterButton .ui-icon { background:  url(./assets/icons/84-lightbulb.png) 50% 50% no-repeat;  background-size: 14px 21px; }
-			#categoryFooterButton .ui-icon { background:  url(./assets/icons/104-index-cards.png) 50% 50% no-repeat;  background-size: 26px 17px; }
-			#exitFooterButton .ui-icon { background:  url(./assets/icons/113-navigation.png) 50% 50% no-repeat;  background-size: 23px 23px; }
-			#searchFooterButton .ui-icon { background:  url(./assets/icons/06-magnify.png) 50% 50% no-repeat;  background-size: 24px 24px; }
+    <!---custom css to handle footer icons--->
+    <style type="text/css">
+      .nav-footer-custom-icons .ui-btn .ui-btn-inner { padding-top: 35px !important; }
+      .nav-footer-custom-icons .ui-btn .ui-icon { width: 30px!important; height: 30px!important; margin-left: -15px !important; box-shadow: none!important; -moz-box-shadow: none!important; -webkit-box-shadow: none!important; -webkit-border-radius: none !important; border-radius: none !important; }
+      #aboutFooterButton .ui-icon { background:  url(./assets/icons/84-lightbulb.png) 50% 50% no-repeat;  background-size: 14px 21px; }
+      #categoryFooterButton .ui-icon { background:  url(./assets/icons/104-index-cards.png) 50% 50% no-repeat;  background-size: 26px 17px; }
+      #exitFooterButton .ui-icon { background:  url(./assets/icons/113-navigation.png) 50% 50% no-repeat;  background-size: 23px 23px; }
+      #searchFooterButton .ui-icon { background:  url(./assets/icons/06-magnify.png) 50% 50% no-repeat;  background-size: 24px 24px; }
 
-			/* wrap text in pre tag (code output)*/
-			pre {
-			  white-space: pre-wrap;       /* css-3 */
-			  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-			  white-space: -pre-wrap;      /* Opera 4-6 */
-			  white-space: -o-pre-wrap;    /* Opera 7 */
-			  word-wrap: break-word;       /* Internet Explorer 5.5+ */
-			}
-		</style>
+      /* wrap text in pre tag (code output)*/
+      pre {
+        white-space: pre-wrap;       /* css-3 */
+        white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+        white-space: -pre-wrap;      /* Opera 4-6 */
+        white-space: -o-pre-wrap;    /* Opera 7 */
+        word-wrap: break-word;       /* Internet Explorer 5.5+ */
+      }
+    </style>
     </head>
 </head>
-<body class="ui-body-b">
+<body>
 
-<cfparam name="URL.page" default="1" >
+<cfparam name="url.page" default="1" >
 
-<cfif URL.page EQ 1>
-	<!---this is here for initial load --->
-	<cfset params.startrow = 1>
-	<cfset params.maxEntries = APPLICATION.BLOG.mobilePageMax>
-	<cfset articleData = SESSION.BROG.getEntries(params)>
-	<cfset articles = articleData.entries>
+<cfif url.page EQ 1>
+  <!---this is here for initial load --->
+  <cfset params.startrow = 1>
+  <cfset params.maxEntries = application.mobilePageMax>
+  <cfset articleData = application.blog.getEntries(params)>
+  <cfset articles = articleData.entries>
 
-	<!---determin max numer of pages--->
-	<cfset pages = ceiling(articleData.totalEntries/params.maxEntries)>
+  <!---determin max numer of pages--->
+  <cfset pages = ceiling(articleData.totalEntries/params.maxEntries)>
 </cfif>
 
-<cfset curPage = URL.page>
+<cfset curPage = url.page>
 
 
 
 
-<div data-role="page" data-theme="<cfoutput>#APPLICATION.BLOG.primaryTheme#</cfoutput>">
+<div data-role="page" data-theme="<cfoutput>#application.primaryTheme#</cfoutput>">
 
 
-	<cf_header title="#SESSION.BROG.getProperty("blogTitle")#" showHome="#curPage#" id="blogHeader">
+  <cf_header title="#application.blog.getProperty("blogTitle")#" showHome="#curPage#" id="blogHeader">
 
-	<div data-role="content" data-theme="a">
-		<ul data-role="listview">
-			<cfinclude template="posts.cfm">
-		</ul>
-	</div><!-- /content -->
-	<!---paging nav--->
-	<fieldset class="ui-grid-a">
-		<div class="ui-block-a">
-			<cfif curPage NEQ 1>
-				<a href="index.cfm?page=<cfoutput>#curPage-1#</cfoutput>" data-role="button"  data-direction="reverse" data-icon="arrow-l">Previous</a>
-			<cfelse>
-				&nbsp;
-			</cfif>
-		</div>
-		<div class="ui-block-b">
-			<cfif curPage NEQ pages>
-				<a href="index.cfm?page=<cfoutput>#curPage+1#</cfoutput>" data-role="button" data-icon="arrow-r" data-iconpos="right">More</a></div>
-			<cfelse>
-				&nbsp;
-			</cfif>
-	</fieldset>
+  <div data-role="content" data-theme="c">
+    <ul data-role="listview">
 
-	<cf_footer />
-	<!-- /footer -->
+      <cfinclude template="posts.cfm">
+    </ul>
+  </div><!-- /content -->
+  <!---paging nav--->
+  <fieldset class="ui-grid-<cfoutput>#application.primaryTheme#</cfoutput>">
+    <div class="ui-block-<cfoutput>#application.primaryTheme#</cfoutput>">
+      <cfif curPage NEQ 1>
+        <a href="index.cfm?page=<cfoutput>#curPage-1#</cfoutput>" data-role="button"  data-direction="reverse" data-icon="arrow-l">Previous</a>
+      <cfelse>
+        &nbsp;
+      </cfif>
+    </div>
+    <div class="ui-block-<cfoutput>#application.primaryTheme#</cfoutput>">
+      <cfif curPage NEQ pages>
+        <a href="index.cfm?page=<cfoutput>#curPage+1#</cfoutput>" data-role="button" data-icon="arrow-r" data-iconpos="right">More</a></div>
+      <cfelse>
+        &nbsp;
+      </cfif>
+  </fieldset>
+
+  <cf_footer />
+  <!-- /footer -->
 
 
 </div><!-- /page -->

@@ -2,7 +2,7 @@ component accessors=true {
   public void function login(required string email, required string password) {
     try {
       if (application.utility.isEmail(email)) {
-        var qryUser = new app.models.User().search(us_email: email);
+        var qryUser = new app.models.Users().search(us_email: email);
         if (qryUser.len()==1) {
           if (application.bcrypt.checkpw(password, qryUser.us_password)) {
             sessionize_user(qryUser);

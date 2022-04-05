@@ -1,13 +1,13 @@
-DROP procedure IF EXISTS user_delete;
+DROP procedure IF EXISTS users_delete;
 
 delimiter ;;
 
-CREATE PROCEDURE user_delete(
+CREATE PROCEDURE users_delete(
   IN _usid integer
 )
 BEGIN
   DELETE
-    FROM user
+    FROM users
    WHERE us_usid = _usid;
 
   SELECT ROW_COUNT() AS delete_count;

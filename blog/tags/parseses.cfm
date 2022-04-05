@@ -1,5 +1,5 @@
-<cfsetting enablecfoutputonly="true">
-<cfprocessingdirective pageencoding="utf-8" />
+<cfsetting enablecfoutputonly=true>
+<cfprocessingdirective pageencoding="utf-8">
 <!---
   Name         : parseses.cfm
   Author       : Raymond Camden
@@ -20,7 +20,7 @@
  */
 function parseMySES() {
   //line below from Mike D.
-  var urlVars=reReplaceNoCase(trim(CGI.path_info), '.+\.cfm/? *', '');
+  var urlVars=reReplaceNoCase(trim(cgi.path_info), '.+\.cfm/? *', '');
   var r = structNew();
   var theLen = listLen(urlVars,"/");
 
@@ -29,7 +29,7 @@ function parseMySES() {
   //handles categories
   if(theLen is 1) {
       urlVars = replace(urlVars, "/","");
-      r.bca_name = urlVars;
+      r.bca_category = urlVars;
       return r;
   }
 
@@ -49,57 +49,81 @@ function parseMySES() {
   return r;
 }
 </cfscript>
-<!--- TRY TO LOAD MY INFO FROM THE URL ... --->
+
+<!--- Try to load my info from the URL ... --->
 <cfset sesInfo = parseMySES()>
-<!--- I DON'T HAVE THE RIGHT INFO, SO WE ARE OUTA HERE! --->
+
+<!--- I don't have the right info, so we are outa here! --->
 <cfif structIsEmpty(sesInfo)>
-  <cfsetting enablecfoutputonly="false" />
+  <cfsetting enablecfoutputonly=false>
   <cfexit method="exitTag">
 </cfif>
 
 <cfset params = structNew()>
-<cfif structKeyExists(sesInfo, "bca_name")><!--- FIRST SEE IF WE HAVE A CATEGORY --->
-  <cfif len(trim(sesInfo.bca_name)) and len(trim(sesInfo.bca_name)) lte 50>
-    <cfset bca_bcaid = SESSION.BROG.getCategoryByAlias(sesInfo.bca_name)>
+
+<!--- First see if we have a category --->
+<cfif structKeyExists(sesInfo, "bca_category")>
+
+  <cfif len(trim(sesInfo.bca_category)) and len(trim(sesInfo.bca_category)) lte 50>
+    <!--- translate back --->
+    <cfset bca_bcaid = application.blog.getCategoryByAlias(sesInfo.bca_category)>
     <cfif len(bca_bcaid)>
-      <cfset URL.mode = "cat">
-      <cfset URL.catid = bca_bcaid>
+      <cfset url.mode = "cat">
+      <cfset url.catid = bca_bcaid>
     </cfif>
   </cfif>
-<cfelseif structKeyExists(sesInfo, "postedby")><!--- ELSE IF WE HAVE A BLOG POSTER/USER/AUTHOR --->
-  <cfif len(trim(sesInfo.postedby)) and len(trim(sesInfo.postedby)) lte 50><!--- TRANSLATE BACK - GET USERNAME BASED ON NAME --->
-    <!--- <cfset username = SESSION.BROG.getUserByName(sesInfo.postedby)> WE ARE NOT GOING TO USE REAL NAMES HERE, JUST USERNAMES--->
-    <cfset username = sesInfo.postedby>
+
+<!--- BEGIN BRAUNSTEIN MOD 2/5/2010 --->
+<!--- else if we have a blog poster/user/author --->
+<cfelseif structKeyExists(sesInfo, "postedby")>
+
+  <cfif len(trim(sesInfo.postedby)) and len(trim(sesInfo.postedby)) lte 50>
+    <!--- translate back - get username based on name --->
+    <cfset username = application.blog.getUserByName(sesInfo.postedby)>
     <cfif len(username)>
-      <cfset URL.mode = "postedby">
-      <cfset URL.postedby = username>
+      <cfset url.mode = "postedby">
+      <cfset url.postedby = username>
     </cfif>
   </cfif>
-<cfelseif not structKeyExists(sesInfo, "title")><!--- BY MONTH --->
-  <cfset URL.month = sesInfo.month>
-  <cfset URL.year = sesInfo.year>
+
+<!--- END BRAUNSTEIN MOD 2/5/2010 --->
+
+<!--- By month --->
+<cfelseif not structKeyExists(sesInfo, "title")>
+
+  <cfset url.month = sesInfo.month>
+  <cfset url.year = sesInfo.year>
+
   <cfif structKeyExists(sesInfo, "day")>
-    <cfset URL.day = sesInfo.day>
-    <cfset URL.mode = "day">
+    <cfset url.day = sesInfo.day>
+    <cfset url.mode = "day">
   <cfelse>
-    <cfset URL.mode = "month">
+    <cfset url.mode = "month">
   </cfif>
-<cfelse><!--- THIS IS A FULL ENTRY --->
-  <!--- THE BLOG CHECKS, BUT LETS BE EXTRA CAREFUL --->
+
+<!--- This is a full entry --->
+<cfelse>
+
+  <!--- The blog checks, but lets be extra careful --->
   <cfif not isNumeric(sesInfo.year) or not isNumeric(sesInfo.month) or not (sesInfo.month gte 1 and sesInfo.month lte 12) or not len(trim(sesInfo.title))>
-    <cfsetting enablecfoutputonly="false" />
+    <cfsetting enablecfoutputonly=false>
     <cfexit method="exitTag">
   </cfif>
+
   <cfset params.byMonth = sesInfo.month>
   <cfset params.byYear = sesInfo.year>
   <cfif structKeyExists(sesInfo,"day")>
     <cfset params.byDay = sesInfo.day>
   </cfif>
+
   <cfset params.byAlias = sesInfo.title>
-  <cfset URL.mode = "alias">
-  <cfset URL.alias = params.byAlias>
+  <cfset url.mode = "alias">
+  <cfset url.alias = params.byAlias>
+
 </cfif>
+
 <!--- Copy to caller --->
 <cfset caller.params = params>
-<cfsetting enablecfoutputonly="false" />
+
+<cfsetting enablecfoutputonly=false>
 <cfexit method="exitTag">

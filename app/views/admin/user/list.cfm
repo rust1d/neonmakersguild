@@ -1,5 +1,5 @@
 <cfscript>
-  arrUsers = utility.preserveNulls(new app.models.User().search());
+  arrUsers = utility.preserveNulls(new app.models.Users().search());
 </cfscript>
 
 <cfoutput>
@@ -12,7 +12,7 @@
     </div>
     <div class='row thumbnail-lg'>
       <cfloop array='#arrUsers#' item='row'>
-        <cfset mUser = new app.models.User(row) />
+        <cfset mUser = new app.models.Users(row) />
         <div class='col-md-2 col-sm-4'>
           <img class='img-thumbnail' src='#mUser.profile_image().src()#' />
           <div class=''>

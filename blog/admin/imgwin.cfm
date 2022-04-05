@@ -1,34 +1,56 @@
-<cfsetting enablecfoutputonly="true">
-<cfprocessingdirective pageencoding="utf-8" />
-<cfoutput><link rel="stylesheet" type="text/css" href="#APPLICATION.PATH.ROOT#/css/popout.css" /></cfoutput>
+<cfsetting enablecfoutputonly=true>
+<cfprocessingdirective pageencoding="utf-8">
+<!---
+  Name         : /client/admin/imgwin.cfm
+  Author       : Raymond Camden
+  Created      : 9/15/06
+  Last Updated : 12/14/06
+  History      : Use imageroot (rkc 12/14/06)
+--->
+
+<cfif len(application.imageroot)>
+  <cfset sImgRoot = "../" & application.imageroot />
+<cfelse>
+  <cfset sImgRoot = "../images/" />
+</cfif>
+
+<cfset sImgRoot = application.utils.fixUrl(sImgRoot) />
+<cfset imageDirectory = expandPath(sImgRoot) />
 
 <cfif structKeyExists(form, "upload") and len(trim(form.newimage))>
-	<cfset imageDirectory = udfMakeDirIfNot("#APPLICATION.DISK.BLOGIMG#\#REQUEST.BLOG#") />
-	<cffile action="upload" filefield="form.newimage" destination="#imageDirectory#" nameconflict="makeunique">
-	<cfif not listFindNoCase("gif,jpg,png", cffile.serverFileExt) OR NOT IsImage(cffile)>
-		<cfset notImageFlag = true>
-		<cffile action="delete" file="#cffile.serverDirectory#/#cffile.serverFile#">
-	<cfelse>
-		<cfset fileName = cffile.serverFile>
-		<cfoutput>
-		<script>
-			opener.newImage("#APPLICATION.PATH.BLOGIMG#/#REQUEST.BLOG#/#jsStringFormat(filename)#");
-			window.close();
-		</script>
-		</cfoutput>
-		<cfabort>
-	</cfif>
+
+  <cfif not directoryExists(imageDirectory)>
+    <cfdirectory action="create" directory="#imageDirectory#">
+  </cfif>
+
+  <cffile action="upload" filefield="form.newimage" destination="#imageDirectory#" nameconflict="makeunique">
+
+  <cfif not listFindNoCase("gif,jpg,png", cffile.serverFileExt)>
+    <cfset notImageFlag = true>
+    <cffile action="delete" file="#cffile.serverDirectory#/#cffile.serverFile#">
+  <cfelse>
+    <cfset fileName = cffile.serverFile>
+    <cfoutput>
+    <script>
+    opener.newImage('#jsStringFormat(filename)#');
+    window.close();
+    </script>
+    </cfoutput>
+    <cfabort>
+  </cfif>
+
 </cfif>
-<cfoutput>
 
 <cfif structKeyExists(variables, "notImageFlag")>
-	<div class="pad10"><div class="ui-state-default ui-state-error ui-corner-all pad10">File '#cffile.serverFile#' is not a valid image.</div></div>
+  <cfoutput>
+  File upload wasn't a valid image.
+  </cfoutput>
 </cfif>
-<div class="page_head bih-grid-caption pad10 ui-widget-header ui-corner-all">#REQUEST.BLOG#'s Image Library</div>
-<br>
-<h3>Select Image to Upload</h3>
-<form action="x.imgwin.cfm" method="post" enctype="multipart/form-data">
-	<input type="file" name="newimage"> <input type="submit" name="upload" value="Upload Image">
+
+<cfoutput>
+<form action="imgwin.cfm" method="post" enctype="multipart/form-data">
+<input type="file" name="newimage"> <input type="submit" name="upload" value="Upload Image">
 </form>
 </cfoutput>
-<cfsetting enablecfoutputonly="false" />
+
+<cfsetting enablecfoutputonly=false>

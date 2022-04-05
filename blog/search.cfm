@@ -1,5 +1,5 @@
-<cfsetting enablecfoutputonly="true">
-<cfprocessingdirective pageencoding="utf-8" />
+<cfsetting enablecfoutputonly=true>
+<cfprocessingdirective pageencoding="utf-8">
 <!---
   Name         : search.cfm
   Author       : Raymond Camden
@@ -11,55 +11,55 @@
 --->
 
 <!--- allow for /xxx shortcut --->
-<cfif CGI.path_info is not "/search.cfm">
-  <cfset searchAlias = listLast(CGI.path_info, "/")>
+<cfif cgi.path_info is not "/search.cfm">
+  <cfset searchAlias = listLast(cgi.path_info, "/")>
 <cfelse>
   <cfset searchAlias = "">
 </cfif>
 
-<cfif StructKeyExists(URL, "search")>
-  <cfset form.search = URL.search>
+<cfif structKeyExists(url, "search")>
+  <cfset form.search = url.search>
 </cfif>
-<cfif StructKeyExists(URL, "category")>
-  <cfset form.category = URL.category>
+<cfif structKeyExists(url, "category")>
+  <cfset form.category = url.category>
 </cfif>
-<cfparam name="URL.start" default="1">
+<cfparam name="url.start" default="1">
 <cfparam name="form.search" default="#searchAlias#">
 <cfparam name="form.category" default="">
 
-<cfif not isNumeric(URL.start) or URL.start lt 1 or round(URL.start) neq URL.start>
-  <cflocation url="#APPLICATION.PATH.ROOT#/index.cfm" addToken="false">
+<cfif not isNumeric(url.start) or url.start lt 1 or round(url.start) neq url.start>
+  <cflocation url="#application.rooturl#/index.cfm" addtoken="false">
 </cfif>
 
 <cfset form.search = left(htmlEditFormat(trim(form.search)),255)>
 
-<cfset cats = SESSION.BROG.getCategories()>
+<cfset cats = application.blog.getCategories()>
 
 <cfset params = structNew()>
 <cfset params.searchTerms = form.search>
 <cfif form.category is not "">
   <cfset params.byCat = form.category>
 </cfif>
-<cfset params.startrow = URL.start>
-<cfset params.maxEntries = APPLICATION.BLOG.maxEntries>
+<cfset params.startrow = url.start>
+<cfset params.maxEntries = application.maxEntries>
 <!---// dgs: only get released items //--->
 <cfset params.releasedonly = true />
 
 <cfif len(form.search) or form.category is not "">
-  <cfset results = SESSION.BROG.getEntries(params)>
+  <cfset results = application.blog.getEntries(params)>
   <cfset searched = true>
 <cfelse>
   <cfset searched = false>
 </cfif>
 
-<cfset title = rb("search")>
+<cfset title = request.rb("search")>
 
 <cfmodule template="tags/layout.cfm" title="#title#">
 
   <cfoutput>
   <div class="date"><b>#title#</b></div>
   <div class="body">
-  <form action="#APPLICATION.PATH.ROOT#/b.search.cfm" method="post">
+  <form action="#application.rooturl#/search.cfm" method="post">
   <p>
   <cfif searched>
   You searched for <input type="text" name="search" value="#form.search#" /> in
@@ -69,7 +69,7 @@
   <select name="category">
   <option value="" <cfif form.category is "">selected="selected"</cfif>>all categories</option>
   <cfloop query="cats">
-  <option value="#bca_bcaid#" <cfif form.category is bca_bcaid>selected="selected"</cfif>>#bca_name#</option>
+  <option value="#bca_bcaid#" <cfif form.category is bca_bcaid>selected="selected"</cfif>>#bca_category#</option>
   </cfloop>
   </select><br/>
 
@@ -80,7 +80,7 @@
     <input type="submit" value="Search Again" />
     </p>
     </form>
-    <cfif results.entries.RecordCount>
+    <cfif results.entries.recordCount>
       <cfloop query="results.entries">
         <!--- remove html from result. --->
         <cfset newbody = rereplace(body, "<.*?>", "", "all")>
@@ -121,24 +121,24 @@
           </cfcatch>
         </cftry>
         <p>
-        <b><a href="#SESSION.BROG.makeLink(id)#">#newtitle#</a></b> (#APPLICATION.BLOG.localeUtils.dateLocaleFormat(posted)# #APPLICATION.BLOG.localeUtils.timeLocaleFormat(posted)#)<br />
+        <b><a href="#application.blog.makeLink(id)#">#newtitle#</a></b> (#application.localeUtils.dateLocaleFormat(posted)# #application.localeUtils.timeLocaleFormat(posted)#)<br />
         <br />
         #excerpt#
-        <cfif currentRow neq RecordCount>
+        <cfif currentRow neq recordCount>
         <hr />
         </cfif>
       </p>
       </cfloop>
-      <cfif results.totalEntries gte URL.start + APPLICATION.BLOG.maxEntries>
+      <cfif results.totalEntries gte url.start + application.maxEntries>
         <p align="right">
-        <cfif URL.start gt 1>
-          <a href="search.cfm?search=#urlEncodedFormat(form.search)#&amp;category=#form.category#&amp;start=#URL.start-APPLICATION.BLOG.maxEntries#">Previous Results</a>
+        <cfif url.start gt 1>
+          <a href="search.cfm?search=#urlEncodedFormat(form.search)#&amp;category=#form.category#&amp;start=#url.start-application.maxEntries#">Previous Results</a>
         <cfelse>
           Previous Entries
         </cfif>
         -
-        <cfif (URL.start + APPLICATION.BLOG.maxEntries-1) lt results.totalEntries>
-          <a href="search.cfm?search=#urlEncodedFormat(form.search)#&amp;category=#form.category#&amp;start=#URL.start+APPLICATION.BLOG.maxEntries#">Next Results</a>
+        <cfif (url.start + application.maxEntries-1) lt results.totalEntries>
+          <a href="search.cfm?search=#urlEncodedFormat(form.search)#&amp;category=#form.category#&amp;start=#url.start+application.maxEntries#">Next Results</a>
         <cfelse>
           Next Entries
         </cfif>

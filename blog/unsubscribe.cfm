@@ -1,49 +1,70 @@
-<cfsetting enablecfoutputonly="true">
-<cfprocessingdirective pageencoding="utf-8" />
-<cfif not isDefined("URL.email")>
-  <cflocation url = "#SESSION.BROG.getProperty("blogURL")#">
+<cfsetting enablecfoutputonly=true>
+<cfprocessingdirective pageencoding="utf-8">
+<!---
+  Name         : unsubscribe.cfm
+  Author       : Raymond Camden
+  Created      : October 20, 2004
+  Last Updated : August 20, 2006
+  History      : Removed mapping (3/20/05)
+           Adding cfsetting, procdirective (rkc 7/21/05)
+           Use of rb (rkc 8/20/06)
+  Purpose     : Allows you to unsubscribe
+--->
+
+<cfif not isDefined("url.email")>
+  <cflocation url = "#application.blog.getProperty("blogURL")#">
 </cfif>
-<cfmodule template="tags/layout.cfm" title="#rb("unsubscribe")#">
-<cfif isDefined("URL.commentID")>
-  <!--- ATTEMPT TO UNSUB --->
-  <cftry>
-    <cfset qryUnsub = SESSION.BROG.unsubscribeThread(URL.commentID, URL.email)>
-    <cfcatch>
-      <cfset qryUnsub = QueryNew("dummy") />
-    </cfcatch>
-  </cftry>
-  <cfoutput>
-  <br/>
-  <h3>Blog Comment Unsubscribe</h3>
-  <cfif qryUnsub.RecordCount>
-    <p>You will no longer be notified of new comments on this entry:</p>
-    <h4 class="pad10"><a href="#SESSION.BROG.makeLink(qryUnsub.id)#">#qryUnsub.title#</a></h4>
-  <cfelse>
-    <p>#rb("unsubscribefailure")#</p>
-  </cfif>
-  <br/>
-  <p><a href="#SESSION.BROG.getProperty("blogurl")#">#rb("returntoblog")#</a></p>
-  </cfoutput>
-<cfelseif isDefined("URL.token")>
+
+
+<cfmodule template="tags/layout.cfm" title="#request.rb("unsubscribe")#">
+
+<cfoutput>
+<div class="date">#request.rb("unsubscribe")#</div>
+</cfoutput>
+
+<cfif isDefined("url.commentID")>
+
   <!--- Attempt to unsub --->
   <cftry>
-    <cfset result = SESSION.BROG.removeSubscriber(URL.email, URL.token)>
+    <cfset result = application.blog.unsubscribeThread(url.commentID, url.email)>
     <cfcatch>
       <cfset result = false>
     </cfcatch>
   </cftry>
-  <cfoutput>
-  <br/><br/>
-  <h3>Blog Unsubscribe</h3>
+
   <cfif result>
-    <p>#rb("unsubscribeblogsuccess")#</p>
+    <cfoutput>
+    <p>#request.rb("unsubscribesuccess")#</p>
+    </cfoutput>
   <cfelse>
-    <p>#rb("unsubscribeblogfailure")#</p>
+    <cfoutput>
+    <p>#request.rb("unsubscribefailure")#</p>
+    </cfoutput>
   </cfif>
-  <br/><br/>
-  <p><a href="#SESSION.BROG.getProperty("blogurl")#">#rb("returntoblog")#</a></p>
-  </cfoutput>
+
+<cfelseif isDefined("url.bsu_token")>
+
+  <!--- Attempt to unsub --->
+  <cftry>
+    <cfset result = application.blog.removeSubscriber(url.email, url.bsu_token)>
+    <cfcatch>
+      <cfset result = false>
+    </cfcatch>
+  </cftry>
+
+  <cfif result>
+    <cfoutput>
+    <p>#request.rb("unsubscribeblogsuccess")#</p>
+    </cfoutput>
+  <cfelse>
+    <cfoutput>
+    <p>#request.rb("unsubscribeblogfailure")#</p>
+    </cfoutput>
+  </cfif>
+
 </cfif>
-<cfoutput></cfoutput>
+
+<cfoutput><p><a href="#application.blog.getProperty("blogurl")#">#request.rb("returntoblog")#</a></p></cfoutput>
+
 </cfmodule>
-<cfsetting enablecfoutputonly="false" />
+<cfsetting enablecfoutputonly=false>

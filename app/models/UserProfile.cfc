@@ -7,7 +7,7 @@ component extends=BaseModel accessors=true {
   property name='up_location'   type='string'   sqltype='varchar';
   property name='up_dla'        type='date';
 
-  belongs_to(class: 'User',  key: 'up_usid', relation: 'us_usid');
+  belongs_to(class: 'Users',  key: 'up_usid', relation: 'us_usid');
 
   public query function search(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;

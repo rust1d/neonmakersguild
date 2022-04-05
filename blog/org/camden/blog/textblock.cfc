@@ -1,23 +1,39 @@
+<!---
+  Name         : textblock
+  Author       : Raymond Camden
+  Created      :
+  Last Updated : August 22, 2006
+  History      : Updates for Oracle and username/password added by Deanna Schneider (8/22/06)
+  Purpose     : Blog CFC
+--->
 <cfcomponent output="false" displayName="Textblock">
 
+<cfset variables.username = "">
+<cfset variables.password = "">
 <cfset variables.dsn = "">
 <cfset variables.blog = "">
 
 <cffunction name="init" access="public" returnType="textblock" output="false">
   <cfargument name="dsn" type="string" required="true">
+  <cfargument name="username" type="string" required="true">
+  <cfargument name="password" type="string" required="true">
   <cfargument name="blog" type="string" required="true">
+
   <cfset variables.dsn = arguments.dsn>
+  <cfset variables.username = arguments.username>
+  <cfset variables.password = arguments.password>
   <cfset variables.blog = arguments.blog>
+
   <cfreturn this>
 </cffunction>
 
 <cffunction name="deleteTextblock" returnType="void" output="false" access="public">
-  <cfargument name="id" type="uuid" required="true">
+  <cfargument name="btb_btbid" type="uuid" required="true">
 
-  <cfquery datasource="#variables.dsn#">
-  delete from blogTextBlocks
-  where  id = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.id#" maxlength="35">
-  and    blog = <cfqueryparam cfsqltype="cf_sql_varchar" value="#variables.blog#" maxlength="50">
+  <cfquery datasource="#variables.dsn#" username="#variables.username#" password="#variables.password#">
+  delete from BlogTextBlocks
+  where  btb_btbid = <cfqueryparam cfsqltype="varchar" value="#arguments.btb_btbid#" maxlength="35">
+  and    btb_blog = <cfqueryparam cfsqltype="varchar" value="#variables.blog#" maxlength="50">
   </cfquery>
 </cffunction>
 
@@ -27,22 +43,22 @@
   <cfset var q = "">
   <cfset var s = structNew()>
 
-  <cfquery name="q" datasource="#variables.dsn#" >
-  select    id, label, body
-  from    blogTextBlocks
-  where    blog = <cfqueryparam cfsqltype="cf_sql_varchar" value="#variables.blog#" maxlength="50">
+  <cfquery name="q" datasource="#variables.dsn#"  username="#variables.username#" password="#variables.password#">
+  select    btb_btbid, btb_label, btb_body
+  from    BlogTextBlocks
+  where    btb_blog = <cfqueryparam cfsqltype="varchar" value="#variables.blog#" maxlength="50">
   <cfif structKeyExists(arguments, "label")>
-  and    label = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.label#" maxlength="255">
+  and    btb_label = <cfqueryparam cfsqltype="varchar" value="#arguments.label#" maxlength="255">
   </cfif>
-  <cfif structKeyExists(arguments, "id")>
-  and    id = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.id#" maxlength="35">
+  <cfif structKeyExists(arguments, "btb_btbid")>
+  and    btb_btbid = <cfqueryparam cfsqltype="varchar" value="#arguments.btb_btbid#" maxlength="35">
   </cfif>
   </cfquery>
 
-  <cfif q.RecordCount>
-    <cfset s.id = q.id>
-    <cfset s.label = q.label>
-    <cfset s.body = q.body>
+  <cfif q.recordCount>
+    <cfset s.btb_btbid = q.btb_btbid>
+    <cfset s.btb_label = q.btb_label>
+    <cfset s.btb_body = q.btb_body>
   </cfif>
 
   <cfreturn s>
@@ -52,56 +68,56 @@
   <cfargument name="label" type="string" required="true">
   <cfset var q = "">
 
-  <cfquery name="q" datasource="#variables.dsn#" >
-  select    id, label, body
-  from    blogTextBlocks
-  where    blog = <cfqueryparam cfsqltype="cf_sql_varchar" value="#variables.blog#" maxlength="50">
-  and        label = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.label#" maxlength="255">
+  <cfquery name="q" datasource="#variables.dsn#"  username="#variables.username#" password="#variables.password#">
+  select    btb_btbid, btb_label, btb_body
+  from    BlogTextBlocks
+  where    btb_blog = <cfqueryparam cfsqltype="varchar" value="#variables.blog#" maxlength="50">
+  and        btb_label = <cfqueryparam cfsqltype="varchar" value="#arguments.label#" maxlength="255">
   </cfquery>
 
-  <cfreturn q.body>
+  <cfreturn q.btb_body>
 </cffunction>
 
 
 <cffunction name="getTextBlocks" access="public" returnType="query" output="false">
   <cfset var q = "">
 
-  <cfquery name="q" datasource="#variables.dsn#" >
-  select    id, label, body
-  from    blogTextBlocks
-  where    blog = <cfqueryparam cfsqltype="cf_sql_varchar" value="#variables.blog#" maxlength="50">
-  order by   label asc
+  <cfquery name="q" datasource="#variables.dsn#"  username="#variables.username#" password="#variables.password#">
+  select    btb_btbid, btb_label, btb_body
+  from    BlogTextBlocks
+  where    btb_blog = <cfqueryparam cfsqltype="varchar" value="#variables.blog#" maxlength="50">
+  order by   btb_label asc
   </cfquery>
 
   <cfreturn q>
 </cffunction>
 
 <cffunction name="saveTextblock" returnType="void" output="false" access="public">
-  <cfargument name="id" type="string" required="true">
+  <cfargument name="btb_btbid" type="string" required="true">
   <cfargument name="label" type="string" required="true">
   <cfargument name="body" type="string" required="true">
 
-  <cfif arguments.id is 0>
-    <cfset arguments.id = createUUID()>
+  <cfif arguments.btb_btbid is 0>
+    <cfset arguments.btb_btbid = createUUID()>
 
-    <cfquery datasource="#variables.dsn#" >
-    insert into blogTextBlocks(id, label, body, blog)
+    <cfquery datasource="#variables.dsn#"  username="#variables.username#" password="#variables.password#">
+    insert into BlogTextBlocks(btb_btbid, btb_label, btb_body, btb_blog)
     values(
-      <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.id#" maxlength="35">,
-      <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.label#" maxlength="255">,
-      <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#arguments.body#">,
-      <cfqueryparam cfsqltype="cf_sql_varchar" value="#variables.blog#" maxlength="35">
+      <cfqueryparam cfsqltype="varchar" value="#arguments.btb_btbid#" maxlength="35">,
+      <cfqueryparam cfsqltype="varchar" value="#arguments.btb_label#" maxlength="255">,
+      <cfqueryparam cfsqltype="longvarchar" value="#arguments.btb_body#">,
+      <cfqueryparam cfsqltype="varchar" value="#variables.btb_blog#" maxlength="35">
       )
     </cfquery>
 
   <cfelse>
 
-    <cfquery datasource="#variables.dsn#" >
-    update blogTextBlocks
+    <cfquery datasource="#variables.dsn#"  username="#variables.username#" password="#variables.password#">
+    update BlogTextBlocks
     set
-        label = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.label#" maxlength="255">,
-        body = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#arguments.body#">
-    where  id = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.id#" maxlength="35">
+    btb_label = <cfqueryparam cfsqltype="varchar" value="#arguments.btb_label#" maxlength="255">,
+    btb_body = <cfqueryparam cfsqltype="longvarchar" value="#arguments.btb_body#">
+    where  btb_btbid = <cfqueryparam cfsqltype="varchar" value="#arguments.btb_btbid#" maxlength="35">
     </cfquery>
 
   </cfif>

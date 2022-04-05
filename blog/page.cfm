@@ -1,5 +1,5 @@
-<cfsetting enablecfoutputonly="true">
-<cfprocessingdirective pageencoding="utf-8" />
+<cfsetting enablecfoutputonly=true>
+<cfprocessingdirective pageencoding="utf-8">
 <!---
   Name         : page.cfm
   Author       : Raymond Camden
@@ -9,16 +9,16 @@
   Purpose     : Page render
 --->
 
-<cfset pageAlias = listLast(CGI.path_info, "/")>
+<cfset pageAlias = listLast(cgi.path_info, "/")>
 
 <cfif not len(pageAlias)>
-  <cflocation url="#APPLICATION.PATH.ROOT#/index.cfm" addToken="false">
+  <cflocation url="#application.rooturl#/index.cfm" addtoken="false">
 </cfif>
 
-<cfset page = APPLICATION.BLOG.page.getPageByAlias(pageAlias)>
+<cfset page = application.page.getPageByAlias(pageAlias)>
 
 <cfif structIsEmpty(page)>
-  <cflocation url="#APPLICATION.PATH.ROOT#/index.cfm" addToken="false">
+  <cflocation url="#application.rooturl#/index.cfm" addtoken="false">
 </cfif>
 
 <cfif page.showlayout>
@@ -28,7 +28,7 @@
     <cfoutput>
     <div class="date"><b>#page.title#</b></div>
     <div class="body">
-    #SESSION.BROG.renderEntry(page.body)#
+    #application.blog.renderEntry(page.body)#
     </div>
     </cfoutput>
 
@@ -36,6 +36,6 @@
 
 <cfelse>
 
-  <cfoutput>#SESSION.BROG.renderEntry(page.body)#</cfoutput>
+  <cfoutput>#application.blog.renderEntry(page.body)#</cfoutput>
 
 </cfif>

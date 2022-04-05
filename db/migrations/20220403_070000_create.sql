@@ -1,8 +1,8 @@
-CREATE SCHEMA neonmakersguild ;
+/* CREATE SCHEMA neonmakersguild ; */
 
-DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS users;
 
-CREATE TABLE user (
+CREATE TABLE users (
   us_usid        INT(11) NOT NULL AUTO_INCREMENT,
   us_email       VARCHAR(50) NOT NULL,
   us_password    VARCHAR(100) NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE user (
   UNIQUE INDEX (us_email)
 ) ENGINE=InnoDB;
 
-insert into user (us_email, us_password) values ('rust1d@usa.net', '$2a$10$Uf0dppN2Zi94EDz.vC.Y2OLXwDt8c53eMzkY/mRlrkANU2mrGSssm');
+insert into users (us_email, us_password) values ('rust1d@usa.net', '$2a$10$Uf0dppN2Zi94EDz.vC.Y2OLXwDt8c53eMzkY/mRlrkANU2mrGSssm');
 
 DROP TABLE IF EXISTS userProfile;
 

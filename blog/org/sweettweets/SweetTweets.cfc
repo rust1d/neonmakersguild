@@ -39,7 +39,7 @@ http://sweettweetscfc.riaforge.org/
     <cfelse>
       <cfset variables.cacheLocation = "application" />
     </cfif>
-    <!--- Using shrinkURL from Andy Matthews: http://shrinkURL.riaforge.org/ --->
+    <!--- Using shrinkURL from Andy Matthews: http://shrinkurl.riaforge.org/ --->
     <cfset variables.urlService = createObject("component","shrinkURL").init()/>
     <!--- Using JSONUtil from Nathan Mische: http://jsonutil.riaforge.org/ --->
     <cfset variables.jsonService = createObject("component","JSONUtil").init()/>
@@ -163,7 +163,7 @@ http://sweettweetscfc.riaforge.org/
         local.shortened.cligs = '';
       }
 
-      //tinyURL.com
+      //tinyurl.com
       structClear(local.params);
       local.params['url'] = arguments.uri;
       try {
@@ -190,7 +190,7 @@ http://sweettweetscfc.riaforge.org/
         local.shortened.cligs = '';
       }
 
-      //budURL.com
+      //budurl.com
       structClear(local.params);
       local.params['myurl'] = arguments.uri;
       try {
@@ -307,10 +307,10 @@ http://sweettweetscfc.riaforge.org/
     <cfargument name="cacheKey" type="string" required="true" />
     <cfscript>
       if (variables.cacheLocation eq "application"){
-        if (not structKeyExists(application, "SweetTweetCache")){APPLICATION.BLOG.SweetTweetCache=StructNew();}
-        if (not structKeyExists(APPLICATION.BLOG.sweetTweetCache, "urls")){APPLICATION.BLOG.sweetTweetCache.urls=StructNew();}
-        if (not structKeyExists(APPLICATION.BLOG.sweetTweetCache, "tweetbacks")){APPLICATION.BLOG.sweetTweetCache.tweetbacks=StructNew();}
-        if (not structKeyExists(APPLICATION.BLOG.sweetTweetCache.tweetbacks, arguments.cacheKey)){APPLICATION.BLOG.sweetTweetCache.tweetbacks[arguments.cacheKey]=StructNew();}
+        if (not structKeyExists(application, "SweetTweetCache")){application.SweetTweetCache=StructNew();}
+        if (not structKeyExists(application.sweetTweetCache, "urls")){application.sweetTweetCache.urls=StructNew();}
+        if (not structKeyExists(application.sweetTweetCache, "tweetbacks")){application.sweetTweetCache.tweetbacks=StructNew();}
+        if (not structKeyExists(application.sweetTweetCache.tweetbacks, arguments.cacheKey)){application.sweetTweetCache.tweetbacks[arguments.cacheKey]=StructNew();}
       }else{
         if (not structKeyExists(variables, "SweetTweetCache")){variables.SweetTweetCache=StructNew();}
         if (not structKeyExists(variables.sweetTweetCache, "urls")){variables.sweetTweetCache.urls=StructNew();}
@@ -323,8 +323,8 @@ http://sweettweetscfc.riaforge.org/
     <cfargument name="cacheKey" type="string" required="true"/>
     <cfscript>
       if (variables.cacheLocation eq "application"){
-        return (not structKeyExists(APPLICATION.BLOG.sweetTweetCache.tweetbacks[arguments.cacheKey], "timeout") or
-            dateCompare(now(), APPLICATION.BLOG.sweetTweetCache.tweetbacks[arguments.cacheKey].timeout) eq 1);
+        return (not structKeyExists(application.sweetTweetCache.tweetbacks[arguments.cacheKey], "timeout") or
+            dateCompare(now(), application.sweetTweetCache.tweetbacks[arguments.cacheKey].timeout) eq 1);
       }else{
         return (not structKeyExists(variables.sweetTweetCache.tweetbacks[arguments.cacheKey], "timeout") or
             dateCompare(now(), variables.sweetTweetCache.tweetbacks[arguments.cacheKey].timeout) eq 1);
@@ -335,7 +335,7 @@ http://sweettweetscfc.riaforge.org/
     <cfargument name="cacheKey" type="string" required="true"/>
     <cfscript>
       if (variables.cacheLocation eq "application"){
-        return APPLICATION.BLOG.sweetTweetCache.tweetbacks[arguments.cacheKey].tweets;
+        return application.sweetTweetCache.tweetbacks[arguments.cacheKey].tweets;
       }else{
 //dump(variables.sweetTweetCache,true);
         return variables.sweetTweetCache.tweetbacks[arguments.cacheKey].tweets;
@@ -348,8 +348,8 @@ http://sweettweetscfc.riaforge.org/
     <cfargument name="timeout" type="any" required="true"/>
     <cfscript>
       if (variables.cacheLocation eq "application"){
-        APPLICATION.BLOG.sweetTweetCache.tweetbacks[arguments.cacheKey].tweets = arguments.data;
-        APPLICATION.BLOG.sweetTweetCache.tweetbacks[arguments.cacheKey].timeout = dateAdd("n",arguments.timeout,now());
+        application.sweetTweetCache.tweetbacks[arguments.cacheKey].tweets = arguments.data;
+        application.sweetTweetCache.tweetbacks[arguments.cacheKey].timeout = dateAdd("n",arguments.timeout,now());
       }else{
         variables.sweetTweetCache.tweetbacks[arguments.cacheKey].tweets = arguments.data;
         variables.sweetTweetCache.tweetbacks[arguments.cacheKey].timeout = dateAdd("n",arguments.timeout,now());
@@ -360,7 +360,7 @@ http://sweettweetscfc.riaforge.org/
     <cfargument name="cacheKey" type="string" required="true"/>
     <cfscript>
       if (variables.cacheLocation eq "application"){
-        return (structKeyExists(APPLICATION.BLOG.SweetTweetCache.urls, arguments.cacheKey));
+        return (structKeyExists(application.SweetTweetCache.urls, arguments.cacheKey));
       }else{
         return (structKeyExists(variables.SweetTweetCache.urls, arguments.cacheKey));
       }
@@ -370,7 +370,7 @@ http://sweettweetscfc.riaforge.org/
     <cfargument name="cacheKey" type="string" required="true"/>
     <cfscript>
       if (variables.cacheLocation eq "application"){
-        return APPLICATION.BLOG.sweetTweetCache.urls[arguments.cacheKey];
+        return application.sweetTweetCache.urls[arguments.cacheKey];
       }else{
         return variables.sweetTweetCache.urls[arguments.cacheKey];
       }
@@ -381,7 +381,7 @@ http://sweettweetscfc.riaforge.org/
     <cfargument name="data" type="struct" required="true"/>
     <cfscript>
       if (variables.cacheLocation eq "application"){
-        APPLICATION.BLOG.sweetTweetCache.urls[arguments.cacheKey] = arguments.data;
+        application.sweetTweetCache.urls[arguments.cacheKey] = arguments.data;
       }else{
         variables.sweetTweetCache.urls[arguments.cacheKey] = arguments.data;
       }

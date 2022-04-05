@@ -25,9 +25,9 @@
       <cfset val = variables.resourceBundle[arguments.resource]>
     </cfif>
 
-<!---     <cfif isDebugMode()>
+    <cfif isDebugMode()>
       <cfset val = "*** #val# ***">
-    </cfif> --->
+    </cfif>
 
     <cfreturn val>
 

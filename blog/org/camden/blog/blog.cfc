@@ -1,89 +1,113 @@
 <cfcomponent displayName="Blog" output="false" hint="BlogCFC by Raymond Camden">
+
   <!--- Load utils immidiately. --->
-  <cfset VARIABLES.utils = createObject("component", "utils")>
-  <cfset VARIABLES.roles = structNew()>
+  <cfset variables.utils = createObject("component", "utils")>
+
+  <cfset variables.roles = structNew()>
+
+  <!--- Require 6.1 or higher --->
+  <cfset majorVersion = listFirst(server.coldfusion.productversion)>
+  <cfset minorVersion = listGetAt(server.coldfusion.productversion,2,".,")>
+  <cfset cfversion = majorVersion & "." & minorVersion>
+  <cfif (server.coldfusion.productname is "ColdFusion Server" and cfversion lte 6)
+      or
+      (server.coldfusion.productname is "BlueDragon" and cfversion lte 6.1)>
+    <cfset variables.utils.throw("Blog must be run under ColdFusion 6.1, BlueDragon 6.2, or higher.")>
+  </cfif>
+  <cfset variables.isColdFusionMX8 = server.coldfusion.productname is "ColdFusion Server" and cfversion gte 8>
+
+  <!--- Valid database types --->
+  <cfset validDBTypes = "MSACCESS,MYSQL,MSSQL,ORACLE">
 
   <!--- current version --->
   <cfset version = "5.9.8.012" />
 
   <!--- cfg file --->
-  <cfset VARIABLES.cfgFile = "#getDirectoryFromPath(GetCurrentTemplatePath())#\blog.ini.cfm">
+  <cfset variables.cfgFile = "#getDirectoryFromPath(GetCurrentTemplatePath())#/blog.ini.cfm">
 
   <!--- used for rendering --->
-  <cfset VARIABLES.renderMethods = structNew()>
+  <cfset variables.renderMethods = structNew()>
 
   <!--- used for settings --->
-  <cfset VARIABLES.instance = "">
+  <cfset variables.instance = "">
 
-  <cffunction name="init" access="public" returnType="blog" output="false" hint="Initialize the blog engine">
+  <cffunction name="init" access="public" returnType="blog" output="false"
+        hint="Initialize the blog engine">
 
-    <cfargument name="name" type="string" required="false" default="#APPLICATION.SETTING.blog#" hint="Blog name, defaults to default in blog.ini">
+    <cfargument name="name" type="string" required="false" default="default" hint="Blog name, defaults to default in blog.ini">
     <cfargument name="instanceData" type="struct" required="false" hint="Allows you to specify BlogCFC info at runtime.">
+    <cfargument name="BlogDBName" type="string" required="false" hint="I am the blog name in the DB.  If I am specified, I will use the name argument to find the config settings, but the blogDBName to find the database data">
 
     <cfset var renderDir = "">
     <cfset var renderCFCs = "">
     <cfset var cfcName = "">
     <cfset var md = "">
 
-    <cfif isDefined("ARGUMENTS.instanceData")>
-      <cfset instance = duplicate(ARGUMENTS.instanceData)>
+    <cfif isDefined("arguments.instanceData")>
+      <cfset instance = duplicate(arguments.instanceData)>
     <cfelse>
-      <cfif not listFindNoCase(structKeyList(getProfileSections(VARIABLES.cfgFile)),name)>
-        <cfset VARIABLES.utils.throw("#ARGUMENTS.name# isn't registered as a valid blog.")>
+      <cfif not listFindNoCase(structKeyList(getProfileSections(variables.cfgFile)),name)>
+        <cfset variables.utils.throw("#arguments.name# isn't registered as a valid blog.")>
       </cfif>
       <cfset instance = structNew()>
-      <cfset instance.dsn = VARIABLES.utils.configParam(VARIABLES.cfgFile,ARGUMENTS.name,"dsn")>
-      <cfset instance.username = VARIABLES.utils.configParam(VARIABLES.cfgFile,ARGUMENTS.name,"username")>
-      <cfset instance.password = VARIABLES.utils.configParam(VARIABLES.cfgFile,ARGUMENTS.name,"password")>
-      <cfset instance.ownerEmail = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "owneremail")>
-      <cfset instance.blogURL = "#APPLICATION.PATH.FULL#/b.index.cfm" />
-      <cfset instance.blogTitle = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "blogTitle")>
-      <cfset instance.blogDescription = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "blogDescription")>
-      <cfset instance.locale = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "locale")>
-      <cfset instance.commentsFrom = VARIABLES.utils.configParam(VARIABLES.cfgFile,ARGUMENTS.name,"commentsFrom")>
-      <cfset instance.failTo = VARIABLES.utils.configParam(VARIABLES.cfgFile,ARGUMENTS.name,"failTo")>
-      <cfset instance.mailServer = VARIABLES.utils.configParam(VARIABLES.cfgFile,ARGUMENTS.name,"mailserver")>
-      <cfset instance.mailusername = VARIABLES.utils.configParam(VARIABLES.cfgFile,ARGUMENTS.name,"mailusername")>
-      <cfset instance.mailpassword = VARIABLES.utils.configParam(VARIABLES.cfgFile,ARGUMENTS.name,"mailpassword")>
-      <cfset instance.pingurls = VARIABLES.utils.configParam(VARIABLES.cfgFile,ARGUMENTS.name,"pingurls")>
-      <cfset instance.offset = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "offset")>
-      <cfset instance.trackbackspamlist = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "trackbackspamlist")>
-      <cfset instance.blogkeywords = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "blogkeywords")>
-      <cfset instance.ipblocklist = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "ipblocklist")>
-      <cfset instance.maxentries = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "maxentries")>
-      <cfset instance.moderate = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "moderate")>
-      <cfset instance.usecaptcha = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "usecaptcha")>
-      <cfset instance.usecfp = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "usecfp")>
-      <cfset instance.allowgravatars = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "allowgravatars")>
-      <cfset instance.filebrowse = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "filebrowse")>
-      <cfset instance.settings = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "settings")>
-      <cfset instance.itunesSubtitle = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "itunesSubtitle")>
-      <cfset instance.itunesSummary = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "itunesSummary")>
-      <cfset instance.itunesKeywords = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "itunesKeywords")>
-      <cfset instance.itunesAuthor = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "itunesAuthor")>
-      <cfset instance.itunesImage = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "itunesImage")>
-      <cfset instance.itunesExplicit = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "itunesExplicit")>
-      <cfset instance.usetweetbacks = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "usetweetbacks")>
-      <cfset instance.installed = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "installed")>
-      <cfset instance.saltalgorithm = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "saltalgorithm")>
-      <cfset instance.saltkeysize = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "saltkeysize")>
-      <cfset instance.hashalgorithm = VARIABLES.utils.configParam(VARIABLES.cfgFile, ARGUMENTS.name, "hashalgorithm")>
-
+      <cfset instance.dsn = variables.utils.configParam(variables.cfgFile,arguments.name,"dsn")>
+      <cfset instance.username = variables.utils.configParam(variables.cfgFile,arguments.name,"username")>
+      <cfset instance.password = variables.utils.configParam(variables.cfgFile,arguments.name,"password")>
+      <cfset instance.ownerEmail = variables.utils.configParam(variables.cfgFile, arguments.name, "owneremail")>
+      <cfset instance.blogURL = variables.utils.configParam(variables.cfgFile, arguments.name, "blogURL")>
+      <cfset instance.blogTitle = variables.utils.configParam(variables.cfgFile, arguments.name, "blogTitle")>
+      <cfset instance.blogDescription = variables.utils.configParam(variables.cfgFile, arguments.name, "blogDescription")>
+      <cfset instance.blogDBType = variables.utils.configParam(variables.cfgFile, arguments.name, "blogDBType")>
+      <cfset instance.locale = variables.utils.configParam(variables.cfgFile, arguments.name, "locale")>
+      <cfset instance.commentsFrom = variables.utils.configParam(variables.cfgFile,arguments.name,"commentsFrom")>
+      <cfset instance.failTo = variables.utils.configParam(variables.cfgFile,arguments.name,"failTo")>
+      <cfset instance.mailServer = variables.utils.configParam(variables.cfgFile,arguments.name,"mailserver")>
+      <cfset instance.mailusername = variables.utils.configParam(variables.cfgFile,arguments.name,"mailusername")>
+      <cfset instance.mailpassword = variables.utils.configParam(variables.cfgFile,arguments.name,"mailpassword")>
+      <cfset instance.pingurls = variables.utils.configParam(variables.cfgFile,arguments.name,"pingurls")>
+      <cfset instance.offset = variables.utils.configParam(variables.cfgFile, arguments.name, "offset")>
+      <cfset instance.trackbackspamlist = variables.utils.configParam(variables.cfgFile, arguments.name, "trackbackspamlist")>
+      <cfset instance.blogkeywords = variables.utils.configParam(variables.cfgFile, arguments.name, "blogkeywords")>
+      <cfset instance.ipblocklist = variables.utils.configParam(variables.cfgFile, arguments.name, "ipblocklist")>
+      <cfset instance.maxentries = variables.utils.configParam(variables.cfgFile, arguments.name, "maxentries")>
+      <cfset instance.maxentriesadmin = variables.utils.configParam(variables.cfgFile, arguments.name, "maxentriesadmin")>
+      <cfset instance.moderate = variables.utils.configParam(variables.cfgFile, arguments.name, "moderate")>
+      <cfset instance.usecaptcha = variables.utils.configParam(variables.cfgFile, arguments.name, "usecaptcha")>
+      <cfset instance.usecfp = variables.utils.configParam(variables.cfgFile, arguments.name, "usecfp")>
+      <cfset instance.allowgravatars = variables.utils.configParam(variables.cfgFile, arguments.name, "allowgravatars")>
+      <cfset instance.filebrowse = variables.utils.configParam(variables.cfgFile, arguments.name, "filebrowse")>
+      <cfset instance.settings = variables.utils.configParam(variables.cfgFile, arguments.name, "settings")>
+      <cfset instance.imageroot = variables.utils.configParam(variables.cfgFile, arguments.name, "imageroot")>
+      <cfset instance.itunesSubtitle = variables.utils.configParam(variables.cfgFile, arguments.name, "itunesSubtitle")>
+      <cfset instance.itunesSummary = variables.utils.configParam(variables.cfgFile, arguments.name, "itunesSummary")>
+      <cfset instance.itunesKeywords = variables.utils.configParam(variables.cfgFile, arguments.name, "itunesKeywords")>
+      <cfset instance.itunesAuthor = variables.utils.configParam(variables.cfgFile, arguments.name, "itunesAuthor")>
+      <cfset instance.itunesImage = variables.utils.configParam(variables.cfgFile, arguments.name, "itunesImage")>
+      <cfset instance.itunesExplicit = variables.utils.configParam(variables.cfgFile, arguments.name, "itunesExplicit")>
+      <cfset instance.tableprefix = variables.utils.configParam(variables.cfgFile, arguments.name, "tableprefix")>
+      <cfset instance.usetweetbacks = variables.utils.configParam(variables.cfgFile, arguments.name, "usetweetbacks")>
+      <cfset instance.installed = variables.utils.configParam(variables.cfgFile, arguments.name, "installed")>
+      <cfset instance.saltalgorithm = variables.utils.configParam(variables.cfgFile, arguments.name, "saltalgorithm")>
+      <cfset instance.saltkeysize = variables.utils.configParam(variables.cfgFile, arguments.name, "saltkeysize")>
+      <cfset instance.hashalgorithm = variables.utils.configParam(variables.cfgFile, arguments.name, "hashalgorithm")>
     </cfif>
 
     <!--- Name the blog --->
-    <cfset instance.name = ARGUMENTS.name>
+    <cfif IsDefined('arguments.BlogDBName')>
+      <cfset instance.name = arguments.BlogDBName>
+    <cfelse>
+      <cfset instance.name = arguments.name>
+    </cfif>
 
     <!--- If FailTo is blank, use Admin email --->
     <cfif instance.failTo is "">
       <cfset instance.failTo = instance.ownerEmail>
     </cfif>
 
-    <!--- get a copy of ping --->
-    <cfset VARIABLES.ping = createObject("component", "ping8")>
+    <cfset variables.ping = createObject("component", "ping8")>
 
     <!--- get a copy of textblock --->
-    <cfset VARIABLES.textblock = createObject("component","textblock").init(dsn=instance.dsn, username=instance.username, password=instance.password, blog=instance.name)>
+    <cfset variables.textblock = createObject("component","textblock").init(dsn=instance.dsn, blog=instance.name)>
 
     <!--- prepare rendering --->
     <cfset renderDir = getDirectoryFromPath(GetCurrentTemplatePath()) & "/render/">
@@ -95,12 +119,12 @@
 
       <cfif cfcName is not "render">
         <!--- store the name --->
-        <cfset VARIABLES.renderMethods[cfcName] = structNew()>
+        <cfset variables.renderMethods[cfcName] = structNew()>
         <!--- create an instance of the CFC. It better have a render method! --->
-        <cfset VARIABLES.renderMethods[cfcName].cfc = createObject("component", "render.#cfcName#")>
-        <cfset md = getMetaData(VARIABLES.renderMethods[cfcName].cfc)>
+        <cfset variables.renderMethods[cfcName].cfc = createObject("component", "render.#cfcName#")>
+        <cfset md = getMetaData(variables.renderMethods[cfcName].cfc)>
         <cfif structKeyExists(md, "instructions")>
-          <cfset VARIABLES.renderMethods[cfcName].instructions = md.instructions>
+          <cfset variables.renderMethods[cfcName].instructions = md.instructions>
         </cfif>
       </cfif>
 
@@ -110,26 +134,27 @@
 
   </cffunction>
 
-  <cffunction name="addCategory" access="remote" returnType="uuid" roles="" output="false" hint="Adds a category.">
+  <cffunction name="addCategory" access="remote" returnType="uuid" roles="admin,AddCategory,ManageCategory" output="false"
+        hint="Adds a category.">
     <cfargument name="name" type="string" required="true">
     <cfargument name="alias" type="string" required="true">
 
     <cfset var checkC = "">
     <cfset var id = createUUID()>
 
-    <cflock name="blogcfc.addCategory" type="exclusive" timeout="30">
+    <cflock name="blogcfc.addCategory" type="exclusive" timeout=30>
 
-      <cfif categoryExists(name="#ARGUMENTS.name#")>
-        <cfset VARIABLES.utils.throw("#ARGUMENTS.name# already exists as a category.")>
+      <cfif categoryExists(name="#arguments.name#")>
+        <cfset variables.utils.throw("#arguments.name# already exists as a category.")>
       </cfif>
 
-      <cfquery datasource="#instance.dsn#">
-        insert into blogCategories(bca_bcaid,bca_name,bca_alias,blog)
+      <cfquery datasource="nmg" >
+        insert into BlogCategories(bca_bcaid,bca_category,bca_alias,blog)
         values(
-          <cfqueryparam value="#id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">,
-          <cfqueryparam value="#ARGUMENTS.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">,
-          <cfqueryparam value="#ARGUMENTS.alias#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">,
-          <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">)
+          <cfqueryparam value="#id#" cfsqltype="VARCHAR" maxlength="35">,
+          <cfqueryparam value="#arguments.name#" cfsqltype="VARCHAR" maxlength="50">,
+          <cfqueryparam value="#arguments.alias#" cfsqltype="VARCHAR" maxlength="50">,
+          <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">)
       </cfquery>
 
     </cflock>
@@ -137,98 +162,107 @@
     <cfreturn id>
   </cffunction>
 
-  <cffunction name="addComment" access="remote" returnType="uuid" output="false" hint="Adds a comment.">
-    <cfargument name="entryid" type="uuid" required="true">
-    <cfargument name="name" type="string" required="true">
-    <cfargument name="email" type="string" required="true">
+  <cffunction name="addComment" access="remote" returnType="uuid" output="false"
+        hint="Adds a comment.">
+    <cfargument name="bco_benid" type="uuid" required="true">
+    <cfargument name="bco_name" type="string" required="true">
+    <cfargument name="bco_email" type="string" required="true">
+    <!--- RBB 11/02/2005:  Added bco_website argument --->
     <cfargument name="bco_website" type="string" required="true">
-    <cfargument name="comments" type="string" required="true">
-    <cfargument name="subscribe" type="boolean" required="true">
+    <cfargument name="bco_comments" type="string" required="true">
+    <cfargument name="bco_subscribe" type="boolean" required="true">
     <cfargument name="bco_subscribeonly" type="boolean" required="false" default="false">
     <cfargument name="overridemoderation" type="boolean" required="false" default="false">
-    <cfargument name="usid" type="numeric" default="0">
 
     <cfset var newID = createUUID()>
     <cfset var entry = "">
     <cfset var spam = "">
     <cfset var kill = createUUID()>
 
-    <cfset ARGUMENTS.comments = htmleditformat(ARGUMENTS.comments)>
-    <cfset ARGUMENTS.name = left(htmlEditFormat(ARGUMENTS.name),50)>
-    <cfset ARGUMENTS.email = left(htmlEditFormat(ARGUMENTS.email),50)>
-    <cfset ARGUMENTS.bco_website = left(htmlEditFormat(ARGUMENTS.bco_website),255)>
-    <cfif not entryExists(ARGUMENTS.entryid)>
-      <cfset VARIABLES.utils.throw("#ARGUMENTS.entryid# is not a valid entry.")>
+    <cfset arguments.bco_comments = htmleditformat(arguments.bco_comments)>
+    <cfset arguments.bco_name = left(htmlEditFormat(arguments.bco_name),50)>
+    <cfset arguments.bco_email = left(htmlEditFormat(arguments.bco_email),50)>
+    <!--- RBB 11/02/2005:  Added bco_website element --->
+    <cfset arguments.bco_website = left(htmlEditFormat(arguments.bco_website),255)>
+
+    <cfif not entryExists(arguments.bco_benid)>
+      <cfset variables.utils.throw("#arguments.bco_benid# is not a valid entry.")>
     </cfif>
-    <!--- get the entry so we can check for allowcomments --->
-    <cfset entry = getEntry(ARGUMENTS.entryid,true)>
-    <cfif not entry.allowcomments>
-      <cfset VARIABLES.utils.throw("#ARGUMENTS.entryid# does not allow for comments.")>
+
+    <!--- get the entry so we can check for ben_allowcomments --->
+    <cfset entry = getEntry(arguments.bco_benid,true)>
+    <cfif not entry.ben_allowcomments>
+      <cfset variables.utils.throw("#arguments.bco_benid# does not allow for comments.")>
     </cfif>
+
     <!--- only check spam if not a sub --->
-    <cfif not ARGUMENTS.bco_subscribeonly>
+    <cfif not arguments.bco_subscribeonly>
       <!--- check spam and IPs --->
       <cfloop index="spam" list="#instance.trackbackspamlist#">
-        <cfif findNoCase(spam, ARGUMENTS.comments) or
-            findNoCase(spam, ARGUMENTS.name) or
-            findNoCase(spam, ARGUMENTS.bco_website) or
-            findNoCase(spam, ARGUMENTS.email)>
-          <cfset VARIABLES.utils.throw("Comment blocked for spam.")>
+        <cfif findNoCase(spam, arguments.bco_comments) or
+            findNoCase(spam, arguments.bco_name) or
+            findNoCase(spam, arguments.bco_website) or
+            findNoCase(spam, arguments.bco_email)>
+          <cfset variables.utils.throw("Comment blocked for spam.")>
         </cfif>
       </cfloop>
       <cfloop list="#instance.ipblocklist#" index="spam">
-        <cfif spam contains "*" and reFindNoCase(replaceNoCase(spam, '.', '\.','all'), CGI.REMOTE_ADDR)>
-          <cfset VARIABLES.utils.throw("Comment blocked for spam.")>
-        <cfelseif spam is CGI.REMOTE_ADDR>
-          <cfset VARIABLES.utils.throw("Comment blocked for spam.")>
+        <cfif spam contains "*" and reFindNoCase(replaceNoCase(spam, '.', '\.','all'), cgi.REMOTE_ADDR)>
+          <cfset variables.utils.throw("Comment blocked for spam.")>
+        <cfelseif spam is cgi.REMOTE_ADDR>
+          <cfset variables.utils.throw("Comment blocked for spam.")>
         </cfif>
-        </cfloop>
+          </cfloop>
     </cfif>
-    <cfquery datasource="#instance.dsn#">
-      INSERT INTO blogComments(
-        id,entryidfk,name,email,bco_website,comment,posted,subscribe,bco_moderated,bco_kill,bco_subscribeonly,usid
-      ) VALUES (
-        <cfqueryparam value="#newID#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">,
-        <cfqueryparam value="#ARGUMENTS.entryid#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">,
-        <cfqueryparam value="#ARGUMENTS.name#" maxlength="50">,
-        <cfqueryparam value="#ARGUMENTS.email#" maxlength="50">,
-        <cfqueryparam value="#ARGUMENTS.bco_website#" maxlength="255">,
-        <cfqueryparam value="#ARGUMENTS.comments#" cfsqltype="CF_SQL_LONGVARCHAR">,
-        <cfqueryparam value="#blogNow()#" cfsqltype="CF_SQL_TIMESTAMP">,
-        <cfqueryparam value="#ARGUMENTS.subscribe#" cfsqltype="CF_SQL_BIT">,
-        <cfif instance.moderate and not ARGUMENTS.overridemoderation>0<cfelse>1</cfif>,
-        <cfqueryparam value="#kill#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">,
-        <cfqueryparam value="#ARGUMENTS.bco_subscribeonly#" cfsqltype="CF_SQL_TINYINT">,
-        <cfqueryparam value="#ARGUMENTS.usid#" cfsqltype="CF_SQL_INTEGER">
-      )
+
+    <cfquery datasource="nmg" >
+    <!--- RBB 11/02/2005:  Added bco_website element --->
+    insert into BlogComments(bco_bcoid,bco_benid,bco_name,bco_email,bco_website,bco_comment,bco_posted,bco_subscribe,bco_moderated,bco_kill,bco_subscribeonly)
+    values(<cfqueryparam value="#newID#" cfsqltype="VARCHAR" maxlength="35">,
+         <cfqueryparam value="#arguments.bco_benid#" cfsqltype="VARCHAR" maxlength="35">,
+         <cfqueryparam value="#arguments.bco_name#" maxlength="50">,
+         <cfqueryparam value="#arguments.bco_email#" maxlength="50">,
+         <cfqueryparam value="#arguments.bco_website#" maxlength="255">,
+         <cfqueryparam value="#arguments.bco_comment#" cfsqltype="LONGVARCHAR">,
+       <cfqueryparam value="#blogNow()#" cfsqltype="TIMESTAMP">,
+                <!--- convert yes/no to 1 or 0 --->
+             <cfif arguments.subscribe>
+               <cfset arguments.subscribe = 1>
+             <cfelse>
+               <cfset arguments.subscribe = 0>
+             </cfif>
+           <cfqueryparam value="#arguments.subscribe#" cfsqltype="TINYINT">,
+           <cfif instance.moderate and not arguments.overridemoderation>0<cfelse>1</cfif>,
+         <cfqueryparam value="#kill#" cfsqltype="VARCHAR" maxlength="35">,
+         <cfqueryparam value="#arguments.bco_subscribeonly#" cfsqltype="TINYINT">
+         )
     </cfquery>
-    <!--- IF SUBSCRIBE IS NO, AUTO SET OLDER POSTS IN THREAD BY THIS AUTHOR TO NO --->
-    <cfif not ARGUMENTS.subscribe>
-      <cfquery datasource="#instance.dsn#">
-        UPDATE blogComments
-          SET subscribe = 0
-         WHERE entryidfk = <cfqueryparam value="#ARGUMENTS.entryid#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
-        <cfif ARGUMENTS.usid>
-          AND usid = <cfqueryparam value="#ARGUMENTS.usid#" cfsqltype="cf_sql_integer" />
-        <cfelse>
-          AND email = <cfqueryparam value="#ARGUMENTS.email#" cfsqltype="cf_sql_varchar" maxlength="100" />
-        </cfif>
+
+    <!--- If subscribe is no, auto set older posts in thread by this author to no --->
+    <cfif not arguments.subscribe>
+      <cfquery datasource="nmg" >
+      update  BlogComments
+      set    bco_subscribe = 0
+      where  bco_benid = <cfqueryparam value="#arguments.bco_benid#" cfsqltype="VARCHAR" maxlength="35">
+      and    bco_email = <cfqueryparam value="#arguments.bco_email#" cfsqltype="varchar" maxlength="100">
       </cfquery>
     </cfif>
+
     <cfreturn newID>
   </cffunction>
 
-  <cffunction name="addEntry" access="remote" returnType="uuid" roles="" output="true" hint="Adds an entry.">
+  <cffunction name="addEntry" access="remote" returnType="uuid" roles="admin" output="true"
+        hint="Adds an entry.">
     <cfargument name="title" type="string" required="true">
     <cfargument name="body" type="string" required="true">
-    <cfargument name="morebody" type="string" required="false" default="">
+    <cfargument name="ben_morebody" type="string" required="false" default="">
     <cfargument name="alias" type="string" required="false" default="">
     <cfargument name="posted" type="date" required="false" default="#blogNow()#">
-    <cfargument name="allowcomments" type="boolean" required="false" default="true">
-    <cfargument name="enclosure" type="string" required="false" default="">
-    <cfargument name="filesize" type="numeric" required="false" default="0">
-    <cfargument name="mimetype" type="string" required="false" default="">
-    <cfargument name="released" type="boolean" required="false" default="true">
+    <cfargument name="ben_allowcomments" type="boolean" required="false" default="true">
+    <cfargument name="ben_enclosure" type="string" required="false" default="">
+    <cfargument name="ben_filesize" type="numeric" required="false" default="0">
+    <cfargument name="ben_mimetype" type="string" required="false" default="">
+    <cfargument name="ben_released" type="boolean" required="false" default="true">
     <cfargument name="relatedEntries" type="string" required="false" default="">
     <cfargument name="sendemail" type="boolean" required="false" default="true">
     <cfargument name="duration" type="string" required="false" default="">
@@ -238,85 +272,132 @@
 
     <cfset var id = createUUID()>
     <cfset var theURL = "">
-    <cfif ARGUMENTS.allowcomments><cfset ARGUMENTS.allowcomments = 1><cfelse><cfset ARGUMENTS.allowcomments = 0></cfif>
-    <cfif ARGUMENTS.released><cfset ARGUMENTS.released = 1><cfelse><cfset ARGUMENTS.released = 0></cfif>
-    <cfquery datasource="#instance.dsn#">
-      insert into blogEntries(id,title,body,posted,
-        <cfif len(ARGUMENTS.morebody)>morebody,</cfif>
-        <cfif len(ARGUMENTS.alias)>alias,</cfif>
-        username,blog,allowcomments,enclosure,summary,subtitle,keywords,duration,filesize,mimetype,released,views,mailed)
+
+    <cfquery datasource="nmg" >
+      insert into BlogEntries(id,title,body,posted
+        <cfif len(arguments.ben_morebody)>,ben_morebody</cfif>
+        <cfif len(arguments.alias)>,alias</cfif>
+        ,username,blog,ben_allowcomments,ben_enclosure,summary,subtitle,keywords,duration,ben_filesize,ben_mimetype,ben_released,views,mailed)
       values(
-        <cfqueryparam value="#id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">,
-        <cfqueryparam value="#ARGUMENTS.title#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">,
-        <cfqueryparam value="#ARGUMENTS.body#" cfsqltype="CF_SQL_LONGVARCHAR">,
-        <cfqueryparam value="#ARGUMENTS.posted#" cfsqltype="CF_SQL_TIMESTAMP">,
-        <cfif len(ARGUMENTS.morebody)>
-          <cfqueryparam value="#ARGUMENTS.morebody#" cfsqltype="CF_SQL_LONGVARCHAR">,
+        <cfqueryparam value="#id#" cfsqltype="VARCHAR" maxlength="35">,
+        <cfqueryparam value="#arguments.title#" cfsqltype="VARCHAR" maxlength="100">,
+        <cfif instance.blogDBTYPE is "ORACLE">
+          <cfqueryparam cfsqltype="clob" value="#arguments.body#">,
+        <cfelse>
+          <cfqueryparam value="#arguments.body#" cfsqltype="LONGVARCHAR">,
         </cfif>
-        <cfif len(ARGUMENTS.alias)>
-          <cfqueryparam value="#ARGUMENTS.alias#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">,
+
+        <cfqueryparam value="#arguments.posted#" cfsqltype="TIMESTAMP">
+        <cfif len(arguments.ben_morebody)>
+          <cfif instance.blogDBType is "ORACLE">
+            ,<cfqueryparam cfsqltype="clob" value="#arguments.ben_morebody#">
+          <cfelse>
+            ,<cfqueryparam value="#arguments.ben_morebody#" cfsqltype="LONGVARCHAR">
+          </cfif>
         </cfif>
-        <cfqueryparam value="#getAuthUser()#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">,
-        <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">,
-        <cfqueryparam value="#ARGUMENTS.allowcomments#" cfsqltype="CF_SQL_TINYINT">,
-        <cfqueryparam value="#ARGUMENTS.enclosure#" cfsqltype="CF_SQL_VARCHAR" maxlength="255">,
-        <cfqueryparam value="#ARGUMENTS.summary#" cfsqltype="CF_SQL_VARCHAR" maxlength="255">,
-        <cfqueryparam value="#ARGUMENTS.subtitle#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">,
-        <cfqueryparam value="#ARGUMENTS.keywords#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">,
-        <cfqueryparam value="#ARGUMENTS.duration#" cfsqltype="CF_SQL_VARCHAR" maxlength="10">,
-        <cfqueryparam value="#ARGUMENTS.filesize#" cfsqltype="CF_SQL_NUMERIC">,
-        <cfqueryparam value="#ARGUMENTS.mimetype#" cfsqltype="CF_SQL_VARCHAR" maxlength="255">,
-        <cfqueryparam value="#ARGUMENTS.released#" cfsqltype="CF_SQL_TINYINT">,
-        0,
-        <cfqueryparam value="0" cfsqltype="CF_SQL_TINYINT">
-      )
+        <cfif len(arguments.alias)>
+          ,<cfqueryparam value="#arguments.alias#" cfsqltype="VARCHAR" maxlength="100">
+        </cfif>
+        ,<cfqueryparam value="#getAuthUser()#" cfsqltype="VARCHAR" maxlength="50">,
+        <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">,
+          <cfif instance.blogDBType is not "MYSQL" AND instance.blogDBType is not "ORACLE">
+          <cfqueryparam value="#arguments.ben_allowcomments#" cfsqltype="BIT">
+         <cfelse>
+                <!--- convert yes/no to 1 or 0 --->
+             <cfif arguments.ben_allowcomments>
+               <cfset arguments.ben_allowcomments = 1>
+             <cfelse>
+               <cfset arguments.ben_allowcomments = 0>
+             </cfif>
+          <cfqueryparam value="#arguments.ben_allowcomments#" cfsqltype="TINYINT">
+         </cfif>
+           ,<cfqueryparam value="#arguments.ben_enclosure#" cfsqltype="VARCHAR" maxlength="255">
+        ,<cfqueryparam value="#arguments.summary#" cfsqltype="VARCHAR" maxlength="255">
+        ,<cfqueryparam value="#arguments.subtitle#" cfsqltype="VARCHAR" maxlength="100">
+        ,<cfqueryparam value="#arguments.keywords#" cfsqltype="VARCHAR" maxlength="100">
+        ,<cfqueryparam value="#arguments.duration#" cfsqltype="VARCHAR" maxlength="10">
+           ,<cfqueryparam value="#arguments.ben_filesize#" cfsqltype="NUMERIC">
+           ,<cfqueryparam value="#arguments.ben_mimetype#" cfsqltype="VARCHAR" maxlength="255">
+           ,<cfif instance.blogDBType is not "MYSQL" and instance.blogDBType is not "ORACLE">
+          <cfqueryparam value="#arguments.ben_released#" cfsqltype="BIT">
+         <cfelse>
+                <!--- convert yes/no to 1 or 0 --->
+             <cfif arguments.ben_released>
+               <cfset arguments.ben_released = 1>
+             <cfelse>
+               <cfset arguments.ben_released = 0>
+             </cfif>
+          <cfqueryparam value="#arguments.ben_released#" cfsqltype="TINYINT">
+         </cfif>
+        ,0
+        ,<cfif instance.blogDBType is not "MYSQL" AND instance.blogDBType is not "ORACLE">
+          <cfqueryparam value="false" cfsqltype="BIT">
+         <cfelse>
+          <cfqueryparam value="0" cfsqltype="TINYINT">
+         </cfif>
+        )
     </cfquery>
-    <cfif len(trim(ARGUMENTS.relatedEntries)) GT 0>
-      <cfset saveRelatedEntries(id, ARGUMENTS.relatedEntries) />
+
+    <cfif len(trim(arguments.relatedEntries)) GT 0>
+      <cfset saveRelatedEntries(id, arguments.relatedEntries) />
     </cfif>
-    <!--- Only mail if released = true, and posted not in the future --->
-    <cfif ARGUMENTS.sendEmail and ARGUMENTS.released and dateCompare(dateAdd("h", instance.offset,ARGUMENTS.posted), blogNow()) lte 0>
+
+    <!---
+        Only mail if released = true, and posted not in the future
+    --->
+    <cfif arguments.sendEmail and arguments.ben_released and dateCompare(dateAdd("h", instance.offset,arguments.posted), blogNow()) lte 0>
+
       <cfset mailEntry(id)>
+
     </cfif>
-    <cfif ARGUMENTS.released>
-      <cfif ARGUMENTS.sendEmail and dateCompare(dateAdd("h", instance.offset,ARGUMENTS.posted), blogNow()) is 1>
+
+    <cfif arguments.ben_released>
+
+      <cfif arguments.sendEmail and dateCompare(dateAdd("h", instance.offset,arguments.posted), blogNow()) is 1>
         <!--- Handle delayed posting --->
-        <cfset theURL = APPLICATION.PATH.FULL & "/x.notify.cfm?id=#id#">
-        <cfschedule action="update" task="BlogCFC Notifier #id#" operation="HTTPRequest" startDate="#ARGUMENTS.posted#" startTime="#ARGUMENTS.posted#" url="#theURL#" interval="once">
+        <cfset theURL = getRootURL()>
+        <cfset theURL = theURL & "admin/notify.cfm?id=#id#">
+        <cfschedule action="update" task="BlogCFC Notifier #id#" operation="HTTPRequest"
+              startDate="#arguments.posted#" startTime="#arguments.posted#" url="#theURL#" interval="once">
       <cfelse>
-        <cfset VARIABLES.ping.pingAggregators(instance.pingurls, instance.blogtitle, instance.blogurl)>
+        <cfset variables.ping.pingAggregators(instance.pingurls, instance.blogtitle, instance.blogurl)>
       </cfif>
+
     </cfif>
+
+
     <cfreturn id>
+
   </cffunction>
 
-  <cffunction name="addSubscriber" access="remote" returnType="string" output="false" hint="Adds a subscriber to the blog.">
-    <cfargument name="email" type="string" required="true">
-    <cfset var token = createUUID()>
+  <cffunction name="addSubscriber" access="remote" returnType="string" output="false"
+        hint="Adds a subscriber to the blog.">
+    <cfargument name="bsu_email" type="string" required="true">
+    <cfset var bsu_token = createUUID()>
     <cfset var getMe = "">
 
     <!--- First, lets see if this guy is already subscribed. --->
-    <cfquery name="getMe" datasource="#instance.dsn#">
-    select  email
-    from  blogSubscribers
-    where  email = <cfqueryparam value="#ARGUMENTS.email#" cfsqltype="cf_sql_varchar" maxlength="50">
-    and    blog = <cfqueryparam value="#instance.name#" cfsqltype="cf_sql_varchar" maxlength="50">
+    <cfquery name="getMe" datasource="nmg" >
+    select  bsu_email
+    from  BlogSubscribers
+    where  bsu_email = <cfqueryparam value="#arguments.bsu_email#" cfsqltype="varchar" maxlength="50">
+    and    bsu_blog = <cfqueryparam value="#instance.name#" cfsqltype="varchar" maxlength="50">
     </cfquery>
 
-    <cfif getMe.RecordCount is 0>
-      <cfquery datasource="#instance.dsn#">
-      insert into blogSubscribers(email,
-      token,
-      blog,
-      verified)
-      values(<cfqueryparam value="#ARGUMENTS.email#" cfsqltype="cf_sql_varchar" maxlength="50">,
-      <cfqueryparam value="#token#" cfsqltype="cf_sql_varchar" maxlength="35">,
-      <cfqueryparam value="#instance.name#" cfsqltype="cf_sql_varchar" maxlength="50">,
+    <cfif getMe.recordCount is 0>
+      <cfquery datasource="nmg" >
+      insert into BlogSubscribers(bsu_email,
+      bsu_token,
+      bsu_blog,
+      bsu_verified)
+      values(<cfqueryparam value="#arguments.bsu_email#" cfsqltype="varchar" maxlength="50">,
+      <cfqueryparam value="#bsu_token#" cfsqltype="varchar" maxlength="35">,
+      <cfqueryparam value="#instance.name#" cfsqltype="varchar" maxlength="50">,
       0
       )
       </cfquery>
 
-      <cfreturn token>
+      <cfreturn bsu_token>
 
     <cfelse>
 
@@ -334,70 +415,81 @@
     <cfset var salt = generateSalt()>
 
     <cflock name="blogcfc.adduser" type="exclusive" timeout="60">
-      <cfquery name="q" datasource="#instance.dsn#">
-      select  username
-      from  blogUsers
-      where  username = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.username#" maxlength="50">
-      and    blog = <cfqueryparam cfsqltype="cf_sql_varchar" value="#instance.name#" maxlength="50">
+      <cfquery name="q" datasource="nmg" >
+      select  bus_username
+      from  BlogUsers
+      where  bus_username = <cfqueryparam cfsqltype="varchar" value="#arguments.username#" maxlength="50">
+      and    bus_blog = <cfqueryparam cfsqltype="varchar" value="#instance.name#" maxlength="50">
       </cfquery>
 
-      <cfif q.RecordCount>
-        <cfset VARIABLES.utils.throw("#ARGUMENTS.name# already exists as a user.")>
+      <cfif q.recordCount>
+        <cfset variables.utils.throw("#arguments.name# already exists as a user.")>
       </cfif>
 
-      <cfquery datasource="#instance.dsn#">
-      insert into blogUsers(username, name, password, blog, salt)
+      <cfquery datasource="nmg" >
+      insert into BlogUsers(bus_username, bus_name, bus_password, bus_blog, bus_salt)
       values(
-      <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.username#" maxlength="50">,
-      <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.name#" maxlength="50">,
-      <cfqueryparam cfsqltype="cf_sql_varchar" value="#hash(salt & ARGUMENTS.password, instance.hashalgorithm)#" maxlength="256">,
-      <cfqueryparam cfsqltype="cf_sql_varchar" value="#instance.name#" maxlength="50">,
-      <cfqueryparam cfsqltype="cf_sql_varchar" value="#salt#" maxlength="256">
+      <cfqueryparam cfsqltype="varchar" value="#arguments.bus_username#" maxlength="50">,
+      <cfqueryparam cfsqltype="varchar" value="#arguments.bus_name#" maxlength="50">,
+      <cfqueryparam cfsqltype="varchar" value="#hash(bus_salt & arguments.bus_password, instance.hashalgorithm)#" maxlength="256">,
+      <cfqueryparam cfsqltype="varchar" value="#instance.name#" maxlength="50">,
+      <cfqueryparam cfsqltype="varchar" value="#bus_salt#" maxlength="256">
       )
       </cfquery>
     </cflock>
 
   </cffunction>
 
-  <cffunction name="approveComment" access="public" returnType="void" output="false" hint="Approves a comment.">
+  <cffunction name="approveComment" access="public" returnType="void" output="false"
+        hint="Approves a comment.">
     <cfargument name="commentid" type="uuid" required="true">
-    <cfquery datasource="#instance.dsn#">
-      update blogComments
-        set bco_moderated = <cfqueryparam value="1" cfsqltype="CF_SQL_TINYINT">
-       where id = <cfqueryparam value="#ARGUMENTS.commentid#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
+
+    <cfquery datasource="nmg" >
+    update BlogComments
+    set     bco_moderated =
+      <cfif instance.blogDBType is "MSSQL" or instance.blogDBType is "MSACCESS">
+        <cfqueryparam value="true" cfsqltype="BIT">
+      <cfelse>
+        <cfqueryparam value="1" cfsqltype="TINYINT">
+      </cfif>
+    where  id = <cfqueryparam value="#arguments.commentid#" cfsqltype="VARCHAR" maxlength="35">
     </cfquery>
+
   </cffunction>
 
-  <cffunction name="assignCategory" access="remote" returnType="void" roles="" output="false" hint="Assigns entry ID to category X">
+
+  <cffunction name="assignCategory" access="remote" returnType="void" roles="admin,ReleaseEntries" output="false"
+        hint="Assigns entry ID to category X">
     <cfargument name="entryid" type="uuid" required="true">
     <cfargument name="bca_bcaid" type="uuid" required="true">
     <cfset var checkEC = "">
 
-    <cfquery name="checkEC" datasource="#instance.dsn#">
-      select    bec_bcaid
-      from  blogEntriesCategories
-      where    bec_bcaid = <cfqueryparam value="#ARGUMENTS.bca_bcaid#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
-      and    entryidfk = <cfqueryparam value="#ARGUMENTS.entryid#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
+    <cfquery name="checkEC" datasource="nmg" >
+      select  bec_bcaid
+      from  BlogEntriesCategories
+      where  bec_bcaid = <cfqueryparam value="#arguments.bca_bcaid#" cfsqltype="VARCHAR" maxlength="35">
+      and    bec_benid = <cfqueryparam value="#arguments.entryid#" cfsqltype="VARCHAR" maxlength="35">
     </cfquery>
 
-    <cfif entryExists(ARGUMENTS.entryid) and categoryExists(id=ARGUMENTS.bca_bcaid) and not checkEC.RecordCount>
-      <cfquery datasource="#instance.dsn#">
-        insert into blogEntriesCategories(  bec_bcaid,entryidfk)
-        values(<cfqueryparam value="#ARGUMENTS.bca_bcaid#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">,<cfqueryparam value="#ARGUMENTS.entryid#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">)
+    <cfif entryExists(arguments.entryid) and categoryExists(id=arguments.bca_bcaid) and not checkEC.recordCount>
+      <cfquery datasource="nmg" >
+        insert into BlogEntriesCategories(bec_bcaid,bec_benid)
+        values(<cfqueryparam value="#arguments.bca_bcaid#" cfsqltype="VARCHAR" maxlength="35">,<cfqueryparam value="#arguments.entryid#" cfsqltype="VARCHAR" maxlength="35">)
       </cfquery>
     </cfif>
 
   </cffunction>
 
-  <cffunction name="assignCategories" access="remote" returnType="void" roles="" output="false" hint="Assigns entry ID to multiple categories">
+  <cffunction name="assignCategories" access="remote" returnType="void" roles="admin,ReleaseEntries" output="false"
+        hint="Assigns entry ID to multiple categories">
     <cfargument name="entryid" type="uuid" required="true">
     <cfargument name="bca_bcaids" type="string" required="true">
 
     <cfset var i=0>
 
     <!--- Loop through categories --->
-    <cfloop index="i" from="1" to="#listLen(ARGUMENTS.bca_bcaids)#">
-      <cfset assignCategory(ARGUMENTS.entryid,listGetAt(bca_bcaids,i))>
+    <cfloop index="i" from="1" to="#listLen(arguments.bca_bcaids)#">
+      <cfset assignCategory(arguments.entryid,listGetAt(bca_bcaids,i))>
     </cfloop>
 
   </cffunction>
@@ -406,131 +498,134 @@
     <cfargument name="username" type="string" required="true">
     <cfargument name="password" type="string" required="true">
 
-    <cfreturn APPLICATION.CFC.Users.Login(ARGUMENTS.username, ARGUMENTS.password).validated />
-
-<!---     <cfset var q = "">
+    <cfset var q = "">
     <cfset var authenticated = false>
 
-    <cfquery name="q" datasource="#instance.dsn#">
-      select  username, password, salt
-      from  blogUsers
-      where  username = <cfqueryparam value="#ARGUMENTS.username#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-      and    blog = <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
+    <cfquery name="q" datasource="nmg" >
+      select   bus_username, bus_password, bus_salt
+      from  BlogUsers
+      where  bus_sername = <cfqueryparam value="#arguments.username#" cfsqltype="VARCHAR" maxlength="50">
+      and    bus_blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
     </cfquery>
 
-    <cfif (q.RecordCount eq 1) AND (q.password is hash(q.salt & ARGUMENTS.password, instance.hashalgorithm))>
+    <cfif (q.recordCount eq 1) AND (q.bus_password is hash(q.bus_salt & arguments.password, instance.hashalgorithm))>
       <cfset authenticated = true>
     </cfif>
 
-    <cfreturn authenticated> --->
-
+    <cfreturn authenticated>
   </cffunction>
 
-  <cffunction name="blogNow" access="public" returntype="date" output="false" hint="Returns now() with the offset.">
+  <cffunction name="blogNow" access="public" returntype="date" output="false"
+        hint="Returns now() with the offset.">
     <cfreturn dateAdd("h", instance.offset, now())>
   </cffunction>
 
-  <cffunction name="categoryExists" access="private" returnType="boolean" output="false" hint="Returns true or false if an entry exists.">
+  <cffunction name="categoryExists" access="private" returnType="boolean" output="false"
+        hint="Returns true or false if an entry exists.">
     <cfargument name="id" type="uuid" required="false">
     <cfargument name="name" type="string" required="false">
     <cfset var checkC = "">
 
     <!--- must pass either ID or name, but not obth --->
-    <cfif (not isDefined("ARGUMENTS.id") and not isDefined("ARGUMENTS.name")) or (isDefined("ARGUMENTS.id") and isDefined("ARGUMENTS.name"))>
-      <cfset VARIABLES.utils.throw("categoryExists method must be passed id or name, but not both.")>
+    <cfif (not isDefined("arguments.id") and not isDefined("arguments.name")) or (isDefined("arguments.id") and isDefined("arguments.name"))>
+      <cfset variables.utils.throw("categoryExists method must be passed id or name, but not both.")>
     </cfif>
 
-    <cfquery name="checkC" datasource="#instance.dsn#">
+    <cfquery name="checkC" datasource="nmg" >
       select  bca_bcaid
-      from  blogCategories
+      from  BlogCategories
       where
-        <cfif isDefined("ARGUMENTS.id")>
-        bca_bcaid = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
+        <cfif isDefined("arguments.id")>
+        bca_bcaid = <cfqueryparam value="#arguments.id#" cfsqltype="VARCHAR" maxlength="35">
         </cfif>
-        <cfif isDefined("ARGUMENTS.name")>
-        bca_name = <cfqueryparam value="#ARGUMENTS.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
+        <cfif isDefined("arguments.name")>
+        bca_category = <cfqueryparam value="#arguments.name#" cfsqltype="VARCHAR" maxlength="100">
         </cfif>
-        and blog = <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
+        and blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
 
     </cfquery>
 
-    <cfreturn checkC.RecordCount gte 1>
+    <cfreturn checkC.recordCount gte 1>
 
   </cffunction>
 
-  <cffunction name="confirmSubscription" access="public" returnType="void" output="false" hint="Confirms a user's subscription to the blog.">
-    <cfargument name="token" type="uuid" required="false">
+  <cffunction name="confirmSubscription" access="public" returnType="void" output="false"
+        hint="Confirms a user's subscription to the blog.">
+    <cfargument name="bsu_token" type="uuid" required="false">
     <cfargument name="email" type="string" required="false">
 
-    <cfquery datasource="#instance.dsn#">
-    update  blogSubscribers
-    set    verified = 1
-    <cfif structKeyExists(arguments, "token")>
-    where  token = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="35" value="#ARGUMENTS.token#">
-    <cfelseif structKeyExists(arguments, "email")>
-    where  email = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="255" value="#ARGUMENTS.email#">
+    <cfquery datasource="nmg" >
+    update  BlogSubscribers
+    set    bsu_verified = 1
+    <cfif structKeyExists(arguments, "bsu_token")>
+    where  bsu_token = <cfqueryparam cfsqltype="varchar" maxlength="35" value="#arguments.bsu_token#">
+    <cfelseif structKeyExists(arguments, "bsu_email")>
+    where  bsu_email = <cfqueryparam cfsqltype="varchar" maxlength="255" value="#arguments.bsu_email#">
     <cfelse>
-      <cfthrow message="Invalid call to confirmSubscription. Must pass token or email.">
+      <cfthrow message="Invalid call to confirmSubscription. Must pass bsu_token or bsu_email.">
     </cfif>
     </cfquery>
 
   </cffunction>
 
-  <cffunction name="deleteCategory" access="public" returnType="void" roles="" output="false" hint="Deletes a category.">
+  <cffunction name="deleteCategory" access="public" returnType="void" roles="admin,ManageCategories" output="false"
+        hint="Deletes a category.">
     <cfargument name="id" type="uuid" required="true">
 
-    <cfquery datasource="#instance.dsn#">
-      delete from blogEntriesCategories
-      where   bec_bcaid = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
+    <cfquery datasource="nmg" >
+      delete from BlogEntriesCategories
+      where bec_bcaid = <cfqueryparam value="#arguments.id#" cfsqltype="VARCHAR" maxlength="35">
     </cfquery>
 
-    <cfquery datasource="#instance.dsn#">
-      delete from blogCategories
-      where bca_bcaid = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
+    <cfquery datasource="nmg" >
+      delete from BlogCategories
+      where bca_bcaid = <cfqueryparam value="#arguments.id#" cfsqltype="VARCHAR" maxlength="35">
     </cfquery>
 
   </cffunction>
 
-  <cffunction name="deleteComment" access="public" returnType="void" roles="" output="false" hint="Deletes a comment based on the comment's uuid.">
+  <cffunction name="deleteComment" access="public" returnType="void" roles="admin,ReleaseEntries" output="false"
+        hint="Deletes a comment based on the comment's uuid.">
     <cfargument name="id" type="uuid" required="true">
 
-    <cfquery datasource="#instance.dsn#">
-      delete from blogComments
-      where id = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
+    <cfquery datasource="nmg" >
+      delete from BlogComments
+      where id = <cfqueryparam value="#arguments.id#" cfsqltype="VARCHAR" maxlength="35">
     </cfquery>
 
   </cffunction>
 
-  <cffunction name="deleteEntry" access="remote" returnType="void" roles="" output="false" hint="Deletes an entry, plus all comments.">
+  <cffunction name="deleteEntry" access="remote" returnType="void" roles="admin,ReleaseEntries" output="false"
+        hint="Deletes an entry, plus all comments.">
     <cfargument name="id" type="uuid" required="true">
     <cfset var entry = "">
-    <cfset var enclosure = "">
+    <cfset var ben_enclosure = "">
 
-    <cfif entryExists(ARGUMENTS.id)>
+    <cfif entryExists(arguments.id)>
 
-      <!--- get the entry. we need it to clean up enclosure --->
-      <cfset entry = getEntry(ARGUMENTS.id)>
+      <!--- get the entry. we need it to clean up ben_enclosure --->
+      <cfset entry = getEntry(arguments.id)>
 
-      <cfif entry.enclosure neq "">
-        <cfif fileExists(entry.enclosure)>
-          <cffile action="delete" file="#entry.enclosure#">
+      <cfif entry.ben_enclosure neq "">
+        <cfif fileExists(entry.ben_enclosure)>
+          <cffile action="delete" file="#entry.ben_enclosure#">
         </cfif>
       </cfif>
 
-      <cfquery datasource="#instance.dsn#">
-        delete from blogEntries
-        where id = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
-        and    blog = <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
+      <cfquery datasource="nmg" >
+        delete from BlogEntries
+        where ben_benid = <cfqueryparam value="#arguments.id#" cfsqltype="VARCHAR" maxlength="35">
+        and    ben_blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
       </cfquery>
 
-      <cfquery datasource="#instance.dsn#">
-        delete from blogEntriesCategories
-        where entryidfk = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
+      <cfquery datasource="nmg" >
+        delete from BlogEntriesCategories
+        where bec_benid = <cfqueryparam value="#arguments.id#" cfsqltype="VARCHAR" maxlength="35">
       </cfquery>
 
-      <cfquery datasource="#instance.dsn#">
-        delete from blogComments
-        where entryidfk = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
+      <cfquery datasource="nmg" >
+        delete from BlogComments
+        where bco_benid = <cfqueryparam value="#arguments.id#" cfsqltype="VARCHAR" maxlength="35">
       </cfquery>
 
     </cfif>
@@ -540,44 +635,51 @@
   <cffunction name="deleteUser" access="public" returnType="void" output="false" hint="Deletes a user.">
     <cfargument name="username" type="string" required="true">
 
-    <cfquery datasource="#instance.dsn#">
-    delete from blogUsers
-    where  blog = <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-    and    username = <cfqueryparam value="#ARGUMENTS.username#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
+    <cfquery datasource="nmg" >
+    delete from BlogUsers
+    where  bus_blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
+    and    bus_username = <cfqueryparam value="#arguments.username#" cfsqltype="VARCHAR" maxlength="50">
     </cfquery>
 
   </cffunction>
 
-  <cffunction name="entryExists" access="private" returnType="boolean" output="false" hint="Returns true or false if an entry exists.">
+  <!--- JH DotComIt modified slightly to allow a "true" result if the item exists but is not available --->
+  <cffunction name="entryExists" access="private" returnType="boolean" output="false"
+        hint="Returns true or false if an entry exists.">
     <cfargument name="id" type="uuid" required="true">
+    <cfargument name="isAvailable" type="Boolean" required="false" default="1">
+
     <cfset var getIt = "">
 
     <cfif not structKeyExists(variables, "existsCache")>
-      <cfset VARIABLES.existsCache = structNew() />
+      <cfset variables.existsCache = structNew() />
     </cfif>
 
-    <cfif structKeyExists(VARIABLES.existsCache, ARGUMENTS.id)>
-      <cfreturn VARIABLES.existsCache[ARGUMENTS.id]>
+    <cfif structKeyExists(variables.existsCache, arguments.id)>
+      <cfreturn variables.existsCache[arguments.id]>
     </cfif>
 
-    <cfquery name="getIt" datasource="#instance.dsn#">
-      select    blogEntries.id
-      from    blogEntries
-      where    blogEntries.id = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
-<!---       and      ben_blog = <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50"> --->
-      <cfif not isBlogAuthorized()>
-      and      posted < <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-      and      released = 1
+    <cfquery name="getIt" datasource="nmg" >
+      select    BlogEntries.ben_benid
+      from    BlogEntries
+      where    BlogEntries.ben_benid = <cfqueryparam value="#arguments.id#" cfsqltype="VARCHAR" maxlength="35">
+      and      BlogEntries.ben_blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
+      <cfif (arguments.IsAvailable is 1)>
+        <cfif (not isUserInRole("admin"))>
+                    and      posted < <cfqueryparam cfsqltype="timestamp" value="#now()#">
+                    and      ben_released = 1
+        </cfif>
       </cfif>
     </cfquery>
 
-    <cfset VARIABLES.existsCache[ARGUMENTS.id] = getit.RecordCount gte 1>
-    <cfreturn VARIABLES.existsCache[ARGUMENTS.id]>
+    <cfset variables.existsCache[arguments.id] = getit.recordCount gte 1>
+    <cfreturn variables.existsCache[arguments.id]>
 
   </cffunction>
 
 
-  <cffunction name="generateRSS" access="remote" returnType="string" output="false" hint="Attempts to generate RSS v1 or v2">
+  <cffunction name="generateRSS" access="remote" returnType="string" output="false"
+        hint="Attempts to generate RSS v1 or v2">
     <cfargument name="mode" type="string" required="false" default="short" hint="If mode=short, show EXCERPT chars of entries. Otherwise, show all.">
     <cfargument name="excerpt" type="numeric" required="false" default="250" hint="If mode=short, this how many chars to show.">
     <cfargument name="params" type="struct" required="false" default="#structNew()#" hint="Passed to getEntries. Note, maxEntries can't be bigger than 15.">
@@ -592,17 +694,18 @@
     <cfset var dateStr = "">
     <cfset var rssStr = "">
     <cfset var utcPrefix = "">
+    <cfset var rootURL = "">
     <cfset var cat = "">
     <cfset var lastid = "">
     <cfset var catid = "">
     <cfset var catlist = "">
 
     <!--- Right now, we force this in. Useful to limit throughput of RSS feed. I may remove this later. --->
-    <cfif (structKeyExists(ARGUMENTS.params,"maxEntries") and ARGUMENTS.params.maxEntries gt 15) or not structKeyExists(ARGUMENTS.params,"maxEntries")>
-      <cfset ARGUMENTS.params.maxEntries = 15>
+    <cfif (structKeyExists(arguments.params,"maxEntries") and arguments.params.maxEntries gt 15) or not structKeyExists(arguments.params,"maxEntries")>
+      <cfset arguments.params.maxEntries = 15>
     </cfif>
 
-    <cfset articles = getEntries(ARGUMENTS.params)>
+    <cfset articles = getEntries(arguments.params)>
     <!--- copy over just the actual query --->
     <cfset articles = articles.entries>
 
@@ -614,7 +717,7 @@
     </cfif>
 
 
-    <cfif ARGUMENTS.version is 1>
+    <cfif arguments.version is 1>
 
       <cfsavecontent variable="header">
       <cfoutput>
@@ -622,8 +725,8 @@
 
       <rdf:RDF
         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns##"
-        xmlns:dc="http://pURL.org/dc/elements/1.1/"
-        xmlns="http://pURL.org/rss/1.0/"
+        xmlns:dc="http://purl.org/dc/elements/1.1/"
+        xmlns="http://purl.org/rss/1.0/"
       >
       </cfoutput>
       </cfsavecontent>
@@ -631,7 +734,7 @@
       <cfsavecontent variable="channel">
       <cfoutput>
       <channel rdf:about="#xmlFormat(instance.blogURL)#">
-      <title>#xmlFormat(instance.blogTitle)##xmlFormat(ARGUMENTS.additionalTitle)#</title>
+      <title>#xmlFormat(instance.blogTitle)##xmlFormat(arguments.additionalTitle)#</title>
       <description>#xmlFormat(instance.blogDescription)#</description>
       <link>#xmlFormat(instance.blogURL)#</link>
 
@@ -652,9 +755,9 @@
       <cfset dateStr = dateFormat(posted,"yyyy-mm-dd")>
       <cfset dateStr = dateStr & "T" & timeFormat(posted,"HH:mm:ss") & utcPrefix & numberFormat(z.utcHourOffset,"00") & ":00">
       <cfoutput>
-      <item rdf:about="#xmlFormat(makeLink(id))#">
+        <item rdf:about="#xmlFormat(makeLink(id))#">
       <title>#xmlFormat(title)#</title>
-      <description><cfif ARGUMENTS.mode is "short" and len(REReplaceNoCase(body,"<[^>]*>","","ALL")) gte ARGUMENTS.excerpt>#xmlFormat(left(REReplaceNoCase(body,"<[^>]*>","","ALL"),ARGUMENTS.excerpt))#...<cfelse>#xmlFormat(body & morebody)#</cfif></description>
+      <description><cfif arguments.mode is "short" and len(REReplaceNoCase(body,"<[^>]*>","","ALL")) gte arguments.excerpt>#xmlFormat(left(REReplaceNoCase(body,"<[^>]*>","","ALL"),arguments.excerpt))#...<cfelse>#xmlFormat(body & ben_morebody)#</cfif></description>
       <link>#xmlFormat(makeLink(id))#</link>
       <dc:date>#dateStr#</dc:date>
       <cfloop item="catid" collection="#categories#">
@@ -663,21 +766,23 @@
       <dc:subject>#xmlFormat(catlist)#</dc:subject>
       </item>
       </cfoutput>
-      </cfloop>
+       </cfloop>
       </cfsavecontent>
 
       <cfset rssStr = trim(header & channel & items & "</rdf:RDF>")>
 
-    <cfelseif ARGUMENTS.version eq "2">
+    <cfelseif arguments.version eq "2">
+
+      <cfset rootURL = reReplace(instance.blogURL, "(.*)/index.cfm", "\1")>
 
       <cfsavecontent variable="header">
       <cfoutput>
       <?xml version="1.0" encoding="utf-8"?>
 
-      <rss version="2.0" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns##" xmlns:cc="http://web.resource.org/cc/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+      <rss version="2.0" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns##" xmlns:cc="http://web.resource.org/cc/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:media="http://search.yahoo.com/mrss/">
 
       <channel>
-      <title>#xmlFormat(instance.blogTitle)##xmlFormat(ARGUMENTS.additionalTitle)#</title>
+      <title>#xmlFormat(instance.blogTitle)##xmlFormat(arguments.additionalTitle)#</title>
       <link>#xmlFormat(instance.blogURL)#</link>
       <description>#xmlFormat(instance.blogDescription)#</description>
       <language>#replace(lcase(instance.locale),'_','-','one')#</language>
@@ -685,11 +790,20 @@
       <lastBuildDate>{LAST_BUILD_DATE}</lastBuildDate>
       <generator>BlogCFC</generator>
       <docs>http://blogs.law.harvard.edu/tech/rss</docs>
-      <managingEditor>#xmlFormat(instance.owneremail)#</managingEditor>
-      <webMaster>#xmlFormat(instance.owneremail)#</webMaster>
+      <!---- JH DotComIt added code to turn e-mails into unitext, removed xmlformat ---->
+      <managingEditor>#(variables.utils.EmailAntiSpam(instance.owneremail))#</managingEditor>
+      <webMaster>#(variables.utils.EmailAntiSpam(instance.owneremail))#</webMaster>
+      <media:copyright>Copyright 2008-#year(now())#, DotComIt LLC</media:copyright>
+      <media:thumbnail url="#xmlFormat(instance.itunesImage)#" />
+            <media:keywords>#xmlFormat(instance.itunesKeywords)#</media:keywords>
+            <media:category scheme="http://www.itunes.com/dtds/podcast-1.0.dtd">Technology/Software How-To</media:category>
+            <media:category scheme="http://www.itunes.com/dtds/podcast-1.0.dtd">Technology/Tech News</media:category>
       <itunes:subtitle>#xmlFormat(instance.itunesSubtitle)#</itunes:subtitle>
       <itunes:summary>#xmlFormat(instance.itunesSummary)#</itunes:summary>
       <itunes:category text="Technology" />
+      <itunes:category text="Technology">
+        <itunes:category text="Software How-To" />
+      </itunes:category>
       <itunes:category text="Technology">
         <itunes:category text="Podcasting" />
       </itunes:category>
@@ -723,9 +837,9 @@
         <link>#xmlFormat(makeLink(id))#</link>
         <description>
         <!--- Regex operation removes HTML code from blog body output --->
-        <cfif ARGUMENTS.mode is "short" and len(REReplaceNoCase(body,"<[^>]*>","","ALL")) gte ARGUMENTS.excerpt>
-        #xmlFormat(left(REReplace(body,"<[^>]*>","","All"),ARGUMENTS.excerpt))#...
-        <cfelse>#xmlFormat(body & morebody)#</cfif>
+        <cfif arguments.mode is "short" and len(REReplaceNoCase(body,"<[^>]*>","","ALL")) gte arguments.excerpt>
+        #xmlFormat(left(REReplace(body,"<[^>]*>","","All"),arguments.excerpt))#...
+        <cfelse>#xmlFormat(body & ben_morebody)#</cfif>
         </description>
         <cfset lastid = listLast(structKeyList(categories))>
         <cfloop item="catid" collection="#categories#">
@@ -733,14 +847,11 @@
         </cfloop>
         <pubDate>#dateStr#</pubDate>
         <guid>#xmlFormat(makeLink(id))#</guid>
-        <!---
-        <author>
-        <name>#xmlFormat(name)#</name>
-        </author>
-        --->
-        <cfif len(enclosure)>
-        <enclosure url="#xmlFormat("#APPLICATION.PATH.ATTACH#/#REQUEST.BLOG#/#getFileFromPath(enclosure)#")#" length="#filesize#" type="#mimetype#"/>
-        <cfif mimetype IS "audio/mpeg">
+        <!--- JH, DotComIt Adding this back in; no idea why it was commented out --->
+                <author>#xmlFormat(instance.owneremail)# (#xmlFormat(instance.itunesAuthor)#)</author>
+        <cfif len(ben_enclosure)>
+        <ben_enclosure url="#xmlFormat("#rootURL#/ben_enclosures/#getFileFromPath(ben_enclosure)#")#" length="#ben_filesize#" type="#ben_mimetype#"/>
+        <cfif ben_mimetype IS "audio/mpeg">
         <itunes:author>#xmlFormat(instance.itunesAuthor)#</itunes:author>
         <itunes:explicit>#xmlFormat(instance.itunesExplicit)#</itunes:explicit>
         <itunes:duration>#xmlFormat(duration)#</itunes:duration>
@@ -752,7 +863,7 @@
         </cfif>
       </item>
       </cfoutput>
-      </cfloop>
+       </cfloop>
       </cfsavecontent>
 
       <cfset header = replace(header,'{LAST_BUILD_DATE}','#dateFormat(articles.posted[1],"ddd, dd mmm yyyy") & " " & timeFormat(articles.posted[1],"HH:mm:ss") & utcPrefix & numberFormat(z.utcHourOffset,"00") & "00"#','one')>
@@ -768,37 +879,61 @@
     <cfargument name="year" type="numeric" required="true">
     <cfargument name="month" type="numeric" required="true">
 
-    <cfset var dtMonth = createDateTime(ARGUMENTS.year,ARGUMENTS.month,1,0,0,0)>
-    <cfset var dtEndOfMonth = createDateTime(ARGUMENTS.year,ARGUMENTS.month,daysInMonth(dtMonth),23,59,59)>
+    <cfset var dtMonth = createDateTime(arguments.year,arguments.month,1,0,0,0)>
+    <cfset var dtEndOfMonth = createDateTime(arguments.year,arguments.month,daysInMonth(dtMonth),23,59,59)>
     <cfset var days = "">
+    <cfset var posted = "">
 
-    <cfquery datasource="#instance.dsn#" name="days">
-      select distinct extract(day from date_add(posted, interval #instance.offset# hour)) as posted_day
-        from blogEntries
-       where date_add(posted, interval #instance.offset# hour) >= <cfqueryparam value="#dtMonth#" cfsqltype="CF_SQL_TIMESTAMP">
-        and date_add(posted, interval #instance.offset# hour) <= <cfqueryparam value="#dtEndOfMonth#" cfsqltype="CF_SQL_TIMESTAMP">
-        and blog = <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-        and date_add(posted, interval #instance.offset# hour) < <cfqueryparam cfsqltype="cf_sql_timestamp" value="#blogNow()#">
-        and released = 1
+    <cfif instance.blogDBType is "MSSQL">
+      <cfset posted = "dateAdd(hh, #instance.offset#, BlogEntries.ben_posted)">
+    <cfelseif instance.blogDBType is "MSACCESS">
+      <cfset posted = "dateAdd('h', #instance.offset#, BlogEntries.ben_posted)">
+    <cfelseif instance.blogDBType is "MYSQL">
+      <cfset posted = "date_add(posted, interval #instance.offset# hour)">
+    <cfelseif instance.blogDBType is "ORACLE">
+      <cfset posted = "BlogEntries.ben_posted + (#instance.offset#/24)">
+    </cfif>
+
+    <cfquery datasource="nmg" name="days" >
+      select distinct
+        <cfif instance.blogDBType is "MSSQL">
+          datepart(dd, #preserveSingleQuotes(posted)#)
+        <cfelseif instance.blogDBType is "MYSQL">
+          extract(day from #preserveSingleQuotes(posted)#)
+        <cfelseif instance.blogDBType is "MSACCESS">
+          datepart('d', #preserveSingleQuotes(posted)#)
+        <cfelseif instance.blogDBType is "ORACLE">
+          to_char(#preserveSingleQuotes(posted)#, 'dd')
+        </cfif> as posted_day
+      from BlogEntries
+      where
+        #preserveSingleQuotes(posted)# >= <cfqueryparam value="#dtMonth#" cfsqltype="TIMESTAMP">
+        and
+        #preserveSingleQuotes(posted)# <= <cfqueryparam value="#dtEndOfMonth#" cfsqltype="TIMESTAMP">
+        and blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
+        and  #preserveSingleQuotes(posted)# < <cfqueryparam cfsqltype="timestamp" value="#blogNow()#">
+        and  ben_released = 1
     </cfquery>
+
     <cfreturn valueList(days.posted_day)>
+
   </cffunction>
 
   <cffunction name="getArchives" access="public" returnType="query" output="false" hint="I return a query containing all of the past months/years that have entries along with the entry count">
     <cfargument name="archiveYears" type="numeric" required="false" hint="Number of years back to pull archives for. This helps limit the result set that can be returned" default="0">
     <cfset var getMonthlyArchives = "" />
-    <cfset var fromYear = year(now()) - ARGUMENTS.archiveYears />
+    <cfset var fromYear = year(now()) - arguments.archiveYears />
 
-    <cfquery name="getMonthlyArchives" datasource="#instance.dsn#">
-      SELECT MONTH(blogEntries.posted) AS PreviousMonths,
-           YEAR(blogEntries.posted) AS PreviousYears,
-          COUNT(blogEntries.id) AS entryCount
-      FROM blogEntries
-      WHERE ben_blog = <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-      <cfif ARGUMENTS.archiveYears gt 0>
-      AND YEAR(blogEntries.posted) >= #fromYear#
+    <cfquery name="getMonthlyArchives" datasource="nmg" >
+      SELECT MONTH(BlogEntries.ben_posted) AS PreviousMonths,
+             YEAR(BlogEntries.ben_posted) AS PreviousYears,
+           COUNT(BlogEntries.ben_benid) AS entryCount
+      FROM BlogEntries
+      WHERE BlogEntries.ben_blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
+      <cfif arguments.archiveYears gt 0>
+      AND YEAR(BlogEntries.ben_posted) >= #fromYear#
       </cfif>
-      GROUP BY YEAR(blogEntries.posted), MONTH(blogEntries.posted)
+      GROUP BY YEAR(BlogEntries.ben_posted), MONTH(BlogEntries.ben_posted)
       ORDER BY PreviousYears DESC, PreviousMonths DESC
     </cfquery>
 
@@ -808,9 +943,9 @@
   <cffunction name="getBlogRoles" access="public" returnType="query" output="false">
     <cfset var q = "">
 
-    <cfquery name="q" datasource="#instance.dsn#">
-    select  id, role, description
-    from  blogRoles
+    <cfquery name="q" datasource="nmg" >
+    select  bro_broid, bro_role, bro_description
+    from  BlogRoles
     </cfquery>
 
     <cfreturn q>
@@ -820,49 +955,88 @@
     <cfargument name="usecache" type="boolean" required="false" default="true">
     <cfset var getC = "">
     <cfset var getTotal = "">
+
+    <!---
+    Update on May 10, 2006
+    So I wanted to update the code to handle cats with 0 entries. This proved difficult.
+    My friend Tai sent code that he said would work on both mssql and mysql,
+    but it only worked on mssql for me.
+
+    So for now I'm going to use the "nice" method for mssql, and the "hack" method
+    for the others. The hack method will be slower, but it should not be terrible.
+    --->
+
     <!--- get cats is expensive when not mssql, and really, it doesn't change too often, so I'm adding a cache --->
-    <cfif structKeyExists(variables, "categoryCache") and ARGUMENTS.usecache>
-      <cfreturn VARIABLES.categoryCache>
+
+    <cfif structKeyExists(variables, "categoryCache") and arguments.usecache>
+      <cfreturn variables.categoryCache>
     </cfif>
-    <cfquery name="getC" datasource="#instance.dsn#">
-      select  blogCategories.bca_bcaid, blogCategories.bca_name, blogCategories.bca_alias
-      from  blogCategories
-      where  bca_blog = <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-      order by blogCategories.bca_name
-    </cfquery>
-    <cfset queryAddColumn(getC, "entrycount", arrayNew(1))>
-    <cfloop query="getC">
-      <cfquery name="getTotal" datasource="#instance.dsn#">
-        select  count(blogEntriesCategories.entryidfk) as total
-        from  blogEntriesCategories, blogEntries
-        where  blogEntriesCategories.  bec_bcaid = <cfqueryparam value="#bca_bcaid#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
-        and   blogEntriesCategories.entryidfk = blogEntries.id
-        and   blogEntries.released = 1
+
+    <cfif instance.blogDBType is "mssql">
+
+      <cfquery name="getC" datasource="nmg" >
+        select  BlogCategories.bca_bcaid, BlogCategories.bca_category, BlogCategories.bca_alias, count(BlogEntriesCategories.bec_benid) as entryCount
+        from  (BlogCategories
+        left outer join
+        BlogEntriesCategories ON BlogCategories.bca_bcaid = BlogEntriesCategories.bec_bcaid)
+        left join BlogEntries on BlogEntriesCategories.bec_benid = BlogEntries.ben_benid
+        where  BlogCategories.bca_blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
+        <!--- Don't allow future posts unless logged in. --->
+        <cfif not isUserInRole("admin")>
+            and isNull(BlogEntries.ben_posted, '1/1/1900') < <cfqueryparam cfsqltype="timestamp" value="#blogNow()#">
+             and isNull(BlogEntries.ben_released, 1) = 1
+        </cfif>
+        group by BlogCategories.bca_bcaid, BlogCategories.bca_category, BlogCategories.bca_alias
+        order by BlogCategories.bca_category
       </cfquery>
-      <cfif getTotal.RecordCount>
-        <cfset querySetCell(getC, "entrycount", getTotal.total, currentRow)>
-      <cfelse>
-        <cfset querySetCell(getC, "entrycount", 0, currentRow)>
-      </cfif>
-    </cfloop>
-    <cfset VARIABLES.categoryCache = getC>
-    <cfreturn VARIABLES.categoryCache>
+
+    <cfelse>
+
+      <cfquery name="getC" datasource="nmg" >
+      select  BlogCategories.bca_bcaid, BlogCategories.bca_category,
+          BlogCategories.bca_alias
+      from  BlogCategories
+      where  BlogCategories.bca_blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
+      order by BlogCategories.bca_category
+      </cfquery>
+
+      <cfset queryAddColumn(getC, "entrycount", arrayNew(1))>
+
+      <cfloop query="getC">
+        <cfquery name="getTotal" datasource="nmg" >
+        select  count(BlogEntriesCategories.bec_benid) as total
+        from  BlogEntriesCategories, BlogEntries
+        where  BlogEntriesCategories.bec_bcaid = <cfqueryparam value="#bca_bcaid#" cfsqltype="VARCHAR" maxlength="35">
+        and    BlogEntriesCategories.bec_benid = BlogEntries.ben_benid
+        and    BlogEntries.ben_released = 1
+        </cfquery>
+        <cfif getTotal.recordCount>
+          <cfset querySetCell(getC, "entrycount", getTotal.total, currentRow)>
+        <cfelse>
+          <cfset querySetCell(getC, "entrycount", 0, currentRow)>
+        </cfif>
+      </cfloop>
+    </cfif>
+
+    <cfset variables.categoryCache = getC>
+    <cfreturn variables.categoryCache>
+
   </cffunction>
 
   <cffunction name="getCategoriesForEntry" access="remote" returnType="query" output="false" hint="Returns a query containing all of the categories for a specific blog entry.">
     <cfargument name="id" type="uuid" required="true">
     <cfset var getC = "">
 
-    <cfif not entryExists(ARGUMENTS.id)>
-      <cfset VARIABLES.utils.throw("#ARGUMENTS.id# does not exist.")>
+    <cfif not entryExists(arguments.id)>
+      <cfset variables.utils.throw("#arguments.id# does not exist.")>
     </cfif>
 
-    <!--- updated "VARIABLES.dsn" to "instance.dsn" (DS 8/22/06) --->
-    <cfquery name="getC" datasource="#instance.dsn#">
-      select  blogCategories.bca_bcaid, blogCategories.bca_name
-      from  blogCategories, blogEntriesCategories
-      where  blogCategories.bca_bcaid = blogEntriesCategories.  bec_bcaid
-      and    blogEntriesCategories.entryidfk = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
+    <!--- updated "variables.dsn" to "instance.dsn" (DS 8/22/06) --->
+    <cfquery name="getC" datasource="nmg" >
+      select  BlogCategories.bca_bcaid, BlogCategories.bca_category
+      from  BlogCategories, BlogEntriesCategories
+      where  BlogCategories.bca_bcaid = BlogEntriesCategories.bec_bcaid
+      and    BlogEntriesCategories.bec_benid = <cfqueryparam value="#arguments.id#" cfsqltype="VARCHAR" maxlength="35">
     </cfquery>
     <cfreturn getC>
 
@@ -872,15 +1046,15 @@
     <cfargument name="id" type="uuid" required="true">
     <cfset var getC = "">
 
-    <cfquery name="getC" datasource="#instance.dsn#">
-      select  bca_name, bca_alias
-      from  blogCategories
-      where  bca_bcaid = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
-      and    blog = <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
+    <cfquery name="getC" datasource="nmg" >
+      select  bca_category, bca_alias
+      from  BlogCategories
+      where  bca_bcaid = <cfqueryparam value="#arguments.id#" cfsqltype="VARCHAR" maxlength="35">
+      and    bca_blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
     </cfquery>
 
-    <cfif not getC.RecordCount>
-      <cfset VARIABLES.utils.throw("#ARGUMENTS.id# is not a valid category.")>
+    <cfif not getC.recordCount>
+      <cfset variables.utils.throw("#arguments.id# is not a valid category.")>
     </cfif>
 
     <cfreturn getC>
@@ -891,11 +1065,11 @@
     <cfargument name="alias" type="string" required="true">
     <cfset var getC = "">
 
-    <cfquery name="getC" datasource="#instance.dsn#">
+    <cfquery name="getC" datasource="nmg" >
       select  bca_bcaid
-      from  blogCategories
-      where  bca_alias = <cfqueryparam value="#ARGUMENTS.alias#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-      and    blog = <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
+      from  BlogCategories
+      where  bca_alias = <cfqueryparam value="#arguments.alias#" cfsqltype="VARCHAR" maxlength="50">
+      and    blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
     </cfquery>
 
     <cfreturn getC.bca_bcaid>
@@ -907,36 +1081,48 @@
     <cfargument name="name" type="string" required="true">
     <cfset var getC = "">
 
-    <cfquery name="getC" datasource="#instance.dsn#">
+    <cfquery name="getC" datasource="nmg" >
       select  bca_bcaid
-      from  blogCategories
-      where  bca_name = <cfqueryparam value="#ARGUMENTS.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-      and    blog = <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
+      from  BlogCategories
+      where  bca_category = <cfqueryparam value="#arguments.name#" cfsqltype="VARCHAR" maxlength="50">
+      and    blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
     </cfquery>
 
     <cfreturn getC.bca_bcaid>
 
   </cffunction>
 
-  <cffunction name="getComment" access="remote" returnType="query" output="false" hint="Gets a specific comment by comment ID.">
+  <cffunction name="getComment" access="remote" returnType="query" output="false"
+        hint="Gets a specific comment by comment ID.">
     <cfargument name="id" type="uuid" required="true">
     <cfset var getC = "">
-    <cfquery name="getC" datasource="#instance.dsn#">
-      select    id, entryidfk, name, email, bco_website, comment, posted, subscribe, bco_moderated, bco_kill, usid
-      from    blogComments
-      where    id = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
+
+    <cfquery name="getC" datasource="nmg" >
+      select    id, fk_benid, name, email, bco_website, comment<cfif instance.blogDBTYPE is "ORACLE">s</cfif>, posted, subscribe, bco_moderated, bco_kill
+      from    BlogComments
+      where    id = <cfqueryparam value="#arguments.id#" cfsqltype="VARCHAR" maxlength="35">
     </cfquery>
+
+    <!--- DS 8/22/06: if this is oracle, do a q of q to return the data with column named "comment" --->
+    <cfif instance.blogDBType is "ORACLE">
+      <cfquery name="getC" dbtype="query">
+        select    id, fk_benid, name, email, bco_website, comments AS comment, posted, subscribe, bco_moderated, bco_kill
+        from    getC
+      </cfquery>
+    </cfif>
     <cfreturn getC>
+
   </cffunction>
 
   <!--- RBB 8/23/2010: Added a new method to get comment count for an entry --->
-  <cffunction name="getCommentCount" access="remote" returnType="numeric"  output="false" hint="Gets the total number of comments for a blog entry">
+  <cffunction name="getCommentCount" access="remote" returnType="numeric"  output="false"
+        hint="Gets the total number of comments for a blog entry">
     <cfargument name="id" type="uuid" required="true">
 
-    <cfquery name="getCommentCount" datasource="#instance.dsn#">
+    <cfquery name="getCommentCount" datasource="nmg" >
       select count(id) as commentCount
-      from  blogComments
-      where  entryidfk = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
+      from   BlogComments
+      where  fk_benid = <cfqueryparam value="#arguments.id#" cfsqltype="VARCHAR" maxlength="35">
 
       <cfif instance.moderate>
         and bco_moderated = 1
@@ -947,79 +1133,115 @@
     <cfreturn getCommentCount.commentCount>
   </cffunction>
 
-  <cffunction name="getComments" access="remote" returnType="query" output="false" hint="Gets all comments for an entry ID.">
+  <cffunction name="getComments" access="remote" returnType="query" output="false"
+        hint="Gets all comments for an entry ID.">
     <cfargument name="id" type="uuid" required="false">
     <cfargument name="sortdir" type="string" required="false" default="asc">
     <cfargument name="includesubscribers" type="boolean" required="false" default="false">
     <cfargument name="search" type="string" required="false">
+
     <cfset var getC = "">
-    <cfif structKeyExists(arguments, "id") and not entryExists(ARGUMENTS.id)>
-      <cfset VARIABLES.utils.throw("#ARGUMENTS.id# does not exist.")>
+    <cfset var getO = "">
+
+    <cfif structKeyExists(arguments, "id") and not entryExists(arguments.id)>
+      <cfset variables.utils.throw("#arguments.id# does not exist.")>
     </cfif>
-    <cfif ARGUMENTS.sortDir is not "asc" and ARGUMENTS.sortDir is not "desc">
-      <cfset ARGUMENTS.sortDir = "asc">
+
+    <cfif arguments.sortDir is not "asc" and arguments.sortDir is not "desc">
+      <cfset arguments.sortDir = "asc">
     </cfif>
-    <cfquery name="getC" datasource="#instance.dsn#">
-      SELECT blogComments.id, blogComments.name, blogComments.email, blogComments.bco_website,
-           blogComments.comment, blogComments.posted, blogComments.subscribe, blogEntries.title as entrytitle, blogComments.entryidfk,
-           CAST(md5(blogComments.email) AS CHAR) AS gravatar, IF(LENGTH(avatar)=0, 'zombatar.jpg', avatar) AS avatar, blogComments.usid
-        FROM blogComments
-           INNER JOIN blogEntries ON blogComments.entryidfk = blogEntries.id
-           LEFT OUTER JOIN forum_users AS fu ON fu.usid = blogComments.usid
-       WHERE 1=1
+
+    <!--- RBB 11/02/2005: Added bco_website to query --->
+    <cfquery name="getC" datasource="nmg" >
+      select    BlogComments.bco_bcoid, BlogComments.bco_name, BlogComments.bco_email, BlogComments.bco_website,
+            <cfif instance.blogDBTYPE is NOT "ORACLE">BlogComments.comment<cfelse>to_char(BlogComments.comments) as comments</cfif>,   BlogComments.bco_posted, BlogComments.subscribe, BlogEntries.ben_title as entrytitle, BlogComments.bco_benid
+      from    BlogComments, BlogEntries
+      where    BlogComments.bco_benid = BlogEntries.ben_benid
       <cfif structKeyExists(arguments, "search")>
-        AND (
-            blogComments.comment LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#ARGUMENTS.search#%">
-            OR
-            blogComments.name LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#ARGUMENTS.search#%">
-          )
+      and
+            (
+            <cfif instance.blogDBTYpe is not "ORACLE">
+            BlogComments.comment
+            <cfelse>
+            comments
+            </cfif> like <cfqueryparam cfsqltype="varchar" value="%#arguments.search#%">
+            or
+            BlogComments.bco_name like <cfqueryparam cfsqltype="varchar" value="%#arguments.search#%">
+            )
       </cfif>
       <cfif structKeyExists(arguments, "id")>
-        AND blogComments.entryidfk = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
+      and      BlogComments.bco_benid = <cfqueryparam value="#arguments.id#" cfsqltype="VARCHAR" maxlength="35">
       </cfif>
-        AND ben_blog = <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
+      and      BlogEntries.ben_blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
+      <!--- added 12/5/2006 by Trent Richardson --->
       <cfif instance.moderate>
-        AND blogComments.bco_moderated = 1
+        and BlogComments.bco_moderated = 1
       </cfif>
-      <cfif not ARGUMENTS.includesubscribers>
-        AND (bco_subscribeonly = 0 OR bco_subscribeonly IS NULL)
+      <cfif not arguments.includesubscribers>
+      and (bco_subscribeonly = 0 or bco_subscribeonly is null)
       </cfif>
-      ORDER BY blogComments.posted #ARGUMENTS.sortdir#
+      order by    BlogComments.bco_posted #arguments.sortdir#
     </cfquery>
+
+    <!--- DS 8/22/06: if this is oracle, do a q of q to return the data with column named "comment" --->
+    <cfif instance.blogDBType is "ORACLE">
+      <cfquery name="getO" dbtype="query">
+      select    id, name, email, bco_website,
+            comments AS comment, posted, subscribe, entrytitle, fk_benid
+      from    getC
+      order by  posted #arguments.sortdir#
+      </cfquery>
+
+      <cfreturn getO>
+    </cfif>
+
     <cfreturn getC>
+
   </cffunction>
 
   <!--- Deprecated --->
-  <cffunction name="getEntry" access="remote" returnType="struct" output="false" hint="Returns one particular entry.">
+  <cffunction name="getEntry" access="remote" returnType="struct" output="false"
+        hint="Returns one particular entry.">
     <cfargument name="id" type="uuid" required="true">
     <cfargument name="dontlog" type="boolean" required="false" default="false">
+    <cfargument name="IsAvailable" type="boolean" required="false" default="true">
+
     <cfset var getIt = "">
     <cfset var s = structNew()>
     <cfset var col = "">
     <cfset var getCategories = "">
 
-    <cfif not entryExists(ARGUMENTS.id)>
-      <cfset VARIABLES.utils.throw("#ARGUMENTS.id# does not exist.")>
+    <cfif not entryExists(arguments.id,arguments.IsAvailable)>
+      <cfset variables.utils.throw("#arguments.id# does not exist.")>
     </cfif>
 
-    <cfquery name="getIt" datasource="#instance.dsn#">
-      select  blogEntries.id, blogEntries.title, date_add(posted, interval #instance.offset# hour) as posted,
-            blogEntries.body,
-            blogEntries.morebody, blogEntries.alias, blogEntries.allowcomments,
-            blogEntries.enclosure, blogEntries.filesize, blogEntries.mimetype, blogEntries.released, blogEntries.mailed,
-            blogEntries.summary, blogEntries.keywords, blogEntries.subtitle, blogEntries.duration,
-            IF(us_last="", us_user, trim(concat(us_first, " ", us_last))) AS name
-      from    blogEntries, bih.users
-      where    blogEntries.id = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
-      and      ben_blog = <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-      and      blogEntries.username = bih.users.us_user
+    <cfquery name="getIt" datasource="nmg" >
+      select    BlogEntries.ben_benid, BlogEntries.ben_title,
+            <!--- Handle offset --->
+            <cfif instance.blogDBType is "MSACCESS">
+            dateAdd('h', #instance.offset#, BlogEntries.ben_posted) as posted,
+            <cfelseif instance.blogDBType is "MSSQL">
+            dateAdd(hh, #instance.offset#, BlogEntries.ben_posted) as posted,
+            <cfelseif instance.blogDBType is "ORACLE">
+            BlogEntries.ben_posted + (#instance.offset#/24) as posted,
+            <cfelse>
+            date_add(posted, interval #instance.offset# hour) as posted,
+            </cfif>
+            BlogEntries.ben_body,
+            BlogEntries.ben_morebody, BlogEntries.ben_alias, BlogUsers.bus_name, BlogEntries.ben_allowcomments,
+            BlogEntries.ben_enclosure, BlogEntries.ben_filesize, BlogEntries.ben_mimetype, BlogEntries.ben_released, BlogEntries.ben_mailed,
+            BlogEntries.ben_summary, BlogEntries.ben_keywords, BlogEntries.ben_subtitle, BlogEntries.ben_duration
+      from    BlogEntries, BlogUsers
+      where    BlogEntries.ben_benid = <cfqueryparam value="#arguments.id#" cfsqltype="VARCHAR" maxlength="35">
+      and      BlogEntries.ben_blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
+      and      BlogEntries.ben_username = BlogUsers.bus_username
     </cfquery>
 
-    <cfquery name="getCategories" datasource="#instance.dsn#">
-      select  bca_bcaid,bca_name
-      from  blogCategories, blogEntriesCategories
-      where  blogEntriesCategories.entryidfk = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
-      and    blogEntriesCategories.  bec_bcaid = blogCategories.bca_bcaid
+    <cfquery name="getCategories" datasource="nmg" >
+      select  bca_bcaid,bca_category
+      from  BlogCategories, BlogEntriesCategories
+      where  BlogEntriesCategories.bec_benid = <cfqueryparam value="#arguments.id#" cfsqltype="VARCHAR" maxlength="35">
+      and    BlogEntriesCategories.bec_bcaid = BlogCategories.bca_bcaid
     </cfquery>
 
     <cfloop index="col" list="#getIt.columnList#">
@@ -1028,15 +1250,15 @@
 
     <cfset s.categories = structNew()>
     <cfloop query="getCategories">
-      <cfset s.categories[bca_bcaid] = bca_name>
+      <cfset s.categories[bca_bcaid] = bca_category>
     </cfloop>
 
     <!--- Handle view --->
-    <cfif not ARGUMENTS.dontlog>
-      <cfquery datasource="#instance.dsn#">
-      update  blogEntries
+    <cfif not arguments.dontlog>
+      <cfquery datasource="nmg" >
+      update  BlogEntries
       set    views = views + 1
-      where  id = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
+      where  id = <cfqueryparam value="#arguments.id#" cfsqltype="VARCHAR" maxlength="35">
       </cfquery>
     </cfif>
 
@@ -1044,7 +1266,8 @@
 
   </cffunction>
 
-  <cffunction name="getEntries" access="remote" returnType="struct" output="false" hint="Returns entries. Allows for a params structure to configure what entries are returned.">
+  <cffunction name="getEntries" access="remote" returnType="struct" output="false"
+        hint="Returns entries. Allows for a params structure to configure what entries are returned.">
     <cfargument name="params" type="struct" required="false" default="#structNew()#">
     <cfset var getEm = "">
     <cfset var getComments = "">
@@ -1063,125 +1286,125 @@
     <cfset var r = structNew()>
 
     <!--- By default, order the results by posted col --->
-    <cfif not structKeyExists(ARGUMENTS.params,"orderBy") or not listFindNoCase(validOrderBy,ARGUMENTS.params.orderBy)>
-      <cfset ARGUMENTS.params.orderBy = "posted">
+    <cfif not structKeyExists(arguments.params,"orderBy") or not listFindNoCase(validOrderBy,arguments.params.orderBy)>
+      <cfset arguments.params.orderBy = "posted">
     </cfif>
     <!--- By default, order the results direction desc --->
-    <cfif not structKeyExists(ARGUMENTS.params,"orderByDir") or not listFindNoCase(validOrderByDir,ARGUMENTS.params.orderByDir)>
-      <cfset ARGUMENTS.params.orderByDir = "desc">
+    <cfif not structKeyExists(arguments.params,"orderByDir") or not listFindNoCase(validOrderByDir,arguments.params.orderByDir)>
+      <cfset arguments.params.orderByDir = "desc">
     </cfif>
     <!--- If lastXDays is passed, verify X is int between 1 and 365 --->
-    <cfif structKeyExists(ARGUMENTS.params,"lastXDays")>
-      <cfif not val(ARGUMENTS.params.lastXDays) or val(ARGUMENTS.params.lastXDays) lt 1 or val(ARGUMENTS.params.lastXDays) gt 365>
-        <cfset structDelete(ARGUMENTS.params,"lastXDays")>
+    <cfif structKeyExists(arguments.params,"lastXDays")>
+      <cfif not val(arguments.params.lastXDays) or val(arguments.params.lastXDays) lt 1 or val(arguments.params.lastXDays) gt 365>
+        <cfset structDelete(arguments.params,"lastXDays")>
       <cfelse>
-        <cfset ARGUMENTS.params.lastXDays = val(ARGUMENTS.params.lastXDays)>
+        <cfset arguments.params.lastXDays = val(arguments.params.lastXDays)>
       </cfif>
     </cfif>
     <!--- If byDay is passed, verify X is int between 1 and 31 --->
-    <cfif structKeyExists(ARGUMENTS.params,"byDay")>
-      <cfif not val(ARGUMENTS.params.byDay) or val(ARGUMENTS.params.byDay) lt 1 or val(ARGUMENTS.params.byDay) gt 31>
-        <cfset structDelete(ARGUMENTS.params,"byDay")>
+    <cfif structKeyExists(arguments.params,"byDay")>
+      <cfif not val(arguments.params.byDay) or val(arguments.params.byDay) lt 1 or val(arguments.params.byDay) gt 31>
+        <cfset structDelete(arguments.params,"byDay")>
       <cfelse>
-        <cfset ARGUMENTS.params.byDay = val(ARGUMENTS.params.byDay)>
+        <cfset arguments.params.byDay = val(arguments.params.byDay)>
       </cfif>
     </cfif>
     <!--- If byMonth is passed, verify X is int between 1 and 12 --->
-    <cfif structKeyExists(ARGUMENTS.params,"byMonth")>
-      <cfif not val(ARGUMENTS.params.byMonth) or val(ARGUMENTS.params.byMonth) lt 1 or val(ARGUMENTS.params.byMonth) gt 12>
-        <cfset structDelete(ARGUMENTS.params,"byMonth")>
+    <cfif structKeyExists(arguments.params,"byMonth")>
+      <cfif not val(arguments.params.byMonth) or val(arguments.params.byMonth) lt 1 or val(arguments.params.byMonth) gt 12>
+        <cfset structDelete(arguments.params,"byMonth")>
       <cfelse>
-        <cfset ARGUMENTS.params.byMonth = val(ARGUMENTS.params.byMonth)>
+        <cfset arguments.params.byMonth = val(arguments.params.byMonth)>
       </cfif>
     </cfif>
     <!--- If byYear is passed, verify X is int  --->
-    <cfif structKeyExists(ARGUMENTS.params,"byYear")>
-      <cfif not val(ARGUMENTS.params.byYear)>
-        <cfset structDelete(ARGUMENTS.params,"byYear")>
+    <cfif structKeyExists(arguments.params,"byYear")>
+      <cfif not val(arguments.params.byYear)>
+        <cfset structDelete(arguments.params,"byYear")>
       <cfelse>
-        <cfset ARGUMENTS.params.byYear = val(ARGUMENTS.params.byYear)>
+        <cfset arguments.params.byYear = val(arguments.params.byYear)>
       </cfif>
     </cfif>
     <!--- If byTitle is passed, verify we have a length  --->
-    <cfif structKeyExists(ARGUMENTS.params,"byTitle")>
-      <cfif not len(trim(ARGUMENTS.params.byTitle))>
-        <cfset structDelete(ARGUMENTS.params,"byTitle")>
+    <cfif structKeyExists(arguments.params,"byTitle")>
+      <cfif not len(trim(arguments.params.byTitle))>
+        <cfset structDelete(arguments.params,"byTitle")>
       <cfelse>
-        <cfset ARGUMENTS.params.byTitle = trim(ARGUMENTS.params.byTitle)>
+        <cfset arguments.params.byTitle = trim(arguments.params.byTitle)>
       </cfif>
     </cfif>
 
     <!--- By default, get body, commentCount and categories as well, requires additional lookup --->
-    <cfif not structKeyExists(ARGUMENTS.params,"mode") or not listFindNoCase(validMode,ARGUMENTS.params.mode)>
-      <cfset ARGUMENTS.params.mode = "full">
+    <cfif not structKeyExists(arguments.params,"mode") or not listFindNoCase(validMode,arguments.params.mode)>
+      <cfset arguments.params.mode = "full">
     </cfif>
     <!--- handle searching --->
-    <cfif structKeyExists(ARGUMENTS.params,"searchTerms") and not len(trim(ARGUMENTS.params.searchTerms))>
-      <cfset structDelete(ARGUMENTS.params,"searchTerms")>
+    <cfif structKeyExists(arguments.params,"searchTerms") and not len(trim(arguments.params.searchTerms))>
+      <cfset structDelete(arguments.params,"searchTerms")>
     </cfif>
     <!--- Limit number returned. Thanks to Rob Brooks-Bilson --->
-    <cfif not structKeyExists(ARGUMENTS.params,"maxEntries") or (structKeyExists(ARGUMENTS.params,"maxEntries") and not val(ARGUMENTS.params.maxEntries))>
-      <cfset ARGUMENTS.params.maxEntries = 10>
+    <cfif not structKeyExists(arguments.params,"maxEntries") or (structKeyExists(arguments.params,"maxEntries") and not val(arguments.params.maxEntries))>
+      <cfset arguments.params.maxEntries = 10>
     </cfif>
 
-    <cfif not structKeyExists(ARGUMENTS.params,"startRow") or (structKeyExists(ARGUMENTS.params,"startRow") and not val(ARGUMENTS.params.startRow))>
-      <cfset ARGUMENTS.params.startRow = 1>
+    <cfif not structKeyExists(arguments.params,"startRow") or (structKeyExists(arguments.params,"startRow") and not val(arguments.params.startRow))>
+      <cfset arguments.params.startRow = 1>
     </cfif>
 
     <!--- I get JUST the ids --->
-    <cfquery name="getIds" datasource="#instance.dsn#">
-    select blogEntries.id
-    from  blogEntries
-      <!--- , blogUsers --->
-      <cfif structKeyExists(ARGUMENTS.params,"byCat")>,blogEntriesCategories</cfif>
+    <cfquery name="getIds" datasource="nmg" >
+    select  BlogEntries.ben_benid
+    from  BlogEntries, BlogUsers
+      <cfif structKeyExists(arguments.params,"byCat")>,BlogEntriesCategories</cfif>
       where    1=1
-            and ben_blog = <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-<!---   and blogEntries.username = blogUsers.username  and  ben_blog = blogUsers.blog --->
-      <cfif structKeyExists(ARGUMENTS.params,"lastXDays")>
-        and blogEntries.posted >= <cfqueryparam value="#dateAdd("d",-1*ARGUMENTS.params.lastXDays,blogNow())#" cfsqltype="CF_SQL_DATE">
+            and BlogEntries.ben_blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
+            and BlogEntries.ben_username = BlogUsers.bus_username
+            <!--- fix suggested by William Steiner --->
+            and  BlogEntries.ben_blog = BlogUsers.bus_blog
+      <cfif structKeyExists(arguments.params,"lastXDays")>
+        and BlogEntries.ben_posted >= <cfqueryparam value="#dateAdd("d",-1*arguments.params.lastXDays,blogNow())#" cfsqltype="DATE">
       </cfif>
-      <cfif structKeyExists(ARGUMENTS.params,"byDay")>
-        and dayOfMonth(date_add(posted, interval #instance.offset# hour)) = <cfqueryparam value="#ARGUMENTS.params.byDay#" cfsqltype="CF_SQL_NUMERIC">
+      <cfif structKeyExists(arguments.params,"byDay")>
+          and dayOfMonth(date_add(posted, interval #instance.offset# hour)) = <cfqueryparam value="#arguments.params.byDay#" cfsqltype="NUMERIC">
       </cfif>
-      <cfif structKeyExists(ARGUMENTS.params,"byMonth")>
-        and month(date_add(posted, interval #instance.offset# hour)) = <cfqueryparam value="#ARGUMENTS.params.byMonth#" cfsqltype="CF_SQL_NUMERIC">
+      <cfif structKeyExists(arguments.params,"byMonth")>
+          and month(date_add(posted, interval #instance.offset# hour)) = <cfqueryparam value="#arguments.params.byMonth#" cfsqltype="NUMERIC">
       </cfif>
-      <cfif structKeyExists(ARGUMENTS.params,"byYear")>
-        and year(date_add(posted, interval #instance.offset# hour)) = <cfqueryparam value="#ARGUMENTS.params.byYear#" cfsqltype="CF_SQL_NUMERIC">
+      <cfif structKeyExists(arguments.params,"byYear")>
+          and year(date_add(posted, interval #instance.offset# hour)) = <cfqueryparam value="#arguments.params.byYear#" cfsqltype="NUMERIC">
       </cfif>
-      <cfif structKeyExists(ARGUMENTS.params,"byTitle")>
-        and blogEntries.title = <cfqueryparam value="#ARGUMENTS.params.byTitle#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
+      <cfif structKeyExists(arguments.params,"byTitle")>
+        and BlogEntries.ben_title = <cfqueryparam value="#arguments.params.byTitle#" cfsqltype="VARCHAR" maxlength="100">
       </cfif>
-      <cfif structKeyExists(ARGUMENTS.params,"byCat")>
-        and blogEntriesCategories.entryidfk = blogEntries.id
-        and blogEntriesCategories.  bec_bcaid in (<cfqueryparam value="#ARGUMENTS.params.byCat#" cfsqltype="CF_SQL_VARCHAR" maxlength="35" list=true>)
+      <cfif structKeyExists(arguments.params,"byCat")>
+        and BlogEntriesCategories.bec_benid = BlogEntries.ben_benid
+        and BlogEntriesCategories.bec_bcaid in (<cfqueryparam value="#arguments.params.byCat#" cfsqltype="VARCHAR" maxlength="35" list=true>)
       </cfif>
-      <cfif structKeyExists(ARGUMENTS.params,"byPosted")>
-        and blogEntries.username =  <cfqueryparam value="#ARGUMENTS.params.byPosted#" cfsqltype="CF_SQL_VARCHAR" maxlength="50" list=true>
+      <cfif structKeyExists(arguments.params,"byPosted")>
+        and BlogEntries.ben_username =  <cfqueryparam value="#arguments.params.byPosted#" cfsqltype="VARCHAR" maxlength="50" list=true>
       </cfif>
-      <cfif structKeyExists(ARGUMENTS.params,"searchTerms")>
-        <cfif not structKeyExists(ARGUMENTS.params, "dontlogsearch")>
-          <cfset logSearch(ARGUMENTS.params.searchTerms)>
+      <cfif structKeyExists(arguments.params,"searchTerms")>
+        <cfif not structKeyExists(arguments.params, "dontlogsearch")>
+          <cfset logSearch(arguments.params.searchTerms)>
         </cfif>
-          and (blogEntries.title like '%#ARGUMENTS.params.searchTerms#%' OR blogEntries.body like '%#ARGUMENTS.params.searchTerms#%' or blogEntries.morebody like '%#ARGUMENTS.params.searchTerms#%')
+          and (BlogEntries.ben_title like '%#arguments.params.searchTerms#%' OR BlogEntries.ben_body like '%#arguments.params.searchTerms#%' or BlogEntries.ben_morebody like '%#arguments.params.searchTerms#%')
       </cfif>
-      <cfif structKeyExists(ARGUMENTS.params,"byEntry")>
-        and blogEntries.id = <cfqueryparam value="#ARGUMENTS.params.byEntry#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
+      <cfif structKeyExists(arguments.params,"byEntry")>
+        and BlogEntries.ben_benid = <cfqueryparam value="#arguments.params.byEntry#" cfsqltype="VARCHAR" maxlength="35">
       </cfif>
-      <cfif structKeyExists(ARGUMENTS.params,"byAlias")>
-        and blogEntries.alias = <cfqueryparam value="#left(ARGUMENTS.params.byAlias,100)#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
+      <cfif structKeyExists(arguments.params,"byAlias")>
+        and BlogEntries.ben_alias = <cfqueryparam value="#arguments.params.byAlias#" cfsqltype="VARCHAR" maxlength="100">
       </cfif>
       <!--- Don't allow future posts unless logged in. --->
-      <cfif not isBlogAuthorized() or (structKeyExists(ARGUMENTS.params, "releasedonly") and ARGUMENTS.params.releasedonly)>
-          and      posted < <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-        and      released = 1
+      <cfif not isUserInRole("admin") or (structKeyExists(arguments.params, "ben_releasedonly") and arguments.params.ben_releasedonly)>
+          and      posted < <cfqueryparam cfsqltype="timestamp" value="#now()#">
+        and      ben_released = 1
+      </cfif>
+      <cfif structKeyExists(arguments.params, "ben_released")>
+        and  ben_released = <cfqueryparam cfsqltype="bit" value="#arguments.params.ben_released#">
       </cfif>
 
-      <cfif structKeyExists(ARGUMENTS.params, "released")>
-      and  released = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.params.released#">
-      </cfif>
-
-      order by  blogEntries.#ARGUMENTS.params.orderBy# #ARGUMENTS.params.orderByDir#
+      order by   BlogEntries.#arguments.params.orderBy# #arguments.params.orderByDir#
     </cfquery>
 
     <!--- we now have a query from row 1 to our max, we need to get a 'page' of IDs --->
@@ -1193,45 +1416,55 @@
       <cfreturn r>
     </cfif>
 
-    <cfloop index="x" from="#ARGUMENTS.params.startRow#" to="#min(ARGUMENTS.params.startRow+ARGUMENTS.params.maxEntries-1,getIds.RecordCount)#">
+    <cfloop index="x" from="#arguments.params.startRow#" to="#min(arguments.params.startRow+arguments.params.maxEntries-1,getIds.recordCount)#">
       <cfset pageIdList = listAppend(pageIdList, listGetAt(idlist,x))>
     </cfloop>
 
     <!--- I now get the full info --->
-    <cfquery name="getEm" datasource="#instance.dsn#" maxrows="#ARGUMENTS.params.maxEntries+ARGUMENTS.params.startRow-1#">
+    <cfquery name="getEm" datasource="nmg"  maxrows="#arguments.params.maxEntries+arguments.params.startRow-1#">
+    <!--- DS 8/22/06: added Oracle pseudo top n code --->
       select
-          blogEntries.id, blogEntries.title,
-          blogEntries.alias, date_add(posted, interval #instance.offset# hour) as posted,
-          blogEntries.allowcomments,
-          blogEntries.enclosure, blogEntries.filesize, blogEntries.mimetype, blogEntries.released, blogEntries.views,
-          blogEntries.summary, blogEntries.subtitle, blogEntries.keywords, blogEntries.duration,
-          <cfif ARGUMENTS.params.mode is "full"> blogEntries.body, blogEntries.morebody,</cfif>
-          IF(us_last="", us_user, trim(concat(us_first, " ", us_last))) AS name
-      from blogEntries, bih.users
+          BlogEntries.ben_benid, BlogEntries.ben_title,
+          BlogEntries.ben_alias,
+          <!--- Handle offset --->
+          <cfif instance.blogDBType is "MSACCESS">
+            dateAdd('h', #instance.offset#, BlogEntries.ben_posted) as posted,
+          <cfelseif instance.blogDBType is "MSSQL">
+            dateAdd(hh, #instance.offset#, BlogEntries.ben_posted) as posted,
+          <cfelseif instance.blogDBType is "ORACLE">
+            BlogEntries.ben_posted + (#instance.offset#/24) as posted,
+          <cfelse>
+          date_add(posted, interval #instance.offset# hour) as posted,
+          </cfif>
+          BlogUsers.bus_name, BlogEntries.ben_allowcomments,
+          BlogEntries.ben_enclosure, BlogEntries.ben_filesize, BlogEntries.ben_mimetype, BlogEntries.ben_released, BlogEntries.ben_views,
+          BlogEntries.ben_summary, BlogEntries.ben_subtitle, BlogEntries.ben_keywords, BlogEntries.ben_duration
+        <cfif arguments.params.mode is "full">, BlogEntries.ben_body, BlogEntries.ben_morebody</cfif>
+      from  BlogEntries, BlogUsers
       where
-        blogEntries.id in (<cfqueryparam cfsqltype="cf_sql_varchar" list="true" value="#pageIdList#">)
-            and ben_blog = <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-            and blogEntries.username = bih.users.us_user
-      order by blogEntries.#ARGUMENTS.params.orderBy# #ARGUMENTS.params.orderByDir#
+        BlogEntries.ben_benid in (<cfqueryparam cfsqltype="varchar" list="true" value="#pageIdList#">)
+            and BlogEntries.ben_blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
+            and BlogEntries.ben_username = BlogUsers.bus_username
+      order by   BlogEntries.#arguments.params.orderBy# #arguments.params.orderByDir#
     </cfquery>
 
-    <cfif ARGUMENTS.params.mode is "full" and getEm.RecordCount>
+    <cfif arguments.params.mode is "full" and getEm.recordCount>
       <cfset queryAddColumn(getEm,"commentCount",arrayNew(1))>
-      <cfquery name="getComments" datasource="#instance.dsn#">
-        select count(id) as commentCount, entryidfk
-        from  blogComments
-        where  entryidfk in (<cfqueryparam value="#valueList(getEm.id)#" cfsqltype="CF_SQL_VARCHAR" list="Yes">)
+      <cfquery name="getComments" datasource="nmg" >
+        select count(id) as commentCount, fk_benid
+        from   BlogComments
+        where  fk_benid in (<cfqueryparam value="#valueList(getEm.id)#" cfsqltype="VARCHAR" list="Yes">)
         <!--- added 12/5/2006 by Trent Richardson --->
         <cfif instance.moderate>
           and bco_moderated = 1
         </cfif>
         and (bco_subscribeonly = 0 or bco_subscribeonly is null)
-        group by entryidfk
+        group by fk_benid
       </cfquery>
-      <cfif getComments.RecordCount>
+      <cfif getComments.recordCount>
         <!--- for each row, need to find in getEm --->
         <cfloop query="getComments">
-          <cfset pos = listFindNoCase(valueList(getEm.id),entryidfk)>
+          <cfset pos = listFindNoCase(valueList(getEm.id),fk_benid)>
           <cfif pos>
             <cfset querySetCell(getEm,"commentCount",commentCount,pos)>
           </cfif>
@@ -1239,26 +1472,23 @@
       </cfif>
       <cfset queryAddColumn(getEm,"categories",arrayNew(1))>
       <cfloop query="getEm">
-        <cfquery name="getCategories" datasource="#instance.dsn#">
-          select  bca_bcaid,bca_name
-          from  blogCategories, blogEntriesCategories
-          where  blogEntriesCategories.entryidfk = <cfqueryparam value="#getEm.id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
-          and    blogEntriesCategories.  bec_bcaid = blogCategories.bca_bcaid
+        <cfquery name="getCategories" datasource="nmg" >
+          select  bca_bcaid,bca_category
+          from  BlogCategories, BlogEntriesCategories
+          where  BlogEntriesCategories.bec_benid = <cfqueryparam value="#getEm.id#" cfsqltype="VARCHAR" maxlength="35">
+          and    BlogEntriesCategories.bec_bcaid = BlogCategories.bca_bcaid
         </cfquery>
-        <!---
-        <cfset querySetCell(getEm,"bca_bcaids",valueList(getCategories.bca_bcaid),currentRow)>
-        <cfset querySetCell(getEm,"bca_names",valueList(getCategories.bca_name),currentRow)>
-        --->
+
         <cfset catData = structNew()>
         <cfloop query="getCategories">
-          <cfset catData[bca_bcaid] = bca_name>
+          <cfset catData[bca_bcaid] = bca_category>
         </cfloop>
         <cfset querySetCell(getEm,"categories",catData,currentRow)>
       </cfloop>
 
     </cfif>
     <cfset r.entries = getEm>
-    <cfset r.totalEntries = getIds.RecordCount>
+    <cfset r.totalEntries = getIds.recordCount>
 
     <cfreturn r>
 
@@ -1266,41 +1496,44 @@
 
   <!--- RBB 8/24/2010: New method to get the date an entry was posted. Added as
       a method since it's used by several other methods --->
-  <cffunction name="getEntryPostedDate" access="public" returnType="date" output="false" hint="Returns the date/time an entry was posted">
+  <cffunction name="getEntryPostedDate" access="public" returnType="date" output="false"
+        hint="Returns the date/time an entry was posted">
     <cfargument name="entryId" type="uuid" required="true" hint="UUID of the entry you want to get post date for.">
 
     <cfset var getPostedDate = "" />
 
-     <cfquery name="getPostedDate" datasource="#instance.dsn#">
-        select posted
-        from blogEntries
-        where id = <cfqueryparam value="#ARGUMENTS.entryId#" cfsqltype="CF_SQL_VARCHAR" maxlength="35" />
-    </cfquery>
+      <cfquery name="getPostedDate" datasource="nmg" >
+          select posted
+          from BlogEntries
+          where id = <cfqueryparam value="#arguments.entryId#" cfsqltype="VARCHAR" maxlength="35" />
+      </cfquery>
 
     <cfreturn getPostedDate.posted>
   </cffunction>
 
-  <cffunction name="getNameForUser" access="public" returnType="string" output="false" hint="Returns the full name of a user.">
+  <cffunction name="getNameForUser" access="public" returnType="string" output="false"
+        hint="Returns the full name of a user.">
     <cfargument name="username" type="string" required="true" />
     <cfset var q = "" />
 
-    <cfquery name="q" datasource="#APPLICATION.DSN.MAIN#">
-      SELECT IF(us_last="", us_user, trim(concat(us_first, " ", us_last))) AS name
-        FROM users
-       WHERE us_user = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.username#" maxlength="50">
+    <cfquery name="q" datasource="nmg" >
+    select  bus_name
+    from  BlogUsers
+    where  bus_username = <cfqueryparam cfsqltype="varchar" value="#arguments.username#" maxlength="50">
     </cfquery>
 
-    <cfreturn q.name>
+    <cfreturn q.bus_name>
   </cffunction>
 
-  <cffunction name="getNumberUnbco_moderated" access="public" returntype="numeric" output="false" hint="Returns the number of unmodderated comments for a specific blog entry.">
+  <cffunction name="getNumberUnbco_moderated" access="public" returntype="numeric" output="false"
+        hint="Returns the number of unmodderated comments for a specific blog entry.">
     <cfset var getUnbco_moderated = "" />
-    <cfquery name="getUnbco_moderated" datasource="#instance.dsn#">
+    <cfquery name="getUnbco_moderated" datasource="nmg" >
       select count(c.bco_moderated) as unbco_moderated
-      from blogComments c, blogEntries e
+      from BlogComments c, BlogEntries e
       where c.bco_moderated=0
-      and   e.blog = <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-      and c.entryidfk = e.id
+      and   e.blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
+      and c.fk_benid = e.id
     </cfquery>
 
     <cfreturn getUnbco_moderated.unbco_moderated>
@@ -1313,211 +1546,305 @@
   <cffunction name="getProperty" access="public" returnType="any" output="false">
     <cfargument name="property" type="string" required="true">
 
-    <cfif not structKeyExists(instance,ARGUMENTS.property)>
-      <cfset VARIABLES.utils.throw("#ARGUMENTS.property# is not a valid property.")>
+    <cfif not structKeyExists(instance,arguments.property)>
+      <cfset variables.utils.throw("#arguments.property# is not a valid property.")>
     </cfif>
 
-    <cfreturn instance[ARGUMENTS.property]>
+    <cfreturn instance[arguments.property]>
 
   </cffunction>
 
-  <cffunction name="getRecentComments" access="remote" returnType="query" output="false" hint="Returns the last N comments for a specific blog.">
-    <cfargument name="maxEntries" type="numeric" required="false" default="10">
+  <cffunction name="getRecentComments" access="remote" returnType="query" output="false"
+                hint="Returns the last N comments for a specific blog.">
+        <cfargument name="maxEntries" type="numeric" required="false" default="10">
+
     <cfset var getRecentComments = "" />
-    <cfquery datasource="#instance.dsn#" name="getRecentComments">
-      select e.id as entryID, e.title, c.id, c.entryidfk, c.name, c.email, c.comment, date_add(c.posted, interval #instance.offset# hour) as posted
-        from blogComments c
-           inner join blogEntries e on c.entryidfk = e.id
-       where blog = <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-      <cfif instance.moderate>
-        and c.bco_moderated = 1
-      </cfif>
-       order by c.posted desc
-       limit #ARGUMENTS.maxEntries#
+    <cfset var getO = "" />
+
+    <cfquery datasource="nmg" name="getRecentComments" >
+    <!--- DS 8/22/06: Added Oracle pseudo "top n" code --->
+    <cfif instance.blogDBTYPE is "ORACLE">
+    SELECT   * FROM (
+    </cfif>
+
+    select <cfif instance.blogDBType is not "MYSQL" AND instance.blogDBType is not "ORACLE">
+                    top #arguments.maxEntries#
+                </cfif>
+    e.id as entryID,
+    e.title,
+    c.id,
+    c.fk_benid,
+    c.name,
+    c.email, <!--- RBB 8/25/2010: Added email column --->
+    <cfif instance.blogDBType is NOT "ORACLE">c.comment<cfelse>to_char(c.comments) as comments</cfif>,
+    <!--- Handle offset --->
+    <cfif instance.blogDBType is "MSACCESS">
+        dateAdd('h', #instance.offset#, c.posted) as posted
+    <cfelseif instance.blogDBType is "MSSQL">
+        dateAdd(hh, #instance.offset#, c.posted) as posted
+    <cfelseif instance.blogDBType is "ORACLE">
+      c.posted + (#instance.offset#/24) as posted
+    <cfelse>
+        date_add(c.posted, interval #instance.offset# hour) as posted
+    </cfif>
+    from BlogComments c
+    inner join BlogEntries e on c.fk_benid = e.id
+    where   blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
+    <!--- added 12/5/2006 by Trent Richardson --->
+    <cfif instance.moderate>
+      and c.bco_moderated = 1
+    </cfif>
+    order by c.posted desc
+    <cfif instance.blogDBType is "MYSQL">limit #arguments.maxEntries#</cfif>
+
+    <cfif instance.blogDBType is "ORACLE">
+    )
+    WHERE  rownum <= #arguments.maxEntries#
+    </cfif>
     </cfquery>
-    <cfreturn getRecentComments>
-   </cffunction>
+
+    <cfif instance.blogDBType is "ORACLE">
+      <cfquery name="getO" dbtype="query">
+      SELECT   entryID, title, id, fk_benid, name, email, comments AS comment, posted <!--- RBB 8/25/2010: Added email column --->
+      FROM  getRecentComments
+      ORDER BY posted desc
+      </cfquery>
+
+      <cfreturn getO>
+    </cfif>
+
+
+        <cfreturn getRecentComments>
+
+    </cffunction>
 
   <!--- TODO: Take a look at this, something seems wrong. --->
-  <cffunction name="getRelatedBlogEntries" access="remote" returntype="query" output="true" hint="returns related entries for a specific blog entry.">
-     <cfargument name="entryId" type="uuid" required="true" />
-     <cfargument name="bDislayBackwardRelations" type="boolean" hint="Displays related entries that set from another entry" default="true" />
-     <cfargument name="bDislayFutureLinks" type="boolean" hint="Displays related entries that occur after the posted date of THIS entry" default="true" />
-     <cfargument name="bDisplayForAdmin" type="boolean" hint="If admin, we can show future links not released to public" default="false" />
+  <cffunction name="getRelatedBlogEntries" access="remote" returntype="query" output="true"
+        hint="returns related entries for a specific blog entry.">
+      <cfargument name="entryId" type="uuid" required="true" />
+      <cfargument name="bDislayBackwardRelations" type="boolean" hint="Displays related entries that set from another entry" default="true" />
+      <cfargument name="bDislayFutureLinks" type="boolean" hint="Displays related entries that occur after the posted date of THIS entry" default="true" />
+      <cfargument name="bDisplayForAdmin" type="boolean" hint="If admin, we can show future links not ben_released to public" default="false" />
 
-     <cfset var qEntries = "" />
+      <cfset var qEntries = "" />
 
     <!--- BEGIN : added bca_bcaid to related blog entry query : cjg : 31 december 2005 --->
     <!--- <cfset var qRelatedEntries = queryNew("id,title,posted,alias") />  --->
-    <cfset var qRelatedEntries = queryNew("id,title,posted,alias,bca_name") />
+    <cfset var qRelatedEntries = queryNew("id,title,posted,alias,bca_category") />
     <!--- END : added bca_bcaid to related blog entry query : cjg : 31 december 2005 --->
 
-     <cfset var qThisEntry = "" />
-     <cfset var getRelatedIds = "" />
+      <cfset var qThisEntry = "" />
+      <cfset var getRelatedIds = "" />
     <cfset var getThisRelatedEntry = "" />
     <!--- RBB 8/23/2010: Refactored to use new method getEntryPostedDate --->
     <cfset var postedDate = "" />
 
-      <cfif bdislayfuturelinks is false>
+        <cfif bdislayfuturelinks is false>
       <!--- RBB 8/23/2010: Refactored to use new method getEntryPostedDate --->
-      <cfset postedDate = SESSION.BROG.getEntryPostedDate(entryID=#ARGUMENTS.entryId#)>
+      <cfset postedDate = application.blog.getEntryPostedDate(entryID=#arguments.entryId#)>
     </cfif>
-     <cfquery name="getRelatedIds" datasource="#instance.dsn#">
-      select distinct relatedid
-      from blogEntriesRelated
-      where entryid = <cfqueryparam value="#ARGUMENTS.entryId#" cfsqltype="CF_SQL_VARCHAR" maxlength="35" />
+      <cfquery name="getRelatedIds" datasource="nmg" >
+        select distinct bre_relbenid
+        from BlogEntriesRelated
+        where bre_benid = <cfqueryparam value="#arguments.entryId#" cfsqltype="VARCHAR" maxlength="35" />
 
-      <cfif bDislayBackwardRelations>
-      union
+        <cfif bDislayBackwardRelations>
+        union
 
-      select distinct entryid as relatedid
-      from blogEntriesRelated
-      where relatedid = <cfqueryparam value="#ARGUMENTS.entryId#" cfsqltype="CF_SQL_VARCHAR" maxlength="35" />
-      </cfif>
-     </cfquery>
-     <cfloop query="getRelatedIds">
-    <cfquery name="getThisRelatedEntry" datasource="#instance.dsn#">
-      select blogEntries.id, blogEntries.title, blogEntries.posted, blogEntries.alias, blogCategories.bca_name
-        from blogCategories
-           inner join blogEntriesCategories on blogCategories.bca_bcaid = blogEntriesCategories.  bec_bcaid
-           inner join blogEntries on blogEntriesCategories.entryidfk = blogEntries.id
-       where blogEntries.id = <cfqueryparam value="#getrelatedids.relatedid#" cfsqltype="cf_sql_varchar" maxlength="35" />
-        and ben_blog = <cfqueryparam value="#instance.name#" cfsqltype="cf_sql_varchar" maxlength="255">
-      <cfif bdislayfuturelinks is false>
-        and blogEntries.posted <= #createodbcdatetime(postedDate)#
-      </cfif>
-      <cfif not ARGUMENTS.bDisplayForAdmin>
-        and posted < <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-        and released = 1
-      </cfif>
-    </cfquery>
-      <cfif getThisRelatedEntry.RecordCount>
-        <cfset queryAddRow(qRelatedEntries, 1) />
-        <cfset querySetCell(qRelatedEntries, "id", getThisRelatedEntry.id) />
-        <cfset querySetCell(qRelatedEntries, "title", getThisRelatedEntry.title) />
-        <cfset querySetCell(qRelatedEntries, "posted", getThisRelatedEntry.posted) />
-        <cfset querySetCell(qRelatedEntries, "alias", getThisRelatedEntry.alias) />
-        <!--- BEGIN : added bca_name to query : cjg : 31 december 2005 --->
-        <cfset querySetCell(qRelatedEntries, "bca_name", getThisRelatedEntry.bca_name) />
-        <!--- END : added bca_name to query : cjg : 31 december 2005 --->
-      </cfif>
-    </cfloop>
-    <cfif qRelatedEntries.RecordCount>
-      <!--- Order By --->
-      <cfquery name="qRelatedEntries" dbtype="query">
-        select *
-          from qrelatedentries
-         order by posted desc
+        select distinct bre_benid as bre_relbenid
+        from BlogEntriesRelated
+        where bre_relbenid = <cfqueryparam value="#arguments.entryId#" cfsqltype="VARCHAR" maxlength="35" />
+        </cfif>
       </cfquery>
-     </cfif>
+      <cfloop query="getRelatedIds">
+      <cfquery name="getThisRelatedEntry" datasource="nmg" >
+      select
+        BlogEntries.ben_benid,
+        BlogEntries.ben_title,
+        BlogEntries.ben_posted,
+        BlogEntries.ben_alias,
+        BlogCategories.bca_category
+      from
+        (BlogCategories
+        inner join BlogEntriesCategories on
+          BlogCategories.bca_bcaid = BlogEntriesCategories.bec_bcaid)
+        inner join BlogEntries on
+          BlogEntriesCategories.bec_benid = BlogEntries.ben_benid
+          where BlogEntries.ben_benid = <cfqueryparam value="#getrelatedids.bre_relbenid#" cfsqltype="varchar" maxlength="35" />
+          and   BlogEntries.ben_blog = <cfqueryparam value="#instance.name#" cfsqltype="varchar" maxlength="255">
+          <cfif bdislayfuturelinks is false>
+            and BlogEntries.ben_posted <= #createodbcdatetime(postedDate)#
+          </cfif>
+
+          <cfif not arguments.bDisplayForAdmin>
+            and      ben_posted < <cfqueryparam cfsqltype="timestamp" value="#now()#">
+            and      ben_released = 1
+          </cfif>
+        </cfquery>
+
+        <cfif getThisRelatedEntry.recordCount>
+          <cfset queryAddRow(qRelatedEntries, 1) />
+          <cfset querySetCell(qRelatedEntries, "ben_benid", getThisRelatedEntry.ben_benid) />
+          <cfset querySetCell(qRelatedEntries, "ben_title", getThisRelatedEntry.ben_title) />
+          <cfset querySetCell(qRelatedEntries, "ben_posted", getThisRelatedEntry.ben_posted) />
+          <cfset querySetCell(qRelatedEntries, "ben_alias", getThisRelatedEntry.ben_alias) />
+          <cfset querySetCell(qRelatedEntries, "bca_category", getThisRelatedEntry.bca_category) />
+        </cfif>
+      </cfloop>
+      <cfif qRelatedEntries.recordCount>
+        <!--- Order By --->
+        <cfquery name="qRelatedEntries" dbtype="query">
+          select *
+          from qrelatedentries
+          order by ben_posted desc
+        </cfquery>
+      </cfif>
 
     <cfreturn qRelatedEntries />
   </cffunction>
   <!--- END : get related entries method : cjg  --->
 
   <!--- RBB 8/23/2010: Added a new method to get related blog entry count for a given entry --->
-  <cffunction name="getRelatedBlogEntryCount" access="remote" returnType="numeric"  output="false" hint="Gets the total number of related blog entriess for for a specific blog entry">
+  <cffunction name="getRelatedBlogEntryCount" access="remote" returnType="numeric"  output="false"
+        hint="Gets the total number of related blog entriess for for a specific blog entry">
     <cfargument name="entryId" type="uuid" required="true" hint="UUID of the entry you want to get the count for.">
-     <cfargument name="bDislayBackwardRelations" type="boolean" hint="Display related entries that set from another entry" default="true" />
+      <cfargument name="bDislayBackwardRelations" type="boolean" hint="Display related entries that set from another entry" default="true" />
     <cfargument name="bDislayFutureLinks" type="boolean" hint="Display related entries that occur after the posted date of THIS entry. If true, this will return the count for items that have a future publishing date." default="true" />
-    <cfargument name="bDisplayForAdmin" type="boolean" hint="If admin, we can show future links not released to public" default="false" />
+    <cfargument name="bDisplayForAdmin" type="boolean" hint="If admin, we can show future links not ben_released to public" default="false" />
 
     <cfset var postedDate = "" />
     <cfset var getRelatedBlogEntryCount = "" />
 
-    <cfif ARGUMENTS.bDislayFutureLinks is false>
-      <cfset postedDate = SESSION.BROG.getEntryPostedDate(entryID=#ARGUMENTS.entryId#)>
+    <cfif arguments.bDislayFutureLinks is false>
+      <cfset postedDate = application.blog.getEntryPostedDate(entryID=#arguments.entryId#)>
     </cfif>
 
-    <cfquery name="getRelatedBlogEntryCount" datasource="#instance.dsn#">
+    <cfquery name="getRelatedBlogEntryCount" datasource="nmg" >
       SELECT count(entryId) AS relatedEntryCount
-        FROM blogEntriesRelated, blogEntries
-        WHERE blogEntriesRelated.entryID = blogEntries.id
-        AND (blogEntriesRelated.entryid = <cfqueryparam value="#ARGUMENTS.entryId#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
-      <cfif ARGUMENTS.bDislayBackwardRelations>
-        OR blogEntriesRelated.relatedid = <cfqueryparam value="#ARGUMENTS.entryId#" cfsqltype="CF_SQL_VARCHAR" maxlength="35" />
+        FROM BlogEntriesRelated, BlogEntries
+        WHERE BlogEntriesRelated.entryID = BlogEntries.ben_benid
+        AND (BlogEntriesRelated.entryid = <cfqueryparam value="#arguments.entryId#" cfsqltype="VARCHAR" maxlength="35">
+      <cfif arguments.bDislayBackwardRelations>
+        OR BlogEntriesRelated.bre_relbenid = <cfqueryparam value="#arguments.entryId#" cfsqltype="VARCHAR" maxlength="35" />
       </cfif>
         )
-        <cfif bdislayfuturelinks is false>
-        AND blogEntries.posted <= #createodbcdatetime(postedDate)#
+          <cfif bdislayfuturelinks is false>
+        <cfif instance.blogDBType is not "ORACLE">
+        AND BlogEntries.ben_posted <= #createodbcdatetime(postedDate)#
+        <cfelse>
+        AND BlogEntries.ben_posted <= <cfqueryparam cfsqltype="timestamp" value="#postedDate#">
         </cfif>
-      <cfif ARGUMENTS.bDisplayForAdmin is false>
-          AND  blogEntries.posted < <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+          </cfif>
+
+      <cfif arguments.bDisplayForAdmin is false>
+        <cfif instance.blogDBType IS "ORACLE">
+           AND  to_char(.posted + (#instance.offset#/24), 'YYYY-MM-DD HH24:MI:SS') <= <cfqueryparam cfsqltype="varchar" value="#dateformat(now(), 'YYYY-MM-DD')# #timeformat(now(), 'HH:mm:ss')#">
+        <cfelse>
+          AND  BlogEntries.ben_posted < <cfqueryparam cfsqltype="timestamp" value="#now()#">
+        </cfif>
       </cfif>
-        AND  blogEntries.released = 1
+        AND  BlogEntries.ben_released = 1
     </cfquery>
 
     <cfreturn getRelatedBlogEntryCount.relatedEntryCount>
   </cffunction>
 
-  <cffunction name="getRelatedEntriesSelects" access="remote" returntype="query" output="false" hint="Returns a query containing all entries - designed to be used in the admin for
+  <cffunction name="getRelatedEntriesSelects" access="remote" returntype="query" output="false"
+        hint="Returns a query containing all entries - designed to be used in the admin for
         selecting related entries.">
     <cfset var getRelatedP = "" />
 
-    <cfquery name="getRelatedP" datasource="#instance.dsn#">
+    <cfquery name="getRelatedP" datasource="nmg" >
       select
-        blogCategories.bca_name,
-        blogEntries.id,
-        blogEntries.title,
-        blogEntries.posted
+        BlogCategories.bca_category,
+        BlogEntries.ben_benid,
+        BlogEntries.ben_title,
+        BlogEntries.ben_posted
       from
-        blogEntries inner join
-          (blogCategories inner join blogEntriesCategories on blogCategories.bca_bcaid = blogEntriesCategories.  bec_bcaid) on
-            blogEntries.id = blogEntriesCategories.entryidfk
+        BlogEntries inner join
+          (BlogCategories inner join BlogEntriesCategories on BlogCategories.bca_bcaid = BlogEntriesCategories.bec_bcaid) on
+            BlogEntries.ben_benid = BlogEntriesCategories.bec_benid
 
-      where bca_blog = <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
+      where BlogCategories.bca_blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
       order by
-        blogCategories.bca_name,
-        blogEntries.posted,
-        blogEntries.title
+        BlogCategories.bca_category,
+        BlogEntries.ben_posted,
+        BlogEntries.ben_title
     </cfquery>
 
     <cfreturn getRelatedP />
   </cffunction>
 
-  <cffunction name="getSubscribers" access="public" returnType="query" output="false" hint="Returns all people subscribed to the blog.">
-    <cfargument name="verifiedonly" type="boolean" required="false" default="false">
+  <cffunction name="getRootURL" access="public" returnType="string" output="false"
+        hint="Simple helper function to get root url.">
+
+    <cfset var theURL = replace(instance.blogurl, "index.cfm", "")>
+    <cfreturn theURL>
+
+  </cffunction>
+
+  <cffunction name="getSubscribers" access="public" returnType="query" output="false"
+        hint="Returns all people subscribed to the blog.">
+    <cfargument name="bsu_verifiedonly" type="boolean" required="false" default="false">
     <cfset var getPeople = "">
 
-    <cfquery name="getPeople" datasource="#instance.dsn#">
-    select    email, token, verified
-    from    blogSubscribers
-    where    blog = <cfqueryparam value="#instance.name#" cfsqltype="cf_sql_varchar" maxlength="50">
-    <cfif    ARGUMENTS.verifiedonly>
-    and      verified = 1
+    <cfquery name="getPeople" datasource="nmg" >
+    select    bsu_email, bsu_token, bsu_verified
+    from    BlogSubscribers
+    where    bsu_blog = <cfqueryparam value="#instance.name#" cfsqltype="varchar" maxlength="50">
+    <cfif    arguments.bsu_verifiedonly>
+    and      bsu_verified = 1
     </cfif>
-    order by  email asc
+    order by  bsu_email asc
     </cfquery>
 
     <cfreturn getPeople>
   </cffunction>
 
-  <cffunction name="getUnbco_moderatedComments" access="remote" returnType="query" output="false" hint="Gets unbco_moderated comments for an entry.">
+  <cffunction name="getUnbco_moderatedComments" access="remote" returnType="query" output="false"
+        hint="Gets unbco_moderated comments for an entry.">
     <cfargument name="id" type="uuid" required="false">
     <cfargument name="sortdir" type="string" required="false" default="asc">
 
     <cfset var getC = "">
+    <cfset var getO = "">
 
-    <cfif structKeyExists(arguments, "id") and not entryExists(ARGUMENTS.id)>
-      <cfset VARIABLES.utils.throw("#ARGUMENTS.id# does not exist.")>
+    <cfif structKeyExists(arguments, "id") and not entryExists(arguments.id)>
+      <cfset variables.utils.throw("#arguments.id# does not exist.")>
     </cfif>
 
-    <cfif ARGUMENTS.sortDir is not "asc" and ARGUMENTS.sortDir is not "desc">
-      <cfset ARGUMENTS.sortDir = "asc">
+    <cfif arguments.sortDir is not "asc" and arguments.sortDir is not "desc">
+      <cfset arguments.sortDir = "asc">
     </cfif>
 
     <!--- RBB 11/02/2005: Added bco_website to query --->
-    <cfquery name="getC" datasource="#instance.dsn#">
-      SELECT blogComments.id, blogComments.name, blogComments.email, blogComments.bco_website, blogComments.comment, blogComments.posted, blogComments.subscribe, blogEntries.title AS entrytitle, blogComments.entryidfk
-        FROM blogComments, blogEntries
-        WHERE blogComments.entryidfk = blogEntries.id
+    <cfquery name="getC" datasource="nmg" >
+      select    BlogComments.bco_bcoid, BlogComments.bco_name, BlogComments.bco_email, BlogComments.bco_website,
+            <cfif instance.blogDBTYPE is NOT "ORACLE">BlogComments.comment<cfelse>to_char(BlogComments.comments) as comments</cfif>,   BlogComments.bco_posted, BlogComments.subscribe, BlogEntries.ben_title as entrytitle, BlogComments.bco_benid
+      from    BlogComments, BlogEntries
+      where    BlogComments.bco_benid = BlogEntries.ben_benid
       <cfif structKeyExists(arguments, "id")>
-        AND blogComments.entryidfk = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
+      and      BlogComments.bco_benid = <cfqueryparam value="#arguments.id#" cfsqltype="VARCHAR" maxlength="35">
       </cfif>
-        AND ben_blog = <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-        AND blogComments.bco_moderated = 0
-       ORDER BY blogComments.posted #ARGUMENTS.sortdir#
+      and      BlogEntries.ben_blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
+      <!--- added 12/5/2006 by Trent Richardson --->
+      and BlogComments.bco_moderated = 0
+
+      order by    BlogComments.bco_posted #arguments.sortdir#
     </cfquery>
+
+    <!--- DS 8/22/06: if this is oracle, do a q of q to return the data with column named "comment" --->
+    <cfif instance.blogDBType is "ORACLE">
+      <cfquery name="getO" dbtype="query">
+      select    id, name, email, bco_website,
+            comments AS comment, posted, subscribe, entrytitle, fk_benid
+      from    getC
+      order by  posted #arguments.sortdir#
+      </cfquery>
+
+      <cfreturn getO>
+    </cfif>
+
     <cfreturn getC>
 
   </cffunction>
@@ -1527,138 +1854,192 @@
     <cfset var q = "">
     <cfset var s = structNew()>
 
-    <cfquery name="q" datasource="#instance.dsn#">
-    select  username, password, name
-    from  blogUsers
-    where  blog = <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
-    and    username = <cfqueryparam value="#ARGUMENTS.username#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
+    <cfquery name="q" datasource="nmg" >
+    select  bus_username, bus_password, bus_name
+    from  BlogUsers
+    where  bus_blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
+    and    bus_username = <cfqueryparam value="#arguments.username#" cfsqltype="VARCHAR" maxlength="50">
     </cfquery>
-    <cfif q.RecordCount>
-      <cfset s.username = q.username>
-      <cfset s.password = q.password>
-      <cfset s.name = q.name>
+    <cfif q.recordCount>
+      <cfset s.bus_username = q.bus_username>
+      <cfset s.bus_password = q.bus_password>
+      <cfset s.bus_name = q.bus_name>
       <cfreturn s>
     <cfelse>
-      <cfthrow message="Unknown user #ARGUMENTS.username# for blog.">
+      <cfthrow message="Unknown user #arguments.username# for blog.">
     </cfif>
 
   </cffunction>
 
-  <cffunction name="getUserByName" access="public" returnType="string" output="false" hint="Get username based on encoded name.">
+  <cffunction name="getUserByName" access="public" returnType="string" output="false"
+        hint="Get username based on encoded name.">
     <cfargument name="name" type="string" required="true">
     <cfset var q = "">
 
-    <cfquery name="q" datasource="#instance.dsn#">
-    select  username
-    from  blogUsers
-    where  name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#replace(ARGUMENTS.name,"_"," ","all")#" maxlength="50">
+    <cfquery name="q" datasource="nmg" >
+    select  bus_username
+    from  BlogUsers
+    where  bus_name = <cfqueryparam cfsqltype="varchar" value="#replace(arguments.name,"_"," ","all")#" maxlength="50">
     </cfquery>
 
     <cfreturn q.username>
 
   </cffunction>
 
-  <cffunction name="getUserBlogRoles" access="public" returnType="string" output="false" hint="Returns a list of the roles for a specific user.">
+  <cffunction name="getUserBlogRoles" access="public" returnType="string" output="false"
+        hint="Returns a list of the roles for a specific user.">
     <cfargument name="username" type="string" required="true">
     <cfset var q = "">
-    <cfquery name="q" datasource="#instance.dsn#">
-      select  blogRoles.id
-      from  blogRoles
-      left join blogUserRoles on blogUserRoles.roleidfk = blogRoles.id
-      left join blogUsers on blogUserRoles.username = blogUsers.username
-      where blogUsers.username = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.username#" maxlength="50">
-      and blogUsers.blog = <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
+
+    <!--- MSACCESS fix provided by Andy Florino --->
+    <cfquery name="q" datasource="nmg" >
+    <cfif instance.blogDBType is "MSACCESS">
+    select BlogRoles.bro_broid
+    from BlogRoles, BlogUserRoles, BlogUsers
+    where (BlogRoles.bro_broid = BlogUserRoles.bur_broid and BlogUserRoles.bus_username = BlogUsers.bus_username)
+    and BlogUsers.bus_username = <cfqueryparam cfsqltype="varchar" value="#arguments.username#" maxlength="50">
+    and BlogUsers.bus_blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
+    <cfelse>
+    select  BlogRoles.bro_broid
+    from  BlogRoles
+    left join BlogUserRoles on BlogUserRoles.bur_broid = BlogRoles.bro_broid
+    left join BlogUsers on BlogUserRoles.bus_username = BlogUsers.bus_username
+    where BlogUsers.bus_username = <cfqueryparam cfsqltype="varchar" value="#arguments.username#" maxlength="50">
+    and BlogUsers.bus_blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
+    </cfif>
     </cfquery>
-    <cfreturn valueList(q.id)>
+
+    <cfreturn valueList(q.bro_broid)>
   </cffunction>
 
   <cffunction name="getUsers" access="public" returnType="query" output="false" hint="Returns users for a blog.">
     <cfset var q = "">
 
-    <cfquery name="q" datasource="#instance.dsn#">
-    select  username, name
-    from  blogUsers
-    where  blog = <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
+    <cfquery name="q" datasource="nmg" >
+    select  bus_username, bus_name
+    from  BlogUsers
+    where  bus_blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
     </cfquery>
 
     <cfreturn q>
   </cffunction>
 
-  <cffunction name="getVersion" access="remote" returnType="string" output="false" hint="Returns the version of the blog.">
-    <cfreturn VARIABLES.version>
+  <cffunction name="getValidDBTypes" access="public" returnType="string" output="false"
+        hint="Returns the valid database types.">
+    <cfreturn variables.validDBTypes>
   </cffunction>
 
-  <cffunction name="isBlogAuthorized" access="public" returnType="boolean" output="false" hint="Simple wrapper to check session roles and see if you are cool to do stuff. Admin role can do all.">
-    <cfif NOT SESSION.LoggedIn><cfreturn false /></cfif>
-    <cfif isUserInRole("siteadmin")><cfreturn true /></cfif>
-    <cfif NOT instance.SiteBlog>
-      <cfreturn instance.name EQ SESSION.USER.user />
+  <cffunction name="getVersion" access="remote" returnType="string" output="false"
+        hint="Returns the version of the blog.">
+    <cfreturn variables.version>
+  </cffunction>
+
+  <cffunction name="isBlogAuthorized" access="public" returnType="boolean" output="false"
+      hint="Simple wrapper to check session roles and see if you are cool to do stuff. Admin role can do all.">
+    <cfargument name="role" type="string" required="true">
+    <!--- Roles are IDs, but to make code simpler, we allow you to specify a string, so do a cached lookup conversion. --->
+    <cfset var q = "">
+
+    <!--- cache admin once --->
+    <cfif not structKeyExists(variables.roles, 'admin')>
+      <cfquery name="q" datasource="nmg" >
+      select  bro_broid
+      from  BlogRoles
+      where  role = <cfqueryparam cfsqltype="varchar" value="Admin" maxlength="50">
+      </cfquery>
+      <cfset variables.roles['admin'] = q.bro_broid>
     </cfif>
-    <cfreturn false />
+
+    <cfif not structKeyExists(variables.roles, arguments.role)>
+      <cfquery name="q" datasource="nmg" >
+      select  bro_broid
+      from  BlogRoles
+      where  role = <cfqueryparam cfsqltype="varchar" value="#arguments.role#" maxlength="50">
+      </cfquery>
+      <cfset variables.roles[arguments.role] = q.bro_broid>
+    </cfif>
+
+    <cfreturn (listFindNoCase(session.roles, variables.roles[arguments.role]) or listFindNoCase(session.roles, variables.roles['admin']))>
   </cffunction>
 
-  <cffunction name="bco_kill" access="public" returnType="void" output="false" hint="Deletes a comment based on a separate uuid to identify the comment in email to the blog admin.">
+  <cffunction name="isValidDBType" access="private" returnType="boolean" output="false"
+        hint="Checks to see if a db type is valid for the blog.">
+    <cfargument name="dbtype" type="string" required="true">
+
+    <cfreturn listFindNoCase(getValidDBTypes(), arguments.dbType) gte 1>
+
+  </cffunction>
+
+  <cffunction name="bco_kill" access="public" returnType="void" output="false"
+        hint="Deletes a comment based on a separate uuid to identify the comment in email to the blog admin.">
     <cfargument name="kid" type="uuid" required="true">
     <cfset var q = "">
+
     <!--- delete comment based on kill --->
-    <cfquery name="q" datasource="#instance.dsn#">
-      delete from blogComments
-      where bco_kill = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.kid#" maxlength="35">
+    <cfquery name="q" datasource="nmg" >
+      delete from BlogComments
+      where bco_kill = <cfqueryparam cfsqltype="varchar" value="#arguments.kid#" maxlength="35">
     </cfquery>
 
   </cffunction>
 
-  <cffunction name="logSearch" access="private" returnType="void" output="false" hint="Logs the search.">
+  <cffunction name="logSearch" access="private" returnType="void" output="false"
+        hint="Logs the search.">
     <cfargument name="searchterm" type="string" required="true">
 
-    <cfquery datasource="#instance.dsn#">
-    insert into blogSearchStats(searchterm, searched, blog)
+    <cfquery datasource="nmg" >
+    insert into BlogSearchStats(bss_term, bss_searched, bss_blog)
     values(
-      <cfqueryparam value="#ARGUMENTS.searchterm#" cfsqltype="cf_sql_varchar" maxlength="255">,
-      <cfqueryparam value="#blogNow()#" cfsqltype="cf_sql_timestamp">,
-      <cfqueryparam value="#instance.name#" cfsqltype="cf_sql_varchar" maxlength="50">
+      <cfqueryparam value="#arguments.searchterm#" cfsqltype="varchar" maxlength="255">,
+      <cfqueryparam value="#blogNow()#" cfsqltype="timestamp">,
+      <cfqueryparam value="#instance.name#" cfsqltype="varchar" maxlength="50">
     )
     </cfquery>
 
   </cffunction>
 
-  <cffunction name="logView" access="public" returnType="void" output="false" hint="Handles adding a view to an entry.">
+  <cffunction name="logView" access="public" returnType="void" output="false"
+        hint="Handles adding a view to an entry.">
     <cfargument name="entryid" type="uuid" required="true">
 
-    <cfquery datasource="#instance.dsn#">
-    update  blogEntries
+    <cfquery datasource="nmg" >
+    update  BlogEntries
     set    views = views + 1
-    where  id = <cfqueryparam value="#ARGUMENTS.entryid#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
+    where  id = <cfqueryparam value="#arguments.entryid#" cfsqltype="VARCHAR" maxlength="35">
     </cfquery>
 
   </cffunction>
 
-  <cffunction name="mailEntry" access="public" returnType="void" output="false" hint="Handles email for the blog.">
+  <cffunction name="mailEntry" access="public" returnType="void" output="false"
+        hint="Handles email for the blog.">
     <cfargument name="entryid" type="uuid" required="true">
-    <cfset var entry = getEntry(ARGUMENTS.entryid,true)>
+    <cfset var entry = getEntry(arguments.entryid,true)>
     <cfset var subscribers = getSubscribers(true)>
     <cfset var theMessage = "">
     <cfset var mailBody = "">
-    <cfset var renderedText = renderEntry(entry.body,true,entry.enclosure)>
+    <cfset var renderedText = renderEntry(entry.body,true,entry.ben_enclosure)>
     <cfset var theLink = makeLink(entry.id)>
+    <cfset var rootURL = getRootURL()>
+
     <cfloop query="subscribers">
+
       <cfsavecontent variable="theMessage">
       <cfoutput>
 <h2>#entry.title#</h2>
 <b>URL:</b> <a href="#theLink#">#theLink#</a><br />
 <b>Author:</b> #entry.name#<br />
 
-#renderedText#<cfif len(entry.morebody)>
+#renderedText#<cfif len(entry.ben_morebody)>
 <a href="#theLink#">[Continued at Blog]</a></cfif>
 
 <p>
 You are receiving this email because you have subscribed to this blog.<br />
 To unsubscribe, please go to this URL:
-<a href="#APPLICATION.PATH.FULL#/b.unsubscribe.cfm?email=#email#&amp;token=#token#">#APPLICATION.PATH.FULL#/b.unsubscribe.cfm?email=#email#&amp;token=#token#</a>
+<a href="#rooturl#unsubscribe.cfm?email=#email#&amp;bsu_token=#bsu_token#">#rooturl#unsubscribe.cfm?email=#email#&amp;bsu_token=#bsu_token#</a>
 </p>
       </cfoutput>
       </cfsavecontent>
-      <cfset utils.mail(to=email,from=instance.owneremail,subject="#VARIABLES.utils.htmlToPlainText(htmlEditFormat(instance.blogtitle))# / #VARIABLES.utils.htmlToPlainText(entry.title)#",type="html",body=theMessage, failTo=instance.failTo, mailserver=instance.mailserver, mailusername=instance.mailusername, mailpassword=instance.mailpassword)>
+      <cfset utils.mail(to=email,from=instance.owneremail,subject="#variables.utils.htmlToPlainText(htmlEditFormat(instance.blogtitle))# / #variables.utils.htmlToPlainText(entry.title)#",type="html",body=theMessage, failTo=instance.failTo, mailserver=instance.mailserver, mailusername=instance.mailusername, mailpassword=instance.mailpassword)>
     </cfloop>
 
     <!---
@@ -1666,131 +2047,143 @@ To unsubscribe, please go to this URL:
       note: it is possible that an entry will never be marked mailed if your blog has
       no subscribers. I don't think this is an issue though.
     --->
-    <cfquery datasource="#instance.dsn#">
-    update blogEntries
-    set    mailed = <cfqueryparam value="1" cfsqltype="CF_SQL_TINYINT">
-    where  id = <cfqueryparam value="#ARGUMENTS.entryid#" cfsqltype="CF_SQL_VARCHAR">
+    <cfquery datasource="nmg" >
+    update BlogEntries
+    set    mailed =
+        <cfif instance.blogDBType is not "MYSQL">
+          <cfqueryparam value="true" cfsqltype="BIT">
+         <cfelse>
+              <cfqueryparam value="1" cfsqltype="TINYINT">
+         </cfif>
+    where  id = <cfqueryparam value="#arguments.entryid#" cfsqltype="VARCHAR">
     </cfquery>
 
 
   </cffunction>
 
-  <cffunction name="makeCategoryLink" access="public" returnType="string" output="false" hint="Generates links for a category.">
+  <cffunction name="makeCategoryLink" access="public" returnType="string" output="false"
+        hint="Generates links for a category.">
     <cfargument name="catid" type="uuid" required="true">
     <cfset var q = "">
 
     <!---// make sure the cache exists //--->
     <cfif not structKeyExists(variables, "catAliasCache")>
-      <cfset VARIABLES.catAliasCache = structNew() />
+      <cfset variables.catAliasCache = structNew() />
     </cfif>
 
-    <cfif structKeyExists(VARIABLES.catAliasCache, ARGUMENTS.catid)>
-      <cfreturn VARIABLES.catAliasCache[ARGUMENTS.catid]>
+    <cfif structKeyExists(variables.catAliasCache, arguments.catid)>
+      <cfreturn variables.catAliasCache[arguments.catid]>
     </cfif>
 
-    <cfquery name="q" datasource="#instance.dsn#">
+    <cfquery name="q" datasource="nmg" >
     select  bca_alias
-    from  blogCategories
-    where  bca_bcaid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.catid#" maxlength="35">
+    from  BlogCategories
+    where  bca_bcaid = <cfqueryparam cfsqltype="varchar" value="#arguments.catid#" maxlength="35">
     </cfquery>
 
     <cfif q.bca_alias is not "">
-      <cfset VARIABLES.catAliasCache[ARGUMENTS.catid] = "#instance.blogURL#/#q.bca_alias#">
+      <cfset variables.catAliasCache[arguments.catid] = "#instance.blogURL#/#q.bca_alias#">
     <cfelse>
-      <cfset VARIABLES.catAliasCache[ARGUMENTS.catid] = "#instance.blogURL#?mode=cat&amp;catid=#ARGUMENTS.catid#">
+      <cfset variables.catAliasCache[arguments.catid] = "#instance.blogURL#?mode=cat&amp;catid=#arguments.catid#">
     </cfif>
-    <cfreturn VARIABLES.catAliasCache[ARGUMENTS.catid]>
+    <cfreturn variables.catAliasCache[arguments.catid]>
   </cffunction>
 
-  <cffunction name="makeUserLink" access="public" returnType="string" output="false" hint="Generates links for viewing blog posts by user/blog poster.">
+  <cffunction name="makeUserLink" access="public" returnType="string" output="false"
+        hint="Generates links for viewing blog posts by user/blog poster.">
     <cfargument name="name" type="string" required="true">
-    <!--- <cfreturn "#instance.blogURL#/postedby/#replace(ARGUMENTS.name," ","_","all")#"> --->
-    <cfreturn "#instance.blogURL#/postedby/#instance.name#">
+
+    <cfreturn "#instance.blogURL#/postedby/#replace(arguments.name," ","_","all")#">
+
   </cffunction>
 
-  <cffunction name="cacheLink" access="public" returnType="struct" output="false" hint="Caches a link.">
+  <cffunction name="cacheLink" access="public" returnType="struct" output="false"
+        hint="Caches a link.">
     <cfargument name="entryid" type="uuid" required="true" />
     <cfargument name="alias" type="string" required="true" />
     <cfargument name="posted" type="date" required="true" />
 
     <!---// make sure the cache exists //--->
     <cfif not structKeyExists(variables, "lCache")>
-      <cfset VARIABLES.lCache = structNew() />
+      <cfset variables.lCache = structNew() />
     </cfif>
 
-    <cfset VARIABLES.lCache[ARGUMENTS.entryid] = structNew() />
-    <cfset VARIABLES.lCache[ARGUMENTS.entryid].alias = ARGUMENTS.alias />
-    <cfset VARIABLES.lCache[ARGUMENTS.entryid].posted = ARGUMENTS.posted />
+    <cfset variables.lCache[arguments.entryid] = structNew() />
+    <cfset variables.lCache[arguments.entryid].alias = arguments.alias />
+    <cfset variables.lCache[arguments.entryid].posted = arguments.posted />
 
     <cfreturn arguments />
   </cffunction>
 
-  <cffunction name="makeLink" access="public" returnType="string" output="false" hint="Generates links for an entry.">
+  <cffunction name="makeLink" access="public" returnType="string" output="false"
+        hint="Generates links for an entry.">
     <cfargument name="entryid" type="uuid" required="true" />
     <cfargument name="updateCache" type="boolean" required="false" default="false" />
     <cfset var q = "">
     <cfset var realdate = "">
 
     <cfif not structKeyExists(variables, "lCache")>
-      <cfset VARIABLES.lCache = structNew()>
+      <cfset variables.lCache = structNew()>
     </cfif>
 
     <!---// if forcing the cache to be updated, remove the key //--->
-    <cfif ARGUMENTS.updateCache>
-      <cfset structDelete(VARIABLES.lCache, ARGUMENTS.entryid, true) />
+    <cfif arguments.updateCache>
+      <cfset structDelete(variables.lCache, arguments.entryid, true) />
     </cfif>
 
-    <cfif not structKeyExists(VARIABLES.lCache, ARGUMENTS.entryid)>
+    <cfif not structKeyExists(variables.lCache, arguments.entryid)>
       <cflock name="variablesLCache_#instance.name#" timeout="30" type="exclusive">
-        <cfif not structKeyExists(VARIABLES.lCache, ARGUMENTS.entryid)>
-          <cfquery name="q" datasource="#instance.dsn#">
+        <cfif not structKeyExists(variables.lCache, arguments.entryid)>
+          <cfquery name="q" datasource="nmg" >
           select  posted, alias
-          from  blogEntries
-          where  id = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.entryid#" maxlength="35">
+          from  BlogEntries
+          where  id = <cfqueryparam cfsqltype="varchar" value="#arguments.entryid#" maxlength="35">
           </cfquery>
           <!---// cache the link //--->
           <cfset realdate = dateAdd("h", instance.offset, q.posted)>
-          <cfset cacheLink(entryid=ARGUMENTS.entryid, alias=q.alias, posted=realdate) />
+          <cfset cacheLink(entryid=arguments.entryid, alias=q.alias, posted=realdate) />
         <cfelse>
           <cfset q = structNew()>
-          <cfset q.alias = VARIABLES.lCache[ARGUMENTS.entryid].alias>
-          <cfset q.posted = VARIABLES.lCache[ARGUMENTS.entryid].posted>
+          <cfset q.alias = variables.lCache[arguments.entryid].alias>
+          <cfset q.posted = variables.lCache[arguments.entryid].posted>
         </cfif>
         </cflock>
     <cfelse>
       <cfset q = structNew()>
-      <cfset q.alias = VARIABLES.lCache[ARGUMENTS.entryid].alias>
-      <cfset q.posted = VARIABLES.lCache[ARGUMENTS.entryid].posted>
+      <cfset q.alias = variables.lCache[arguments.entryid].alias>
+      <cfset q.posted = variables.lCache[arguments.entryid].posted>
     </cfif>
 
     <cfif q.alias is not "">
       <cfreturn "#instance.blogURL#/#year(q.posted)#/#month(q.posted)#/#day(q.posted)#/#q.alias#">
     <cfelse>
-      <cfreturn "#instance.blogURL#?mode=entry&amp;entry=#ARGUMENTS.entryid#">
+      <cfreturn "#instance.blogURL#?mode=entry&amp;entry=#arguments.entryid#">
     </cfif>
   </cffunction>
 
-  <cffunction name="makeTitle" access="public" returnType="string" output="false" hint="Formats the title.">
+  <cffunction name="makeTitle" access="public" returnType="string" output="false"
+        hint="Formats the title.">
     <cfargument name="title" type="string" required="true">
 
     <!--- Remove non alphanumeric but keep spaces. --->
     <!--- Changed to be more strict - Martin Baur noticed foreign chars getting through. THey
     ARE valid alphanumeric chars, but we don't want them. --->
     <!---
-    <cfset ARGUMENTS.title = reReplace(ARGUMENTS.title,"[^[:alnum:] ]","","all")>
+    <cfset arguments.title = reReplace(arguments.title,"[^[:alnum:] ]","","all")>
     --->
     <!---// replace the & symbol with the word "and" //--->
-    <cfset ARGUMENTS.title = replace(ARGUMENTS.title, "&amp;", "and", "all") />
+    <cfset arguments.title = replace(arguments.title, "&amp;", "and", "all") />
     <!---// remove html entities //--->
-    <cfset ARGUMENTS.title = reReplace(ARGUMENTS.title, "&[^;]+;", "", "all") />
-    <cfset ARGUMENTS.title = reReplace(ARGUMENTS.title,"[^0-9a-zA-Z ]","","all")>
+    <cfset arguments.title = reReplace(arguments.title, "&[^;]+;", "", "all") />
+    <cfset arguments.title = reReplace(arguments.title,"[^0-9a-zA-Z ]","","all")>
     <!--- change spaces to - --->
-    <cfset ARGUMENTS.title = replace(ARGUMENTS.title," ","-","all")>
+    <cfset arguments.title = replace(arguments.title," ","-","all")>
 
-    <cfreturn ARGUMENTS.title>
+    <cfreturn arguments.title>
   </cffunction>
 
-  <cffunction name="notifyEntry" access="public" returnType="void" output="false" hint="Sends a message to everyone in an entry.">
+  <cffunction name="notifyEntry" access="public" returnType="void" output="false"
+        hint="Sends a message to everyone in an entry.">
     <cfargument name="entryid" type="uuid" required="true">
     <cfargument name="message" type="string" required="true">
     <cfargument name="subject" type="string" required="true">
@@ -1798,7 +2191,6 @@ To unsubscribe, please go to this URL:
 
     <!--- Both of these are related to comment moderation. --->
     <cfargument name="adminonly" type="boolean" required="false">
-    <cfargument name="approved" type="boolean" required="false">
     <cfargument name="noadmin" type="boolean" required="false">
     <cfargument name="html" type="boolean" required="false" default="false">
 
@@ -1812,11 +2204,11 @@ To unsubscribe, please go to this URL:
     <cfset var address = "">
     <cfset var ulink = "">
     <cfset var theMessage = "">
-    <cfset var comment = getComment(ARGUMENTS.commentid)>
-    <cfset var fromtouse = ARGUMENTS.from>
+    <cfset var comment = getComment(arguments.commentid)>
+    <cfset var fromtouse = arguments.from>
     <cfset var mailType = "text">
 
-    <cfif ARGUMENTS.html>
+    <cfif arguments.html>
       <cfset mailType = "html">
     </cfif>
 
@@ -1825,16 +2217,16 @@ To unsubscribe, please go to this URL:
     </cfif>
 
     <!--- is it a valid entry? --->
-    <cfif not entryExists(ARGUMENTS.entryid)>
-      <cfset VARIABLES.utils.throw("#entryid# isn't a valid entry.")>
+    <cfif not entryExists(arguments.entryid)>
+      <cfset variables.utils.throw("#entryid# isn't a valid entry.")>
     </cfif>
 
     <!--- argument allows us to only send to the admin. --->
-    <cfif not structKeyExists(arguments, "adminonly") or not ARGUMENTS.adminonly>
+    <cfif not structKeyExists(arguments, "adminonly") or not arguments.adminonly>
 
       <!--- First, get everyone in the thread --->
       <cfinvoke method="getComments" returnVariable="comments">
-        <cfinvokeargument name="id" value="#ARGUMENTS.entryid#">
+        <cfinvokeargument name="id" value="#arguments.entryid#">
         <cfinvokeargument name="includesubscribers" value="true">
       </cfinvoke>
 
@@ -1849,23 +2241,23 @@ To unsubscribe, please go to this URL:
     </cfif>
 
     <!--- Send email to admin --->
-    <cfif not structKeyExists(arguments, "noadmin") or not ARGUMENTS.noadmin>
+    <cfif not structKeyExists(arguments, "noadmin") or not arguments.noadmin>
       <cfset emailAddresses[instance.ownerEmail] = "">
     </cfif>
 
     <!--- Don't send email to from --->
-    <cfset structDelete(emailAddresses, ARGUMENTS.from)>
+    <cfset structDelete(emailAddresses, arguments.from)>
 
     <cfif not structIsEmpty(emailAddresses)>
       <!---
         Determine if we have a commentsFrom property. If so, it overrides this setting.
       --->
       <cfif getProperty("commentsFrom") neq "">
-        <cfset ARGUMENTS.from = getProperty("commentsFrom")>
+        <cfset arguments.from = getProperty("commentsFrom")>
       </cfif>
 
       <cfloop item="address" collection="#emailAddresses#">
-        <!--- determine if msg has an unsub token, if so, prepare the link --->
+        <!--- determine if msg has an unsub bsu_token, if so, prepare the link --->
         <!---
           Note, right now, the email sent to the admin will have a blank
           commentID. Since the admin can't unsub anyway I don't think it
@@ -1875,13 +2267,10 @@ To unsubscribe, please go to this URL:
           email readers require inline CSS. I could have passed it in as an argument but
           said frack it.
         --->
-        <cfif findNoCase("%unsubscribe%", ARGUMENTS.message)>
+        <cfif findNoCase("%unsubscribe%", arguments.message)>
           <cfif address is not instance.ownerEmail>
-            <cfif instance.SiteBlog>
-              <cfset ulink = "#APPLICATION.PATH.FULL#/b.unsubscribe.cfm?commentID=#emailAddresses[address]#&amp;email=#address#">
-            <cfelse>
-              <cfset ulink = "#APPLICATION.PATH.FULL#/#REQUEST.brewer#/blog/unsubscribe/p.brewer.cfm?commentID=#emailAddresses[address]#&amp;email=#address#">
-            </cfif>
+            <cfset ulink = getRootURL() & "unsubscribe.cfm" &
+            "?commentID=#emailAddresses[address]#&amp;email=#address#">
             <cfif mailType is "html">
               <cfset ulink = "<a href=""#ulink#"" style=""font-size:8pt;text-decoration:underline;color:##7d8524;text-decoration:none;"">Unsubscribe</a>">
             <cfelse>
@@ -1891,79 +2280,81 @@ To unsubscribe, please go to this URL:
             <cfset ulink = "">
             <!--- We get a bit fancier now as well as we will be allowing for kill switches --->
             <cfif mailType is "text">
-              <cfset ulink = ulink & "#chr(10)#Delete this comment: #instance.blogURL#?bco_kill=#comment.bco_kill#">
+              <cfset ulink = ulink & "#chr(10)#Delete this comment: #getRootURL()#index.cfm?bco_kill=#comment.bco_kill#">
             <cfelse>
-              <cfset ulink = ulink & " <a href=""#instance.blogURL#?bco_kill=#comment.bco_kill#"" style=""font-size:8pt;text-decoration:underline;color:##7d8524;text-decoration:none;"">Delete</a>">
+              <cfset ulink = ulink & " <a href=""#getRootURL()#index.cfm?bco_kill=#comment.bco_kill#"" style=""font-size:8pt;text-decoration:underline;color:##7d8524;text-decoration:none;"">Delete</a>">
             </cfif>
             <!--- also allow for approving --->
-            <cfif instance.moderate AND NOT StructKeyExists(ARGUMENTS, "Approved")>
+            <cfif instance.moderate>
               <cfif mailType is "text">
-                <cfset ulink = ulink & "#chr(10)#Approve this comment: #instance.blogURL#?approvecomment=#comment.id#">
+                <cfset ulink = ulink & "#chr(10)#Approve this comment: #getRootURL()#index.cfm?approvecomment=#comment.id#">
               <cfelse>
-                <cfset ulink = ulink & " <a href=""#instance.blogURL#?approvecomment=#comment.id#"" style=""font-size:8pt;text-decoration:underline;color:##7d8524;text-decoration:none;"">Approve</a>">
+                <cfset ulink = ulink & " <a href=""#getRootURL()#index.cfm?approvecomment=#comment.id#"" style=""font-size:8pt;text-decoration:underline;color:##7d8524;text-decoration:none;"">Approve</a>">
               </cfif>
             </cfif>
           </cfif>
-          <cfset theMessage = replaceNoCase(ARGUMENTS.message, "%unsubscribe%", ulink, "all")>
+          <cfset theMessage = replaceNoCase(arguments.message, "%unsubscribe%", ulink, "all")>
         <cfelse>
-          <cfset theMessage = ARGUMENTS.message>
+          <cfset theMessage = arguments.message>
         </cfif>
 
-        <cfset utils.mail(to=address,from=fromtouse,subject=VARIABLES.utils.htmlToPlainText(ARGUMENTS.subject),type=mailType,body=theMessage, failTo=instance.failTo, mailserver=instance.mailserver, mailusername=instance.mailusername, mailpassword=instance.mailpassword)>
+        <cfset utils.mail(to=address,from=fromtouse,subject=variables.utils.htmlToPlainText(arguments.subject),type=mailType,body=theMessage, failTo=instance.failTo, mailserver=instance.mailserver, mailusername=instance.mailusername, mailpassword=instance.mailpassword)>
 
       </cfloop>
     </cfif>
 
   </cffunction>
 
-  <cffunction name="removeCategory" access="remote" returnType="void" roles="" output="false" hint="remove entry ID from category X">
+  <cffunction name="removeCategory" access="remote" returnType="void" roles="admin" output="false"
+        hint="remove entry ID from category X">
     <cfargument name="entryid" type="uuid" required="true">
     <cfargument name="bca_bcaid" type="uuid" required="true">
 
-    <cfquery datasource="#instance.dsn#">
-      delete from blogEntriesCategories
-      where   bec_bcaid = <cfqueryparam value="#ARGUMENTS.bca_bcaid#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
-      and entryidfk = <cfqueryparam value="#ARGUMENTS.entryid#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
+    <cfquery datasource="nmg" >
+      delete from BlogEntriesCategories
+      where bec_bcaid = <cfqueryparam value="#arguments.bca_bcaid#" cfsqltype="VARCHAR" maxlength="35">
+      and bec_benid = <cfqueryparam value="#arguments.entryid#" cfsqltype="VARCHAR" maxlength="35">
     </cfquery>
 
   </cffunction>
 
-  <cffunction name="removeCategories" access="remote" returnType="void" roles="" output="false" hint="Remove all categories from an entry.">
+  <cffunction name="removeCategories" access="remote" returnType="void" roles="admin" output="false"
+        hint="Remove all categories from an entry.">
     <cfargument name="entryid" type="uuid" required="true">
 
-    <cfquery datasource="#instance.dsn#">
-      delete from blogEntriesCategories
-      where  entryidfk = <cfqueryparam value="#ARGUMENTS.entryid#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
+    <cfquery datasource="nmg" >
+      delete from BlogEntriesCategories
+      where  bec_benid = <cfqueryparam value="#arguments.entryid#" cfsqltype="VARCHAR" maxlength="35">
     </cfquery>
   </cffunction>
 
   <cffunction name="removeSubscriber" access="remote" returnType="boolean" output="false" hint="Removes a subscriber user.">
-    <cfargument name="email" type="string" required="true">
-    <cfargument name="token" type="uuid" required="false">
+    <cfargument name="bsu_email" type="string" required="true">
+    <cfargument name="bsu_token" type="uuid" required="false">
     <cfset var getMe = "">
 
-    <cfif not isBlogAuthorized() and not structKeyExists(arguments,"token")>
-      <cfset VARIABLES.utils.throw("Unauthorized removal.")>
+    <cfif not isUserInRole("admin") and not structKeyExists(arguments,"bsu_token")>
+      <cfset variables.utils.throw("Unauthorized removal.")>
     </cfif>
 
     <!--- First, lets see if this guy is already subscribed. --->
-    <cfquery name="getMe" datasource="#instance.dsn#">
-    select  email
-    from  blogSubscribers
-    where  email = <cfqueryparam value="#ARGUMENTS.email#" cfsqltype="cf_sql_varchar" maxlength="50">
-    <cfif structKeyExists(arguments, "token")>
-    and    token = <cfqueryparam value="#ARGUMENTS.token#" cfsqltype="cf_sql_varchar" maxlength="35">
+    <cfquery name="getMe" datasource="nmg" >
+    select  bsu_email
+    from  BlogSubscribers
+    where  bsu_email = <cfqueryparam value="#arguments.bsu_email#" cfsqltype="varchar" maxlength="50">
+    <cfif structKeyExists(arguments, "bsu_token")>
+    and    bsu_token = <cfqueryparam value="#arguments.bsu_token#" cfsqltype="varchar" maxlength="35">
     </cfif>
     </cfquery>
 
-    <cfif getMe.RecordCount is 1>
-      <cfquery datasource="#instance.dsn#">
-      delete  from blogSubscribers
-      where  email = <cfqueryparam value="#ARGUMENTS.email#" cfsqltype="cf_sql_varchar" maxlength="50">
-      <cfif structKeyExists(arguments, "token")>
-      and    token = <cfqueryparam value="#ARGUMENTS.token#" cfsqltype="cf_sql_varchar" maxlength="35">
+    <cfif getMe.recordCount is 1>
+      <cfquery datasource="nmg" >
+      delete  from BlogSubscribers
+      where  bsu_email = <cfqueryparam value="#arguments.bsu_email#" cfsqltype="varchar" maxlength="50">
+      <cfif structKeyExists(arguments, "bsu_token")>
+      and    bsu_token = <cfqueryparam value="#arguments.bsu_token#" cfsqltype="varchar" maxlength="35">
       </cfif>
-      and    blog = <cfqueryparam value="#instance.name#" cfsqltype="cf_sql_varchar" maxlength="50">
+      and    bsu_blog = <cfqueryparam value="#instance.name#" cfsqltype="varchar" maxlength="50">
       </cfquery>
 
       <cfreturn true>
@@ -1973,20 +2364,22 @@ To unsubscribe, please go to this URL:
 
   </cffunction>
 
-  <cffunction name="removeUnverifiedSubscribers" access="remote" returnType="void" output="false" roles="" hint="Removes all subscribers who are not verified.">
+  <cffunction name="removeUnverifiedSubscribers" access="remote" returnType="void" output="false" roles="admin"
+        hint="Removes all subscribers who are not bsu_verified.">
 
-    <cfquery datasource="#instance.dsn#">
-    delete  from blogSubscribers
-    where  blog = <cfqueryparam value="#instance.name#" cfsqltype="cf_sql_varchar" maxlength="50">
-    and    verified = 0
+    <cfquery datasource="nmg" >
+    delete  from BlogSubscribers
+    where  bsu_blog = <cfqueryparam value="#instance.name#" cfsqltype="varchar" maxlength="50">
+    and    bsu_verified = 0
     </cfquery>
 
   </cffunction>
 
-  <cffunction name="renderEntry" access="public" returnType="string" output="true" hint="Handles rendering the blog entry.">
+  <cffunction name="renderEntry" access="public" returnType="string" output="false"
+        hint="Handles rendering the blog entry.">
     <cfargument name="string" type="string" required="true">
     <cfargument name="printformat" type="boolean" required="false" default="false">
-    <cfargument name="enclosure" type="string" required="false" default="">
+    <cfargument name="ben_enclosure" type="string" required="false" default="">
     <cfargument name="ignoreParagraphFormat" type="boolean" required="false" default="false"/>
     <cfset var counter = "">
     <cfset var codeblock = "">
@@ -1995,6 +2388,7 @@ To unsubscribe, please go to this URL:
     <cfset var newbody = "">
     <cfset var style = "">
     <cfset var imgURL = "">
+    <cfset var rootURL = "">
     <cfset var textblock = "">
     <cfset var tbRegex = "">
     <cfset var textblockLabel = "">
@@ -2004,72 +2398,111 @@ To unsubscribe, please go to this URL:
     <cfset var cfc = "">
     <cfset var newstring = "">
 
+    <!---// check to see if we should paragraph format this string //--->
+    <cfif not structKeyExists(arguments, "ignoreParagraphFormat")>
+      <!---
+      <cfset arguments.ignoreParagraphFormat = yesNoFormat(reFindNoCase('<p[^e>]*>', arguments.string, 0, false))>
+      --->
+    </cfif>
+
+    <!--- Check for code blocks --->
+    <cfif findNoCase("<code>",arguments.string) and findNoCase("</code>",arguments.string)>
+      <cfset counter = findNoCase("<code>",arguments.string)>
+      <cfloop condition="counter gte 1">
+                <cfset codeblock = reFindNoCase("(?s)(.*)(<code>)(.*)(</code>)(.*)",arguments.string,1,1)>
+        <cfif arrayLen(codeblock.len) gte 6>
+                    <cfset codeportion = mid(arguments.string, codeblock.pos[4], codeblock.len[4])>
+                    <cfif len(trim(codeportion))>
+            <cfif arguments.printformat>
+              <cfset result = "<br/><pre class='codePrint'>#trim(htmlEditFormat(codeportion))#</pre><br/>">
+            <cfelse>
+              <cfset result = variables.codeRenderer.formatString(trim(codeportion))>
+              <cfset result = "<div class='code'>#result#</div>">
+            </cfif>
+          <cfelse>
+            <cfset result = "">
+          </cfif>
+          <cfset newbody = mid(arguments.string, 1, codeblock.len[2]) & result & mid(arguments.string,codeblock.pos[6],codeblock.len[6])>
+
+                    <cfset arguments.string = newbody>
+          <cfset counter = findNoCase("<code>",arguments.string,counter)>
+        <cfelse>
+          <!--- bad crap, maybe <code> and no ender, or maybe </code><code> --->
+          <cfset counter = 0>
+        </cfif>
+      </cfloop>
+    </cfif>
+
     <!--- call our render funcs --->
-    <cfloop item="cfc" collection="#VARIABLES.renderMethods#">
-      <cfinvoke component="#VARIABLES.renderMethods[cfc].cfc#" method="renderDisplay" argumentCollection="#arguments#" returnVariable="newstring" />
-      <cfset ARGUMENTS.string = newstring>
+    <cfloop item="cfc" collection="#variables.renderMethods#">
+      <cfinvoke component="#variables.renderMethods[cfc].cfc#" method="renderDisplay" argumentCollection="#arguments#" returnVariable="newstring" />
+      <cfset arguments.string = newstring>
     </cfloop>
 
-    <!--- New enclosure support. If enclose if a jpg, png, or gif, put it on top, aligned left. --->
-    <cfif len(ARGUMENTS.enclosure) and listFindNoCase("gif,jpg,png", listLast(ARGUMENTS.enclosure, "."))>
-      <cfset imgURL = "#APPLICATION.PATH.BLOGIMG#/#REQUEST.BLOG#/#urlEncodedFormat(getFileFromPath(enclosure))#">
-      <cfset ARGUMENTS.string = "<div class=""autoImage""><img src=""#imgURL#""></div>" & ARGUMENTS.string>
+    <!--- New ben_enclosure support. If enclose if a jpg, png, or gif, put it on top, aligned left. --->
+    <cfif len(arguments.ben_enclosure) and listFindNoCase("gif,jpg,png", listLast(arguments.ben_enclosure, "."))>
+      <cfset rootURL = replace(instance.blogURL, "index.cfm", "")>
+      <cfset imgURL = "#rootURL#ben_enclosures/#urlEncodedFormat(getFileFromPath(ben_enclosure))#">
+      <cfset arguments.string = "<div class=""autoImage""><img src=""#imgURL#""></div>" & arguments.string>
     <!--- bmeloche - 06/13/2008 - Adding podcast support. --->
-    <cfelseif len(ARGUMENTS.enclosure) and listFindNoCase("mp3", listLast(ARGUMENTS.enclosure, "."))>
-      <cfset imgURL = "#APPLICATION.PATH.ATTACH#/#REQUEST.BLOG#/#urlEncodedFormat(getFileFromPath(enclosure))#">
-      <cfset ARGUMENTS.string = "<div id=""#urlEncodedFormat(getFileFromPath(enclosure))#""></div>" & ARGUMENTS.string>
+    <cfelseif len(arguments.ben_enclosure) and listFindNoCase("mp3", listLast(arguments.ben_enclosure, "."))>
+      <cfset rootURL = replace(instance.blogURL, "index.cfm", "")>
+      <cfset imgURL = "#rootURL#ben_enclosures/#urlEncodedFormat(getFileFromPath(ben_enclosure))#">
+      <cfset arguments.string = "<div id=""#urlEncodedFormat(getFileFromPath(ben_enclosure))#""></div>" & arguments.string>
     </cfif>
 
     <!--- textblock support --->
     <cfset tbRegex = "<textblock[[:space:]]+label[[:space:]]*=[[:space:]]*""(.*?)"">">
-    <cfif reFindNoCase(tbRegex,ARGUMENTS.string)>
-      <cfset counter = reFindNoCase(tbRegex,ARGUMENTS.string)>
+    <cfif reFindNoCase(tbRegex,arguments.string)>
+      <cfset counter = reFindNoCase(tbRegex,arguments.string)>
       <cfloop condition="counter gte 1">
-        <cfset textblock = reFindNoCase(tbRegex,ARGUMENTS.string,1,1)>
+        <cfset textblock = reFindNoCase(tbRegex,arguments.string,1,1)>
         <cfif arrayLen(textblock.pos) is 2>
-          <cfset textblockTag = mid(ARGUMENTS.string, textblock.pos[1], textblock.len[1])>
-          <cfset textblockLabel = mid(ARGUMENTS.string, textblock.pos[2], textblock.len[2])>
-          <cfset newContent = VARIABLES.textblock.getTextBlockContent(textblockLabel)>
-          <cfset ARGUMENTS.string = replaceNoCase(ARGUMENTS.string, textblockTag, newContent)>
+          <cfset textblockTag = mid(arguments.string, textblock.pos[1], textblock.len[1])>
+          <cfset textblockLabel = mid(arguments.string, textblock.pos[2], textblock.len[2])>
+          <cfset newContent = variables.textblock.getTextBlockContent(textblockLabel)>
+          <cfset arguments.string = replaceNoCase(arguments.string, textblockTag, newContent)>
         </cfif>
-        <cfset counter = reFindNoCase(tbRegex,ARGUMENTS.string, counter)>
+        <cfset counter = reFindNoCase(tbRegex,arguments.string, counter)>
       </cfloop>
     </cfif>
 
-    <cfif not ARGUMENTS.ignoreParagraphFormat>
-      <cfset ARGUMENTS.string = xhtmlParagraphFormat(ARGUMENTS.string) />
+    <cfif not arguments.ignoreParagraphFormat>
+      <cfset arguments.string = xhtmlParagraphFormat(arguments.string) />
     </cfif>
 
-    <cfreturn ARGUMENTS.string />
+    <cfreturn arguments.string />
   </cffunction>
 
-  <cffunction name="saveCategory" access="remote" returnType="void" roles="" output="false" hint="Saves a category.">
+  <cffunction name="saveCategory" access="remote" returnType="void" roles="admin" output="false"
+        hint="Saves a category.">
     <cfargument name="id" type="uuid" required="true">
     <cfargument name="name" type="string" required="true">
     <cfargument name="alias" type="string" required="true">
-    <cfset var oldName = getCategory(ARGUMENTS.id).bca_name>
+    <cfset var oldName = getCategory(arguments.id).bca_category>
 
-    <cflock name="blogcfc.addCategory" type="exclusive" timeout="30">
+    <cflock name="blogcfc.addCategory" type="exclusive" timeout=30>
 
       <!--- new name? --->
-      <cfif oldName neq ARGUMENTS.name>
-        <cfif categoryExists(name="#ARGUMENTS.name#")>
-          <cfset VARIABLES.utils.throw("#ARGUMENTS.name# already exists as a category.")>
+      <cfif oldName neq arguments.name>
+        <cfif categoryExists(name="#arguments.name#")>
+          <cfset variables.utils.throw("#arguments.name# already exists as a category.")>
         </cfif>
       </cfif>
 
-      <cfquery datasource="#instance.dsn#">
-      update  blogCategories
-      set    bca_name = <cfqueryparam value="#ARGUMENTS.name#" cfsqltype="cf_sql_varchar" maxlength="50">,
-          bca_alias = <cfqueryparam value="#ARGUMENTS.alias#" cfsqltype="cf_sql_varchar" maxlength="50">
-      where  bca_bcaid = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="cf_sql_varchar" maxlength="35">
+      <cfquery datasource="nmg" >
+      update  BlogCategories
+      set    bca_category = <cfqueryparam value="#arguments.name#" cfsqltype="varchar" maxlength="50">,
+          bca_alias = <cfqueryparam value="#arguments.alias#" cfsqltype="varchar" maxlength="50">
+      where  bca_bcaid = <cfqueryparam value="#arguments.id#" cfsqltype="varchar" maxlength="35">
       </cfquery>
 
     </cflock>
 
   </cffunction>
 
-  <cffunction name="saveComment" access="public" returnType="uuid" output="false" hint="Saves a comment.">
+  <cffunction name="saveComment" access="public" returnType="uuid" output="false"
+        hint="Saves a comment.">
     <cfargument name="commentid" type="uuid" required="true">
     <cfargument name="name" type="string" required="true">
     <cfargument name="email" type="string" required="true">
@@ -2078,37 +2511,60 @@ To unsubscribe, please go to this URL:
     <cfargument name="subscribe" type="boolean" required="true">
     <cfargument name="bco_moderated" type="boolean" required="true">
 
-    <cfset ARGUMENTS.comments = htmleditformat(ARGUMENTS.comments)>
-    <cfset ARGUMENTS.name = left(htmlEditFormat(ARGUMENTS.name),50)>
-    <cfset ARGUMENTS.email = left(htmlEditFormat(ARGUMENTS.email),50)>
-    <cfset ARGUMENTS.bco_website = left(htmlEditFormat(ARGUMENTS.bco_website),255)>
-    <cfif ARGUMENTS.subscribe><cfset ARGUMENTS.subscribe = 1><cfelse><cfset ARGUMENTS.subscribe = 0></cfif>
-    <cfquery datasource="#instance.dsn#">
-      update blogComments
-      set name = <cfqueryparam value="#ARGUMENTS.name#" maxlength="50">,
-      email = <cfqueryparam value="#ARGUMENTS.email#" maxlength="50">,
-      bco_website = <cfqueryparam value="#ARGUMENTS.bco_website#" maxlength="255">,
-      comment = <cfqueryparam value="#ARGUMENTS.comments#" cfsqltype="CF_SQL_LONGVARCHAR">,
-      subscribe = <cfqueryparam value="#ARGUMENTS.subscribe#" cfsqltype="CF_SQL_TINYINT">,
-      bco_moderated= <cfqueryparam value="#ARGUMENTS.bco_moderated#" cfsqltype="CF_SQL_TINYINT">
-      where  id = <cfqueryparam value="#ARGUMENTS.commentid#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
+    <cfset arguments.comments = htmleditformat(arguments.comments)>
+    <cfset arguments.name = left(htmlEditFormat(arguments.name),50)>
+    <cfset arguments.email = left(htmlEditFormat(arguments.email),50)>
+    <cfset arguments.bco_website = left(htmlEditFormat(arguments.bco_website),255)>
+
+
+    <cfquery datasource="nmg" >
+    update BlogComments
+    set name = <cfqueryparam value="#arguments.name#" maxlength="50">,
+    email = <cfqueryparam value="#arguments.email#" maxlength="50">,
+    bco_website = <cfqueryparam value="#arguments.bco_website#" maxlength="255">,
+    <cfif instance.blogDBType is not "ORACLE">
+    comment = <cfqueryparam value="#arguments.comments#" cfsqltype="LONGVARCHAR">,
+    <cfelse>
+    comments = <cfqueryparam cfsqltype="clob" value="#arguments.comments#">,
+    </cfif>
+    subscribe =
+         <cfif instance.blogDBType is "MSSQL" or instance.blogDBType is "MSACCESS">
+           <cfqueryparam value="#arguments.subscribe#" cfsqltype="BIT">
+         <cfelse>
+                <!--- convert yes/no to 1 or 0 --->
+             <cfif arguments.subscribe>
+               <cfset arguments.subscribe = 1>
+             <cfelse>
+               <cfset arguments.subscribe = 0>
+             </cfif>
+           <cfqueryparam value="#arguments.subscribe#" cfsqltype="TINYINT">
+         </cfif>,
+    bco_moderated=
+      <cfif instance.blogDBType is "MSSQL" or instance.blogDBType is "MSACCESS">
+        <cfqueryparam value="#arguments.bco_moderated#" cfsqltype="BIT">
+      <cfelse>
+        <cfqueryparam value="#arguments.bco_moderated#" cfsqltype="TINYINT">
+      </cfif>
+    where  id = <cfqueryparam value="#arguments.commentid#" cfsqltype="VARCHAR" maxlength="35">
     </cfquery>
-    <cfreturn ARGUMENTS.commentid>
+
+    <cfreturn arguments.commentid>
   </cffunction>
 
-  <cffunction name="saveEntry" access="remote" returnType="void" roles="" output="false" hint="Saves an entry.">
+  <cffunction name="saveEntry" access="remote" returnType="void" roles="admin" output="false"
+        hint="Saves an entry.">
     <cfargument name="id" type="uuid" required="true">
     <cfargument name="title" type="string" required="true">
     <cfargument name="body" type="string" required="true">
-    <cfargument name="morebody" type="string" required="false" default="">
+    <cfargument name="ben_morebody" type="string" required="false" default="">
     <cfargument name="alias" type="string" required="false" default="">
     <!--- I use "any" so I can default to a blank string --->
     <cfargument name="posted" type="any" required="false" default="">
-    <cfargument name="allowcomments" type="boolean" required="false" default="true">
-    <cfargument name="enclosure" type="string" required="false" default="">
-    <cfargument name="filesize" type="numeric" required="false" default="0">
-    <cfargument name="mimetype" type="string" required="false" default="">
-    <cfargument name="released" type="boolean" required="false" default="true">
+    <cfargument name="ben_allowcomments" type="boolean" required="false" default="true">
+    <cfargument name="ben_enclosure" type="string" required="false" default="">
+    <cfargument name="ben_filesize" type="numeric" required="false" default="0">
+    <cfargument name="ben_mimetype" type="string" required="false" default="">
+    <cfargument name="ben_released" type="boolean" required="false" default="true">
     <cfargument name="relatedPPosts" type="string" required="true" default="">
     <cfargument name="sendemail" type="boolean" required="false" default="true">
     <cfargument name="duration" type="string" required="false" default="">
@@ -2119,213 +2575,260 @@ To unsubscribe, please go to this URL:
     <cfset var theURL = "" />
     <cfset var entry = "" />
 
-    <cfif not entryExists(ARGUMENTS.id)>
-      <cfset VARIABLES.utils.throw("#ARGUMENTS.id# does not exist as an entry.")>
+    <cfif not entryExists(arguments.id)>
+      <cfset variables.utils.throw("#arguments.id# does not exist as an entry.")>
     </cfif>
-    <cfif ARGUMENTS.allowcomments><cfset ARGUMENTS.allowcomments = 1><cfelse><cfset ARGUMENTS.allowcomments = 0></cfif>
-    <cfif ARGUMENTS.released><cfset ARGUMENTS.released = 1><cfelse><cfset ARGUMENTS.released = 0></cfif>
-    <cfquery datasource="#instance.dsn#">
-      update blogEntries
-      set    title = <cfqueryparam value="#ARGUMENTS.title#" cfsqltype="CF_SQL_CHAR" maxlength="100">,
-          body = <cfqueryparam value="#ARGUMENTS.body#" cfsqltype="CF_SQL_LONGVARCHAR">
-          <cfif len(ARGUMENTS.morebody)>
-            ,morebody = <cfqueryparam value="#ARGUMENTS.morebody#" cfsqltype="CF_SQL_LONGVARCHAR">
-           <cfelse>
-            ,morebody = <cfqueryparam null="yes" cfsqltype="CF_SQL_LONGVARCHAR">
+
+    <cfquery datasource="nmg" >
+      update BlogEntries
+      set    title = <cfqueryparam value="#arguments.title#" cfsqltype="CHAR" maxlength="100">,
+          <cfif instance.blogDBType is not "ORACLE">
+          body = <cfqueryparam value="#arguments.body#" cfsqltype="LONGVARCHAR">
+          <cfelse>
+          body = <cfqueryparam value="#arguments.body#" cfsqltype="CLOB">
           </cfif>
-          <cfif len(ARGUMENTS.alias)>
-            ,alias = <cfqueryparam value="#ARGUMENTS.alias#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
+          <cfif len(arguments.ben_morebody)>
+            <cfif instance.blogDBType is not "ORACLE">
+            ,ben_morebody = <cfqueryparam value="#arguments.ben_morebody#" cfsqltype="LONGVARCHAR">
+            <cfelse>
+            ,ben_morebody = <cfqueryparam value="#arguments.ben_morebody#" cfsqltype="CLOB">
+            </cfif>
+          <!--- ME - 04/27/2005 - fix this to overwrite more/ on edit --->
+            <cfelse>
+            <cfif instance.blogDBType is not "ORACLE">
+               ,ben_morebody = <cfqueryparam null="yes" cfsqltype="LONGVARCHAR">
+            <cfelse>
+            ,ben_morebody = <cfqueryparam null="yes" cfsqltype="CLOB">
+            </cfif>
           </cfif>
-          <cfif (len(trim(ARGUMENTS.posted)) gt 0) and isDate(ARGUMENTS.posted)>
-            ,posted = <cfqueryparam value="#ARGUMENTS.posted#" cfsqltype="CF_SQL_TIMESTAMP">
+          <cfif len(arguments.alias)>
+            ,alias = <cfqueryparam value="#arguments.alias#" cfsqltype="VARCHAR" maxlength="100">
           </cfif>
-            ,allowcomments = <cfqueryparam value="#ARGUMENTS.allowcomments#" cfsqltype="CF_SQL_TINYINT">
-            ,enclosure = <cfqueryparam value="#ARGUMENTS.enclosure#" cfsqltype="CF_SQL_CHAR" maxlength="255">
-          ,summary = <cfqueryparam value="#ARGUMENTS.summary#" cfsqltype="CF_SQL_VARCHAR" maxlength="255">
-          ,subtitle = <cfqueryparam value="#ARGUMENTS.subtitle#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
-          ,keywords = <cfqueryparam value="#ARGUMENTS.keywords#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
-          ,duration = <cfqueryparam value="#ARGUMENTS.duration#" cfsqltype="CF_SQL_VARCHAR" maxlength="10">
-          ,filesize = <cfqueryparam value="#ARGUMENTS.filesize#" cfsqltype="CF_SQL_NUMERIC">
-            ,mimetype = <cfqueryparam value="#ARGUMENTS.mimetype#" cfsqltype="CF_SQL_VARCHAR" maxlength="255">
-            ,released = <cfqueryparam value="#ARGUMENTS.released#" cfsqltype="CF_SQL_TINYINT">
-      where  id = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
-      and    blog = <cfqueryparam value="#instance.name#" cfsqltype="CF_SQL_VARCHAR" maxlength="50">
+          <cfif (len(trim(arguments.posted)) gt 0) and isDate(arguments.posted)>
+            ,posted = <cfqueryparam value="#arguments.posted#" cfsqltype="TIMESTAMP">
+          </cfif>
+            <cfif instance.blogDBType is not "MYSQL" AND instance.blogDBType is not "ORACLE">
+          ,ben_allowcomments = <cfqueryparam value="#arguments.ben_allowcomments#" cfsqltype="BIT">
+             <cfelse>
+               <!--- convert yes/no to 1 or 0 --->
+               <cfif arguments.ben_allowcomments>
+                 <cfset arguments.ben_allowcomments = 1>
+               <cfelse>
+                 <cfset arguments.ben_allowcomments = 0>
+               </cfif>
+            ,ben_allowcomments = <cfqueryparam value="#arguments.ben_allowcomments#" cfsqltype="TINYINT">
+             </cfif>
+             ,ben_enclosure = <cfqueryparam value="#arguments.ben_enclosure#" cfsqltype="CHAR" maxlength="255">
+          ,summary = <cfqueryparam value="#arguments.summary#" cfsqltype="VARCHAR" maxlength="255">
+          ,subtitle = <cfqueryparam value="#arguments.subtitle#" cfsqltype="VARCHAR" maxlength="100">
+          ,keywords = <cfqueryparam value="#arguments.keywords#" cfsqltype="VARCHAR" maxlength="100">
+          ,duration = <cfqueryparam value="#arguments.duration#" cfsqltype="VARCHAR" maxlength="10">
+            ,ben_filesize = <cfqueryparam value="#arguments.ben_filesize#" cfsqltype="NUMERIC">
+             ,ben_mimetype = <cfqueryparam value="#arguments.ben_mimetype#" cfsqltype="VARCHAR" maxlength="255">
+             <cfif instance.blogDBType is not "MYSQL" AND instance.blogDBType is not "ORACLE">
+          ,ben_released = <cfqueryparam value="#argumeben_releasedased#" cfsqltype="BIT">
+             <cfelse>
+               <!--- convert yes/no to 1 or 0 --->
+               <cfif arguments.released>
+                 <cfset arguments.ben_released = 1>
+               <cfelse>
+                 <cfset arguments.ben_released = 0>
+               </cfif>
+            ,ben_released = <cfqueryparam value="#arguments.ben_released#" cfsqltype="TINYINT">
+             </cfif>
+
+      where  id = <cfqueryparam value="#arguments.id#" cfsqltype="VARCHAR" maxlength="35">
+      and    blog = <cfqueryparam value="#instance.name#" cfsqltype="VARCHAR" maxlength="50">
     </cfquery>
 
-    <cfset saveRelatedEntries(ARGUMENTS.ID, ARGUMENTS.relatedpposts) />
+    <cfset saveRelatedEntries(arguments.ID, arguments.relatedpposts) />
 
     <!---// get the entry //--->
-    <cfset entry = getEntry(ARGUMENTS.id, true) />
+    <cfset entry = getEntry(arguments.id, true) />
 
     <!---// update the link cache //--->
-    <cfset cacheLink(entryid=ARGUMENTS.id, alias=entry.alias, posted=entry.posted) />
+    <cfset cacheLink(entryid=arguments.id, alias=entry.alias, posted=entry.posted) />
 
-    <cfif ARGUMENTS.released>
+    <cfif arguments.ben_released>
 
-      <cfif ARGUMENTS.sendEmail>
+      <cfif arguments.sendEmail>
         <cfif dateCompare(dateAdd("h", instance.offset, entry.posted), blogNow()) is 1>
           <!--- Handle delayed posting --->
-          <cfset theURL = APPLICATION.PATH.ROOT & "/x.notify.cfm?id=#id#">
-          <cfschedule action="update" task="BlogCFC Notifier #id#" operation="HTTPRequest" startDate="#entry.posted#" startTime="#entry.posted#" url="#theURL#" interval="once">
+          <cfset theURL = getRootURL()>
+          <cfset theURL = theURL & "admin/notify.cfm?id=#id#">
+          <cfschedule action="update" task="BlogCFC Notifier #id#" operation="HTTPRequest"
+                startDate="#entry.posted#" startTime="#entry.posted#" url="#theURL#" interval="once">
         <cfelse>
-          <cfset mailEntry(ARGUMENTS.id)>
+          <cfset mailEntry(arguments.id)>
         </cfif>
       </cfif>
 
       <cfif dateCompare(dateAdd("h", instance.offset, entry.posted), blogNow()) is not 1>
-        <cfset VARIABLES.ping.pingAggregators(instance.pingurls, instance.blogtitle, instance.blogurl)>
+        <cfset variables.ping.pingAggregators(instance.pingurls, instance.blogtitle, instance.blogurl)>
       </cfif>
 
     </cfif>
 
   </cffunction>
 
-  <cffunction name="saveRelatedEntries" access="public" returntype="void" roles="" output="false"
+  <cffunction name="saveRelatedEntries" access="public" returntype="void" roles="admin" output="false"
     hint="I add/update related blog entries">
     <cfargument name="ID" type="UUID" required="true" />
     <cfargument name="relatedpposts" type="string" required="true" />
 
     <cfset var ppost = "" />
 
-    <cfquery datasource="#instance.dsn#">
+    <cfquery datasource="nmg" >
       delete from
-        blogEntriesRelated
+        BlogEntriesRelated
       where
-        entryid = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
+        entryid = <cfqueryparam value="#arguments.id#" cfsqltype="VARCHAR" maxlength="35">
     </cfquery>
 
-    <cfloop list="#ARGUMENTS.relatedpposts#" index="ppost">
-      <cfquery datasource="#instance.dsn#">
+    <cfloop list="#arguments.relatedpposts#" index="ppost">
+      <cfquery datasource="nmg" >
         insert into
-          blogEntriesRelated(
-            entryid,
-            relatedid
+          BlogEntriesRelated(
+            bre_benid,
+            bre_relbenid
           ) values (
-            <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">,
-            <cfqueryparam value="#ppost#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
+            <cfqueryparam value="#arguments.id#" cfsqltype="VARCHAR" maxlength="35">,
+            <cfqueryparam value="#ppost#" cfsqltype="VARCHAR" maxlength="35">
           )
       </cfquery>
     </cfloop>
 
   </cffunction>
 
-  <cffunction name="saveUser" access="public" returnType="void" output="false" hint="Saves a user.">
+  <cffunction name="saveUser" access="public" returnType="void" output="false"
+        hint="Saves a user.">
     <cfargument name="username" type="string" required="true">
     <cfargument name="name" type="string" required="true">
     <cfargument name="password" type="string" required="false">
     <cfset var salt = generateSalt()>
 
-    <cfquery datasource="#instance.dsn#">
-    update  blogUsers
-    set    name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.name#" maxlength="50">
+    <cfquery datasource="nmg" >
+    update  BlogUsers
+    set    bus_name = <cfqueryparam cfsqltype="varchar" value="#arguments.name#" maxlength="50">
+        <!--- RBB 1/17/11: if no password is passed in, we can assume that only the user's name is being updated --->
         <cfif structKeyExists(arguments, "password")>
-          ,password = <cfqueryparam value="#hash(salt & ARGUMENTS.password, instance.hashalgorithm)#" cfsqltype="cf_sql_varchar" maxlength="256">,
-          salt = <cfqueryparam value="#salt#" cfsqltype="cf_sql_varchar" maxlength="256">
+          <!--- RBB 1/17/11: generate new salt. I like to do this whenever a password is changed --->
+
+          ,bus_password = <cfqueryparam value="#hash(salt & arguments.password, instance.hashalgorithm)#" cfsqltype="varchar" maxlength="256">,
+          bus_salt = <cfqueryparam value="#salt#" cfsqltype="varchar" maxlength="256">
         </cfif>
-    where  username = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.username#" maxlength="50">
-    and    blog = <cfqueryparam cfsqltype="cf_sql_varchar" value="#instance.name#" maxlength="50">
+    where  bus_username = <cfqueryparam cfsqltype="varchar" value="#arguments.username#" maxlength="50">
+    and    bus_blog = <cfqueryparam cfsqltype="varchar" value="#instance.name#" maxlength="50">
     </cfquery>
 
   </cffunction>
 
-  <cffunction name="setProperty" access="public" returnType="void" output="true" roles="">
+  <cffunction name="setCodeRenderer" access="public" returnType="void" output="false" hint="Injector for coldfish">
+    <cfargument name="renderer" type="any" required="true">
+    <cfset variables.coderenderer = arguments.renderer>
+  </cffunction>
+
+  <cffunction name="setProperty" access="public" returnType="void" output="false" roles="admin">
     <cfargument name="property" type="string" required="true">
     <cfargument name="value" type="string" required="true">
-    <cfset instance[ARGUMENTS.property] = ARGUMENTS.value>
-    <!--- <cfset setProfileString(VARIABLES.cfgFile, instance.name, ARGUMENTS.property, ARGUMENTS.value)> --->
+
+    <cfset instance[arguments.property] = arguments.value>
+    <cfset setProfileString(variables.cfgFile, instance.name, arguments.property, arguments.value)>
+
   </cffunction>
 
-  <cffunction name="setbco_moderatedComment" access="public" returnType="void" output="false" roles="" hint="Sets a comment to approved">
+  <cffunction name="setbco_moderatedComment" access="public" returnType="void" output="false" roles="admin"
+        hint="Sets a comment to approved">
     <cfargument name="id" type="string" required="true">
 
-    <cfquery datasource="#instance.dsn#">
-      update blogComments set bco_moderated=1 where id=<cfqueryparam value="#ARGUMENTS.id#" cfsqltype="cf_sql_varchar">
+    <cfquery datasource="nmg" >
+      update BlogComments set bco_moderated=1 where id=<cfqueryparam value="#arguments.id#" cfsqltype="varchar">
     </cfquery>
 
   </cffunction>
 
-  <cffunction name="setUserBlogRoles" access="public" returnType="void" output="false" roles="" hint="Sets a user's blog roles">
+  <cffunction name="setUserBlogRoles" access="public" returnType="void" output="false" roles="admin"
+        hint="Sets a user's blog roles">
     <cfargument name="username" type="string" required="true" />
     <cfargument name="roles" type="string" required="true" />
 
     <cfset var r = "" />
     <!--- first, nuke old roles --->
-    <cfquery datasource="#instance.dsn#">
-    delete from blogUserRoles
-    where username = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.username#" maxlength="50">
-    and blog = <cfqueryparam cfsqltype="cf_sql_varchar" value="#instance.name#" maxlength="50">
+    <cfquery datasource="nmg" >
+    delete from BlogUserRoles
+    where username = <cfqueryparam cfsqltype="varchar" value="#arguments.username#" maxlength="50">
+    and blog = <cfqueryparam cfsqltype="varchar" value="#instance.name#" maxlength="50">
     </cfquery>
 
-    <cfloop index="r" list="#ARGUMENTS.roles#">
-      <cfquery datasource="#instance.dsn#">
-      insert into blogUserRoles(username, roleidfk, blog)
+    <cfloop index="r" list="#arguments.roles#">
+      <cfquery datasource="nmg" >
+      insert into BlogUserRoles(username, bur_broid, blog)
       values(
-      <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.username#" maxlength="50">,
-      <cfqueryparam cfsqltype="cf_sql_varchar" value="#r#" maxlength="35">,
-      <cfqueryparam cfsqltype="cf_sql_varchar" value="#instance.name#" maxlength="50">
+      <cfqueryparam cfsqltype="varchar" value="#arguments.username#" maxlength="50">,
+      <cfqueryparam cfsqltype="varchar" value="#r#" maxlength="35">,
+      <cfqueryparam cfsqltype="varchar" value="#instance.name#" maxlength="50">
       )
       </cfquery>
     </cfloop>
 
   </cffunction>
 
-  <cffunction name="unsubscribeThread" access="public" returnType="query" output="false" hint="Removes a user from a thread.">
+  <cffunction name="unsubscribeThread" access="public" returnType="boolean" output="false"
+        hint="Removes a user from a thread.">
     <cfargument name="commentID" type="UUID" required="true" />
     <cfargument name="email" type="string" required="true" />
 
     <cfset var verifySubscribe = "" />
 
     <!--- First ensure that the commentID equals the email --->
-    <cfquery name="verifySubscribe" datasource="#instance.dsn#">
-      SELECT entryidfk
-        FROM blogComments
-       WHERE id = <cfqueryparam value="#ARGUMENTS.commentID#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
-        AND email = <cfqueryparam value="#ARGUMENTS.email#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
+    <cfquery name="verifySubscribe" datasource="nmg" >
+      select  fk_benid
+      from  BlogComments
+      where  id = <cfqueryparam value="#arguments.commentID#" cfsqltype="VARCHAR" maxlength="35">
+      and    email = <cfqueryparam value="#arguments.email#" cfsqltype="VARCHAR" maxlength="100">
     </cfquery>
-    <!--- IF WE HAVE A RESULT, THEN SET SUBSCRIBE=0 FOR THIS USER FOR ALL COMMENTS IN THE THREAD --->
-    <cfif verifySubscribe.RecordCount>
-      <cfquery datasource="#instance.dsn#">
-        UPDATE blogComments
-          SET subscribe = 0
-         WHERE entryidfk = <cfqueryparam value="#verifySubscribe.entryidfk#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
-          AND email = <cfqueryparam value="#ARGUMENTS.email#" cfsqltype="CF_SQL_VARCHAR" maxlength="100">
+
+    <!--- If we have a result, then set subscribe=0 for this user for ALL comments in the thread --->
+    <cfif verifySubscribe.recordCount>
+
+      <cfquery datasource="nmg" >
+        update  BlogComments
+        set    subscribe = 0
+        where  fk_benid = <cfqueryparam value="#verifySubscribe.fk_benid#"
+                  cfsqltype="VARCHAR" maxlength="35">
+        and    email = <cfqueryparam value="#arguments.email#" cfsqltype="VARCHAR" maxlength="100">
       </cfquery>
-      <cfquery name="getTit" datasource="#instance.dsn#">
-        SELECT id, title
-          FROM blogEntries
-         WHERE id = <cfqueryparam value="#verifySubscribe.entryidfk#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
-      </cfquery>
-      <cfreturn getTit />
+
+      <cfreturn true />
     </cfif>
-    <cfreturn verifySubscribe />
+
+    <cfreturn false />
   </cffunction>
 
-  <cffunction name="updatePassword" access="public" returnType="boolean" output="false" hint="Updates the current user's password.">
+  <cffunction name="updatePassword" access="public" returnType="boolean" output="false"
+        hint="Updates the current user's password.">
     <cfargument name="oldpassword" type="string" required="true" />
     <cfargument name="newpassword" type="string" required="true" />
 
     <cfset var checkit = "" />
     <cfset var salt = generateSalt()>
 
-    <cfquery name="checkit" datasource="#instance.dsn#">
-    select  password, salt
-    from  blogUsers
-    where  username = <cfqueryparam value="#getAuthUser()#" cfsqltype="cf_sql_varchar" maxlength="50">
-    <!---
-    and    password = <cfqueryparam value="#ARGUMENTS.oldpassword#" cfsqltype="cf_sql_varchar" maxlength="255">
-    --->
-    and    blog = <cfqueryparam value="#instance.name#" cfsqltype="cf_sql_varchar" maxlength="50">
+    <cfquery name="checkit" datasource="nmg" >
+    select  bus_password, bus_salt
+    from  BlogUsers
+    where  bus_username = <cfqueryparam value="#getAuthUser()#" cfsqltype="varchar" maxlength="50">
+    and    bus_blog = <cfqueryparam value="#instance.name#" cfsqltype="varchar" maxlength="50">
     </cfquery>
 
-    <cfif checkit.RecordCount is 1 AND checkit.password is hash(checkit.salt & ARGUMENTS.oldpassword, instance.hashalgorithm)>
+    <cfif checkit.recordCount is 1 AND checkit.password is hash(checkit.salt & arguments.oldpassword, instance.hashalgorithm)>
       <!--- generate a new salt --->
 
-      <cfquery datasource="#instance.dsn#">
-      update  blogUsers
-      set    password = <cfqueryparam value="#hash(salt & ARGUMENTS.newpassword, instance.hashalgorithm)#" cfsqltype="cf_sql_varchar" maxlength="256">,
-          salt = <cfqueryparam value="#salt#" cfsqltype="cf_sql_varchar" maxlength="256">
-      where  username = <cfqueryparam value="#getAuthUser()#" cfsqltype="cf_sql_varchar" maxlength="50">
-      and    blog = <cfqueryparam value="#instance.name#" cfsqltype="cf_sql_varchar" maxlength="50">
+      <cfquery datasource="nmg" >
+      update  BlogUsers
+      set    bus_password = <cfqueryparam value="#hash(salt & arguments.newpassword, instance.hashalgorithm)#" cfsqltype="varchar" maxlength="256">,
+      bus_salt = <cfqueryparam value="#salt#" cfsqltype="varchar" maxlength="256">
+      where  bus_username = <cfqueryparam value="#getAuthUser()#" cfsqltype="varchar" maxlength="50">
+      and    bus_blog = <cfqueryparam value="#instance.name#" cfsqltype="varchar" maxlength="50">
       </cfquery>
       <cfreturn true />
     <cfelse>
@@ -2335,25 +2838,12 @@ To unsubscribe, please go to this URL:
 
   <cffunction name="XHTMLParagraphFormat" returntype="string" output="false">
     <cfargument name="strTextBlock" required="true" type="string" />
-    <cfreturn REReplace("<p>" & ARGUMENTS.strTextBlock & "</p>", "\r+\n\r+\n", "</p><p>", "ALL") />
+    <cfreturn REReplace("<p>" & arguments.strTextBlock & "</p>", "\r+\n\r+\n", "</p><p>", "ALL") />
   </cffunction>
 
   <cffunction name="generateSalt" returnType="string" output="false" access="public" hint="I generate salt for use in hashing user passwords">
 
     <cfreturn generateSecretKey(instance.saltAlgorithm, instance.saltKeySize)>
-  </cffunction>
-
-  <cffunction name="getOwnerByEntry" access="public" returnType="string" output="false">
-    <cfargument name="id" type="uuid" required="true" />
-    <cfif not entryExists(ARGUMENTS.id)>
-      <cfset VARIABLES.utils.throw("#ARGUMENTS.id# does not exist.")>
-    </cfif>
-    <cfquery name="getIt" datasource="#instance.dsn#">
-      SELECT blog
-        FROM blogEntries
-       WHERE blogEntries.id = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="CF_SQL_VARCHAR" maxlength="35">
-    </cfquery>
-    <cfreturn getIt.blog />
   </cffunction>
 
 </cfcomponent>

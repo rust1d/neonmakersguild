@@ -1,40 +1,39 @@
 <cfsetting enablecfoutputonly=true showdebugoutput=false>
-<cfprocessingdirective pageencoding="utf-8" />
+<cfprocessingdirective pageencoding="utf-8">
 <!---
-	Name         : C:\projects\blogcfc5\client\admin\proxy.cfm
-	Author       : Raymond Camden
-	Created      : 11/2/09
-	Last Updated :
+  Name         : C:\projects\blogcfc5\client\admin\proxy.cfm
+  Author       : Raymond Camden
+  Created      : 11/2/09
+  Last Updated :
 --->
 
-<cfif StructKeyExists(URL, "category") or StructKeyExists(URL, "text")>
+<cfif structKeyExists(url, "category") or structKeyExists(url, "text")>
 
-	<cfset params = structNew()>
-	<cfif StructKeyExists(URL, "category") and len(URL.category)>
-		<cfset params.byCat = URL.category>
-	</cfif>
-	<cfif StructKeyExists(URL, "text") and len(URL.text)>
-		<cfset params.searchterms = URL.text>
-	</cfif>
-	<cfset params.mode = "short">
-	<cfset params.maxEntries = 200>
-	<cfset entryData = SESSION.BROG.getEntries(params)>
-	<cfset entries = entryData.entries>
-	<cfquery name="entries" dbtype="query">
-		select id, title, posted
-		  from entries
-	</cfquery>
+  <cfset params = structNew()>
+  <cfif structKeyExists(url, "category") and len(url.category)>
+    <cfset params.byCat = url.category>
+  </cfif>
+  <cfif structKeyExists(url, "text") and len(url.text)>
+    <cfset params.searchterms = url.text>
+  </cfif>
+  <cfset params.mode = "short">
+  <cfset params.maxEntries = 200>
+  <cfset entryData = application.blog.getEntries(params)>
+  <cfset entries = entryData.entries>
+  <cfquery name="entries" dbtype="query">
+  select  id, title, posted
+  from  entries
+  </cfquery>
 
-	<cfset s = createObject('java','java.lang.StringBuffer')>
-	<!--- hand craft the json myself, still supporting cf7 --->
-	<cfset s.append("{")>
-	<cfset out = "" />
-	<cfloop query="entries">
-		<cfset s.append("""#id#"":""#htmlEditFormat(title)#"",")>
-		<cfset out = ListAppend(out,"""#id#"":""#htmlEditFormat(title)#""") />
-	</cfloop>
+  <cfset s = createObject('java','java.lang.StringBuffer')>
 
-	<cfset s.append("}")>
-	<cfcontent reset="true" type="application/json">
-	<cfoutput>{#out#}</cfoutput>
+  <!--- hand craft the json myself, still supporting cf7 --->
+  <cfset s.append("{")>
+  <cfloop query="entries">
+    <cfset s.append("""#id#"":""#htmlEditFormat(title)#"",")>
+  </cfloop>
+
+  <cfset s.append("}")>
+  <cfcontent reset="true" type="application/json">
+  <cfoutput>#s.toString()#</cfoutput>
 </cfif>

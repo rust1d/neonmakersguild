@@ -1,5 +1,5 @@
-<cfsetting enablecfoutputonly="true">
-<cfprocessingdirective pageencoding="utf-8" />
+<cfsetting enablecfoutputonly=true>
+<cfprocessingdirective pageencoding="utf-8">
 <!---
   Name         : trackbackemail.cfm
   Author       : Raymond Camden
@@ -10,53 +10,53 @@
 --->
 
 <!--- id of the TB --->
-<cfparam name="ATTRIBUTES.trackback" type="uuid">
+<cfparam name="attributes.trackback" type="uuid">
 
-<cfset tb = SESSION.BROG.getTrackBack(ATTRIBUTES.trackback)>
+<cfset tb = application.blog.getTrackBack(attributes.trackback)>
 
 <cfif structIsEmpty(tb)>
-  <cfsetting enablecfoutputonly="false" />
+  <cfsetting enablecfoutputonly=false>
   <cfexit method="exitTag">
 </cfif>
 
 <cftry>
-  <cfset blogEntry = SESSION.BROG.getEntry(tb.entryid,false)>
+  <cfset blogEntry = application.blog.getEntry(tb.entryid,false)>
   <cfcatch>
-    <cfsetting enablecfoutputonly="false" />
+    <cfsetting enablecfoutputonly=false>
     <cfexit method="exitTag">
   </cfcatch>
 </cftry>
 
 <!--- make TB killer link --->
-<cfset tbKiller = APPLICATION.PATH.ROOT & "/trackback.cfm?kill=#ATTRIBUTES.trackback#">
+<cfset tbKiller = application.rootURL & "/trackback.cfm?kill=#attributes.trackback#">
 
-<cfset subject = APPLICATION.BLOG.resourceBundle.getResource("trackbackaddedtoentry") & ": " & SESSION.BROG.getProperty("blogTitle") & " / " & APPLICATION.BLOG.resourceBundle.getResource("entry") & ": " & blogEntry.title>
+<cfset subject = application.resourceBundle.getResource("trackbackaddedtoentry") & ": " & application.blog.getProperty("blogTitle") & " / " & application.resourceBundle.getResource("entry") & ": " & blogEntry.title>
 <cfsavecontent variable="email">
 <cfoutput>
-#APPLICATION.BLOG.resourceBundle.getResource("trackbackaddedtoblogentry")#:  #blogEntry.title#
-#APPLICATION.BLOG.resourceBundle.getResource("trackbackadded")#:     #APPLICATION.BLOG.localeUtils.dateLocaleFormat(now())# / #APPLICATION.BLOG.localeUtils.timeLocaleFormat(now())#
-#APPLICATION.BLOG.resourceBundle.getResource("blogname")#:       #tb.blogname#
-#APPLICATION.BLOG.resourceBundle.getResource("title")#:         #tb.title#
+#application.resourceBundle.getResource("trackbackaddedtoblogentry")#:  #blogEntry.title#
+#application.resourceBundle.getResource("trackbackadded")#:     #application.localeUtils.dateLocaleFormat(now())# / #application.localeUtils.timeLocaleFormat(now())#
+#application.resourceBundle.getResource("blogname")#:       #tb.blogname#
+#application.resourceBundle.getResource("title")#:         #tb.title#
 URL:        #tb.posturl#
-#APPLICATION.BLOG.resourceBundle.getResource("excerpt")#:
+#application.resourceBundle.getResource("excerpt")#:
 #tb.excerpt#
 
-#APPLICATION.BLOG.resourceBundle.getResource("deletetrackbacklink")#:
+#application.resourceBundle.getResource("deletetrackbacklink")#:
 #tbKiller#
 
 ------------------------------------------------------------
-This blog powered by BlogCFC #SESSION.BROG.getVersion()#
+This blog powered by BlogCFC #application.blog.getVersion()#
 Created by Raymond Camden (ray@camdenfamily.com)
 </cfoutput>
 </cfsavecontent>
 
-<cfset addy = SESSION.BROG.getProperty("owneremail")>
-<cfif SESSION.BROG.getProperty("mailserver") is "">
+<cfset addy = application.blog.getProperty("owneremail")>
+<cfif application.blog.getProperty("mailserver") is "">
   <cfmail to="#addy#" from="#addy#" subject="#subject#">#email#</cfmail>
 <cfelse>
   <cfmail to="#addy#" from="#addy#" subject="#subject#"
-    server="#SESSION.BROG.getProperty("mailserver")#" username="#SESSION.BROG.getProperty("mailusername")#" password="#SESSION.BROG.getProperty("mailpassword")#">#email#</cfmail>
+    server="#application.blog.getProperty("mailserver")#" username="#application.blog.getProperty("mailusername")#" password="#application.blog.getProperty("mailpassword")#">#email#</cfmail>
 </cfif>
 
-<cfsetting enablecfoutputonly="false" />
+<cfsetting enablecfoutputonly=false>
 <cfexit method="exitTag">

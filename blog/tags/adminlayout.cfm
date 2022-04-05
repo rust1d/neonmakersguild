@@ -1,5 +1,5 @@
-<cfsetting enablecfoutputonly="true">
-<cfprocessingdirective pageencoding="utf-8" />
+<cfsetting enablecfoutputonly=true>
+<cfprocessingdirective pageencoding="utf-8">
 <!---
   Name         : /client/tags/adminlayout.cfm
   Author       : Raymond Camden
@@ -15,49 +15,108 @@
          : podmanager add by Scott P (rkc 4/13/07)
 --->
 
-<cfparam name="ATTRIBUTES.title" default="">
+<cfparam name="attributes.title" default="">
+
+<!---- added JH DotComIt to allow for admin w/ multiple directory levels --->
+<cfparam name="attributes.dirlevel" default="">
 
 <cfif thisTag.executionMode is "start">
-  <cfoutput>
-  <link rel="stylesheet" type="text/css" href="#APPLICATION.PATH.ROOT#/blog/css/blog.css" media="screen" />
-  <link rel="stylesheet" type="text/css" href="#APPLICATION.PATH.ROOT#/blog/css/admin.css" media="screen" />
-  <script type="text/javascript" src="#APPLICATION.PATH.ROOT#/blog/includes/jquery.selectboxes.js"></script>
-  <script type="text/javascript" src="#APPLICATION.PATH.ROOT#/blog/includes/jquery.autogrow.js"></script>
-  <div id="divBlog">
-    <cfif SESSION.BROG.getProperty("SiteBlog")>
-      <div class="subpage_sidebar">
-        <ul id="sidebar">
-          <li><a href="x.index.cfm">Home</a></li>
-          <li><a href="x.entry.cfm?id=0">Add Entry</a></li>
-          <li><a href="x.entries.cfm">Entries</a></li>
-          <cfif SESSION.BROG.isBlogAuthorized('ManageCategories')><li><a href="x.categories.cfm">Categories</a></li></cfif>
-          <li><a href="x.comments.cfm">Comments</a></li>
-          <cfif SESSION.BROG.getProperty("moderate")><li><a href="x.moderate.cfm">Moderate Comments (<cfoutput>#SESSION.BROG.getNumberUnbco_moderated()#</cfoutput>)</a></li></cfif>
-          <li><a href="x.index.cfm?reinit=1">Refresh Blog Cache</a></li>
-          <li><a href="x.stats.cfm">Stats</a></li>
-          <cfif APPLICATION.BLOG.settings><li><a href="x.settings.cfm">Settings</a></li></cfif>
-          <li><a href="x.subscribers.cfm">Subscribers</a></li>
-          <li><a href="x.mailsubscribers.cfm">Mail Subscribers</a></li>
-          <cfif SESSION.BROG.isBlogAuthorized('ManageUsers')><li><a href="x.users.cfm">Users</a></li></cfif>
-        </ul>
-        <cfif SESSION.BROG.isBlogAuthorized('PageAdmin')>
-          <ul>
-            <li><a href="x.pods.cfm">Pod Manager</a></li>
-            <cfif APPLICATION.BLOG.filebrowse><li><a href="x.filemanager.cfm">File Manager</a></li></cfif>
-            <li><a href="x.pages.cfm">Pages</a></li>
-            <li><a href="x.slideshows.cfm">Slideshows</a></li>
-            <li><a href="x.textblocks.cfm">Textblocks</a></li>
-          </ul>
-        </cfif>
-      </div>
-    </cfif>
-    <div id="content">
-      <h2>#ATTRIBUTES.title#</h2>
-  </cfoutput>
-<cfelse>
-  <cfoutput>
-    </div>
-  </div>
-  </cfoutput>
+
+<cfoutput>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="#application.rooturl#/includes/admin.css" media="screen" />
+<script type="text/javascript" src="#application.rooturl#/includes/jquery.min.js"></script>
+<script type="text/javascript" src="#application.rooturl#/includes/jquery.selectboxes.js"></script>
+<script type="text/javascript" src="#application.rooturl#/includes/jquery.autogrow.js"></script>
+<link type="text/css" href="#application.rooturl#/includes/jqueryui/css/custom-theme/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
+
+<style type="text/css" media="screen">
+  @import "#application.rooturl#/includes/uni-form/css/uni-form.css";
+</style>
+<script type="text/javascript" src="#application.rooturl#/includes/uni-form/js/uni-form.jquery.js"></script>
+
+<script type="text/javascript" src="#application.rooturl#/includes/jqueryui/jqueryui.js"></script>
+<cfif NOT application.utils.isLoggedIn()>
+  <style type="text/css">
+    body{background:none;}
+  </style>
 </cfif>
-<cfsetting enablecfoutputonly="false" />
+<title>BlogCFC Administrator #htmlEditFormat(application.blog.getProperty("blogTitle"))#: #attributes.title#</title>
+</head>
+
+<body>
+
+<!--- TODO: Switch to request scope --->
+<cfif application.utils.isLoggedIn()>
+<div id="menu">
+<ul>
+<li><a href="#attributes.dirlevel#index.cfm">Home</a></li>
+<li><a href="#attributes.dirlevel#entry.cfm?id=0">Add Entry</a></li>
+<li><a href="#attributes.dirlevel#entries.cfm">Entries</a></li>
+<cfif application.blog.isBlogAuthorized('ManageCategories')>
+<li><a href="#attributes.dirlevel#categories.cfm">Categories</a></li>
+</cfif>
+<li><a href="#attributes.dirlevel#comments.cfm">Comments</a></li>
+<cfif application.commentmoderation>
+<li><a href="#attributes.dirlevel#moderate.cfm">Moderate Comments (<cfoutput>#application.blog.getNumberUnbco_moderated()#</cfoutput>)</a></li>
+</cfif>
+<li><a href="#attributes.dirlevel#index.cfm?reinit=1">Refresh Blog Cache</a></li>
+<cfif application.settings>
+<li><a href="#attributes.dirlevel#settings.cfm">Settings</a></li>
+</cfif>
+<li><a href="#attributes.dirlevel#subscribers.cfm">Subscribers</a></li>
+<li><a href="#attributes.dirlevel#mailsubscribers.cfm">Mail Subscribers</a></li>
+<cfif application.blog.isBlogAuthorized('ManageUsers')>
+<li><a href="#attributes.dirlevel#users.cfm">Users</a></li>
+</cfif>
+</ul>
+<ul>
+<cfif application.blog.isBlogAuthorized('PageAdmin')>
+<li><a href="#attributes.dirlevel#pods.cfm">Pod Manager</a></li>
+<cfif application.filebrowse>
+<li><a href="#attributes.dirlevel#filemanager.cfm">File Manager</a></li>
+</cfif>
+<li><a href="#attributes.dirlevel#pages.cfm">Pages</a></li>
+<li><a href="#attributes.dirlevel#slideshows.cfm">Slideshows</a></li>
+<li><a href="#attributes.dirlevel#textblocks.cfm">Textblocks</a></li>
+</ul>
+</cfif>
+<ul>
+<!---<li><a href="../">Your Blog</a></li>--->
+<li><a href="../" target="_new">Your Blog (New Window)</a></li>
+</ul>
+<ul>
+<li><a href="#attributes.dirlevel#stats.cfm">Your Blog Stats</a></li>
+<li><a href="#attributes.dirlevel#stats2.cfm">Your Blog Stats 2</a></li>
+<li><a href="#attributes.dirlevel#statsbyyear.cfm">Your Blog Stats By Year</a></li>
+<li><a href="#attributes.dirlevel#downloads.cfm">Download Reports</a></li>
+</ul>
+<ul style="border-bottom: none;">
+<li><a href="#attributes.dirlevel#updatepassword.cfm">Update Password</a><li>
+<li><a href="#attributes.dirlevel#index.cfm?logout=youbetterbelieveit">Logout</a></li>
+</ul>
+</div>
+<div id="content">
+<div id="blogTitle">#htmlEditFormat(application.blog.getProperty("blogTitle"))#</div>
+<div id="header">#attributes.title#</div>
+<cfelse>
+<div id="content">
+</cfif>
+
+
+</cfoutput>
+
+<cfelse>
+
+<cfoutput>
+</div>
+</body>
+</html>
+</cfoutput>
+
+</cfif>
+
+<cfsetting enablecfoutputonly=false>

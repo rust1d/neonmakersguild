@@ -1,43 +1,71 @@
-<cfsetting enablecfoutputonly="true">
-<cfprocessingdirective pageencoding="utf-8" />
+<cfsetting enablecfoutputonly=true>
+<cfprocessingdirective pageencoding="utf-8">
+<!---
+  Name         : C:\projects\blogcfc5\client\admin\subscribers.cfm
+  Author       : Raymond Camden
+  Created      : 04/07/06
+  Last Updated : 7/21/06
+  History      : Show how many people are bsu_verified (rkc 7/7/06)
+         : Button to let you nuke all the Unverified people at once. (rkc 7/21/06)
+--->
 
+<!--- handle deletes --->
+<cfif structKeyExists(form, "mark")>
+  <cfloop index="u" list="#form.mark#">
+    <cfset application.blog.removeSubscriber(u)>
+  </cfloop>
+</cfif>
 
-<cfif structKeyExists(form, "mark")><!--- handle deletes --->
-	<cfloop index="u" list="#form.mark#">
-		<cfset SESSION.BROG.removeSubscriber(u)>
-	</cfloop>
+<!--- handle mass delete --->
+<cfif structKeyExists(form, "nukeUnverified")>
+    <cfset application.blog.removeUnverifiedSubscribers()>
 </cfif>
-<cfif structKeyExists(form, "nukeunverified")><!--- handle mass delete --->
-	<cfset SESSION.BROG.removeUnverifiedSubscribers()>
+
+<cfif structKeyExists(url, "verify")>
+  <cfset application.blog.confirmSubscription(email=url.verify)>
 </cfif>
-<cfif StructKeyExists(URL, "verify")>
-	<cfset SESSION.BROG.confirmSubscription(email=URL.verify)>
-</cfif>
-<cfset subscribers = SESSION.BROG.getSubscribers()>
-<cfquery name="verifiedSubscriber" dbtype="query">
-	select count(email) as total
-	  from subscribers
-	 where verified = 1
+
+<cfset subscribers = application.blog.getSubscribers()>
+
+<cfquery name="bsu_verifiedSubscriber" dbtype="query">
+select  count(email) as total
+from  subscribers
+where  bsu_verified = 1
 </cfquery>
-<script>
-	verify = function(email) {
-		window.location = "x.subscribers.cfm?verify=" + email;
-	}
-</script>
+
 <cfmodule template="../tags/adminlayout.cfm" title="Subscribers">
-	<cfoutput>
-		<p>Your blog currently has #udfAddSWithCnt("subscriber", subscribers.RecordCount)#.</p>
-		<p>Your blog currently has #udfAddSWithCnt("verified subscriber", verifiedSubscriber.total)#.</p>
-	</cfoutput>
-	<cfmodule template="../tags/datatable.cfm" data="#subscribers#" editlink="" label="Subscribers" linkcol="" linkval="email" showAdd="false" defaultsort="email">
-		<cfmodule template="../tags/datacol.cfm" label="<img title='Verify' class='bih-icon bih-icon-checkwhite' src='#APPLICATION.PATH.IMG#/trans.gif'>" data="<button class='ui-button-text-tiny liveHover juiButton-icon-only ui-state-default ui-widget ui-corner-all ui-button ui-button-icon-only' onclick='verify(""$email$"")' title='Verify' type='button'><span class='ui-button-icon-primary ui-icon bih-icon bih-icon bih-icon-checkgreen'></span><span class='ui-button-text '>&nbsp;</span></button>" sort="false" width="25"/>
-		<cfmodule template="../tags/datacol.cfm" colname="email" label="Email" />
-		<cfmodule template="../tags/datacol.cfm" colname="verified" label="Verified" format="yesno"/>
-	</cfmodule>
-	<hr>
-	<p>You may use the button below to delete all non-verified subscribers. You should note that this will delete ALL of them,	even people who just subscribed a second ago. This should be used rarely!</p>
-	<form action="x.subscribers.cfm" method="post">
-		<cfinvoke component="#APPLICATION.CFC.CONTROLS#" method="create" type="juiButton" name="nukeunverified" class="ui-button-text-tiny" src="bih-icon bih-icon-exclaimation" submit="true" text="Remove ALL Unverified"/>
-	</form>
+
+  <cfoutput>
+  <p>
+  Your blog currently has
+    <cfif subscribers.recordCount gt 1>
+    #subscribers.recordcount# subscribers
+    <cfelseif subscribers.recordCount is 1>
+    1 subscriber
+    <cfelse>
+    0 subscribers
+    </cfif>. There <cfif bsu_verifiedSubscriber.total is 1>is<cfelse>are</cfif> <cfif bsu_verifiedSubscriber.total neq "">#bsu_verifiedSubscriber.total#<cfelse>no</cfif> <b>bsu_verified</b> subscriber<cfif bsu_verifiedSubscriber.total is not 1>s</cfif>.
+  </p>
+
+  <p>
+  You may use the button below to delete all non-bsu_verified subscribers. You should note that this will delete ALL of them,
+  even people who just subscribed a minute ago. This should be used rarely!
+  </p>
+
+  <form action="subscribers.cfm" method="post">
+  <input type="submit" name="nukeUnverified" value="Remove Unverified">
+  </form>
+  </cfoutput>
+
+  <cfmodule template="../tags/datatable.cfm" data="#subscribers#" editlink="" label="Subscribers"
+        linkcol="" linkval="email" showAdd="false" defaultsort="email">
+    <cfmodule template="../tags/datacol.cfm" colname="email" label="Email" />
+    <cfmodule template="../tags/datacol.cfm" colname="bsu_verified" label="bsu_verified" format="yesno"/>
+    <cfmodule template="../tags/datacol.cfm" label="Verify" data="<a href=""subscribers.cfm?verify=$email$"">Verify</a>" sort="false"/>
+
+  </cfmodule>
+
 </cfmodule>
-<cfsetting enablecfoutputonly="false" />
+
+
+<cfsetting enablecfoutputonly=false>

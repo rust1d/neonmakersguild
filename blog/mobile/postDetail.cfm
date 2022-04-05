@@ -3,14 +3,14 @@
 <cfset dataError = false>
 
 <cftry>
-  <cfset thisItem = URL.post>
-  <cfset entryData = SESSION.BROG.getEntry(thisItem)>
-  <cfset commentsCnt = SESSION.BROG.getCommentCount(thisItem)>
+  <cfset thisItem = url.post>
+  <cfset entryData = application.blog.getEntry(thisItem)>
+  <cfset commentsCnt = application.blog.getCommentCount(thisItem)>
   <cfif commentsCnt>
-    <cfset comments = SESSION.BROG.getComments(thisItem)>
+    <cfset comments = application.blog.getComments(thisItem)>
   </cfif>
   <!---catch an attept to load an unreleased entry--->
-  <cfif NOT entryData.released>
+  <cfif NOT entryData.ben_released>
     <cfset dataError = true>
   </cfif>
 
@@ -24,7 +24,7 @@
 
 <cfoutput>
 
-<div data-role="page" data-theme="#APPLICATION.BLOG.primaryTheme#">
+<div data-role="page" data-theme="#application.primaryTheme#">
 
 
   <cf_header title="Post Detail" showHome="2" id="blogHeader">
@@ -40,7 +40,7 @@
 
         </li>
         <li>
-          <p style="padding-top: 5px;"><strong>Posted:</strong> #APPLICATION.BLOG.localeUtils.dateLocaleFormat(entryData.posted)# #APPLICATION.BLOG.localeUtils.timeLocaleFormat(entryData.posted)#</p>
+          <p style="padding-top: 5px;"><strong>Posted:</strong> #application.localeUtils.dateLocaleFormat(entryData.posted)# #application.localeUtils.timeLocaleFormat(entryData.posted)#</p>
           <p><strong>By:</strong> #entryData.name#</p>
           <p>
             <strong>Categories:</strong>
@@ -58,7 +58,7 @@
           --->
           <cfsavecontent variable="pBody">
           #REReplace("<p>" & entryData.body & "</p>", "\r+\n\r+\n", "</p><p>", "ALL")#
-          #REReplace("<p>" & entryData.morebody & "</p>", "\r+\n\r+\n", "</p><p>", "ALL")#
+          #REReplace("<p>" & entryData.ben_morebody & "</p>", "\r+\n\r+\n", "</p><p>", "ALL")#
           </cfsavecontent>
 
           <!--- overrides mobile's default handling of links by
@@ -69,7 +69,7 @@
           <cfset imgRep = '<img rel="external"'>
           <cfset pBody = replaceNoCase(pBody, '<img', imgRep, 'all')>
 
-          #SESSION.BROG.renderEntry(pBody,true,'', true)#
+          #application.blog.renderEntry(pBody,true,'', true)#
         </div>
       </div>
 
@@ -83,20 +83,20 @@
           <cfloop query="comments">
             <div class="ui-bar ui-bar-b">
             <p>
-              <cfif APPLICATION.BLOG.gravatarsAllowed>
-                <img src="http://www.gravatar.com/avatar/#lcase(hash(comments.email))#?s=40&amp;r=pg&amp;d=#APPLICATION.PATH.ROOT#/blog/images/gravatar.png" alt="#comments.name#'s Gravatar" border="0" align="left" style="padding-right: 10px;"/>
+              <cfif application.gravatarsAllowed>
+                <img src="http://www.gravatar.com/avatar/#lcase(hash(comments.email))#?s=40&amp;r=pg&amp;d=#application.rooturl#/images/gravatar.png" alt="#comments.name#'s Gravatar" border="0" align="left" style="padding-right: 10px;"/>
               </cfif>
               #comments.name#<BR>
               <!---<a href="#bco_website#">#bco_website#</a><BR>--->
-              #APPLICATION.BLOG.localeUtils.dateLocaleFormat(comments.posted)# #APPLICATION.BLOG.localeUtils.timeLocaleFormat(comments.posted)#
+              #application.localeUtils.dateLocaleFormat(comments.posted)# #application.localeUtils.timeLocaleFormat(comments.posted)#
               </p>
-              <cfif APPLICATION.BLOG.gravatarsAllowed>
+              <cfif application.gravatarsAllowed>
 
               </cfif>
             </div>
             <div class="ui-body ui-body-b">
               <p>
-                #paragraphFormat2(replaceLinks(comments.comment))#
+                #application.utils.ParagraphFormat2(application.utils.replaceLinks(comments.comment))#
               </p>
             </div>
           </cfloop>

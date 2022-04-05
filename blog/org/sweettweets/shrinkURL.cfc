@@ -1,7 +1,7 @@
 <!---
   Name: shrinkURL
   Author: Andy Matthews
-  bco_website: http://www.andyMatthews.net || http://shrinkURL.riaforge.org
+  bco_website: http://www.andyMatthews.net || http://shrinkurl.riaforge.org
   Created: 1/16/2009
   Last Updated: 2/26/2009
   History:
@@ -26,15 +26,15 @@
       http://notlong.com/
       http://jijr.com/
       http://smallr.com/
-      http://rubyURL.com/home
+      http://rubyurl.com/home
 
       NO API
       ------------
       http://ow.ly/url/shorten-url
-      http://mooURL.com/
+      http://moourl.com/
       http://bloat.me/
       http://bacn.me/
-      http://dwarfURL.com/
+      http://dwarfurl.com/
 
 --->
 <cfcomponent hint="CFC allowing users to create short URLS via various URL shortening services" displayname="shrinkURL" output="false">
@@ -77,11 +77,11 @@
     VARIABLES.services['Cligs']['docs'] = 'http://blog.cli.gs/api';
     VARIABLES.services['Cligs']['parameters'] = ArrayNew(1);
     VARIABLES.services['Cligs']['parameters'][1] = createStruct(field='url',label='URL',value='');
-    VARIABLES.services['Cligs']['parameters'][2] = createStruct(field='appid',label='appid',value='shrinkURL (http://shrinkURL.riaforge.org/)');
+    VARIABLES.services['Cligs']['parameters'][2] = createStruct(field='appid',label='appid',value='shrinkURL (http://shrinkurl.riaforge.org/)');
 
     VARIABLES.services['TinyURL'] = StructNew();
     VARIABLES.services['TinyURL']['method'] = 'GET';
-    VARIABLES.services['TinyURL']['url'] = 'http://tinyURL.com/api-create.php';
+    VARIABLES.services['TinyURL']['url'] = 'http://tinyurl.com/api-create.php';
     VARIABLES.services['TinyURL']['docs'] = 'http://www.scripting.com/stories/2007/06/27/tinyurlHasAnApi.html';
     VARIABLES.services['TinyURL']['parameters'] = ArrayNew(1);
     VARIABLES.services['TinyURL']['parameters'][1] = createStruct(field='url',label='URL',value='');
@@ -127,8 +127,8 @@
 
     VARIABLES.services['BudURL'] = StructNew();
     VARIABLES.services['BudURL']['method'] = 'POST';
-    VARIABLES.services['BudURL']['url'] = 'http://budURL.com/?create-url';
-    VARIABLES.services['BudURL']['docs'] = 'http://budURL.com';
+    VARIABLES.services['BudURL']['url'] = 'http://budurl.com/?create-url';
+    VARIABLES.services['BudURL']['docs'] = 'http://budurl.com';
     VARIABLES.services['BudURL']['parameters'] = ArrayNew(1);
     VARIABLES.services['BudURL']['parameters'][1] = createStruct(field='myurl',label='URL',value='');
 
@@ -143,8 +143,8 @@
     //gives unique urls to every user
     VARIABLES.services['Snurl'] = StructNew();
     VARIABLES.services['Snurl']['method'] = 'POST';
-    VARIABLES.services['Snurl']['url'] = 'http://snipURL.com/site/getsnip';
-    VARIABLES.services['Snurl']['docs'] = 'http://www.snURL.com/site/help?go=api';
+    VARIABLES.services['Snurl']['url'] = 'http://snipurl.com/site/getsnip';
+    VARIABLES.services['Snurl']['docs'] = 'http://www.snurl.com/site/help?go=api';
     VARIABLES.services['Snurl']['parameters'] = ArrayNew(1);
     VARIABLES.services['Snurl']['parameters'][1] = createStruct(field='sniplink',label='URL',value='');
     VARIABLES.services['Snurl']['parameters'][2] = createStruct(field='snipuser',label='username',value='');
@@ -172,8 +172,8 @@
 
     VARIABLES.services['EasyURL'] = StructNew();
     VARIABLES.services['EasyURL']['method'] = 'POST';
-    VARIABLES.services['EasyURL']['url'] = 'http://www.easyURL.net/index.php';
-    VARIABLES.services['EasyURL']['docs'] = 'http://www.easyURL.net/index.php';
+    VARIABLES.services['EasyURL']['url'] = 'http://www.easyurl.net/index.php';
+    VARIABLES.services['EasyURL']['docs'] = 'http://www.easyurl.net/index.php';
     VARIABLES.services['EasyURL']['parameters'] = ArrayNew(1);
     VARIABLES.services['EasyURL']['parameters'][1] = createStruct(field='longurl',label='URL',value='');
     VARIABLES.services['EasyURL']['parameters'][2] = createStruct(field='mode',label='mode',value='shorten');
@@ -206,8 +206,8 @@
 
     VARIABLES.services['PiURL'] = StructNew();
     VARIABLES.services['PiURL']['method'] = 'POST';
-    VARIABLES.services['PiURL']['url'] = 'http://piURL.com/api.php';
-    VARIABLES.services['PiURL']['docs'] = 'http://piURL.com/api.php';
+    VARIABLES.services['PiURL']['url'] = 'http://piurl.com/api.php';
+    VARIABLES.services['PiURL']['docs'] = 'http://piurl.com/api.php';
     VARIABLES.services['PiURL']['parameters'] = ArrayNew(1);
     VARIABLES.services['PiURL']['parameters'][1] = createStruct(field='url',label='URL',value='');
 
@@ -232,8 +232,8 @@
 
     VARIABLES.services['PeaURL'] = StructNew();
     VARIABLES.services['PeaURL']['method'] = 'GET';
-    VARIABLES.services['PeaURL']['url'] = 'http://peaURL.com/api';
-    VARIABLES.services['PeaURL']['docs'] = 'http://peaURL.com/api/documentation';
+    VARIABLES.services['PeaURL']['url'] = 'http://peaurl.com/api';
+    VARIABLES.services['PeaURL']['docs'] = 'http://peaurl.com/api/documentation';
     VARIABLES.services['PeaURL']['parameters'] = ArrayNew(1);
     VARIABLES.services['PeaURL']['parameters'][1] = createStruct(field='link',label='URL',value='');
     VARIABLES.services['PeaURL']['parameters'][2] = createStruct(field='type',label='type',value='json');
@@ -255,8 +255,8 @@
 
     VARIABLES.services['MooURL'] = StructNew();
     VARIABLES.services['MooURL']['method'] = 'GET';
-    VARIABLES.services['MooURL']['url'] = 'http://mooURL.com/create/';
-    VARIABLES.services['MooURL']['docs'] = 'http://mooURL.com/create/';
+    VARIABLES.services['MooURL']['url'] = 'http://moourl.com/create/';
+    VARIABLES.services['MooURL']['docs'] = 'http://moourl.com/create/';
     VARIABLES.services['MooURL']['parameters'] = ArrayNew(1);
     VARIABLES.services['MooURL']['parameters'][1] = createStruct(field='source',label='URL',value='');
 
@@ -264,8 +264,8 @@
 
     VARIABLES.services['RubyURL'] = StructNew();
     VARIABLES.services['RubyURL']['method'] = 'POST';
-    VARIABLES.services['RubyURL']['url'] = 'http://rubyURL.com/api/link';
-    VARIABLES.services['RubyURL']['docs'] = 'http://rubyURL.com/api';
+    VARIABLES.services['RubyURL']['url'] = 'http://rubyurl.com/api/link';
+    VARIABLES.services['RubyURL']['docs'] = 'http://rubyurl.com/api';
     VARIABLES.services['RubyURL']['parameters'] = ArrayNew(1);
     VARIABLES.services['RubyURL']['parameters'][1] = createStruct(field='bco_website_url',label='URL',value='');
 
@@ -425,7 +425,7 @@ Comments: #ARGUMENTS.comments#
       </cfcase>
       <cfcase value="BudURL">
         <!--- EasyURL returns the whole HTML page --->
-        <cfset tmp = REFindNoCase('http://budURL.com/[0-9a-zA-Z]+',ARGUMENTS.data,0,'true')>
+        <cfset tmp = REFindNoCase('http://budurl.com/[0-9a-zA-Z]+',ARGUMENTS.data,0,'true')>
         <cfset shortURL = Mid(ARGUMENTS.data,tmp['pos'][1],tmp['len'][1])>
       </cfcase>
       <cfcase value="Trakz">
@@ -441,11 +441,11 @@ Comments: #ARGUMENTS.comments#
       <cfcase value="PntMe">
         <!--- EasyURL returns the whole HTML page --->
         <cfset tmp = DeserializeJSON(ARGUMENTS.data)>
-        <cfset shortURL = tmp['token']>
+        <cfset shortURL = tmp['bsu_token']>
       </cfcase>
       <cfcase value="MooURL">
         <!--- EasyURL returns the whole HTML page --->
-        <cfset tmp = REFindNoCase('http://mooURL.com/[0-9a-zA-Z]+',ARGUMENTS.data,0,'true')>
+        <cfset tmp = REFindNoCase('http://moourl.com/[0-9a-zA-Z]+',ARGUMENTS.data,0,'true')>
         <cfset shortURL = Mid(ARGUMENTS.data,tmp['pos'][1],tmp['len'][1])>
       </cfcase>
       <cfdefaultcase>

@@ -1,5 +1,17 @@
-<cfparam name="URL.mode" default="">
-<cfparam name="ATTRIBUTES.r_params" type="variableName">
+<!---
+  Name         : c:\projects\blog\client\tags\getmode.cfm
+  Author       : Raymond Camden
+  Created      : 02/09/06
+  Last Updated : 4/13/07
+  History      : Removed date filter (rkc 10/28/06)
+         : Put it back in (rkc 10/30/06)
+         : ben_releasedonly (rkc 4/13/07)
+--->
+
+
+<cfparam name="url.mode" default="">
+<cfparam name="attributes.r_params" type="variableName">
+
 <cfset params = structNew()>
 <!---
     SES parsing is abstracted out. This file is getting a bit large so I want to keep things nice and simple.
@@ -9,71 +21,71 @@
 <cfmodule template="parseses.cfm" />
 
 <!--- starting index --->
-<cfparam name="URL.startrow" default="1">
-<cfif not isNumeric(URL.startrow) or URL.startrow lte 0 or round(URL.startrow) neq URL.startrow>
-  <cfset URL.startrow = 1>
+<cfparam name="url.startrow" default="1">
+<cfif not isNumeric(url.startrow) or url.startrow lte 0 or round(url.startrow) neq url.startrow>
+  <cfset url.startrow = 1>
 </cfif>
 <!--- handle people passing super big #s --->
-<cfif not isValid("integer", URL.startrow)>
-  <cfset URL.startrow = 1>
+<cfif application.isColdFusionMX7 and not isValid("integer", url.startrow)>
+  <cfset url.startrow = 1>
 </cfif>
-<cfset params.startrow = URL.startrow>
-<cfset params.maxEntries = APPLICATION.BLOG.maxEntries>
+<cfset params.startrow = url.startrow>
+<cfset params.maxEntries = application.maxEntries>
 
 <!--- Handle cleaning of day, month, year --->
-<cfif isDefined("URL.day") and (not isNumeric(URL.day) or val(URL.day) is not URL.day)>
+<cfif isDefined("url.day") and (not isNumeric(url.day) or val(url.day) is not url.day)>
   <cfset structDelete(url,"day")>
 </cfif>
-<cfif isDefined("URL.month") and (not isNumeric(URL.month) or val(URL.month) is not URL.month)>
+<cfif isDefined("url.month") and (not isNumeric(url.month) or val(url.month) is not url.month)>
   <cfset structDelete(url,"month")>
 </cfif>
-<cfif isDefined("URL.year") and (not isNumeric(URL.year) or val(URL.year) is not URL.year)>
+<cfif isDefined("url.year") and (not isNumeric(url.year) or val(url.year) is not url.year)>
   <cfset structDelete(url,"year")>
 </cfif>
 
-<cfif URL.mode is "day" and isDefined("URL.day") and isDefined("URL.month") and URL.month gte 1 and URL.month lte 12 and isDefined("URL.year")>
-  <cfset params.byDay = val(URL.day)>
-  <cfset params.byMonth = val(URL.month)>
-  <cfset params.byYear = val(URL.year)>
-  <cfset month = val(URL.month)>
-  <cfset year = val(URL.year)>
-<cfelseif URL.mode is "month" and isDefined("URL.month") and URL.month gte 1 and URL.month lte 12 and isDefined("URL.year")>
-  <cfset params.byMonth = val(URL.month)>
-  <cfset params.byYear = val(URL.year)>
-  <cfset month = val(URL.month)>
-  <cfset year = val(URL.year)>
-<cfelseif URL.mode is "cat" and isDefined("URL.catid")>
-  <cfset params.byCat = URL.catid>
+<cfif url.mode is "day" and isDefined("url.day") and isDefined("url.month") and url.month gte 1 and url.month lte 12 and isDefined("url.year")>
+  <cfset params.byDay = val(url.day)>
+  <cfset params.byMonth = val(url.month)>
+  <cfset params.byYear = val(url.year)>
+  <cfset month = val(url.month)>
+  <cfset year = val(url.year)>
+<cfelseif url.mode is "month" and isDefined("url.month") and url.month gte 1 and url.month lte 12 and isDefined("url.year")>
+  <cfset params.byMonth = val(url.month)>
+  <cfset params.byYear = val(url.year)>
+  <cfset month = val(url.month)>
+  <cfset year = val(url.year)>
+<cfelseif url.mode is "cat" and isDefined("url.catid")>
+  <cfset params.byCat = url.catid>
 <!--- BEGIN BRAUNSTEIN MOD 2/5/2010 --->
-<cfelseif URL.mode is "postedby" and isDefined("URL.postedby")>
-  <cfset params.byPosted = URL.postedby>
+<cfelseif url.mode is "postedby" and isDefined("url.postedby")>
+  <cfset params.byPosted = url.postedby>
 <!--- END BRAUNSTEIN MOD 2/5/2010 --->
 
-<cfelseif URL.mode is "search" and (isDefined("form.search") or isDefined("URL.search"))>
-  <cfif isDefined("URL.search")>
-    <cfset form.search = URL.search>
+<cfelseif url.mode is "search" and (isDefined("form.search") or isDefined("url.search"))>
+  <cfif isDefined("url.search")>
+    <cfset form.search = url.search>
   </cfif>
   <cfset params.searchTerms = htmlEditFormat(form.search)>
   <!--- dont log pages --->
-  <cfif URL.startrow neq 1>
+  <cfif url.startrow neq 1>
     <cfset params.dontlogsearch = true>
   </cfif>
-<cfelseif URL.mode is "entry" and isDefined("URL.entry")>
-  <cfset params.byEntry = URL.entry>
-<cfelseif URL.mode is "alias" and isDefined("URL.alias") and len(trim(URL.alias))>
-  <cfset params.byAlias = URL.alias>
+<cfelseif url.mode is "entry" and isDefined("url.entry")>
+  <cfset params.byEntry = url.entry>
+<cfelseif url.mode is "alias" and isDefined("url.alias") and len(trim(url.alias))>
+  <cfset params.byAlias = url.alias>
 <cfelse>
-  <cfset URL.mode = "">
+  <cfset url.mode = "">
 </cfif>
 
 <!---// if user is logged in an has an admin role, then show all entries //--->
-<cfif IsUserInRole("admin") and StructKeyExists(URL, "adminview") and URL.adminview>
-  <cfset params.releasedonly = false />
-<!---// Ensures admins wont see unreleased on main page. //--->
+<cfif IsUserInRole("admin") and structKeyExists(url, "adminview") and url.adminview>
+  <cfset params.ben_releasedonly = false />
+<!---// Ensures admins wont see unben_released on main page. //--->
 <cfelse>
-  <cfset params.releasedonly = true />
+  <cfset params.ben_releasedonly = true />
 </cfif>
 
-<cfset caller[ATTRIBUTES.r_params] = params>
+<cfset caller[attributes.r_params] = params>
 
 <cfexit method="exitTag">

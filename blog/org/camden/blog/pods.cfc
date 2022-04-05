@@ -22,11 +22,13 @@
   <cfset result.name = "">
   <cfset result.pods = structNew()>
 
-  <cfif not directoryExists(ExpandPath(arguments.directory)) or not fileExists(ExpandPath(xmlFile))>
+  <cfif not directoryExists(arguments.directory) or not fileExists(xmlFile)>
     <cfreturn result>
   </cfif>
+
   <cfset result.name = listLast(arguments.directory, "/\")>
-  <cffile action="read" file="#ExpandPath(xmlFile)#" variable="xmlPacket">
+
+  <cffile action="read" file="#xmlFile#" variable="xmlPacket">
   <cfset xmlPacket = xmlParse(xmlPacket)>
 
   <cfif not structKeyExists(xmlPacket, "pods")>
@@ -37,8 +39,8 @@
     <cfloop index="x" from="1" to="#arrayLen(xmlPacket.pods.files.xmlChildren)#">
       <cfset podNode = xmlPacket.pods.files.xmlChildren[x]>
       <cfif structKeyExists(podNode.xmlAttributes, "name") and structKeyExists(podNode.xmlAttributes, "sortorder")>
-        <cfset pod.filename = podNode.xmlATTRIBUTES.name>
-        <cfset pod.sortOrder = podNode.xmlATTRIBUTES.sortorder>
+        <cfset pod.filename = podNode.xmlAttributes.name>
+        <cfset pod.sortOrder = podNode.xmlAttributes.sortorder>
         <cfset result.pods[pod.filename] = pod.sortorder>
       </cfif>
     </cfloop>

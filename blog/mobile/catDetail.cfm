@@ -2,18 +2,18 @@
 
 <cfset params.startrow = 1>
 <cfset params.maxEntries = 999>
-<cfset params.byCat = SESSION.BROG.getCategoryByAlias(URL.catid)>
-<cfset articleData = SESSION.BROG.getEntries(params)>
+<cfset params.byCat = application.blog.getCategoryByAlias(url.catid)>
+<cfset articleData = application.blog.getEntries(params)>
 <cfset articles = articleData.entries>
 
-<cfset catInfo = SESSION.BROG.getCategory(params.byCat)>
+<cfset catInfo = application.blog.getCategory(params.byCat)>
 
 <cfoutput>
 
-<div data-role="page"  data-theme="#APPLICATION.BLOG.primaryTheme#">
+<div data-role="page"  data-theme="#application.primaryTheme#">
 
 
-  <cf_header title="#catInfo.bca_name#" showHome="2" id="blogHeader">
+  <cf_header title="#catInfo.bca_category#" showHome="2" id="blogHeader">
 
   <div data-role="content" >
     <ul data-role="listview">
