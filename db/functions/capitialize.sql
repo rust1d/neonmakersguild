@@ -1,0 +1,11 @@
+DROP FUNCTION IF EXISTS capitalize;
+
+delimiter ;;
+
+CREATE FUNCTION capitalize(_string VARCHAR(255)) RETURNS VARCHAR(255) DETERMINISTIC
+BEGIN
+  RETURN CONCAT(UCASE(LEFT(_string, 1)), LCASE(SUBSTRING(_string, 2)));
+END
+;;
+
+delimiter ;

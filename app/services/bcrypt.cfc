@@ -1,6 +1,6 @@
 component {
   public bcrypt function init() {
-    variables.encryptor = createObject(type='Java', classname='BCrypt');
+    variables.encryptor = createObject(type: 'Java', classname: 'BCrypt');
 
     return this;
   }

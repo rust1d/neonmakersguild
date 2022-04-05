@@ -53,7 +53,7 @@ component accessors=true {
     for (var key in arguments.keyList()) qry.append('#key#=#arguments[key]#');
     if (qry.len()) path &= '&' & qry.toList('&');
 
-    return application.paths.siteroot & path;
+    return application.paths.remote.root & path;
   }
 
   public string function hrefenc(string page) {
@@ -101,11 +101,11 @@ component accessors=true {
     if (template_not(page)) location(href(argumentcollection: arguments), false);
   }
 
-  public void function redirect_if(condition, page) {
+  public void function redirect_if(required boolean condition, required string page) {
     if (condition) redirect(page);
   }
 
-  public void function redirect_unless(condition, page) {
+  public void function redirect_unless(required boolean condition, required string page) {
     if (!condition) redirect(page);
   }
 
@@ -189,7 +189,10 @@ component accessors=true {
     var shared = false;
     if (!template_exists(partial)) { // IF NOT ON CURRENT SITE
       shared = template_exists(partial, true); // CHECK THE DEFAULT SITE
-      if (!shared) return; // STILL NOT FOUND JUST BAIL
+      if (!shared) {
+        writeoutput('<hr>#partial#<hr>');
+        return; // STILL NOT FOUND JUST BAIL
+      }
     }
 
     var filename = template_path(partial, shared);
@@ -208,7 +211,7 @@ component accessors=true {
 
   private string function physical_path(required string partial, boolean shared = false) {
     var path = shared ? default_site : site;
-    return clean(application.paths.physicalroot & views_path & path & '/' & partial & '.cfm');
+    return clean(application.paths.local.root & views_path & path & '/' & partial & '.cfm');
   }
 
   private boolean function template_exists(required string partial, boolean shared = false) {

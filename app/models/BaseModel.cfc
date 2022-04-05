@@ -97,8 +97,8 @@ component {
     if (relation_exists(missingMethodName)) return relation_load(missingMethodName, missingMethodArguments);
 
     // TRY TO FIND A MATCHING FIELD W/NAME OF METHOD CALLED
-    var field = find_field(missingMethodName); // FULL NAME PASSED? ie st_stid()
-    if (field.isEmpty()) field = find_field(table_prefix() & missingMethodName); // UNPREFIXED NAME PASSED? ie stid()
+    var field = find_field(missingMethodName); // FULL NAME PASSED? ie us_usid()
+    if (field.isEmpty()) field = find_field(table_prefix() & missingMethodName); // UNPREFIXED NAME PASSED? ie usid()
     if (!field.isEmpty()) { // FIELD FOUND, SET OR GET IT
       if (missingMethodArguments.isEmpty()) return variables.get(field.name); // NO VALUE PASSED, GET AND RETURN
 
@@ -157,7 +157,7 @@ component {
     try {
       save();
     } catch (any err) {
-      if (err.type != 'record_not_valid') application.flash.error(utility.errorString(err));
+      if (err.type != 'record_not_valid') application.flash.error(application.utility.errorString(err));
     }
     for (var err in errors()) application.flash.error(err);
     return errors().len() ? false : true;
@@ -535,8 +535,6 @@ component {
   }
 
   // CALLBACK STUBS
-  // BY DEFAULT THESE STUBS DO NOTHING BUT CAN BE EXTENDED IN THE CHILD CLASS AS NEEDED.
-  // FOR EXAMPLE, AFTER SAVING A STUDENT YOU MAY WANT TO USE THE post_save() TO UPDATE SSN IN THE SEC TABLE
   private void function pre_init(struct data) {}
   private void function post_init() {}
   private void function pre_insert() {}

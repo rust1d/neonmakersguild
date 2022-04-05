@@ -1,7 +1,8 @@
 component accessors=true {
   property name='_class'          type='string';
   property name='_pkid'           type='numeric';
-  property name='_home'           type='string';
+  property name='_home'           type='string'   default='home/home';
+  property name='_admin'          type='boolean'  default=false;
   property name='_loginattempts'  type='numeric'  default=0;
 
   public CurrentUser function init() {
@@ -64,13 +65,13 @@ component accessors=true {
     } else {
       session.return_to = '';
     }
-    location('/?p=home/login/login', false);
+    request.router.redirect();
   }
 
   public void function security_check() {
-    if (model().passwordupdate_required()) {
-      request.router.redirect(get_class() & '/security');
-    }
+    // if (model().passwordupdate_required()) {
+    //   request.router.redirect(get_class() & '/security');
+    // }
   }
 
   public void function set(required string key, required any val) {

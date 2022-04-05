@@ -6,7 +6,7 @@
       <cfset closeable = messages.filter(msg => msg.closeable).len() />
       <cfset dismissible = closeable ? 'alert-dismissible' : '' />
 
-      <div class='alert #dismissible# fade show alert-#type#' role='alert'>
+      <div class='alert #dismissible# fade show alert-#type# my-2' role='alert'>
         <cfif type EQ 'danger'>
           One or more errors have been detected:
           <ul class='mb-0'>

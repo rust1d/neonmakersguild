@@ -107,7 +107,7 @@ component {
         return toB64(img);
       }
     } catch (any err) {} // STILL ERRORS, RETURN BROKEN IMAGE
-    return toB64(ImageNew(application.paths.physicalroot & '\assets\images\broken.png'));
+    return toB64(ImageNew(application.paths.local.root & '\assets\images\broken.png'));
   }
 
   public string function ifin(required boolean state, string on='selected', string off='') {

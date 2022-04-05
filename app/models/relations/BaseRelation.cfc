@@ -95,7 +95,7 @@ component accessors=true {
   }
 
   public any function records() {
-    // IF WE HAVE CHILDREN AND PARENT KEY DOES NOT MATCH CHILD FKEY() RELOAD CHILDREN ie student.sport1id UPDATED TO NEW ID SO MODEL NEEDS TO RELOAD
+    // IF WE HAVE CHILDREN AND PARENT KEY DOES NOT MATCH CHILD FKEY() RELOAD CHILDREN
     if (!isNull(variables.children) && !isNull(variables._fkey)) {
       if (variables._fkey != invoke(variables.parent, variables.key)) {
         reset();

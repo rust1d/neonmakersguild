@@ -8,12 +8,12 @@ component {
   this.setClientCookies = true;
   this.showDebugOutput = true;
   this.enablecfoutputonly = false;
-  // this.mappings = {
-  //   '/views': ExpandPath('/app/views'),
-  //   '/site': ExpandPath('/app/views/site'),
-  //   '/cfc': ExpandPath('/assets/cfc'),
-  //   '/services':ExpandPath('/app/services')
-  // };
+  this.mappings = {
+    '/views': ExpandPath('/app/views'),
+    '/site': ExpandPath('/app/views/site'),
+    '/cfc': ExpandPath('/assets/cfc'),
+    '/services':ExpandPath('/app/services')
+  };
 
   public boolean function onApplicationStart() {
     set_environment();
@@ -23,16 +23,17 @@ component {
 
     application.dsn = 'neonmakersguild';
 
-    application.email = {
-      support:       'support@neonmakersguild.org',
-      supportplus:   'Neon Makers Guild <support@neonmakersguild.org>'
-    }
+    application.email.support = 'support@neonmakersguild.org';
+    application.email.supportplus = 'Neon Makers Guild <#application.email.support#>';
 
-    application.paths.physicalroot = ExpandPath('/');
-    application.paths.images = ExpandPath('/assets/images/');
+    application.paths.local.root = ExpandPath('\');
+    application.paths.local.images = application.paths.local.root & 'assets\images\';
+
+    application.paths.remote.images = application.paths.remote.root & '/assets/images';
 
     application.settings = {
-      failedLogins:       5
+      title: 'Neon Makers Guild',
+      failedLogins: 5
     }
 
     return true;
@@ -42,6 +43,7 @@ component {
     lock scope='session' type='exclusive' timeout='10' {
       session.started = now();
       session.user = new app.services.CurrentUser();
+      session.site = new app.services.CurrentSite();
       session.return_to = '';
     }
   }
@@ -51,14 +53,14 @@ component {
     check_reset_app();
     check_user_logout();
     clean_form();
-    request.router =  new app.services.router(homepage: 'home/home');
+    request.router =  new app.services.router('home', session.site.path());
   };
 
   public boolean function onMissingTemplate(string targetpage) {
     writelog(file: '404', text: '#arguments.targetpage#?#cgi.query_string#');
-    new services.email.AdminEmailer(subject: 'onMissingTemplate').send_error(args: arguments);
-    location(application.paths.securesiteroot & '/index.cfm', false);
-
+    new app.services.AdminEmailer(subject: 'onMissingTemplate').send_error(args: arguments);
+    // location(application.paths.remote.root & '/index.cfm', false);
+writedump(arguments);
     return true;
   };
 
@@ -76,7 +78,7 @@ component {
       // try { data = isDefined('session') ? session.user.dump() : {} } catch (any err) {}
       application.sentry.captureException(exception: arguments.exception, additionalData: data);
     }
-    new services.email.AdminEmailer(subject: 'Application Error').send_error(arguments.exception);
+    new app.services.AdminEmailer(subject: 'Application Error').send_error(arguments.exception);
   };
 
   // PRIVATE
@@ -95,22 +97,25 @@ component {
   }
 
   private void function check_user_logout() {
-    if (url.keyExists('logout') && session.user.loggedIn()) {
+    if (url.keyExists('ref') && session.site.get_site()!=url.ref) {
+      // this.onSessionStart();
+      session.site = new app.services.CurrentSite();
+    } else if (url.keyExists('logout') && session.user.loggedIn()) {
       this.onSessionStart();
     }
   }
 
   private void function clean_form() {
     if (!form.keyExists('fieldnames') || form.fieldnames.len() == 0) return;
-    if (form.keyExists('skipApplicationSecurity')) return;
 
     for (key in form.fieldnames.listToArray()) {
-      form[key] = form[key].trim().reReplace('<[^>]*>', '', 'all').reReplace('[^\x00-\x7F]', '-', 'all').reReplace('[<>]', '?', 'all');
+      request.unclean[key] = form[key].reReplace('[^\x00-\x7F]', '-', 'all').trim();
+      form[key] = request.unclean[key].reReplace('<[^>]*>', '', 'all').reReplace('[<>]', '?', 'all');
     }
   }
 
   private void function load_secrets() {
-    application.secrets = deserializeJSON(fileRead(ExpandPath('.') & 'nmg.json'));
+    application.secrets = deserializeJSON(fileRead(ExpandPath('..') & '/nmg.json'));
   }
 
   private void function load_singletons() {
@@ -161,21 +166,18 @@ component {
   private void function setup_development() {
     application.env = 'development';
     application.email.admin = 'john@neonmakersguild.org';
-    application.paths.securesiteroot = 'https://local.neonmakersguild.org';
-    application.paths.siteroot = 'http://local.neonmakersguild.org';
+    application.paths.remote.root = 'http://local.neonmakersguild.org';
   }
 
   private void function setup_staging() {
     application.env = 'staging';
     application.email.admin = 'john@neonmakersguild.org';
-    application.paths.securesiteroot = 'https://staging.neonmakersguild.org';
-    application.paths.siteroot = 'https://staging.neonmakersguild.org';
+    application.paths.remote.root = 'https://staging.neonmakersguild.org';
   }
 
   private void function setup_production() {
     application.env = 'production';
     application.email.admin = 'eve@neonmakersguild.org';
-    application.paths.siteroot = 'https://neonmakersguild.org';
-    application.paths.securesiteroot = 'https://neonmakersguild.org';
+    application.paths.remote.root = 'https://neonmakersguild.org';
   }
 }
