@@ -22,7 +22,7 @@
 <cfparam name="form.keywords" default="#url.keywords#">
 <cfparam name="url.start" default="1">
 
-<cfparam name="url.sort" default="posted">
+<cfparam name="url.sort" default="ben_posted">
 <cfparam name="url.dir" default="desc">
 
 <cfset params = structNew()>
@@ -38,6 +38,7 @@
 </cfif>
 <cfset params.orderby = url.sort>
 <cfset params.orderbydir = url.dir>
+<cfdump var='#params#'>
 <cfset entryData = application.blog.getEntries(params)>
 <cfset entries = entryData.entries>
 
@@ -45,7 +46,7 @@
 <!--- todo: only do rows in current view --->
 <cfset queryAddColumn(entries,"viewurl",arrayNew(1))>
 <cfloop query="entries">
-  <cfset vu = application.blog.makeLink(id)>
+  <cfset vu = application.blog.makeLink(ben_benid)>
   <cfset querySetCell(entries, "viewurl", vu & "?adminview=true", currentRow)>
 </cfloop>
 
@@ -75,11 +76,11 @@
   </cfoutput>
 
   <cfmodule template="../tags/datatablenew.cfm" data="#entries#" editlink="entry.cfm" label="Entries"
-        linkcol="title" defaultsort="posted" defaultdir="desc" queryString="keywords=#urlencodedformat(form.keywords)#" totalRows="#entryData.totalEntries#">
-    <cfmodule template="../tags/datacolnew.cfm" colname="title" label="Title" />
+        linkcol="title" defaultsort="ben_posted" defaultdir="desc" queryString="keywords=#urlencodedformat(form.keywords)#" totalRows="#entryData.totalEntries#">
+    <cfmodule template="../tags/datacolnew.cfm" colname="ben_title" label="Title" />
     <cfmodule template="../tags/datacolnew.cfm" colname="ben_released" label="Released" format="yesno"/>
-    <cfmodule template="../tags/datacolnew.cfm" colname="posted" label="Posted" format="datetime" />
-    <cfmodule template="../tags/datacolnew.cfm" colname="views" label="Views" format="number" />
+    <cfmodule template="../tags/datacolnew.cfm" colname="ben_posted" label="Posted" format="datetime" />
+    <cfmodule template="../tags/datacolnew.cfm" colname="ben_views" label="Views" format="number" />
     <cfmodule template="../tags/datacolnew.cfm" label="View" data="<a href=""$viewurl$"">View</a>"  sort="false" />
   </cfmodule>
 

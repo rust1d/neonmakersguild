@@ -60,11 +60,11 @@
 <li><a href="#attributes.dirlevel#categories.cfm">Categories</a></li>
 </cfif>
 <li><a href="#attributes.dirlevel#comments.cfm">Comments</a></li>
-<cfif application.commentmoderation>
-<li><a href="#attributes.dirlevel#moderate.cfm">Moderate Comments (<cfoutput>#application.blog.getNumberUnbco_moderated()#</cfoutput>)</a></li>
+<cfif application.blog.getProperty("moderate")>
+<li><a href="#attributes.dirlevel#moderate.cfm">Moderate Comments (<cfoutput>#application.blog.getNumberUnmoderated()#</cfoutput>)</a></li>
 </cfif>
 <li><a href="#attributes.dirlevel#index.cfm?reinit=1">Refresh Blog Cache</a></li>
-<cfif application.settings>
+<cfif application.blog.getProperty("settings")>
 <li><a href="#attributes.dirlevel#settings.cfm">Settings</a></li>
 </cfif>
 <li><a href="#attributes.dirlevel#subscribers.cfm">Subscribers</a></li>
@@ -76,7 +76,7 @@
 <ul>
 <cfif application.blog.isBlogAuthorized('PageAdmin')>
 <li><a href="#attributes.dirlevel#pods.cfm">Pod Manager</a></li>
-<cfif application.filebrowse>
+<cfif application.blog.getProperty("filebrowse")>
 <li><a href="#attributes.dirlevel#filemanager.cfm">File Manager</a></li>
 </cfif>
 <li><a href="#attributes.dirlevel#pages.cfm">Pages</a></li>

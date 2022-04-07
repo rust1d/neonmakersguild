@@ -16,7 +16,7 @@
             <div class='card-body border-left border-right'>
               <div class='input-group mb-3'>
                 <span class='input-group-text btn-nmg'><i class='fas fa-at'></i></span>
-                <input type='email' class='form-control' name='username' id='username' maxlength='50' placeholder='email' value='#form.get('username')#' required>
+                <input type='text' class='form-control' name='username' id='username' maxlength='50' placeholder='username' value='#form.get('username')#' required>
               </div>
               <div class='input-group mb-3'>
                 <span class='input-group-text btn-nmg'><i class='fas fa-key'></i></span>

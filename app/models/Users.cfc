@@ -9,9 +9,12 @@ component extends=BaseModel accessors=true {
   property name='us_dla'          type='date';
   property name='password'        type='string';
 
-  has_one(class: 'UserProfile',  key: 'us_usid',  relation: 'up_usid');
-  has_many(class: 'UserImages',  key: 'us_usid',  relation: 'ui_usid');
-  has_many(class: 'UserLinks',   key: 'us_usid',  relation: 'ul_usid');
+  has_one(class: 'UserProfile',     key: 'us_usid',  relation: 'up_usid');
+  has_many(class: 'UserImages',     key: 'us_usid',  relation: 'ui_usid');
+  has_many(class: 'UserLinks',      key: 'us_usid',  relation: 'ul_usid');
+  has_many(class: 'BlogEntries',    key: 'us_usid',  relation: 'ben_usid');
+  has_many(class: 'BlogUserRoles',  key: 'us_usid',  relation: 'bur_usid');
+
 
   public query function search(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;

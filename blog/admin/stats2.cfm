@@ -17,19 +17,19 @@
   <cfset password = application.blog.getProperty("password")>
 
   <!--- get a bunch of crap --->
-  <cfquery name="getEntriesByYear" datasource="#dsn#">
+  <cfquery name="getEntriesByYear" datasource="#application.dsn#">
     SELECT yearPosted,numberOfEntries
       FROM NumberOfBlogEntriesByYear
     </cfquery>
 
 
 <!--- query for personal vs professional posts --->
-  <cfquery name="getPersonalPosts" datasource="#dsn#">
+  <cfquery name="getPersonalPosts" datasource="#application.dsn#">
     SELECT yearPosted, bca_category,numberofEntries
     FROM NumberOfBlogEntriesByYearThenCategory
     where bca_category = 'Personal'
     </cfquery>
-  <cfquery name="getProfessionalPosts" datasource="#dsn#">
+  <cfquery name="getProfessionalPosts" datasource="#application.dsn#">
     SELECT yearPosted, bca_category,numberofEntries
     FROM NumberOfBlogEntriesByYearThenCategory
     where bca_category = 'Professional'
@@ -38,7 +38,7 @@
 
 
   <!--- query for posts by year by cateegory --->
-  <cfquery name="getEntriesByYearByCategory" datasource="#dsn#">
+  <cfquery name="getEntriesByYearByCategory" datasource="#application.dsn#">
     SELECT yearPosted, bca_category,numberofEntries
     FROM NumberOfBlogEntriesByYearThenCategory
     where bca_category not in ('Personal','Professional')
@@ -48,17 +48,17 @@
 
 
 <!--- Flex vs ColdFusion vs AngularJS --->
-  <cfquery name="getFlexPosts" datasource="#dsn#">
+  <cfquery name="getFlexPosts" datasource="#application.dsn#">
     SELECT yearPosted, bca_category,numberofEntries
     FROM NumberOfBlogEntriesByYearThenCategory
     where bca_category = 'Flex'
     </cfquery>
-  <cfquery name="getColdFusionPosts" datasource="#dsn#">
+  <cfquery name="getColdFusionPosts" datasource="#application.dsn#">
     SELECT yearPosted, bca_category,numberofEntries
     FROM NumberOfBlogEntriesByYearThenCategory
     where bca_category = 'ColdFusion'
     </cfquery>
-  <cfquery name="getAngularJSPosts" datasource="#dsn#">
+  <cfquery name="getAngularJSPosts" datasource="#application.dsn#">
     SELECT yearPosted, bca_category,numberofEntries
     FROM NumberOfBlogEntriesByYearThenCategory
     where bca_category = 'AngularJS'

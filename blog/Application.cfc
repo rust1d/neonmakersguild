@@ -1,30 +1,8 @@
 <cfcomponent output="false">
+  <cfset Componentloc = "org.">
+  <cfset blogname = "1">
 
-  <!---
-    If you want to keep the org files out of a web accessible directory, you can use componentLoc to point to a CF mapping that points to the org directory
-    Be sure to add at the end of the the Component loc
-  --->
-  <cfif IsLocalHost(cgi.HTTP_HOST) or cgi.HTTP_HOST is "http://local10.blogcfc.com">
-    <cfset Componentloc = "org.">
-    <cfset blogdbname = "Default">
-    <cfset blogname = "Default">
-  <cfelse>
-    <cfset Componentloc = "org.">
-    <cfset blogdbname = "Default">
-    <cfset blogname = "Default">
-  </cfif>
-
-  <!---
-  The prefix is now dynamic in case 2 people want to run blog.cfc on the same machine. Normally they
-      would run both blogs with the same org, and use different names, but on an ISP that may not be possible.
-      So I base part of the application name on the file path.
-
-    Name can only be 64 max. So we will take right most part.
-  --->
-  <cfset prefix = hash(getCurrentTemplatePath())>
-  <cfset prefix = reReplace(prefix, "[^a-zA-Z]","","all")>
-  <cfset prefix = right(prefix, 64 - len("_blog_#blogname#"))>
-  <cfset this.name = "#prefix#_blog_#blogname#">
+  <cfset this.name = "nmg_blog">
   <cfset this.applicationTimeout = createTimeSpan(0,2,0,0)>
   <cfset this.clientManagement = "true">
 
@@ -35,9 +13,11 @@
   <cfset this.setDomainCookies = false>
 
   <cffunction name="onApplicationStart" returntype="boolean" output="true">
-
+    <cfscript>
+      application.dsn = 'neonmakersguild';
+    </cfscript>
     <!--- load an init blog --->
-    <cfset application.blog = createObject("component","#Componentloc#camden.blog.Blog").init(name=blogname,BlogDBName=blogdbname)>
+    <cfset application.blog = createObject("component","#Componentloc#camden.blog.Blog").init(name=blogname)>
 
     <!--- Load the Utils CFC --->
     <cfset application.utils = createObject("component", "#Componentloc#camden.blog.Utils")>
@@ -129,13 +109,13 @@
     <cfset application.gravatarsAllowed = application.blog.getProperty("allowgravatars")>
 
     <!--- Load the Page CFC --->
-    <cfset application.page = createObject("component", "#Componentloc#camden.blog.page").init(dsn=application.blog.getProperty("dsn"), username=application.blog.getProperty("username"), password=application.blog.getProperty("password"),blog=blogdbname)>
+    <cfset application.page = createObject("component", "#Componentloc#camden.blog.page").init(blog=blogname)>
 
     <!--- Load the TB CFC --->
-    <cfset application.textblock = createObject("component", "#Componentloc#camden.blog.textblock").init(dsn=application.blog.getProperty("dsn"), username=application.blog.getProperty("username"), password=application.blog.getProperty("password"),blog=blogdbname)>
+    <cfset application.textblock = createObject("component", "#Componentloc#camden.blog.textblock").init(blog=blogname)>
 
     <!--- Do we have comment moderation? --->
-    <cfset application.commentmoderation = application.blog.getProperty("moderate")>
+    <!--- <cfset application.blog.getProperty("moderate") = application.blog.getProperty("moderate")> --->
 
     <!--- Do we allow file browsing in the admin? --->
     <cfset application.filebrowse = application.blog.getProperty("filebrowse")>
@@ -168,6 +148,7 @@
     <cfset setEncoding("url","utf-8")>
 
     <cfif not isDefined("application.init") or isDefined("url.reinit")>
+      <cfabort>
       <cfset onApplicationStart()>
     </cfif>
 

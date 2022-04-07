@@ -51,7 +51,7 @@ http://www.rich-media-project.com/
 <!---- added a default directory to give the option to change it
   This won't work using SES URLs and multiple directory levels deep
 --->
-<cfparam name="url.dir" default="ben_enclosures">
+<cfparam name="url.dir" default="ben_attachments">
 <!---- added to track downloads downloads vs on-line views --->
 <cfparam name="url.online" default="0">
 
@@ -79,7 +79,7 @@ http://www.rich-media-project.com/
 
 
 <!---- Log the download ---->
-<cfset application.downloadtracker.logben_enclosureDownload(entry.id,entry.ben_enclosure,url.dir,url.online)>
+<cfset application.downloadtracker.logben_attachmentDownload(entry.id,entry.ben_attachment,url.dir,url.online)>
 
 <!--- the function that sends the feed --->
 <cfscript>
@@ -123,7 +123,6 @@ http://www.rich-media-project.com/
 </cfscript>
 
 <!--- just specify the file to serve, offset (Flash only), MIME type (optional), and download filename (optional) --->
-<cfset f_Stream(entry.ben_enclosure,0,entry.ben_mimetype,getFileFromPath(entry.ben_enclosure))>
+<cfset f_Stream(entry.ben_attachment,0,entry.ben_mimetype,getFileFromPath(entry.ben_attachment))>
 
 <cfsetting enablecfoutputonly="YES">
-

@@ -10,7 +10,7 @@
   <cfset password = application.blog.getProperty("password")>
 
   <!--- get a bunch of crap --->
-  <cfquery name="getTotalEntries" datasource="#dsn#">
+  <cfquery name="getTotalEntries" datasource="#application.dsn#">
     select  count(ben_benid) as totalentries,
         min(ben_posted) as firstentry,
         max(ben_posted) as lastentry
@@ -18,20 +18,20 @@
     where   BlogEntries.ben_blog = <cfqueryparam cfsqltype="varchar" value="#blog#">
   </cfquery>
 
-  <cfquery name="getTotalSubscribers" datasource="#dsn#">
+  <cfquery name="getTotalSubscribers" datasource="#application.dsn#">
     select  count(bsu_email) as totalsubscribers
     from  BlogSubscribers
     where   BlogSubscribers.bsu_blog = <cfqueryparam cfsqltype="varchar" value="#blog#">
     and    bsu_verified = 1
   </cfquery>
 
-  <cfquery name="getTotalViews" datasource="#dsn#">
+  <cfquery name="getTotalViews" datasource="#application.dsn#">
     select    sum(ben_views) as total
     from    BlogEntries
     where   BlogEntries.ben_blog = <cfqueryparam cfsqltype="varchar" value="#blog#">
   </cfquery>
 
-  <cfquery name="getTopViews" datasource="#dsn#">
+  <cfquery name="getTopViews" datasource="#application.dsn#">
     select    ben_id, ben_title, ben_views
     from    BlogEntries
     where   BlogEntries.ben_blog = <cfqueryparam cfsqltype="varchar" value="#blog#">
@@ -41,25 +41,25 @@
 
   <!--- get last 30 --->
   <cfset thirtyDaysAgo = dateAdd("d", -30, now())>
-  <cfquery name="last30" datasource="#dsn#">
+  <cfquery name="last30" datasource="#application.dsn#">
     select  count(id) as totalentries
     from  BlogEntries
     where   BlogEntries.ben_blog = <cfqueryparam cfsqltype="varchar" value="#blog#">
     and    posted >= <cfqueryparam cfsqltype="date" value="#thirtyDaysAgo#">
   </cfquery>
 
-  <cfquery name="getTotalComments" datasource="#dsn#">
+  <cfquery name="getTotalComments" datasource="#application.dsn#">
     select  count(BlogComments.bco_bcoid) as totalcomments
     from  BlogComments, BlogEntries
     where  BlogComments.bco_benid = BlogEntries.ben_benid
     and    BlogEntries.ben_blog = <cfqueryparam cfsqltype="varchar" value="#blog#">
-    <cfif application.commentmoderation>
+    <cfif application.blog.getProperty("moderate")>
     and    BlogComments.bco_moderated = 1
     </cfif>
   </cfquery>
 
   <!--- gets num of entries per category --->
-  <cfquery name="getCategoryCount" datasource="#dsn#">
+  <cfquery name="getCategoryCount" datasource="#application.dsn#">
     select  bca_bcaid, bca_category, count(bec_bcaid) as total
     from  BlogCategories, BlogEntriesCategories
     where  BlogEntriesCategories.bec_bcaid = BlogCategories.bca_bcaid
@@ -69,14 +69,14 @@
   </cfquery>
 
   <!--- gets num of comments per entry, top 10 --->
-  <cfquery name="topCommentedEntries" datasource="#dsn#">
+  <cfquery name="topCommentedEntries" datasource="#application.dsn#">
     select
 
     BlogEntries.ben_benid, BlogEntries.ben_title, count(BlogComments.bco_bcoid) as commentcount
     from      BlogEntries, BlogComments
     where      BlogComments.bco_benid = BlogEntries.ben_benid
     and        BlogEntries.ben_blog = <cfqueryparam cfsqltype="varchar" value="#blog#">
-    <cfif application.commentmoderation>
+    <cfif application.blog.getProperty("moderate")>
     and        BlogComments.bco_moderated = 1
     </cfif>
 
@@ -90,7 +90,7 @@
   </cfquery>
 
   <!--- gets num of comments per category, top 10 --->
-  <cfquery name="topCommentedCategories" datasource="#dsn#">
+  <cfquery name="topCommentedCategories" datasource="#application.dsn#">
     select BlogCategories.bca_bcaid,
             BlogCategories.bca_category,
             count(BlogComments.bco_bcoid) as commentcount
@@ -98,7 +98,7 @@
     where      BlogComments.bco_benid = BlogEntriesCategories.bec_benid
     and        BlogEntriesCategories.bec_bcaid = BlogCategories.bca_bcaid
     and        BlogCategories.bca_blog = <cfqueryparam cfsqltype="varchar" value="#blog#">
-    <cfif application.commentmoderation>
+    <cfif application.blog.getProperty("moderate")>
     and        BlogComments.bco_moderated = 1
     </cfif>
     group by    BlogCategories.bca_bcaid, BlogCategories.bca_category
@@ -106,7 +106,7 @@
     limit 10
   </cfquery>
 
-  <cfquery name="topSearchTerms" datasource="#dsn#">
+  <cfquery name="topSearchTerms" datasource="#application.dsn#">
     select bss_term, count(bss_term) as total
     from    BlogSearchStats
     where    bss_blog = <cfqueryparam cfsqltype="varchar" value="#blog#">
@@ -115,7 +115,7 @@
     limit 10
   </cfquery>
 
-  <cfquery name="topCommenters" datasource="#dsn#" maxrows="10">
+  <cfquery name="topCommenters" datasource="#application.dsn#" maxrows="10">
   select  count(BlogComments.bco_email) as emailCount, email, BlogComments.bco_name
   from  BlogComments, BlogEntries
   where  BlogComments.bco_benid = BlogEntries.ben_benid

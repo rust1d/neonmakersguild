@@ -288,7 +288,7 @@
     <cfelse>
       <!---// create default values for any of the fields we might need to reference //--->
       <cfset currentEntry = structNew() />
-      <cfset currentEntry.ben_enclosure = "" />
+      <cfset currentEntry.ben_attachment = "" />
       <cfset currentEntry.ben_filesize = "0" />
       <cfset currentEntry.ben_mimetype = "" />
       <cfset currentEntry.ben_released = true />
@@ -362,8 +362,8 @@
       <cfset entry.ben_allowcomments = true>
     </cfif>
 
-    <!--- TODO: Allow ben_enclosures -- currently keeps previous values --->
-    <cfset entry.ben_enclosure = currentEntry.ben_enclosure />
+    <!--- TODO: Allow ben_attachments -- currently keeps previous values --->
+    <cfset entry.ben_attachment = currentEntry.ben_attachment />
     <cfset entry.ben_filesize = currentEntry.ben_filesize />
     <cfset entry.ben_mimetype = currentEntry.ben_mimetype />
     <cfset entry.ben_released = published />
@@ -447,7 +447,7 @@
       <cfset upFileName = hash(requestData.params[4].name, "md5") & "." & listlast(requestData.params[4].name, ".") />
       <cfset upFileType = requestData.params[4].type />
 
-      <cfset destination = expandPath("../ben_enclosures") />
+      <cfset destination = expandPath("../ben_attachments") />
 
       <cfif not directoryExists(destination)>
         <cfdirectory action="create" directory="#destination#" />
@@ -456,7 +456,7 @@
       <cffile action="write" output="#upFileData#" file="#destination#/#upFileName#" />
 
       <cfset result = structNew() />
-      <cfset result["url"] = "$string" & "#application.rootURL#/ben_enclosures/#upFileName#" />
+      <cfset result["url"] = "$string" & "#application.rootURL#/ben_attachments/#upFileName#" />
 
     <cfelse>
 

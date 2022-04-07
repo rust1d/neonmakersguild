@@ -4,8 +4,9 @@ DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
   us_usid        INT(11) NOT NULL AUTO_INCREMENT,
-  us_email       VARCHAR(50) NOT NULL,
+  us_user        VARCHAR(50) NOT NULL,
   us_password    VARCHAR(100) NOT NULL,
+  us_email       VARCHAR(50) NOT NULL,
   us_permissions TINYINT(4) DEFAULT 0,
   us_active      TINYINT(1) DEFAULT 1,
   us_deleted     TINYINT(1) DEFAULT 0,
@@ -15,7 +16,7 @@ CREATE TABLE users (
   UNIQUE INDEX (us_email)
 ) ENGINE=InnoDB;
 
-insert into users (us_email, us_password) values ('rust1d@usa.net', '$2a$10$Uf0dppN2Zi94EDz.vC.Y2OLXwDt8c53eMzkY/mRlrkANU2mrGSssm');
+insert into users (us_user, us_password, us_email, us_permissions) values ('rust1d', '$2a$10$Uf0dppN2Zi94EDz.vC.Y2OLXwDt8c53eMzkY/mRlrkANU2mrGSssm', 'rust1d@usa.net', 2);
 
 DROP TABLE IF EXISTS userProfile;
 

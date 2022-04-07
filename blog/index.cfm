@@ -98,11 +98,11 @@ popular view
               </p>
              </div>
              <div class="post-content clearfix">
-          #application.blog.renderEntry(body,false,ben_enclosure)#
+          #application.blog.renderEntry(body,false,ben_attachment)#
 
           <!--- STICK IN THE MP3 PLAYER --->
-          <cfif ben_enclosure contains "mp3">
-            <cfset alternative=replace(getFileFromPath(ben_enclosure),".mp3","") />
+          <cfif ben_attachment contains "mp3">
+            <cfset alternative=replace(getFileFromPath(ben_attachment),".mp3","") />
             <div class="audioPlayerParent">
               <div id="#alternative#" class="audioPlayer">
               </div>
@@ -113,8 +113,8 @@ popular view
               // unique ID
               flashvars.playerID = "#alternative#";
               // load the file
-//              flashvars.soundFile= "#application.rooturl#/ben_enclosures/#getFileFromPath(ben_enclosure)#";
-                            flashvars.soundFile= "#application.rooturl#/download.cfm/id/#id#/online/1/#urlEncodedFormat(getFileFromPath(ben_enclosure))#";
+//              flashvars.soundFile= "#application.rooturl#/ben_attachments/#getFileFromPath(ben_attachment)#";
+                            flashvars.soundFile= "#application.rooturl#/download.cfm/id/#id#/online/1/#urlEncodedFormat(getFileFromPath(ben_attachment))#";
               // Load width and Height again to fix IE bug
               flashvars.width = "470";
               flashvars.height = "24";
@@ -142,9 +142,9 @@ popular view
           <p class="post-metadata">
           This entry was posted on #dateFormat(posted, "mmmm d, yyyy")# at #timeFormat(posted, "h:mm tt")# and has received #views# views. There are currently <cfif commentCount is "">0<cfelse>#commentCount#</cfif> comments.
           <a href="#application.rooturl#/print.cfm?id=#id#" rel="nofollow">Print this entry.</a>
-          <cfif len(ben_enclosure)>
-                        <a href="#application.rooturl#/download.cfm/id/#id#/#urlEncodedFormat(getFileFromPath(ben_enclosure))#">Download attachment.</a>
-<!---            <a href="#application.rooturl#/ben_enclosures/#urlEncodedFormat(getFileFromPath(ben_enclosure))#">Download attachment.</a>--->
+          <cfif len(ben_attachment)>
+                        <a href="#application.rooturl#/download.cfm/id/#id#/#urlEncodedFormat(getFileFromPath(ben_attachment))#">Download attachment.</a>
+<!---            <a href="#application.rooturl#/ben_attachments/#urlEncodedFormat(getFileFromPath(ben_attachment))#">Download attachment.</a>--->
           </cfif>
           </p>
 
@@ -191,7 +191,7 @@ popular view
 
 
       <cfoutput>
-      <h3 class="commentHeader">#request.rb("comments")# <cfif application.commentmoderation>(#request.rb("moderation")#)</cfif></h3>
+      <h3 class="commentHeader">#request.rb("comments")# <cfif application.blog.getProperty("moderate")>(#request.rb("moderation")#)</cfif></h3>
       </cfoutput>
       <cfset comments = application.blog.getComments(id)>
 

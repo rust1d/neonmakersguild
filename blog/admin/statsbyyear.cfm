@@ -26,7 +26,7 @@
   </cfif>
 
   <!--- get a bunch of crap --->
-  <cfquery name="getTotalEntries" datasource="#dsn#">
+  <cfquery name="getTotalEntries" datasource="#application.dsn#">
     select  count(id) as totalentries,
         min(posted) as firstentry,
         max(posted) as lastentry
@@ -35,21 +35,21 @@
     and    year(posted) = <cfqueryparam cfsqltype="numeric" value="#statsYear#">
   </cfquery>
 
-  <cfquery name="getTotalSubscribers" datasource="#dsn#">
+  <cfquery name="getTotalSubscribers" datasource="#application.dsn#">
     select  count(bsu_email) as totalsubscribers
     from  BlogSubscribers
     where   BlogSubscribers.bsu_blog = <cfqueryparam cfsqltype="varchar" value="#blog#">
     and    bsu_verified = 1
   </cfquery>
 
-  <cfquery name="getTotalViews" datasource="#dsn#">
+  <cfquery name="getTotalViews" datasource="#application.dsn#">
     select    sum(views) as total
     from    BlogEntries
     where   BlogEntries.ben_blog = <cfqueryparam cfsqltype="varchar" value="#blog#">
     and    year(posted) = <cfqueryparam cfsqltype="numeric" value="#statsYear#">
   </cfquery>
 
-  <cfquery name="getTopViews" datasource="#dsn#">
+  <cfquery name="getTopViews" datasource="#application.dsn#">
     select     id, title, views
     from    BlogEntries
     where   BlogEntries.ben_blog = <cfqueryparam cfsqltype="varchar" value="#blog#">
@@ -58,19 +58,19 @@
     limit 10
   </cfquery>
 
-  <cfquery name="getTotalComments" datasource="#dsn#">
+  <cfquery name="getTotalComments" datasource="#application.dsn#">
     select  count(BlogComments.bco_bcoid) as totalcomments
     from  BlogComments, BlogEntries
     where  BlogComments.bco_benid = BlogEntries.ben_benid
     and    BlogEntries.ben_blog = <cfqueryparam cfsqltype="varchar" value="#blog#">
-    <cfif application.commentmoderation>
+    <cfif application.blog.getProperty("moderate")>
     and    BlogComments.bco_moderated = 1
     </cfif>
     and    year(  BlogComments.bco_posted) = <cfqueryparam cfsqltype="numeric" value="#statsYear#">
   </cfquery>
 
   <!--- gets num of entries per category --->
-  <cfquery name="getCategoryCount" datasource="#dsn#">
+  <cfquery name="getCategoryCount" datasource="#application.dsn#">
     select  bca_bcaid, bca_category, count(fk_bcaid) as total
     from  BlogCategories, BlogEntriesCategories, BlogEntries
     where  BlogEntriesCategories.bec_bcaid = BlogCategories.bca_bcaid
@@ -82,14 +82,14 @@
   </cfquery>
 
   <!--- gets num of comments per entry, top 10 --->
-  <cfquery name="topCommentedEntries" datasource="#dsn#">
+  <cfquery name="topCommentedEntries" datasource="#application.dsn#">
     select
 
     BlogEntries.ben_benid, BlogEntries.ben_title, count(BlogComments.bco_bcoid) as commentcount
     from      BlogEntries, BlogComments
     where      BlogComments.bco_benid = BlogEntries.ben_benid
     and        BlogEntries.ben_blog = <cfqueryparam cfsqltype="varchar" value="#blog#">
-    <cfif application.commentmoderation>
+    <cfif application.blog.getProperty("moderate")>
     and        BlogComments.bco_moderated = 1
     </cfif>
     and    year(  BlogComments.bco_posted) = <cfqueryparam cfsqltype="numeric" value="#statsYear#">
@@ -104,7 +104,7 @@
   </cfquery>
 
   <!--- gets num of comments per category, top 10 --->
-  <cfquery name="topCommentedCategories" datasource="#dsn#">
+  <cfquery name="topCommentedCategories" datasource="#application.dsn#">
     select BlogCategories.bca_bcaid,
             BlogCategories.bca_category,
             count(BlogComments.bco_bcoid) as commentcount
@@ -113,7 +113,7 @@
     and        BlogEntriesCategories.bec_bcaid = BlogCategories.bca_bcaid
     and        BlogCategories.bca_blog = <cfqueryparam cfsqltype="varchar" value="#blog#">
     and        year(  BlogComments.bco_posted) = <cfqueryparam cfsqltype="numeric" value="#statsYear#">
-    <cfif application.commentmoderation>
+    <cfif application.blog.getProperty("moderate")>
     and        BlogComments.bco_moderated = 1
     </cfif>
     group by    BlogCategories.bca_bcaid, BlogCategories.bca_category
@@ -121,7 +121,7 @@
     limit 10
   </cfquery>
 
-  <cfquery name="topSearchTerms" datasource="#dsn#">
+  <cfquery name="topSearchTerms" datasource="#application.dsn#">
     select bss_term, count(bss_term) as total
     from    BlogSearchStats
     where    bss_blog = <cfqueryparam cfsqltype="varchar" value="#blog#">

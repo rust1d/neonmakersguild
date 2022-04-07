@@ -67,8 +67,8 @@
 
 </cfif>
 
-<!--- changed to get unbco_moderated comments 12-5-2006 by Trent Richardson --->
-<cfset comments = application.blog.getUnbco_moderatedComments(sortdir="desc")>
+<!--- changed to get Unmoderated comments 12-5-2006 by Trent Richardson --->
+<cfset comments = application.blog.getUnmoderatedComments(sortdir="desc")>
 
 <cfmodule template="../tags/adminlayout.cfm" title="Comments">
 

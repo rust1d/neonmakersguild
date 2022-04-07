@@ -6,16 +6,16 @@
 
 
   <!--- added by Jeffry Houser --->
-  <cffunction name="logben_enclosureDownload" access="public" returnType="void" output="false"
-        hint="I save download, or view, data based on an ben_enclosure">
+  <cffunction name="logben_attachmentDownload" access="public" returnType="void" output="false"
+        hint="I save download, or view, data based on an ben_attachment">
     <cfargument name="id" type="string" required="true" hint="entry.id">
-    <cfargument name="ben_enclosure" type="string" required="true" hint="entry.ben_enclosure">
+    <cfargument name="ben_attachment" type="string" required="true" hint="entry.ben_attachment">
     <cfargument name="dir" type="string" required="true" hint="url.dir">
     <cfargument name="online" type="Boolean" required="false" default="0" hint="url.online">
 
 
     <cfquery datasource="#application.blog.getProperty("dsn")#" username="#application.blog.getProperty("username")#" password="#application.blog.getProperty("password")#">
-      insert into tblblogben_enclosuredownloads(id,entryid,ipaddress,http_referrer, HTTP_USER_AGENT, downloaddate, downloadtime, ben_enclosure,Path, online )
+      insert into tblblogben_attachmentdownloads(id,entryid,ipaddress,http_referrer, HTTP_USER_AGENT, downloaddate, downloadtime, ben_attachment,Path, online )
       values(
         <cfqueryparam value="#createuuid()#" cfsqltype="VARCHAR" maxlength="35">,
         <cfif arguments.id is 0>
@@ -27,7 +27,7 @@
         <cfqueryparam value="#cgi.HTTP_REFERER#" cfsqltype="VARCHAR" maxlength="255">,
         <cfqueryparam value="#cgi.HTTP_USER_AGENT#" cfsqltype="VARCHAR" maxlength="255">,
         #createodbcdate(now())#, #createodbctime(now())#,
-        <cfqueryparam value="#getFileFromPath(arguments.ben_enclosure)#" cfsqltype="VARCHAR" maxlength="255">,
+        <cfqueryparam value="#getFileFromPath(arguments.ben_attachment)#" cfsqltype="VARCHAR" maxlength="255">,
         <cfqueryparam value="#arguments.dir#" cfsqltype="VARCHAR" maxlength="255">,
         <cfqueryparam value="#arguments.online#" cfsqltype="bit">
          )
@@ -45,10 +45,10 @@
     <cfset var generateReport = "">
 
     <cfquery name="generateReport" datasource="#application.blog.getProperty("dsn")#" username="#application.blog.getProperty("username")#" password="#application.blog.getProperty("password")#">
-      SELECT     TOP 100 PERCENT dbo.BlogEntries.ben_benid, dbo.BlogEntries.ben_posted, dbo.BlogEntries.ben_title, COUNT(dbo.tblblogben_enclosuredownloads.entryid) AS TotalDownloads
+      SELECT     TOP 100 PERCENT dbo.BlogEntries.ben_benid, dbo.BlogEntries.ben_posted, dbo.BlogEntries.ben_title, COUNT(dbo.tblblogben_attachmentdownloads.entryid) AS TotalDownloads
       FROM         dbo.BlogEntries INNER JOIN
-                            dbo.tblblogben_enclosuredownloads ON dbo.BlogEntries.ben_benid = dbo.tblblogben_enclosuredownloads.entryid
-      where dbo.tblblogben_enclosuredownloads.downloaddate between #createodbcdate(startdate)#  and #createodbcdate(enddate)#
+                            dbo.tblblogben_attachmentdownloads ON dbo.BlogEntries.ben_benid = dbo.tblblogben_attachmentdownloads.entryid
+      where dbo.tblblogben_attachmentdownloads.downloaddate between #createodbcdate(startdate)#  and #createodbcdate(enddate)#
       GROUP BY dbo.BlogEntries.ben_benid, dbo.BlogEntries.ben_posted, dbo.BlogEntries.ben_title
       ORDER BY dbo.BlogEntries.ben_posted, dbo.BlogEntries.ben_title
     </cfquery>

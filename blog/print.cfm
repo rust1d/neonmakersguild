@@ -56,7 +56,7 @@
   </div>
 
   <div class="body">
-  #application.blog.renderEntry(entry.body,true,entry.ben_enclosure)#
+  #application.blog.renderEntry(entry.body,true,entry.ben_attachment)#
   #application.blog.renderEntry(entry.ben_morebody,true)#
   </div>
   </cfoutput>

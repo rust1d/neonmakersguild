@@ -42,11 +42,11 @@
 
 But, here ish ow to do it
 
-SELECT     TOP 100 PERCENT dbo.BlogEntries.ben_benid, dbo.BlogEntries.ben_title, dbo.tblblogben_enclosuredownloads.online, COUNT(dbo.tblblogben_enclosuredownloads.entryid) AS TotalDownloads
+SELECT     TOP 100 PERCENT dbo.BlogEntries.ben_benid, dbo.BlogEntries.ben_title, dbo.tblblogben_attachmentdownloads.online, COUNT(dbo.tblblogben_attachmentdownloads.entryid) AS TotalDownloads
 FROM         dbo.BlogEntries INNER JOIN
-                      dbo.tblblogben_enclosuredownloads ON dbo.BlogEntries.ben_benid = dbo.tblblogben_enclosuredownloads.entryid
-where dbo.tblblogben_enclosuredownloads.downloaddate between {d '2008-06-01'} and {d '2008-06-30'}
-GROUP BY dbo.BlogEntries.ben_benid, dbo.BlogEntries.ben_title, dbo.tblblogben_enclosuredownloads.online
+                      dbo.tblblogben_attachmentdownloads ON dbo.BlogEntries.ben_benid = dbo.tblblogben_attachmentdownloads.entryid
+where dbo.tblblogben_attachmentdownloads.downloaddate between {d '2008-06-01'} and {d '2008-06-30'}
+GROUP BY dbo.BlogEntries.ben_benid, dbo.BlogEntries.ben_title, dbo.tblblogben_attachmentdownloads.online
 ORDER BY dbo.BlogEntries.ben_title
 
 ---->

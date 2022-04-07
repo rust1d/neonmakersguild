@@ -23,7 +23,7 @@
     <cfparam name="form.posted" default="#entry.posted#">
     <cfparam name="form.alias" default="#entry.alias#">
     <cfparam name="form.ben_allowcomments" default="#entry.ben_allowcomments#">
-    <cfparam name="form.oldben_enclosure" default="#entry.ben_enclosure#">
+    <cfparam name="form.oldben_attachment" default="#entry.ben_attachment#">
     <cfparam name="form.oldben_filesize" default="#entry.ben_filesize#">
     <cfparam name="form.oldben_mimetype" default="#entry.ben_mimetype#">
     <cfparam name="form.ben_released" default="#entry.ben_released#">
@@ -64,7 +64,7 @@
     <cfparam name="form.alias" default="">
     <cfparam name="form.posted" default="#dateAdd("h", application.blog.getProperty("offset"), now())#">
     <cfparam name="form.ben_allowcomments" default="">
-    <cfparam name="form.oldben_enclosure" default="">
+    <cfparam name="form.oldben_attachment" default="">
     <cfparam name="form.oldben_filesize" default="0">
     <cfparam name="form.oldben_mimetype" default="">
     <!--- default ben_released to false if no perms to release --->
@@ -92,50 +92,50 @@
   <cflocation url="entries.cfm" addtoken="false">
 </cfif>
 
-<cfif isDefined("form.delete_ben_enclosure")>
-  <cfif len(form.oldben_enclosure) and fileExists(form.oldben_enclosure)>
-    <cffile action="delete" file="#form.oldben_enclosure#">
+<cfif isDefined("form.delete_ben_attachment")>
+  <cfif len(form.oldben_attachment) and fileExists(form.oldben_attachment)>
+    <cffile action="delete" file="#form.oldben_attachment#">
   </cfif>
-  <cfset form.oldben_enclosure = "">
+  <cfset form.oldben_attachment = "">
   <cfset form.oldben_filesize = "0">
   <cfset form.oldben_mimetype = "">
   <!--- We need to set a msg to warn folks that they need to save the entry --->
   <cfif url.id is not "new">
-    <cfset message = application.resourceBundle.getResource("ben_enclosureentrywarning")>
+    <cfset message = application.resourceBundle.getResource("ben_attachmententrywarning")>
   </cfif>
 </cfif>
 
 <!---
-ben_enclosure logic move out to always run. Thinking is that it needs to run on preview.
+ben_attachment logic move out to always run. Thinking is that it needs to run on preview.
 --->
-<cfif isDefined("form.ben_enclosure") and len(trim(form.ben_enclosure))>
-  <cfset destination = expandPath("../ben_enclosures")>
+<cfif isDefined("form.ben_attachment") and len(trim(form.ben_attachment))>
+  <cfset destination = expandPath("../ben_attachments")>
   <!--- first off, potentially make the folder --->
   <cfif not directoryExists(destination)>
     <cfdirectory action="create" directory="#destination#">
   </cfif>
 
-  <cffile action="upload" filefield="ben_enclosure" destination="#destination#" nameconflict="makeunique">
+  <cffile action="upload" filefield="ben_attachment" destination="#destination#" nameconflict="makeunique">
   <cfif cffile.filewassaved>
-    <cfset form.oldben_enclosure = cffile.serverDirectory & "/" & cffile.serverFile>
+    <cfset form.oldben_attachment = cffile.serverDirectory & "/" & cffile.serverFile>
     <cfset form.oldben_filesize = cffile.ben_filesize>
     <cfset form.oldben_mimetype = cffile.contenttype & "/" & cffile.contentsubtype>
   </cfif>
-<cfelseif isDefined("form.manualben_enclosure") and len(trim(form.manualben_enclosure))>
-  <cfset destination = expandPath("../ben_enclosures")>
+<cfelseif isDefined("form.manualben_attachment") and len(trim(form.manualben_attachment))>
+  <cfset destination = expandPath("../ben_attachments")>
   <!--- first off, potentially make the folder --->
   <cfif not directoryExists(destination)>
     <cfdirectory action="create" directory="#destination#">
   </cfif>
-  <cfif fileExists(destination & "/" & form.manualben_enclosure)>
-    <cfset form.oldben_enclosure = destination & "/" & form.manualben_enclosure>
-    <cfdirectory action="list" directory="#destination#" filter="#form.manualben_enclosure#" name="getfile">
+  <cfif fileExists(destination & "/" & form.manualben_attachment)>
+    <cfset form.oldben_attachment = destination & "/" & form.manualben_attachment>
+    <cfdirectory action="list" directory="#destination#" filter="#form.manualben_attachment#" name="getfile">
     <cfset form.oldben_filesize = getfile.size>
     <!---
     Thanks: http://www.coldfusionmuse.com/index.cfm/2006/8/2/mime.types
     --->
     <cftry>
-      <cfset form.oldben_mimetype = getPageContext().getServletContext().getben_mimetype(form.oldben_enclosure)>
+      <cfset form.oldben_mimetype = getPageContext().getServletContext().getben_mimetype(form.oldben_attachment)>
       <cfcatch>
         <!--- silently fail for BD.Net --->
       </cfcatch>
@@ -226,13 +226,13 @@ ben_enclosure logic move out to always run. Thinking is that it needs to run on 
   <!---
   The purpose of this code:
 
-  If you try to add an entry with an ben_enclosure and your session timed out,
+  If you try to add an entry with an ben_attachment and your session timed out,
   you get forced back to login.cfm. I can't recreate the form w/ your file upload.
-  So on login.cfm I notice it - and add a special form var named ben_enclosureerror.
+  So on login.cfm I notice it - and add a special form var named ben_attachmenterror.
   I throw an error to the user so he knows to re-pick the file fo rupload.
   --->
-  <cfif structKeyExists(form, "ben_enclosureerror")>
-    <cfset arrayAppend(errors, "Your ben_enclosure was removed because your session timed out. Please upload it again.")>
+  <cfif structKeyExists(form, "ben_attachmenterror")>
+    <cfset arrayAppend(errors, "Your ben_attachment was removed because your session timed out. Please upload it again.")>
   </cfif>
 
   <cfif not arrayLen(errors)>
@@ -250,12 +250,12 @@ ben_enclosure logic move out to always run. Thinking is that it needs to run on 
       </cfif>
       <!--- End: Shane Zehnder --->
 
-      <cfset application.blog.saveEntry(url.id, form.title, form.body, moreText, form.alias, form.posted, form.ben_allowcomments, form.oldben_enclosure, form.oldben_filesize, form.oldben_mimetype, form.ben_released, form.relatedentries, form.sendemail, form.duration, form.subtitle, form.summary, form.keywords )>
+      <cfset application.blog.saveEntry(url.id, form.title, form.body, moreText, form.alias, form.posted, form.ben_allowcomments, form.oldben_attachment, form.oldben_filesize, form.oldben_mimetype, form.ben_released, form.relatedentries, form.sendemail, form.duration, form.subtitle, form.summary, form.keywords )>
     <cfelse>
       <cfif not application.blog.isBlogAuthorized('ReleaseEntries')>
         <cfset form.ben_released = 0>
       </cfif>
-      <cfset url.id = application.blog.addEntry(form.title, form.body, moreText, form.alias, form.posted, form.ben_allowcomments, form.oldben_enclosure, form.oldben_filesize, form.oldben_mimetype, form.ben_released, form.relatedentries, form.sendemail, form.duration, form.subtitle, form.summary, form.keywords )>
+      <cfset url.id = application.blog.addEntry(form.title, form.body, moreText, form.alias, form.posted, form.ben_allowcomments, form.oldben_attachment, form.oldben_filesize, form.oldben_mimetype, form.ben_released, form.relatedentries, form.sendemail, form.duration, form.subtitle, form.summary, form.keywords )>
     </cfif>
     <!--- remove all old cats that arent passed in --->
     <cfif url.id is not "new">
@@ -476,28 +476,28 @@ ben_enclosure logic move out to always run. Thinking is that it needs to run on 
     </cfif>
     <fieldset class="inlineLabels">
     <div class="ctrlHolder">
-      <input type="hidden" name="oldben_enclosure" value="#form.oldben_enclosure#">
+      <input type="hidden" name="oldben_attachment" value="#form.oldben_attachment#">
       <input type="hidden" name="oldben_filesize" value="#form.oldben_filesize#">
       <input type="hidden" name="oldben_mimetype" value="#form.oldben_mimetype#">
-        <cfif len(form.oldben_enclosure)>#listLast(form.oldben_enclosure,"/\")# <input type="submit" name="delete_ben_enclosure" value="#application.resourceBundle.getResource("deleteben_enclosure")#"><br/>
+        <cfif len(form.oldben_attachment)>#listLast(form.oldben_attachment,"/\")# <input type="submit" name="delete_ben_attachment" value="#application.resourceBundle.getResource("deleteben_attachment")#"><br/>
           <!--- JH dotComIT 11/7/07 added download link --->
-          Download Link: <a href="#application.rooturl#/download.cfm/id/#id#/online/1/#urlEncodedFormat(getFileFromPath(oldben_enclosure))#">#application.rooturl#/download.cfm/id/#id#/online/1/#urlEncodedFormat(getFileFromPath(oldben_enclosure))#</a>
+          Download Link: <a href="#application.rooturl#/download.cfm/id/#id#/online/1/#urlEncodedFormat(getFileFromPath(oldben_attachment))#">#application.rooturl#/download.cfm/id/#id#/online/1/#urlEncodedFormat(getFileFromPath(oldben_attachment))#</a>
         <Cfelse>
           Download Link: Won't show up until you save the entry and the UniqueID is generated
         </cfif>
-      <label for="ben_enclosure">ben_enclosure: </label>
-      <input name="ben_enclosure" id="ben_enclosure" size="30" type="file" class="fileUpload" />
+      <label for="ben_attachment">ben_attachment: </label>
+      <input name="ben_attachment" id="ben_attachment" size="30" type="file" class="fileUpload" />
     </div>
     </fieldset>
     <fieldset class="inlineLabels">
     <div class="ctrlHolder">
-      <label for="manualben_enclosure">Manually Set ben_enclosure: </label>
-      <input type="text" name="manualben_enclosure" id="manualben_enclosure" class="textInput">
+      <label for="manualben_attachment">Manually Set ben_attachment: </label>
+      <input type="text" name="manualben_attachment" id="manualben_attachment" class="textInput">
     </div>
     </fieldset>
-    <cfif len(form.oldben_enclosure)>
+    <cfif len(form.oldben_attachment)>
     <div class="ctrlHolder">
-    #listLast(form.oldben_enclosure,"/\")# <input type="submit" name="delete_ben_enclosure" value="#application.resourceBundle.getResource("deleteben_enclosure")#">
+    #listLast(form.oldben_attachment,"/\")# <input type="submit" name="delete_ben_attachment" value="#application.resourceBundle.getResource("deleteben_attachment")#">
     </div>
     </cfif>
     </fieldset>
@@ -662,14 +662,14 @@ ben_enclosure logic move out to always run. Thinking is that it needs to run on 
     </cfloop>
     </div>
 
-    #application.blog.renderEntry(form.body,false,form.oldben_enclosure)#
+    #application.blog.renderEntry(form.body,false,form.oldben_attachment)#
     </div>
     </cfoutput>
 
     <cfoutput>
     <form action="entry.cfm?#cgi.query_string#" method="post">
     <cfloop item="key" collection="#form#">
-      <cfif not listFindNoCase("preview,fieldnames,ben_enclosure,username", key)>
+      <cfif not listFindNoCase("preview,fieldnames,ben_attachment,username", key)>
         <input type="hidden" name="#key#" value="#htmlEditFormat(form[key])#">
       </cfif>
     </cfloop>

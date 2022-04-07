@@ -5,7 +5,7 @@
   Author       : Raymond Camden
   Created      : 04/13/06
   Last Updated : 10/28/06
-  History      : Fix for timeout w/ ben_enclosure (rkc 10/28/06)
+  History      : Fix for timeout w/ ben_attachment (rkc 10/28/06)
 --->
 
 
@@ -20,8 +20,8 @@
 <!--- copy additional fields --->
 <cfloop item="field" collection="#form#">
   <!--- the isSimpleValue is probably a bit much.... --->
-  <cfif field is "ben_enclosure" and len(trim(form.ben_enclosure))>
-    <input type="hidden" name="ben_enclosureerror" value="true">
+  <cfif field is "ben_attachment" and len(trim(form.ben_attachment))>
+    <input type="hidden" name="ben_attachmenterror" value="true">
   <cfelseif not listFindNoCase("username,password", field) and isSimpleValue(form[field])>
     <input type="hidden" name="#field#" value="#htmleditformat(form[field])#">
   </cfif>

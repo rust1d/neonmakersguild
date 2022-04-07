@@ -177,7 +177,7 @@
         <cfinvokeargument name="message" value="#trim(email)#">
         <cfinvokeargument name="subject" value="#subject#">
         <cfinvokeargument name="from" value="#form.email#">
-        <cfif application.commentmoderation>
+        <cfif application.blog.getProperty("moderate")>
           <cfinvokeargument name="adminonly" value="true">
         </cfif>
         <cfinvokeargument name="commentid" value="#commentid#">

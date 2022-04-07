@@ -63,6 +63,10 @@ component accessors=true {
     }
   }
 
+  public BaseModel function find_or_create() {
+    return detect(argumentcollection: arguments) ?: build({});
+  }
+
   public any function load(required BaseModel parent, BaseModel child) {
     if (IsNull(variables.children)) {
       variables.parent = arguments.parent;

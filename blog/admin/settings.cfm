@@ -11,7 +11,7 @@
          : change moderate postings to moderate comments (rkc 4/13/07)
 --->
 
-<cfif not application.settings>
+<cfif not application.blog.getProperty("settings")>
   <cflocation url="index.cfm" addtoken="false">
 </cfif>
 
@@ -27,7 +27,6 @@ function toList(str) {
 
 
 <cfset settings = application.blog.getProperties()>
-<cfset validDBTypes = application.blog.getValidDBTypes()>
 
 <cfloop item="setting" collection="#settings#">
   <cfparam name="form.#setting#" default="#settings[setting]#">
@@ -205,11 +204,7 @@ http://blogcfc.riaforge.org/index.cfm?event=page.issue&issueid=4CEC3A8A-C919-ED1
     <ul>
       <li><label for="dsn">dsn:</label><input type="text" name="dsn" value="#form.dsn#" class="txtField" maxlength="50"></li>
       <li><label for="blogdbtype">blog database type:</label>
-        <select name="blogdbtype">
-        <cfloop index="dbtype" list="#validDBTypes#">
-        <option value="#dbtype#" <cfif form.blogdbtype is dbtype>selected</cfif>>#dbtype#</option>
-        </cfloop>
-        </select>
+        <select name="blogdbtype"><option value="MYSQL">MYSQL</option></select>
       </li>
       <li><label for="dsn_username">dsn username:</label><input type="text" name="dsn_username" value="#form.dsn_username#" class="txtField" maxlength="255"></li>
       <li><label for="dsn_password">dsn password:</label><input type="text" name="dsn_password" value="#form.dsn_password#" class="txtField" maxlength="255"></li>

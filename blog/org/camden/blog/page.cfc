@@ -1,19 +1,10 @@
 <cfcomponent displayName="Page" output="false">
 
-<cfset variables.dsn = "">
-<cfset variables.username = "">
-<cfset variables.password = "">
 <cfset variables.blog = "">
 
 <cffunction name="init" returnType="page" output="false" access="public">
-  <cfargument name="dsn" type="string" required="true">
-  <cfargument name="username" type="string" required="true">
-  <cfargument name="password" type="string" requirred="true">
   <cfargument name="blog" type="string" required="true">
 
-  <cfset variables.dsn = arguments.dsn>
-  <cfset variables.username = arguments.username>
-  <cfset variables.password = arguments.password>
   <cfset variables.blog = arguments.blog>
 
   <cfreturn this>
@@ -22,15 +13,15 @@
 <cffunction name="deletePage" returnType="void" output="false" access="public">
   <cfargument name="id" type="uuid" required="true">
 
-  <cfquery datasource="#variables.dsn#" username="#variables.username#" password="#variables.password#">
+  <cfquery datasource="#application.dsn#" >
   delete from BlogPages
   where  bpa_bpaid = <cfqueryparam cfsqltype="varchar" value="#arguments.id#" maxlength="35">
   and    bpa_blog = <cfqueryparam cfsqltype="varchar" value="#variables.blog#" maxlength="50">
   </cfquery>
 
   <!--- remove all cats --->
-  <cfquery datasource="#variables.dsn#" username="#variables.username#" password="#variables.password#">
-  delete from BlogPagescategories
+  <cfquery datasource="#application.dsn#" >
+  delete from BlogPagesCategories
   where bpc_bpaid = <cfqueryparam cfsqltype="varchar" value="#arguments.id#" maxlength="35">
   </cfquery>
 
@@ -40,13 +31,13 @@
   <cfargument name="id" type="uuid" required="true">
   <cfset var q = "">
 
-  <cfquery name="q" datasource="#variables.dsn#" username="#variables.username#" password="#variables.password#">
+  <cfquery name="q" datasource="#application.dsn#" >
 
 
   select  BlogCategories.bca_bcaid, BlogCategories.bca_category
-  from  BlogCategories, BlogPagescategories
-  where  BlogCategories.bca_bcaid = BlogPagescategories.bpc_bcaid
-  and    BlogPagescategories.bpc_bpaid = <cfqueryparam value="#arguments.id#" cfsqltype="VARCHAR" maxlength="35">
+  from  BlogCategories, BlogPagesCategories
+  where  BlogCategories.bca_bcaid = BlogPagesCategories.bpc_bcaid
+  and    BlogPagesCategories.bpc_bpaid = <cfqueryparam value="#arguments.id#" cfsqltype="VARCHAR" maxlength="35">
   </cfquery>
   <cfreturn q>
 </cffunction>
@@ -56,7 +47,7 @@
   <cfset var q = "">
   <cfset var s = structNew()>
 
-  <cfquery name="q" datasource="#variables.dsn#" username="#variables.username#" password="#variables.password#">
+  <cfquery name="q" datasource="#application.dsn#" >
   select    bpa_bpaid, bpa_blog, bpa_title, bpa_alias, bpa_body, bpa_showlayout
   from    BlogPages
   where    bpa_bpaid = <cfqueryparam cfsqltype="varchar" value="#arguments.id#" maxlength="35">
@@ -81,7 +72,7 @@
   <cfset var q = "">
   <cfset var s = structNew()>
 
-  <cfquery name="q" datasource="#variables.dsn#" username="#variables.username#" password="#variables.password#">
+  <cfquery name="q" datasource="#application.dsn#" >
   select    bpa_bpaid, bpa_blog, bpa_title, bpa_alias, bpa_body, bpa_showlayout
   from    BlogPages
   where    bpa_alias = <cfqueryparam cfsqltype="varchar" value="#arguments.alias#" maxlength="100">
@@ -103,7 +94,7 @@
 <cffunction name="getPages" returnType="query" output="false" access="public">
   <cfset var q = "">
 
-  <cfquery name="q" datasource="#variables.dsn#" username="#variables.username#" password="#variables.password#">
+  <cfquery name="q" datasource="#application.dsn#" >
   select    bpa_bpaidid, bpa_blog, bpa_title, bpa_alias, bpa_body, bpa_showlayout
   from    BlogPages
   where    bpa_blog = <cfqueryparam cfsqltype="varchar" value="#variables.blog#" maxlength="50">
@@ -125,7 +116,7 @@
 
   <cfif arguments.bpa_bpaid is 0>
     <cfset arguments.bpa_bpaid = createUUID()>
-    <cfquery datasource="#variables.dsn#" username="#variables.username#" password="#variables.password#">
+    <cfquery datasource="#application.dsn#" >
     insert into BlogPages(bpa_bpaid, bpa_title, bpa_alias, bpa_body, bpa_blog, bpa_showlayout)
     values(
       <cfqueryparam cfsqltype="varchar" value="#arguments.bpa_bpaid#" maxlength="35">,
@@ -139,7 +130,7 @@
 
   <cfelse>
 
-    <cfquery datasource="#variables.dsn#" username="#variables.username#" password="#variables.password#">
+    <cfquery datasource="#application.dsn#" >
     update BlogPages
     set
     bpa_title = <cfqueryparam cfsqltype="varchar" value="#arguments.bpa_title#" maxlength="255">,
@@ -152,14 +143,14 @@
   </cfif>
 
   <!--- remove all cats --->
-  <cfquery datasource="#variables.dsn#" username="#variables.username#" password="#variables.password#">
-  delete from BlogPagescategories
+  <cfquery datasource="#application.dsn#" >
+  delete from BlogPagesCategories
   where bpc_bpaid = <cfqueryparam cfsqltype="varchar" value="#arguments.id#" maxlength="35">
   </cfquery>
 
   <cfloop index="c" list="#arguments.categories#">
-    <cfquery datasource="#variables.dsn#" username="#variables.username#" password="#variables.password#">
-    insert into BlogPagescategories(bpc_bpaid,bpc_bcaid)
+    <cfquery datasource="#application.dsn#" >
+    insert into BlogPagesCategories(bpc_bpaid,bpc_bcaid)
     values(
       <cfqueryparam cfsqltype="varchar" value="#arguments.id#" maxlength="35">,
       <cfqueryparam cfsqltype="varchar" value="#c#" maxlength="35">

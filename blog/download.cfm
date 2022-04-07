@@ -22,7 +22,7 @@ Date       Modifier                Modification
 <!---- added a default directory to give the option to change it
   This won't work using SES URLs and multiple directory levels deep
 --->
-<cfparam name="url.dir" default="ben_enclosures">
+<cfparam name="url.dir" default="ben_attachments">
 <!---- added to track downloads downloads vs on-line views --->
 <cfparam name="url.online" default="0">
 
@@ -45,19 +45,17 @@ JH DotComIt 5/25/07 want to allow for downloads w/o an Blog Entry ID
   <!--- JH DotComIt 5/25/07
     this is for tracking the download of files not associated with an blog entry--->
   <cfset entry.id = 0>
-  <cfset entry.ben_enclosure = url.file>
+  <cfset entry.ben_attachment = url.file>
 </cfif>
 <!--- End code copied from print.cfm ---->
 
 <!---- Log the download ---->
-<cfset application.downloadtracker.logben_enclosureDownload(entry.id,entry.ben_enclosure,url.dir,url.online)>
+<cfset application.downloadtracker.logben_attachmentDownload(entry.id,entry.ben_attachment,url.dir,url.online)>
 
 <cfoutput>
-  #application.rooturl#/#url.dir#/#urlEncodedFormat(getFileFromPath(entry.ben_enclosure))#
+  #application.rooturl#/#url.dir#/#urlEncodedFormat(getFileFromPath(entry.ben_attachment))#
 </cfoutput>
 
-<cflocation url="#application.rooturl#/#url.dir#/#urlEncodedFormat(getFileFromPath(entry.ben_enclosure))#">
+<cflocation url="#application.rooturl#/#url.dir#/#urlEncodedFormat(getFileFromPath(entry.ben_attachment))#">
 
 <cfsetting enablecfoutputonly=false>
-
-

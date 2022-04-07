@@ -10,7 +10,7 @@
          : Security fix (rkc 3/9/07)
 --->
 
-<cfif not application.filebrowse>
+<cfif not application.blog.getProperty("filebrowse")>
   <cflocation url="index.cfm" addtoken="false">
 </cfif>
 

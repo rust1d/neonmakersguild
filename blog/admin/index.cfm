@@ -14,18 +14,16 @@
 --->
 
 <!--- As with my stats page, this should most likely be abstracted into the CFC. --->
-<cfset dsn = application.blog.getProperty("dsn")>
+
 <cfset blog = application.blog.getProperty("name")>
 <cfset sevendaysago = dateAdd("d", -7, now())>
-<cfset username = application.blog.getProperty("username")>
-<cfset password = application.blog.getProperty("password")>
 
-<cfquery name="topByViews" datasource="#dsn#" maxrows="5">
-select  id, title, views, posted
+<cfquery name="topByViews" datasource="#application.dsn#" maxrows="5">
+select  ben_benid, ben_title, ben_views, ben_posted
 from  BlogEntries
 where   BlogEntries.ben_blog = <cfqueryparam cfsqltype="varchar" value="#blog#">
-and    posted > <cfqueryparam cfsqltype="timestamp" value="#sevendaysago#">
-order by views desc
+and    ben_posted > <cfqueryparam cfsqltype="timestamp" value="#sevendaysago#">
+order by ben_views desc
 </cfquery>
 
 <cfmodule template="../tags/adminlayout.cfm" title="Welcome">
