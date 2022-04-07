@@ -22,19 +22,13 @@ component {
     set_smtp_server();
 
     application.dsn = 'neonmakersguild';
-
     application.email.support = 'support@neonmakersguild.org';
     application.email.supportplus = 'Neon Makers Guild <#application.email.support#>';
-
-    application.paths.local.root = ExpandPath('\');
-    application.paths.local.images = application.paths.local.root & 'assets\images\';
-
-    application.paths.remote.images = application.paths.remote.root & '/assets/images';
-
-    application.settings = {
-      title: 'Neon Makers Guild',
-      failedLogins: 5
-    }
+    application.paths.root = ExpandPath('\');
+    application.paths.images = application.paths.root & 'assets\images\';
+    application.urls.images = application.urls.root & '/assets/images';
+    application.settings.title = 'Neon Makers Guild';
+    application.settings.tiny = 'g2016x44cjzgv7h689qtbieaowb03dksphmy0umsojeab13b';
 
     return true;
   }
@@ -59,7 +53,7 @@ component {
   public boolean function onMissingTemplate(string targetpage) {
     writelog(file: '404', text: '#arguments.targetpage#?#cgi.query_string#');
     new app.services.AdminEmailer(subject: 'onMissingTemplate').send_error(args: arguments);
-    // location(application.paths.remote.root & '/index.cfm', false);
+    // location(application.urls.root & '/index.cfm', false);
 writedump(arguments);
     return true;
   };
@@ -110,7 +104,9 @@ writedump(arguments);
 
     for (key in form.fieldnames.listToArray()) {
       request.unclean[key] = form[key].reReplace('[^\x00-\x7F]', '-', 'all').trim();
-      form[key] = request.unclean[key].reReplace('<[^>]*>', '', 'all').reReplace('[<>]', '?', 'all');
+      form[key] = request.unclean[key];
+      if (listfindNoCase('up_bio,ben_body,ben_morebody', key)) continue;
+      form[key] = form[key].reReplace('<[^>]*>', '', 'all').reReplace('[<>]', '?', 'all');
     }
   }
 
@@ -166,18 +162,18 @@ writedump(arguments);
   private void function setup_development() {
     application.env = 'development';
     application.email.admin = 'john@neonmakersguild.org';
-    application.paths.remote.root = 'http://local.neonmakersguild.org';
+    application.urls.root = 'http://local.neonmakersguild.org';
   }
 
   private void function setup_staging() {
     application.env = 'staging';
     application.email.admin = 'john@neonmakersguild.org';
-    application.paths.remote.root = 'https://staging.neonmakersguild.org';
+    application.urls.root = 'https://staging.neonmakersguild.org';
   }
 
   private void function setup_production() {
     application.env = 'production';
     application.email.admin = 'eve@neonmakersguild.org';
-    application.paths.remote.root = 'https://neonmakersguild.org';
+    application.urls.root = 'https://neonmakersguild.org';
   }
 }

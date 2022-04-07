@@ -16,9 +16,19 @@
             <a class='nav-link dropdown-toggle' href='' id='navbarDropdownMenuLink' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Users</a>
             <ul class='dropdown-menu' aria-labelledby='navbarDropdownMenuLink'>
               <li><a class='dropdown-item' href='#router.href('user/list')#'>List Users</a></li>
-              <li><a class='dropdown-item' href='#router.href('user/edit')#'>Add New User</a></li>
+              <li><a class='dropdown-item' href='#router.href('user/edit')#'>Add User</a></li>
             </ul>
           </li>
+
+          <li class='nav-item ms-4 dropdown'>
+            <a class='nav-link dropdown-toggle' href='' id='navbarDropdownMenuLink' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Blog</a>
+            <ul class='dropdown-menu' aria-labelledby='navbarDropdownMenuLink'>
+              <li><a class='dropdown-item' href='#router.href('blog/home')#'>Home</a></li>
+              <li><a class='dropdown-item' href='#router.href('blog/entry/list')#'>List Entries</a></li>
+              <li><a class='dropdown-item' href='#router.href('blog/entry/edit')#'>Add Entry</a></li>
+            </ul>
+          </li>
+
           <li class='nav-item ms-4 dropdown'>
             <a class='nav-link dropdown-toggle' href='' id='navbarDropdownMenuLink' role='button' data-bs-toggle='dropdown' aria-expanded='false'>News and Events</a>
             <ul class='dropdown-menu' aria-labelledby='navbarDropdownMenuLink'>
@@ -26,6 +36,7 @@
               <li><a class='dropdown-item' href='#router.href('home/events')#'>Events</a></li>
             </ul>
           </li>
+
           <li class='nav-item ms-4 dropdown'>
             <a class='nav-link dropdown-toggle' href='' id='navbarDropdownMenuLink' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Resources</a>
             <ul class='dropdown-menu' aria-labelledby='navbarDropdownMenuLink'>

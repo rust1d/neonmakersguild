@@ -1,13 +1,22 @@
 <cfprocessingdirective pageencoding='utf-8'>
+<!---
+TODO:
+save/remove attach
+comments tab?
+related entries
+cancel
+preview
+--->
+
 <cfscript>
-  param url.id = 0;
+  benid = router.decode('benid');
 
   if (form.keyExists('cancel')) {
     session.user.destroy('saved_post');
     router.redirect('blog/home');
   }
 
-  mBlogEntry = session.user.BlogEntries(find_or_create: { ben_benid: url.id });
+  mBlogEntry = session.user.BlogEntries(find_or_create: { ben_benid: benid });
   if (mBlogEntry.new_record()) {
     mBlogEntry.set(
       ben_released: blog.isBlogAuthorized('ReleaseEntries'),
@@ -18,7 +27,7 @@
 
   if (form.keyExists('btnSubmit')) {
     if (form.newcategory.len() && blog.isBlogAuthorized('AddCategory')) {
-      params = { bec_blog: blog.blogId(), bec_category: form.newcategory }
+      params = { bca_blog: blog.blogId(), bca_category: form.newcategory }
       mBlogCategory = new app.models.BlogCategories();
       mMatches = mBlogCategory.where(params);
       if (mMatches.len()==0) {
@@ -26,124 +35,50 @@
       } else {
         mBlogCategory = mMatches.first();
       }
-      form.categories.listAppend(mBlogCategory.bca_bcaid);
+      param form.categories = '';
+      form.categories = form.categories.listAppend(mBlogCategory.bcaid());
     }
     mBlogEntry.set(form);
     if (mBlogEntry.safe_save()) {
-      mBlogEntry.BlogEntryCategories(replace: form.categories);
+      mBlogEntry.BlogEntryCategories(replace: form.categories ?: '');
       mBlogEntry.RelatedBlogEntries(replace: form.relatedEntries ?: '');
-      router.redirect('blog/entries');
+      flash.success('Your entry was saved.');
+      router.redirect('blog/entry/list');
     }
   }
 
   param form.categories = mBlogEntry.BlogEntryCategories().map(row => row.bec_bcaid()).toList();
+
   qryCats = new app.models.BlogCategories().search();
 
   mode = mBlogEntry.new_record() ? 'Add' : 'Edit';
 </cfscript>
 
-<cfparam name='form.oldben_attachment' default=''>
-<cfparam name='form.oldben_filesize' default='0'>
-<cfparam name='form.oldben_mimetype' default=''>
 <cfparam name='form.sendemail' default='true'>
 <cfparam name='form.newcategory' default=''>
 
 <cfoutput>
   <!--- <script type="text/javascript">
     $(document).ready(function() {
-
-      //create tabs
-      // $("##entrytabs").tabs()
-
-      //handles searching
-      getEntries = function() {
-        $("##entries_dropdown").removeOption(/./);
-        var id = $("##categories_dropdown option:selected").val()
-        if(id==null) id=""
-        var text = $("##titlefilter").val()
-        text = $.trim(text)
-        if(id == "" && text == "") return
-        $("##entries_dropdown").ajaxAddOption("proxy.cfm?category="+id+"&text="+escape(text)+'&rand='+ Math.round(new Date().getTime()),{}, false)
-      }
-
-      $("##titlefilter").keyup(getEntries)
-
-      //listen for select change on related
-      $("##categories_dropdown").change(getEntries)
-
-      $("##entries_dropdown").change(function () {
-        var selid = $("option:selected", $(this)).val()
-        var text = $("option:selected", $(this)).text()
-
-        if($("##cbRelatedEntries").containsOption(selid)) return
-
-        //sets the hidden form field
-        var relEntry = $("##relatedentries")
-        if(relEntry.val() == "") relEntry.val(selid)
-        else relEntry.val(relEntry.val() + "," + selid)
-
-        $("##cbRelatedEntries").addOption(selid,text,false)
-
-      })
-
-      $("##cbRelatedEntries").change(function() {
-        var selid = $("option:selected", $(this)).val()
-
-        if(selid == null) return
-        $("##cbRelatedEntries").removeOption(selid)
-
-        //quickly regen the hidden field
-        var relEntry = $("##relatedentries")
-        relEntry.val('')
-        $("##cbRelatedEntries option").each(function() {
-          var id = $(this).val()
-          if(relEntry.val() == '') relEntry.val(id)
-          else relEntry.val(relEntry.val() + "," + id)
-        })
-      })
-
       $("##uploadImage").click(function() {
-        var imgWin = window.open('#application.paths.remote.root#/admin/imgwin.cfm','imgWin','width=400,height=100,toolbar=0,resizeable=1,menubar=0')
+        var imgWin = window.open('#application.urls.root#/admin/imgwin.cfm','imgWin','width=400,height=100,toolbar=0,resizeable=1,menubar=0')
         return false
-      })
-
+      });
       $("##browseImage").click(function() {
-        var imgBrowse = window.open('#application.paths.remote.root#/admin/imgbrowse.cfm','imgBrowse','width=800,height=800,toolbar=1,resizeable=1,menubar=1,scrollbars=1')
+        var imgBrowse = window.open('#application.urls.root#/admin/imgbrowse.cfm','imgBrowse','width=800,height=800,toolbar=1,resizeable=1,menubar=1,scrollbars=1')
         return false
-      })
-
-
+      });
     })
-
     function newImage(str) {
-      var imgstr = '<img src="#application.paths.local.images#"' + str + '" />';
+      var imgstr = '<img src="#application.paths.images#"' + str + '" />';
       $("##body").val($("##body").val() + '\n' + imgstr)
     }
-
-    //used to save your form info (title/body) in case your browser crashes
-    function saveText() {
-      var titleField = $("##title").val()
-      var bodyField = $("##body").val()
-      var expire = new Date();
-      expire.setDate(expire.getDate()+7);
-      //write title to cookie
-      var cookieString = 'SAVEDTITLE='+escape(titleField)+'; expires='+expire.toGMTString()+'; path=/';
-      document.cookie = cookieString;
-      cookieString = 'SAVEDBODY='+escape(bodyField)+'; expires='+expire.toGMTString()+'; path=/';
-      document.cookie = cookieString;
-      window.setTimeout('saveText()',5000);
-    }
-    <cfif url.id eq 0>window.setTimeout('saveText()',5000);</cfif>
   </script> --->
 
   <section class='container'>
     <div class='row mb-3'>
       <div class='col'>
         <form role='form' method='post' enctype='multipart/form-data'>
-          <input type='hidden' name='oldben_attachment' value='#form.oldben_attachment#'>
-          <input type='hidden' name='oldben_filesize' value='#form.oldben_filesize#'>
-          <input type='hidden' name='oldben_mimetype' value='#form.oldben_mimetype#'>
-
           <div class='card'>
             <h5 class='card-header bg-nmg'>#mode# Entry</h5>
             <div class='card-body border-left border-right'>
@@ -158,7 +93,7 @@
                   <li class='nav-item' role='presentation'>
                     <button class='nav-link' id='related-tab' data-bs-toggle='tab' data-bs-target='##related' type='button' role='tab' aria-controls='related' aria-selected='false'>Related Entries</button>
                   </li>
-                  <cfif url.id neq 0>
+                  <cfif benid neq 0>
                     <li class='nav-item' role='presentation'>
                       <button class='nav-link disabled' id='comments-tab' data-bs-toggle='tab' data-bs-target='##comments' type='button' role='tab' aria-controls='comments' aria-selected='false'>Comments Entries</button>
                     </li>
@@ -175,11 +110,11 @@
                           </div>
                           <div class='col-12'>
                             <label class='form-label required' for='ben_body'>Post (above fold)</label>
-                            <textarea class='form-control' name='ben_body' id='ben_body' rows='5' required>#htmlEditFormat(mBlogEntry.body())#</textarea>
+                            <textarea class='tiny-mce form-control' name='ben_body' id='ben_body' rows='5' required>#htmlEditFormat(mBlogEntry.body())#</textarea>
                           </div>
                           <div class='col-12'>
                             <label class='form-label required' for='ben_morebody'>Post (below fold)</label>
-                            <textarea class='form-control' name='ben_morebody' id='ben_morebody' rows='7' required>#htmlEditFormat(mBlogEntry.morebody())#</textarea>
+                            <textarea class='tiny-mce form-control' name='ben_morebody' id='ben_morebody' rows='7' required>#htmlEditFormat(mBlogEntry.morebody())#</textarea>
                           </div>
                         </div>
                       </div>
@@ -193,7 +128,7 @@
                             <label class='form-label required' for='categories'>Categories</label>
                             <select class='form-control' name='categories' id='categories' multiple='multiple' size='8'>
                               <cfloop query='qryCats'>
-                                <option value='#bca_bcaid#' #ifin(listFind(form.categories,bca_bcaid), 'selected')#>#bca_category#</option>
+                                <option value='#bca_bcaid#' #ifin(listFind(form.categories, bca_bcaid), 'selected')#>#bca_category#</option>
                               </cfloop>
                             </select>
                           </div>
@@ -253,8 +188,8 @@
                             <label class='form-label' for='ben_attachment'>Attachment</label>
                             <input type='file' class='form-control' name='ben_attachment' id='ben_attachment' />
                             <small>
-                              <cfif len(form.oldben_attachment)>
-                                #listLast(form.oldben_attachment,'/\')#
+                              <cfif len(mBlogEntry.attachment())>
+                                #listLast(mBlogEntry.attachment(),'/')#
                                 <input type='button' class='btn btn-warning' name='delete_ben_attachment' value='Delete Attachment'><br/>
                                 Download Link: TODO
                               <cfelse>
@@ -314,7 +249,7 @@
                       </div>
                     </div>
                   </div>
-                  <cfif url.id neq 0>
+                  <cfif benid neq 0>
                     <div class='tab-pane fade' id='comments' role='tabpanel' aria-labelledby='comments-tab'>
                       TODO / TBD
                       <!--- <iframe src='entry_comments.cfm?id=#url.id#' id='commentsFrame' name='commentsFrame' style='width: 100%; min-height: 500px; overflow-y: hidden;' scrolling='false' frameborder='0' marginheight='0' marginwidth='0'></iframe> --->

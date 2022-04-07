@@ -53,7 +53,7 @@ component accessors=true {
     for (var key in arguments.keyList()) qry.append('#key#=#arguments[key]#');
     if (qry.len()) path &= '&' & qry.toList('&');
 
-    return application.paths.remote.root & path;
+    return application.urls.root & path;
   }
 
   public string function hrefenc(string page) {
@@ -211,7 +211,7 @@ component accessors=true {
 
   private string function physical_path(required string partial, boolean shared = false) {
     var path = shared ? default_site : site;
-    return clean(application.paths.local.root & views_path & path & '/' & partial & '.cfm');
+    return clean(application.paths.root & views_path & path & '/' & partial & '.cfm');
   }
 
   private boolean function template_exists(required string partial, boolean shared = false) {

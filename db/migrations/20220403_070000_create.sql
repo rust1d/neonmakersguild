@@ -32,6 +32,8 @@ CREATE TABLE userProfile (
   UNIQUE INDEX (up_usid)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS userImages;
+
 CREATE TABLE userImages (
   ui_uiid        INT(11) NOT NULL AUTO_INCREMENT,
   ui_usid        INT(11) NOT NULL,
@@ -44,6 +46,8 @@ CREATE TABLE userImages (
   PRIMARY KEY (ui_uiid),
   INDEX (ui_usid) USING BTREE
 ) ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS userLinks;
 
 CREATE TABLE userLinks (
   ul_ulid        INT(11) NOT NULL AUTO_INCREMENT,

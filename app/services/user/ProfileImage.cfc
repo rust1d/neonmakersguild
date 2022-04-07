@@ -40,7 +40,7 @@ component accessors=true {
   }
 
   private string function image_src() {
-    return application.paths.remote.root & '/assets/images/profile/' & subfolder() & '/' & image_name();
+    return application.urls.root & '/assets/images/profile/' & subfolder() & '/' & image_name();
   }
 
   private string function path_to_file() {
@@ -48,11 +48,11 @@ component accessors=true {
   }
 
   private string function path_to_folder() {
-    return application.paths.local.root & 'assets\images\profile\' & subfolder() & '\';
+    return application.paths.root & 'assets\images\profile\' & subfolder() & '\';
   }
 
   public string function placeholder_src() {
-    return application.paths.remote.root & '/assets/images/profile_placeholder.png';
+    return application.urls.root & '/assets/images/profile_placeholder.png';
   }
 
   private string function subfolder() {
@@ -60,7 +60,7 @@ component accessors=true {
   }
 
   private string function tmp_dir() {
-    return application.paths.local.root & 'tmp';
+    return application.paths.root & 'tmp';
   }
 
   private boolean function upload() {

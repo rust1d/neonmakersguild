@@ -1,26 +1,9 @@
 <cfscript>
   if (form.keyExists('btnSubmit')) {
-    writedump(request.unclean);
-    mProfile.set(request.unclean);
+    mProfile.set(form);
     mProfile.safe_save();
   }
 </cfscript>
-
-<script>
-  $(function() {
-    var froala_defaults = {
-      key: 'hWA2C-7G2B6D5D4B2F2vD-8ydzfE-13E-13f1vctdskA2ytqaG3C2A5C4C4E3E3D4F2B2==',
-      pluginsEnabled: ['codeView'],
-      codeViewKeepActiveButtons: ['selectAll'],
-      charCounterMax: 4000,
-      heightMin: 200,
-      fontSizeSelection: true,
-      listAdvancedTypes: true,
-      attribution: false
-    }
-    new FroalaEditor('textarea#up_bio', froala_defaults);
-  });
-</script>
 
 <cfoutput>
   <section class='container'>
@@ -50,7 +33,7 @@
                 </div>
                 <div class='col-md-12 mb-3'>
                   <label class='form-label' for='up_bio'>Bio</label>
-                  <textarea class='form-control' name='up_bio' id='up_bio'>#encodeForHTML(mProfile.bio())#</textarea>
+                  <textarea class='tiny-mce form-control' name='up_bio' id='up_bio'>#encodeForHTML(mProfile.bio())#</textarea>
                 </div>
               </div>
               <small><sup><i class='text-xsmall text-danger fa fa-asterisk'></i></sup> indicates a required field</small>

@@ -60,11 +60,11 @@ component extends=BaseModel accessors=true {
   }
 
   private string function local_path() {
-    return application.paths.local.images & '\user\'  & ui_usid % 10 & '\';
+    return application.paths.images & '\user\'  & ui_usid % 10 & '\';
   }
 
   private string function remote_path() {
-    return application.paths.remote.images & '/user/'  & ui_usid % 10 & '/';
+    return application.urls.images & '/user/'  & ui_usid % 10 & '/';
   }
 
   private void function post_destroy(required boolean success) {
@@ -100,7 +100,7 @@ component extends=BaseModel accessors=true {
   private boolean function upload_image() {
     var filefield = 'ui_filename';
     if (len(form.get(filefield))==0) return false; // NO FILE
-    cffile(action: 'upload', filefield: filefield, destination: application.paths.local.root & 'tmp', result: 'result', nameconflict: 'overwrite');
+    cffile(action: 'upload', filefield: filefield, destination: application.paths.root & 'tmp', result: 'result', nameconflict: 'overwrite');
     if (result.fileWasSaved) {
       var filename = result.serverDirectory & '\' & result.serverfile;
       if (isImageFile(filename)) {

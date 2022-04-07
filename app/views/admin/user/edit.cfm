@@ -58,7 +58,7 @@
                   </div>
                   <div class='col-md-12 mb-3'>
                     <label class='form-label' for='up_bio'>Bio</label>
-                    <textarea class='form-control' name='up_bio' id='up_bio'>#encodeForHTML(mProfile.bio())#</textarea>
+                    <textarea class='tiny-mce form-control' name='up_bio' id='up_bio'>#encodeForHTML(mProfile.bio())#</textarea>
                   </div>
                 </cfif>
                 <div class='col-md-6 mb-3'>

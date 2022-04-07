@@ -2,9 +2,9 @@
   <ul>
     <li><a href='#router.href('blog/index')#'>Home</a></li>
     <li><a href='#router.href('blog/entry/edit')#'>Add Entry</a></li>
-    <li><a href='#router.href('blog/entries')#'>Entries</a></li>
+    <li><a href='#router.href('blog/entry/entries')#'>Entries</a></li>
     <cfif blog.isBlogAuthorized('ManageCategories')>
-      <li><a href='#router.href('blog/categories')#'>Categories</a></li>
+      <li><a href='#router.href('blog/category/list')#'>Categories</a></li>
     </cfif>
     <li><a href='#router.href('blog/comments')#'>Comments</a></li>
     <cfif blog.getProperty('moderate')>

@@ -3,6 +3,7 @@ component extends=BaseModel accessors=true {
   property name='bca_blog'      type='numeric'  sqltype='integer';
   property name='bca_category'  type='string'   sqltype='varchar';
   property name='bca_alias'     type='string'   sqltype='varchar';
+  property name='bca_entrycnt'  type='numeric';
 
   public query function search(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;

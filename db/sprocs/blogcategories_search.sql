@@ -9,7 +9,8 @@ CREATE PROCEDURE blogcategories_search(
   IN _alias       varchar(50)
 )
 BEGIN
-  SELECT *
+  SELECT blogcategories.*,
+         (SELECT COUNT(*) FROM blogentriescategories WHERE bec_bcaid=bca_bcaid) AS bca_entrycnt
     FROM blogcategories
    WHERE (_bcaid IS NULL OR bca_bcaid = _bcaid)
      AND (_blog IS NULL OR bca_blog = _blog)
