@@ -65,7 +65,8 @@ component accessors=true {
     } else {
       session.return_to = '';
     }
-    request.router.redirect();
+    session.site.set_site('nmg');
+    request.router.redirect('login/login');
   }
 
   public void function security_check() {

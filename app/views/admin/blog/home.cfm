@@ -3,27 +3,27 @@
     <li><a href='#router.href('blog/index')#'>Home</a></li>
     <li><a href='#router.href('blog/entry/edit')#'>Add Entry</a></li>
     <li><a href='#router.href('blog/entry/entries')#'>Entries</a></li>
-    <cfif blog.isBlogAuthorized('ManageCategories')>
+    <cfif mBlog.isAuthorized('ManageCategories')>
       <li><a href='#router.href('blog/category/list')#'>Categories</a></li>
     </cfif>
     <li><a href='#router.href('blog/comments')#'>Comments</a></li>
-    <cfif blog.getProperty('moderate')>
-      <li><a href='#router.href('blog/moderate')#'>Moderate Comments (#blog.getNumberUnmoderated()#)</a></li>
+    <cfif mBlog.getProperty('moderate')>
+      <li><a href='#router.href('blog/moderate')#'>Moderate Comments (#mBlog.unmoderated_count()#)</a></li>
     </cfif>
     <li><a href='#router.href(page: 'blog/index', reinit: 1)#'>Refresh Blog Cache</a></li>
-    <cfif blog.getProperty("settings")>
+    <cfif mBlog.getProperty("settings")>
       <li><a href='#router.href('blog/settings')#'>Settings</a></li>
     </cfif>
     <li><a href='#router.href('blog/subscribers')#'>Subscribers</a></li>
     <li><a href='#router.href('blog/mailsubscribers')#'>Mail Subscribers</a></li>
-    <cfif blog.isBlogAuthorized('ManageUsers')>
+    <cfif mBlog.isAuthorized('ManageUsers')>
       <li><a href='#router.href('blog/users')#'>Users</a></li>
     </cfif>
   </ul>
-  <cfif blog.isBlogAuthorized('PageAdmin')>
+  <cfif mBlog.isAuthorized('PageAdmin')>
     <ul>
       <li><a href='#router.href('blog/pods')#'>Pod Manager</a></li>
-      <cfif blog.getProperty("filebrowse")>
+      <cfif mBlog.getProperty("filebrowse")>
         <li><a href='#router.href('blog/filemanager')#'>File Manager</a></li>
       </cfif>
       <li><a href='#router.href('blog/pages')#'>Pages</a></li>

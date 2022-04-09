@@ -168,15 +168,15 @@ component accessors=true {
     // INCLUDE ALL THE _include.cfm SCRIPT FILES IN THE PATH LEADING TO THE TEMPLATE
     // ie FOR TEMPLATE "home/college/list.cfm", BOTH "home/_include.cfm" AND "home/college/_include.cfm" WOULD
     // BE INCLUDED (IF FOUND) IN THAT ORDER.
-
-    var parts = getDirectoryFromPath(partial).listToArray('/');
+    var parts = getDirectoryFromPath(partial).listToArray('/').prepend('');
     var path = '';
     var filename = '';
+
     for (var part in parts) {
       path = path.listAppend(part, '/');
-      // include_template
-      if (template_exists(path & '/_include')) {
-        filename = template_path(path & '/_include');
+      if (path!='/') path &= '/';
+      if (template_exists(path & '_include')) {
+        filename = template_path(path & '_include');
         if (not_included(filename)) {
           history.prepend(filename);
           include filename runonce = true;
@@ -228,6 +228,7 @@ component accessors=true {
 
   private string function template_path(required string partial, boolean shared = false) {
     var path = shared ? default_site : site;
-    return views_map & path & '/' & partial & '.cfm';
+    path = views_map & path & '/' & partial & '.cfm';
+    return '/' & listToArray(path, '/').toList('/');
   }
 }

@@ -6,7 +6,7 @@ paging
 filtering
 --->
 <cfscript>
-  arrRows = new app.models.BlogEntries().search(ben_blog: blog.blogId(), maxrows: 50);
+  mEntries = mBlog.entries();
 </cfscript>
 
 <cfoutput>
@@ -34,18 +34,17 @@ filtering
         </tr>
       </thead>
       <tbody>
-        <cfloop array='#utility.query_to_array(arrRows)#' item='row'>
-          <cfset mBlogEntry = new app.models.BlogEntries(row) />
+        <cfloop array='#mEntries#' item='mEntry'>
           <tr>
             <th scope="row">
-              <a href='#router.hrefenc(page: 'blog/entry/edit', benid: mBlogEntry.benid())#' class='btn btn-nmg btn-sm btn-outline-dark'>
+              <a href='#router.hrefenc(page: 'blog/entry/edit', benid: mEntry.benid())#' class='btn btn-nmg btn-sm btn-outline-dark'>
                 <i class='fal fa-pencil'></i>
               </a>
             </th>
-            <td>#mBlogEntry.title()#</td>
-            <td>#mBlogEntry.released()#</td>
-            <td>#mBlogEntry.posted()#</td>
-            <td>#mBlogEntry.views()#</td>
+            <td>#mEntry.title()#</td>
+            <td>#mEntry.released()#</td>
+            <td>#mEntry.posted()#</td>
+            <td>#mEntry.views()#</td>
           </tr>
         </cfloop>
       </tbody>

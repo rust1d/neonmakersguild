@@ -1,12 +1,5 @@
-<!---
-TODO:
-release entry
-sort Categories
-paging
-filtering
---->
 <cfscript>
-  arrRows = new app.models.BlogCategories().search(bca_blog: blog.blogId(), maxrows: 50);
+  arrCategories = mBlog.Categories();
 </cfscript>
 
 <cfoutput>
@@ -26,22 +19,21 @@ filtering
     <table class="table">
       <thead>
         <tr>
-          <th scope="col"><a href='#router.href('blog/entry/edit')#' class='btn btn-nmg btn-sm btn-outline-dark'><i class='fal fa-plus'></i></a></th>
+          <th scope="col"><a href='#router.href('blog/category/edit')#' class='btn btn-nmg btn-sm btn-outline-dark'><i class='fal fa-plus'></i></a></th>
           <th scope="col">Category</th>
           <th scope="col">Entries</th>
         </tr>
       </thead>
       <tbody>
-        <cfloop array='#utility.query_to_array(arrRows)#' item='row'>
-          <cfset mBlogCategory = new app.models.BlogCategories(row) />
+        <cfloop array='#arrCategories#' item='mCategory'>
           <tr>
             <th scope="row">
-              <a href='#router.hrefenc(page: 'blog/category/edit', bcaid: mBlogCategory.bcaid())#' class='btn btn-nmg btn-sm btn-outline-dark'>
+              <a href='#router.hrefenc(page: 'blog/category/edit', bcaid: mCategory.bcaid())#' class='btn btn-nmg btn-sm btn-outline-dark'>
                 <i class='fal fa-pencil'></i>
               </a>
             </th>
-            <td>#mBlogCategory.category()#</td>
-            <td>#mBlogCategory.entryCnt()#</td>
+            <td>#mCategory.category()#</td>
+            <td>#mCategory.entryCnt()#</td>
           </tr>
         </cfloop>
       </tbody>

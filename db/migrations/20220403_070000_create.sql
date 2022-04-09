@@ -16,7 +16,7 @@ CREATE TABLE users (
   UNIQUE INDEX (us_email)
 ) ENGINE=InnoDB;
 
-insert into users (us_user, us_password, us_email, us_permissions) values ('rust1d', '$2a$10$Uf0dppN2Zi94EDz.vC.Y2OLXwDt8c53eMzkY/mRlrkANU2mrGSssm', 'rust1d@usa.net', 2);
+insert into users (us_user, us_password, us_email, us_permissions) values ('maker', '$2a$10$Uf0dppN2Zi94EDz.vC.Y2OLXwDt8c53eMzkY/mRlrkANU2mrGSssm', 'admin@neonmakersguild.org', 2);
 
 DROP TABLE IF EXISTS userProfile;
 

@@ -8,24 +8,6 @@
   height: 168px;
 }
 
-.thumbnail-sm img {
-  width: 118px;
-  height: 118px;
-  padding: 3px;
-}
-
-.thumbnail-md img {
-  width: 160px;
-  height: 160px;
-  padding: 3px;
-}
-
-.thumbnail-lg img {
-  width: 196px;
-  height: 196px;
-  padding: 3px;
-}
-
 #profile_input {
   top: 0;
   left: 0;

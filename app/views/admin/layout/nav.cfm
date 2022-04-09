@@ -13,33 +13,34 @@
             <a class='nav-link active' aria-current='page' href='#router.href()#'><span class='navbar-brand'>#session.site.title()# Admin</span></a>
           </li>
           <li class='nav-item ms-4 dropdown'>
-            <a class='nav-link dropdown-toggle' href='' id='navbarDropdownMenuLink' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Users</a>
-            <ul class='dropdown-menu' aria-labelledby='navbarDropdownMenuLink'>
+            <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Users</a>
+            <ul class='dropdown-menu'>
               <li><a class='dropdown-item' href='#router.href('user/list')#'>List Users</a></li>
               <li><a class='dropdown-item' href='#router.href('user/edit')#'>Add User</a></li>
             </ul>
           </li>
 
           <li class='nav-item ms-4 dropdown'>
-            <a class='nav-link dropdown-toggle' href='' id='navbarDropdownMenuLink' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Blog</a>
-            <ul class='dropdown-menu' aria-labelledby='navbarDropdownMenuLink'>
+            <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Blog</a>
+            <ul class='dropdown-menu'>
               <li><a class='dropdown-item' href='#router.href('blog/home')#'>Home</a></li>
-              <li><a class='dropdown-item' href='#router.href('blog/entry/list')#'>List Entries</a></li>
-              <li><a class='dropdown-item' href='#router.href('blog/entry/edit')#'>Add Entry</a></li>
+              <li><a class='dropdown-item' href='#router.href('blog/entry/list')#'>Entries</a></li>
+              <li><a class='dropdown-item' href='#router.href('blog/category/list')#'>Categories</a></li>
+              <li><a class='dropdown-item' href='#router.href('blog/image/list')#'>Images</a></li>
             </ul>
           </li>
 
           <li class='nav-item ms-4 dropdown'>
-            <a class='nav-link dropdown-toggle' href='' id='navbarDropdownMenuLink' role='button' data-bs-toggle='dropdown' aria-expanded='false'>News and Events</a>
-            <ul class='dropdown-menu' aria-labelledby='navbarDropdownMenuLink'>
+            <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>News and Events</a>
+            <ul class='dropdown-menu'>
               <li><a class='dropdown-item' href='#router.href('home/news')#'>News</a></li>
               <li><a class='dropdown-item' href='#router.href('home/events')#'>Events</a></li>
             </ul>
           </li>
 
           <li class='nav-item ms-4 dropdown'>
-            <a class='nav-link dropdown-toggle' href='' id='navbarDropdownMenuLink' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Resources</a>
-            <ul class='dropdown-menu' aria-labelledby='navbarDropdownMenuLink'>
+            <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Resources</a>
+            <ul class='dropdown-menu'>
               <li><a class='dropdown-item' href='#router.href()#'>Action</a></li>
               <li><a class='dropdown-item' href='#router.href()#'>Another action</a></li>
               <li><a class='dropdown-item' href='#router.href()#'>Something else here</a></li>

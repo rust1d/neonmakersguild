@@ -62,7 +62,7 @@ $(function () {
       dataType: 'json',
       contentType: false,
       processData: false,
-      error: function(err) { console.error(err) },
+      error: function(err) { console.log(err) },
       success: onSuccess
     });
   }

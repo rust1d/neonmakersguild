@@ -9,76 +9,50 @@ preview
 --->
 
 <cfscript>
-  benid = router.decode('benid');
-
   if (form.keyExists('cancel')) {
     session.user.destroy('saved_post');
     router.redirect('blog/home');
   }
 
-  mBlogEntry = session.user.BlogEntries(find_or_create: { ben_benid: benid });
-  if (mBlogEntry.new_record()) {
-    mBlogEntry.set(
-      ben_released: blog.isBlogAuthorized('ReleaseEntries'),
-      ben_posted: now(),
-      ben_blog: blog.blogId()
-    );
-  }
+  mEntry = mBlog.entry_find_or_create(router.decode('benid'));
 
   if (form.keyExists('btnSubmit')) {
-    if (form.newcategory.len() && blog.isBlogAuthorized('AddCategory')) {
-      params = { bca_blog: blog.blogId(), bca_category: form.newcategory }
-      mBlogCategory = new app.models.BlogCategories();
-      mMatches = mBlogCategory.where(params);
-      if (mMatches.len()==0) {
-        mBlogCategory.set(params).safe_save();
+    param form.categories = '';
+    if (len(form.get('bca_category'))) {
+      qry = mBlog.category_search(bca_category: form.bca_category);
+      if (qry.len()) {
+        form.categories = form.categories.listAppend(qry.bac_bcaid);
       } else {
-        mBlogCategory = mMatches.first();
+        mCategory = mBlog.category_build(form);
+        if (mBlog.category_save(mCategory)) form.categories = form.categories.listAppend(mCategory.bcaid());
       }
-      param form.categories = '';
-      form.categories = form.categories.listAppend(mBlogCategory.bcaid());
     }
-    mBlogEntry.set(form);
-    if (mBlogEntry.safe_save()) {
-      mBlogEntry.BlogEntryCategories(replace: form.categories ?: '');
-      mBlogEntry.RelatedBlogEntries(replace: form.relatedEntries ?: '');
+
+    mEntry.set(form);
+    if (mEntry.safe_save()) {
+      mEntry.BlogEntryCategories(replace: form.categories ?: '');
+      mEntry.RelatedBlogEntries(replace: form.relatedEntries ?: '');
       flash.success('Your entry was saved.');
       router.redirect('blog/entry/list');
     }
   }
 
-  param form.categories = mBlogEntry.BlogEntryCategories().map(row => row.bec_bcaid()).toList();
-
+  param form.categories = mEntry.BlogEntryCategories().map(row => row.bec_bcaid()).toList();
   qryCats = new app.models.BlogCategories().search();
-
-  mode = mBlogEntry.new_record() ? 'Add' : 'Edit';
+  mode = mEntry.new_record() ? 'Add' : 'Edit';
 </cfscript>
 
 <cfparam name='form.sendemail' default='true'>
-<cfparam name='form.newcategory' default=''>
+<cfparam name='form.bca_category' default=''>
+
+<script src='/assets/js/admin/blog/entry.js'></script>
+
 
 <cfoutput>
-  <!--- <script type="text/javascript">
-    $(document).ready(function() {
-      $("##uploadImage").click(function() {
-        var imgWin = window.open('#application.urls.root#/admin/imgwin.cfm','imgWin','width=400,height=100,toolbar=0,resizeable=1,menubar=0')
-        return false
-      });
-      $("##browseImage").click(function() {
-        var imgBrowse = window.open('#application.urls.root#/admin/imgbrowse.cfm','imgBrowse','width=800,height=800,toolbar=1,resizeable=1,menubar=1,scrollbars=1')
-        return false
-      });
-    })
-    function newImage(str) {
-      var imgstr = '<img src="#application.paths.images#"' + str + '" />';
-      $("##body").val($("##body").val() + '\n' + imgstr)
-    }
-  </script> --->
-
   <section class='container'>
     <div class='row mb-3'>
       <div class='col'>
-        <form role='form' method='post' enctype='multipart/form-data'>
+        <form role='form' method='post' id='blogform'>
           <div class='card'>
             <h5 class='card-header bg-nmg'>#mode# Entry</h5>
             <div class='card-body border-left border-right'>
@@ -93,7 +67,7 @@ preview
                   <li class='nav-item' role='presentation'>
                     <button class='nav-link' id='related-tab' data-bs-toggle='tab' data-bs-target='##related' type='button' role='tab' aria-controls='related' aria-selected='false'>Related Entries</button>
                   </li>
-                  <cfif benid neq 0>
+                  <cfif mEntry.persisted()>
                     <li class='nav-item' role='presentation'>
                       <button class='nav-link disabled' id='comments-tab' data-bs-toggle='tab' data-bs-target='##comments' type='button' role='tab' aria-controls='comments' aria-selected='false'>Comments Entries</button>
                     </li>
@@ -106,15 +80,15 @@ preview
                         <div class='row g-3'>
                           <div class='col-12'>
                             <label class='form-label required' for='ben_title'>Title</label>
-                            <input type='text' class='form-control' name='ben_title' id='ben_title' value='#htmlEditFormat(mBlogEntry.title())#' maxlength='100' required />
+                            <input type='text' class='form-control' name='ben_title' id='ben_title' value='#htmlEditFormat(mEntry.title())#' maxlength='100' required />
                           </div>
                           <div class='col-12'>
                             <label class='form-label required' for='ben_body'>Post (above fold)</label>
-                            <textarea class='tiny-mce form-control' name='ben_body' id='ben_body' rows='5' required>#htmlEditFormat(mBlogEntry.body())#</textarea>
+                            <textarea class='tiny-mce form-control' name='ben_body' id='ben_body' rows='5'>#htmlEditFormat(mEntry.body())#</textarea>
                           </div>
                           <div class='col-12'>
                             <label class='form-label required' for='ben_morebody'>Post (below fold)</label>
-                            <textarea class='tiny-mce form-control' name='ben_morebody' id='ben_morebody' rows='7' required>#htmlEditFormat(mBlogEntry.morebody())#</textarea>
+                            <textarea class='tiny-mce form-control' name='ben_morebody' id='ben_morebody' rows='7'>#htmlEditFormat(mEntry.morebody())#</textarea>
                           </div>
                         </div>
                       </div>
@@ -122,7 +96,7 @@ preview
                         <div class='row g-3'>
                           <div class='col-12'>
                             <label class='form-label required' for='ben_posted'>Posted</label>
-                            <input type='text' class='form-control' name='ben_posted' id='ben_posted' value='#mBlogEntry.posted().format('mm/dd/yyyy hh:mm')#' maxlength='20' required />
+                            <input type='text' class='form-control' name='ben_posted' id='ben_posted' value='#mEntry.posted()#' maxlength='20' required />
                           </div>
                           <div class='col-12'>
                             <label class='form-label required' for='categories'>Categories</label>
@@ -132,15 +106,24 @@ preview
                               </cfloop>
                             </select>
                           </div>
-                          <cfif blog.isBlogAuthorized('AddCategory')>
+                          <cfif mBlog.isAuthorized('AddCategory')>
                             <div class='col-12'>
-                              <label class='form-label' for='newcategory'>Add New Category</label>
-                              <input type='text' class='form-control' name='newcategory' id='newcategory' value='#htmlEditFormat(form.get('newcategory'))#' maxlength='50' />
+                              <label class='form-label' for='bca_category'>Add New Category</label>
+                              <input type='text' class='form-control' name='bca_category' id='bca_category' value='#htmlEditFormat(form.get('bca_category'))#' maxlength='50' />
                             </div>
                           </cfif>
-                          <div class='col-12 text-center'>
-                            <button type='button' id='uploadImage' class='btn btn-nmg'>Upload and Insert Image</button>
-                            <button type='button' id='browseImage' id='btnPreview' class='btn btn-nmg'>Browse Image Library</button>
+
+                          <div class='col-12'>
+                            <div class='input-group'>
+                              <span class='input-group-text btn-nmg'>Search Images</span>
+                              <input id='imagesearch' type='text' class='form-control' placeholder='Search' maxlength='20' aria-label='Search' aria-describedby='imagesearch'>
+                            </div>
+                          </div>
+
+                          <div class='col-12'>
+                            <div id='imageselect' class='row g-0'>
+                              <div class='col p-1'><img width='128' src='/assets/images/profile_placeholder.png' /></div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -153,13 +136,13 @@ preview
                         <div class='row g-3'>
                           <div class='col-12'>
                             <label class='form-label' for='ben_alias'>Alias</label>
-                            <input type='text' class='form-control' name='ben_alias' id='ben_alias' value='#mBlogEntry.alias()#' maxlength='20' />
+                            <input type='text' class='form-control' name='ben_alias' id='ben_alias' value='#mEntry.alias()#' maxlength='100' />
                           </div>
                           <div class='col-12'>
                             <label class='form-label' for='ben_allowcomments'>Allow Comments</label>
                             <select class='form-control' name='ben_allowcomments' id='ben_allowcomments'>
-                              <option value='true' #ifin(mBlogEntry.allowcomments(), 'selected')#>Yes</option>
-                              <option value='false' #ifin(mBlogEntry.allowcomments(), 'selected')#>No</option>
+                              <option value='true' #ifin(mEntry.allowcomments(), 'selected')#>Yes</option>
+                              <option value='false' #ifin(mEntry.allowcomments(), 'selected')#>No</option>
                             </select>
                           </div>
                           <div class='col-12'>
@@ -171,13 +154,13 @@ preview
                           </div>
                           <div class='col-12'>
                             <label class='form-label' for='ben_released'>Released</label>
-                            <cfif blog.isBlogAuthorized('ReleaseEntries')>
+                            <cfif mBlog.isAuthorized('ReleaseEntries')>
                               <select class='form-control' name='ben_released' id='ben_released'>
-                                <option value='true' #ifin(mBlogEntry.released(), 'selected')#>Yes</option>
-                                <option value='false' #ifin(mBlogEntry.released(), 'selected')#>No</option>
+                                <option value='true' #ifin(mEntry.released(), 'selected')#>Yes</option>
+                                <option value='false' #ifin(mEntry.released(), 'selected')#>No</option>
                               </select>
                             <cfelse>
-                              #yesNoFormat(mBlogEntry.released())#
+                              #yesNoFormat(mEntry.released())#
                             </cfif>
                           </div>
                         </div>
@@ -188,8 +171,8 @@ preview
                             <label class='form-label' for='ben_attachment'>Attachment</label>
                             <input type='file' class='form-control' name='ben_attachment' id='ben_attachment' />
                             <small>
-                              <cfif len(mBlogEntry.attachment())>
-                                #listLast(mBlogEntry.attachment(),'/')#
+                              <cfif len(mEntry.attachment())>
+                                #listLast(mEntry.attachment(),'/')#
                                 <input type='button' class='btn btn-warning' name='delete_ben_attachment' value='Delete Attachment'><br/>
                                 Download Link: TODO
                               <cfelse>
@@ -240,7 +223,7 @@ preview
                           <div class='col-12'>
                             <label class='form-label' for='relatedEntries'>Current Related Entries (click to remove)</label>
                             <select id='relatedEntries' name='relatedEntries' multiple='multiple' size='4' class='form-control'>
-                              <cfloop array='#mBlogEntry.RelatedBlogEntries()#' item='mRBE'>
+                              <cfloop array='#mEntry.RelatedBlogEntries()#' item='mRBE'>
                                 <option value='#mRBE.RelatedBlogEntry().benid()#'>#mRBE.RelatedBlogEntry().title()#</option>
                               </cfloop>
                             </select>
@@ -249,7 +232,7 @@ preview
                       </div>
                     </div>
                   </div>
-                  <cfif benid neq 0>
+                  <cfif mEntry.persisted()>
                     <div class='tab-pane fade' id='comments' role='tabpanel' aria-labelledby='comments-tab'>
                       TODO / TBD
                       <!--- <iframe src='entry_comments.cfm?id=#url.id#' id='commentsFrame' name='commentsFrame' style='width: 100%; min-height: 500px; overflow-y: hidden;' scrolling='false' frameborder='0' marginheight='0' marginwidth='0'></iframe> --->
@@ -260,7 +243,7 @@ preview
               <div class='row mt-3'>
                 <div class='col text-center'>
                   <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-nmg'>Save</button>
-                  <button type='submit' name='btnPreview' id='btnPreview' class='btn btn-nmg'>Preview</button>
+                  <button type='button' name='btnPreview' id='btnPreview' class='btn btn-nmg'>Preview</button>
                   <button type='submit' name='btnCancel' id='btnCancel' class='btn btn-warning' onClick='return confirm("Are you sure you want to cancel this entry?")'>Cancel</button>
                 </div>
               </div>

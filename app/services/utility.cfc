@@ -106,8 +106,10 @@ component {
         img = ImageNew('ram:///temp.jpg');
         return toB64(img);
       }
-    } catch (any err) {} // STILL ERRORS, RETURN BROKEN IMAGE
-    return toB64(ImageNew(application.paths.root & '\assets\images\broken.png'));
+    } catch (any err) {
+      writedump(err);abort;
+     } // STILL ERRORS, RETURN BROKEN IMAGE
+    return toB64(ImageNew(application.paths.root & '\assets\images\image_new.png'));
   }
 
   public string function ifin(required boolean state, string on='selected', string off='') {
@@ -141,6 +143,10 @@ component {
     }
     data.has_more = data.more.len();
     return data;
+  }
+
+  public string function nodomain(required string link) {
+    return link.replace(application.urls.root, '');
   }
 
   public string function ordinalDate(required string data) {
@@ -282,6 +288,15 @@ component {
   public array function slice(required array data, required numeric size) {
     if (data.len()<=size) return data;
     return data.slice(1, size);
+  }
+
+  public string function slug(string data = 'slug') {
+    data = replace(data.lcase(), '&amp;', 'and', 'all');
+    data = reReplace(data, '&[^;]+;', '', 'all');
+    data = reReplace(data,'[^0-9a-zA-Z- ]','','all');
+    data = replace(data,' ','-','all');
+    data = data.listToArray('-').toList('-');
+    return replace(data,' ','-','all');
   }
 
   public string function stringToBase64(required string data) {

@@ -10,7 +10,7 @@ component extends=BaseModel accessors=true {
 
   belongs_to(class: 'Users',  key: 'ui_usid', relation: 'us_usid');
 
-  variables.image_longest_side = 1600; // ALL IMAGES WILL BE RESIZED BEFORE UPLOAD TO CDN
+  variables.image_longest_side = 1200; // ALL IMAGES WILL BE RESIZED BEFORE UPLOAD TO CDN
   variables.thumbnail_size = 300; // ALL IMAGES WILL BE RESIZED BEFORE UPLOAD TO CDN
 
   public query function search(struct params) {
@@ -20,21 +20,30 @@ component extends=BaseModel accessors=true {
     var sproc = new StoredProc(procedure: 'userimages_search', datasource: datasource());
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('ui_uiid'), null: !arguments.keyExists('ui_uiid'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('ui_usid'), null: !arguments.keyExists('ui_usid'));
+    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),    null: !arguments.keyExists('term'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 
     return sproc.execute().getProcResultSets().qry;
   }
 
+  public string function size_mb() {
+    return isNull(variables.ui_size) ? 0 : numberFormat(variables.ui_size/1024/1024, '.0') & ' MB';
+  }
+
+  public string function dimensions() {
+    return isNull(variables.ui_width) ? '' : '#ui_width# x #ui_height#';
+  }
+
   public string function image_src() {
-    return remote_path() & '/' & image_name()
+    return remote_path() & image_name();
   }
 
   public string function image_src64() {
-    return application.utility.imageToBase64(image_src());
+    return utility.imageToBase64(application.urls.root & image_src());
   }
 
   public string function thumbnail_src() {
-    return remote_path() & '/' & thumbnail_name()
+    return remote_path() & thumbnail_name();
   }
 
   // PRIVATE
@@ -87,7 +96,7 @@ component extends=BaseModel accessors=true {
     var info = ImageInfo(img);
     if (info.height > info.width) {
       img.resize(max, '');
-    } else if (info.width > info.height) {
+    } else if (info.width >= info.height) {
       img.resize('', max);
     }
     info = ImageInfo(img);
@@ -95,6 +104,23 @@ component extends=BaseModel accessors=true {
     var pos_y = (info.height - thumbnail_size) / 2;
     img.crop(pos_x, pos_y, thumbnail_size, thumbnail_size);
     return img;
+  }
+
+  private struct function move_final(required string filename) {
+    var img = ImageRead(filename);
+
+    var info = ImageInfo(img);
+    if (info.height > image_longest_side || info.width > image_longest_side) { // ENFORCE MAX DIMENSION
+      img.scaleTofit(image_longest_side, image_longest_side);
+      info = ImageInfo(img);
+    }
+
+    cfimage(action: 'write', source: img, destination: local_path() & image_name(), quality: 1);
+    info.append(GetFileInfo(local_path() & image_name()));
+    img = make_thumbnail(img);
+    cfimage(action: 'write', source: img, destination: local_path() & thumbnail_name(), quality: 1);
+
+    return info;
   }
 
   private boolean function upload_image() {
@@ -109,7 +135,7 @@ component extends=BaseModel accessors=true {
         var info = move_final(filename);
         variables.ui_height = info.height;
         variables.ui_width = info.width;
-        variables.ui_size = result.filesize;
+        variables.ui_size = info.size;
         return true;
       }
       errors().append('Uploaded Image is invalid.');
@@ -117,19 +143,5 @@ component extends=BaseModel accessors=true {
     }
     errors().append('Could not upload #result.clientFile#.');
     return false;
-  }
-
-  private struct function move_final(required string filename) {
-    var img = ImageRead(filename);
-    var info = ImageInfo(img);
-    if (info.height > image_longest_side || info.width > image_longest_side) { // ENFORCE MAX DIMENSION
-      img.scaleTofit(image_longest_side, image_longest_side);
-      info = ImageInfo(img);
-    }
-    cfimage(action: 'write', source: img, destination: local_path() & image_name());
-    img = make_thumbnail(img);
-    cfimage(action: 'write', source: img, destination: local_path() & thumbnail_name());
-
-    return info;
   }
 }

@@ -4,6 +4,7 @@
   if (usid) mUser = mUser.find(usid);
 
   if (form.keyExists('btnSubmit')) {
+    form.us_email = form.us_email.lcase();
     mUser.set(form);
     if (mUser.safe_save()) {
       flash.success('User data saved.')
@@ -31,8 +32,8 @@
             <div class='card-body border-left border-right'>
               <div class='row'>
                 <div class='col-md-6 mb-3'>
-                  <label class='form-label required' for='us_email'>Email Address</label>
-                  <input type='email' class='form-control' name='us_email' id='us_email' value='#encodeForHTML(mUser.email())#' maxlength='50' required />
+                  <label class='form-label #ifin(mUser.new_record(), 'required')#' for='us_user'>Username</label>
+                  <input type='text' class='form-control' name='us_user' id='us_user' value='#encodeForHTML(mUser.user())#' maxlength='50' #ifin(mUser.new_record(), 'required', 'readonly')# />
                 </div>
                 <cfif mUser.new_record()>
                   <div class='col-md-6 mb-3'>
@@ -61,6 +62,10 @@
                     <textarea class='tiny-mce form-control' name='up_bio' id='up_bio'>#encodeForHTML(mProfile.bio())#</textarea>
                   </div>
                 </cfif>
+                <div class='col-md-6 mb-3'>
+                  <label class='form-label required' for='us_email'>Email Address</label>
+                  <input type='email' class='form-control' name='us_email' id='us_email' value='#encodeForHTML(mUser.email())#' maxlength='50' required />
+                </div>
                 <div class='col-md-6 mb-3'>
                   <label class='form-label' for='us_permissions'>Admin Level</label>
                   <select class='form-control' name='us_permissions' id='us_permissions'>

@@ -6,5 +6,13 @@ $(function() {
     toolbar_mode: 'floating',
     tinycomments_mode: 'embedded',
     tinycomments_author: 'Author name',
+    relative_urls : false,
+    remove_script_host : false,
+  });
+
+  $('body').on('click', '.clipable', function() {
+    navigator.clipboard.writeText($(this).data('clip'));
+    var el = $(this).addClass('bg-secondary');
+    setTimeout(() => { el.removeClass('bg-secondary') }, 250);
   });
 });

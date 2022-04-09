@@ -26,7 +26,6 @@ component {
     application.email.supportplus = 'Neon Makers Guild <#application.email.support#>';
     application.paths.root = ExpandPath('\');
     application.paths.images = application.paths.root & 'assets\images\';
-    application.urls.images = application.urls.root & '/assets/images';
     application.settings.title = 'Neon Makers Guild';
     application.settings.tiny = 'g2016x44cjzgv7h689qtbieaowb03dksphmy0umsojeab13b';
 
@@ -47,6 +46,7 @@ component {
     check_reset_app();
     check_user_logout();
     clean_form();
+    check_redirects();
     request.router =  new app.services.router('home', session.site.path());
   };
 
@@ -76,6 +76,28 @@ writedump(arguments);
   };
 
   // PRIVATE
+
+  private void function check_redirects() {
+    if (cgi.request_method=='get' && url.keyExists('redirect') && url.keyExists('id')) {
+      url.delete('redirect');
+      var router =  new app.services.router('home', session.site.path());
+      var enc = router.encode(id:id).listLast('=');
+      if (url.keyExists('author')) {
+        var qry = new app.models.Users().search(us_usid: url.id, us_user: url.author);
+        url.p = 'blog/author';
+        if (qry.len()) url.usid = enc;
+      } else if (url.keyExists('category')) {
+        var qry = new app.models.BlogCategories().search(bca_bcaid: url.id, bca_alias: url.category);
+        url.p = 'blog/category';
+        if (qry.len()) url.bcaid = enc;
+      } else if (url.keyExists('entry')) {
+        var qry = new app.models.BlogEntries().search(ben_benid: url.id, ben_alias: url.entry);
+        url.p = 'blog/entry';
+        if (qry.len()) url.benid = enc;
+      }
+    }
+  }
+
   private void function check_reset_app() {
     if (url.keyExists('resetMyApp')) {
       structClear(application);
@@ -162,18 +184,21 @@ writedump(arguments);
   private void function setup_development() {
     application.env = 'development';
     application.email.admin = 'john@neonmakersguild.org';
-    application.urls.root = 'http://local.neonmakersguild.org';
+    application.urls.root = 'https://local.neonmakersguild.org';
+    application.urls.images = '/assets/images';
   }
 
   private void function setup_staging() {
     application.env = 'staging';
     application.email.admin = 'john@neonmakersguild.org';
     application.urls.root = 'https://staging.neonmakersguild.org';
+    application.urls.images = '/assets/images';
   }
 
   private void function setup_production() {
     application.env = 'production';
     application.email.admin = 'eve@neonmakersguild.org';
     application.urls.root = 'https://neonmakersguild.org';
+    application.urls.images = '/assets/images';
   }
 }

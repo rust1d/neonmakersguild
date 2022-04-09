@@ -9,7 +9,8 @@ CREATE PROCEDURE blogentries_search(
   IN _title       varchar(100),
   IN _posted      datetime,
   IN _alias       varchar(100),
-  IN _released    tinyint(1)
+  IN _released    tinyint(1),
+  IN _bcaid       int(11)
 )
 BEGIN
   SELECT *
@@ -20,7 +21,9 @@ BEGIN
      AND (_title IS NULL OR ben_title = _title)
      AND (_posted IS NULL OR ben_posted = _posted)
      AND (_alias IS NULL OR ben_alias = _alias)
-     AND (_released IS NULL OR ben_released = _released);
+     AND (_released IS NULL OR ben_released = _released)
+     AND (_bcaid IS NULL OR EXISTS (SELECT 1 FROM BlogEntriesCategories WHERE bec_bcaid=_bcaid AND bec_benid=ben_benid))
+  ORDER BY ben_posted DESC;
 END;;
 
 delimiter ;

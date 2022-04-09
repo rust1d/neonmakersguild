@@ -1,5 +1,6 @@
 component {
   public BaseModel function init(struct params, boolean db = false) {
+    variables.utility = application.utility;
     variables._db = {};
     pre_init(argumentcollection: arguments);
     if (arguments.keyExists('params')) {
