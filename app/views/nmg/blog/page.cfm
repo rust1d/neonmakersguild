@@ -1,13 +1,14 @@
 <cfscript>
-  mEntries = mBlog.entries(bca_bcaid: router.decode('bcaid'), maxrows: 5);
+  mPage = mBlog.page_by_alias(url.page);
+  if (mPage.new_record()) {
+
+  }
 </cfscript>
 <cfoutput>
   <section class='container'>
     <div class='row'>
       <div class='col-md-9 border-end'>
-        <cfloop array='#mEntries#' item='mEntry' index='idx'>
-          #router.include('shared/blog/entry', { mEntry: mEntry, fold: true })#
-        </cfloop>
+        #router.include('shared/blog/page', { mPage: mPage })#
       </div>
       <div class='col-md-3 border-start'>
         #router.include('shared/sidebar')#

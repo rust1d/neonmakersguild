@@ -15,16 +15,9 @@
           <li class='nav-item ms-4 dropdown'>
             <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Members</a>
             <ul class='dropdown-menu'>
-              <li><a class='dropdown-item' href='#router.href()#'>Action</a></li>
-              <li><a class='dropdown-item' href='#router.href()#'>Another action</a></li>
-              <li><a class='dropdown-item' href='#router.href()#'>Something else here</a></li>
-            </ul>
-          </li>
-          <li class='nav-item ms-4 dropdown'>
-            <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>News and Events</a>
-            <ul class='dropdown-menu'>
-              <li><a class='dropdown-item' href='#router.href('home/news')#'>News</a></li>
-              <li><a class='dropdown-item' href='#router.href('home/events')#'>Events</a></li>
+              <li><a class='dropdown-item' href='#router.href('member/list')#'>List</a></li>
+              <li><a class='dropdown-item' href='#mBlog.page_seo_link('join')#'>Join</a></li>
+              <!--- <li><a class='dropdown-item' href='#router.href('member/login')#'>Login</a></li> --->
             </ul>
           </li>
           <li class='nav-item ms-4 dropdown'>
@@ -35,6 +28,10 @@
               <li><a class='dropdown-item' href='#router.href()#'>Something else here</a></li>
             </ul>
           </li>
+          <li class='nav-item ms-4'>
+            <a class='nav-link' href='#mBlog.page_seo_link('about')#'>About</a>
+          </li>
+
           <cfif session.user.loggedIn()>
             <li class='nav-item ms-4 dropdown'>
               <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>My Profile</a>
@@ -46,7 +43,6 @@
               </ul>
             </li>
           </cfif>
-
         </ul>
         <ul class='navbar-nav'>
           <cfif session.user.loggedIn()>
@@ -56,7 +52,7 @@
             <li><a class='dropdown-item' href='?logout'>Sign Out</a></li>
           <cfelse>
             <li class='nav-item'>
-              <a class='nav-link' href='#router.href('home/join')#'>Join</a>
+              <a class='nav-link' href='#mBlog.page_seo_link('join')#'>Join</a>
             </li>
             <li class='nav-item'>
               <a class='nav-link' href='#router.href('login/login')#'>Sign In</a>

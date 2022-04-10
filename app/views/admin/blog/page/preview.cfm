@@ -1,7 +1,6 @@
 <cfscript>
-  mEntry = new app.models.BlogEntries(form);
-  flash.info('This is a preview of the `#mEntry.title()#` post.', false);
-
+  mPage = new app.models.BlogPages(request.unclean);
+  flash.info('This is a preview of the `#mPage.title()#` page.', false);
 </cfscript>
 
 <cfoutput>
@@ -16,15 +15,8 @@
                   <div class='col-12 text-center text-uppercase'>
                     <small>Category &bull; Category</small>
                   </div>
-                  <div class='col-12 text-center'>
-                    <h2>#mEntry.title()#</h2>
-                  </div>
-                  <div class='col-12 text-center'>
-                    by #session.user.user()# | #mEntry.posted()#
-                  </div>
                   <div class='col-12'>
-                    #mEntry.body()#
-                    #mEntry.morebody()#
+                    #mPage.body()#
                   </div>
                 </div>
               </div>

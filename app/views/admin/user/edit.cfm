@@ -78,7 +78,7 @@
               <div class='row my-3'>
                 <div class='col text-center'>
                   <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-nmg'>Save</button>
-                  <a href='#router.href('user/list')#' class='btn btn-nmg'>Cancel</a>
+                  <a href='#router.href('user/list')#' class='btn btn-warning'>Cancel</a>
                 </div>
               </div>
             </div>

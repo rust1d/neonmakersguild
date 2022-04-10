@@ -27,6 +27,7 @@
               <li><a class='dropdown-item' href='#router.href('blog/entry/list')#'>Entries</a></li>
               <li><a class='dropdown-item' href='#router.href('blog/category/list')#'>Categories</a></li>
               <li><a class='dropdown-item' href='#router.href('blog/image/list')#'>Images</a></li>
+              <li><a class='dropdown-item' href='#router.href('blog/page/list')#'>Pages</a></li>
             </ul>
           </li>
 

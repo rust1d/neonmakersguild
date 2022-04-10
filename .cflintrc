@@ -87,6 +87,12 @@
 		},
 		{
 			"code": "METHOD_HAS_PREFIX_OR_POSTFIX"
+		},
+		{
+			"code": "FUNCTION_NAME_COLLISION"
+		},
+		{
+			"code": "PARSE_ERROR"
 		}
 	],
 	"includes": [],

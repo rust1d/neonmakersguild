@@ -11,7 +11,7 @@
         </cfloop>
       </div>
       <div class='col-md-3 border-start'>
-        Side Bar Content
+        #router.include('shared/sidebar')#
       </div>
     </div>
   </section>

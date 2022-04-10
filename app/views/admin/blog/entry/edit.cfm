@@ -21,7 +21,7 @@ preview
     if (len(form.get('bca_category'))) {
       qry = mBlog.category_search(bca_category: form.bca_category);
       if (qry.len()) {
-        form.categories = form.categories.listAppend(qry.bac_bcaid);
+        form.categories = form.categories.listAppend(qry.bca_bcaid);
       } else {
         mCategory = mBlog.category_build(form);
         if (mBlog.category_save(mCategory)) form.categories = form.categories.listAppend(mCategory.bcaid());
@@ -57,7 +57,7 @@ preview
             <h5 class='card-header bg-nmg'>#mode# Entry</h5>
             <div class='card-body border-left border-right'>
               <div class='row'>
-                <ul class='nav nav-tabs' id='myTab' role='tablist'>
+                <!--- <ul class='nav nav-tabs' id='myTab' role='tablist'>
                   <li class='nav-item' role='presentation'>
                     <button class='nav-link active' id='main-tab' data-bs-toggle='tab' data-bs-target='##main' type='button' role='tab' aria-controls='main' aria-selected='true'>Main</button>
                   </li>
@@ -72,7 +72,7 @@ preview
                       <button class='nav-link disabled' id='comments-tab' data-bs-toggle='tab' data-bs-target='##comments' type='button' role='tab' aria-controls='comments' aria-selected='false'>Comments Entries</button>
                     </li>
                   </cfif>
-                </ul>
+                </ul> --->
                 <div class='tab-content border-bottom pb-3' id='myTabContent'>
                   <div class='tab-pane fade show active' id='main' role='tabpanel' aria-labelledby='main-tab'>
                     <div class='row mt-3'>
@@ -84,16 +84,20 @@ preview
                           </div>
                           <div class='col-12'>
                             <label class='form-label required' for='ben_body'>Post (above fold)</label>
-                            <textarea class='tiny-mce form-control' name='ben_body' id='ben_body' rows='5'>#htmlEditFormat(mEntry.body())#</textarea>
+                            <textarea class='tiny-mce form-control' name='ben_body' id='ben_body'>#htmlEditFormat(mEntry.body())#</textarea>
                           </div>
                           <div class='col-12'>
                             <label class='form-label required' for='ben_morebody'>Post (below fold)</label>
-                            <textarea class='tiny-mce form-control' name='ben_morebody' id='ben_morebody' rows='7'>#htmlEditFormat(mEntry.morebody())#</textarea>
+                            <textarea class='tiny-mce form-control' name='ben_morebody' id='ben_morebody'>#htmlEditFormat(mEntry.morebody())#</textarea>
                           </div>
                         </div>
                       </div>
                       <div class='col-md-4'>
                         <div class='row g-3'>
+                          <div class='col-12'>
+                            <label class='form-label' for='ben_alias'>Alias</label>
+                            <input type='text' class='form-control' name='ben_alias' id='ben_alias' value='#mEntry.alias()#' maxlength='100' />
+                          </div>
                           <div class='col-12'>
                             <label class='form-label required' for='ben_posted'>Posted</label>
                             <input type='text' class='form-control' name='ben_posted' id='ben_posted' value='#mEntry.posted()#' maxlength='20' required />
@@ -130,14 +134,10 @@ preview
                     </div>
                   </div>
 
-                  <div class='tab-pane fade' id='settings' role='tabpanel' aria-labelledby='settings-tab'>
+                  <!--- <div class='tab-pane fade' id='settings' role='tabpanel' aria-labelledby='settings-tab'>
                     <div class='row mt-3'>
                       <div class='col-md-6'>
                         <div class='row g-3'>
-                          <div class='col-12'>
-                            <label class='form-label' for='ben_alias'>Alias</label>
-                            <input type='text' class='form-control' name='ben_alias' id='ben_alias' value='#mEntry.alias()#' maxlength='100' />
-                          </div>
                           <div class='col-12'>
                             <label class='form-label' for='ben_allowcomments'>Allow Comments</label>
                             <select class='form-control' name='ben_allowcomments' id='ben_allowcomments'>
@@ -164,7 +164,7 @@ preview
                             </cfif>
                           </div>
                         </div>
-                          </div>
+                      </div>
                       <div class='col-md-6'>
                         <div class='row g-3'>
                           <div class='col-12'>
@@ -187,9 +187,9 @@ preview
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> --->
 
-                  <div class='tab-pane fade' id='related' role='tabpanel' aria-labelledby='related-tab'>
+                  <!--- <div class='tab-pane fade' id='related' role='tabpanel' aria-labelledby='related-tab'>
                     <div class='row mt-3'>
                       <div class='col-12'>
                         Use the form below to search for and add related entries to this blog entry. When you relate one blog entry to another, you automatically create a connection from that entry back to this one.
@@ -237,7 +237,7 @@ preview
                       TODO / TBD
                       <!--- <iframe src='entry_comments.cfm?id=#url.id#' id='commentsFrame' name='commentsFrame' style='width: 100%; min-height: 500px; overflow-y: hidden;' scrolling='false' frameborder='0' marginheight='0' marginwidth='0'></iframe> --->
                     </div>
-                  </cfif>
+                  </cfif> --->
                 </div>
               </div>
               <div class='row mt-3'>

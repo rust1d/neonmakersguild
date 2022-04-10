@@ -13,8 +13,9 @@ CREATE PROCEDURE blogentries_search(
   IN _bcaid       int(11)
 )
 BEGIN
-  SELECT *
+  SELECT blogentries.*, us_user AS ben_blogname
     FROM blogentries
+         INNER JOIN users ON us_usid = ben_blog
    WHERE (_benid IS NULL OR ben_benid = _benid)
      AND (_blog IS NULL OR ben_blog = _blog)
      AND (_usid IS NULL OR ben_usid = _usid)

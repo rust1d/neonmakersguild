@@ -77,7 +77,8 @@ CREATE TABLE BlogEntriesCategories (
   bec_benid                             INT(11) NOT NULL,
   bec_bcaid                             INT(11) NOT NULL,
   PRIMARY KEY (bec_becid),
-  KEY(bec_benid, bec_bcaid)
+  KEY(bec_benid),
+  KEY(bec_bcaid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 
@@ -98,10 +99,10 @@ DROP TABLE IF EXISTS BlogPages;
 CREATE TABLE BlogPages (
   bpa_bpaid                             INT(11) NOT NULL AUTO_INCREMENT,
   bpa_blog                              INT(11) NOT NULL,
-  bpa_title                             VARCHAR(255),
+  bpa_title                             VARCHAR(100),
   bpa_alias                             VARCHAR(100),
   bpa_body                              LONGTEXT,
-  bpa_showlayout                        TINYINT(1) NOT NULL default '0',
+  bpa_standalone                        TINYINT(1) NOT NULL default '0',
   PRIMARY KEY (bpa_bpaid),
   KEY(bpa_blog),
   KEY(bpa_alias),
@@ -159,10 +160,11 @@ CREATE TABLE BlogRoles (
 
 INSERT INTO BlogRoles (bro_role, bro_description) VALUES
  ('AddCategory', 'The ability to create a new category when editing a blog entry.'),
- ('ManageCategories', 'The ability to manage blog categories.'),
  ('Admin', 'A special role for the admin. Allows all functionality.'),
+ ('ManageCategories', 'The ability to manage blog categories.'),
  ('ManageUsers', 'The ability to manage blog users.'),
- ('ReleaseEntries', 'The ability to both release a new entry and edit any released entry.');
+ ('ReleaseEntries', 'The ability to both release a new entry and edit any released entry.'),
+ ('PageAdmin', 'The ability to add pages.');
 
 DROP TABLE IF EXISTS BlogUserRoles;
 
@@ -179,12 +181,13 @@ CREATE TABLE BlogUserRoles (
 
 INSERT INTO BlogUserRoles(bur_usid,bur_broid,bur_blog) VALUES (1,3,1);
 
-
 DROP TABLE IF EXISTS BlogPagesCategories;
 
 CREATE TABLE BlogPagesCategories  (
   bpc_bpcid                             INT(11) NOT NULL AUTO_INCREMENT,
-  bpc_bcaid                             INT(11) NOT NULL,
   bpc_bpaid                             INT(11) NOT NULL,
-  PRIMARY KEY (bpc_bpcid)
+  bpc_bcaid                             INT(11) NOT NULL,
+  PRIMARY KEY (bpc_bpcid),
+  KEY(bpc_bpaid),
+  KEY(bpc_bcaid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;

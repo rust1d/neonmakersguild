@@ -20,7 +20,7 @@ component extends=BaseModel accessors=true {
   }
 
   private void function pre_save() {
-    if (len(variables.bca_alias)==0) variables.delete('bca_alias'); // defaults next line
+    if (len(variables?.bca_alias)==0) variables.delete('bca_alias'); // defaults next line
     param variables.bca_alias = variables.bca_category;
     if (this.alias_changed()) {
       variables.bca_alias = utility.slug(bca_alias);

@@ -13,6 +13,8 @@
       </div>
       <div class='col-md-3 border-start'>
         #router.include('shared/user/view', { mUser: mUser })#
+        <hr>
+        #router.include('shared/sidebar')#
       </div>
     </div>
   </section>

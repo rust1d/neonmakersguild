@@ -23,11 +23,9 @@ component accessors=true {
 
   public boolean function category_save(required BlogCategories mCategory) {
     if (mCategory.new_record() && !isAuthorized('AddCategory')) return application.flash.error('Sorry you are not authorized to add categories.');
-
     var matches = mCategory.where(bca_blog: id(), bca_category: mCategory.category());
     if (matches.len()==1 && (mCategory.new_record() || matches[1].bcaid()!=mCategory.bcaid())) return application.flash.error('Category exists.');
     if (matches.len()>1) return application.flash.error('blog.category_save too many rows.');
-
     return mCategory.safe_save();
   }
 
@@ -61,9 +59,9 @@ component accessors=true {
 
   public string function getProperty(required string prop) {
     var props = {
-      'moderate':     true,
-      'settings':     true,
-      'filebrowse':     true
+      'moderate':   true,
+      'settings':   true,
+      'filebrowse': true
     }
     return props.get(prop);
   }
@@ -75,20 +73,52 @@ component accessors=true {
   public boolean function isAuthorized(required string role) {
     variables.roles = {
       addcategory: 1,
-      managecategories: 2,
-      admin: 3,
+      admin: 2,
+      managecategories: 3,
       manageusers: 4,
       releaseentries: 5,
       pageadmin: 6
     }
-    // variables.roles['admin'] = variables.roles['admin'] ?: new app.models.BlogRoles().search(bro_role: 'admin').bro_broid;
-    // variables.roles[role] = variables.roles[role] ?: new app.models.BlogRoles().search(bro_role: role).bro_broid;
     var roles = user_roles(session.user.get_pkid());
     return roles.find(variables.roles[role]) || roles.find(variables.roles['admin']);
   }
 
   public any function onMissingMethod(required string missingMethodName, required struct missingMethodArguments) {
     return invoke(variables.mBlog, missingMethodName, missingMethodArguments);
+  }
+
+  public BlogPages function page_find_or_create(required numeric pkid) {
+    var mdl = new app.models.BlogPages();
+    try {
+      return mdl.find(pkid);
+    } catch (record_not_found err) {
+      return mdl.set({ bpa_blog: id() });
+    }
+  }
+
+  public BlogPages function page_by_alias(required string alias) {
+    var mdl = new app.models.BlogPages().where(bpa_alias: alias);
+    try {
+      return mdl.first();
+    } catch (record_not_found err) {
+      return mdl.set({
+        bpa_blog: id(),
+        bpa_alias: alias,
+        bpa_title: 'Page Not Found'
+       });
+    }
+  }
+
+  public string function page_seo_link(required string alias) {
+    var mdl = page_by_alias(alias);
+    return (mdl.new_record()) ? 'page/404' : mdl.seo_link();
+  }
+
+  public array function pages(struct params) {
+    if (arguments.keyExists('params')) arguments = arguments.params;
+    var args = { bpa_blog: id(), maxrows: 25 }
+    args.append(arguments);
+    return new app.models.BlogPages().where(args);
   }
 
   public numeric function unmoderated_count() {

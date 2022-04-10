@@ -14,10 +14,12 @@ component extends=BaseModel accessors=true {
   property name='ben_views'          type='numeric'  sqltype='integer';
   property name='ben_released'       type='boolean'  sqltype='tinyint'    default='0';
   property name='ben_mailed'         type='numeric'  sqltype='tinyint';
+  property name='ben_blogname'       type='string';
 
   has_many(name: 'BlogEntryCategories',  class: 'BlogEntriesCategories',  key: 'ben_benid',  relation: 'bec_benid');
   has_many(name: 'RelatedBlogEntries',   class: 'BlogEntriesRelated',     key: 'ben_benid',  relation: 'ber_benid');
   belongs_to(name: 'User',               class: 'Users',                  key: 'ben_usid',   relation: 'us_usid');
+  belongs_to(name: 'UserBlog',           class: 'Users',                  key: 'ben_blog',   relation: 'us_usid');
 
   public query function search(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;
@@ -61,6 +63,9 @@ component extends=BaseModel accessors=true {
   }
 
   public string function seo_link() {
-    return '/post/#ben_benid#/#ben_posted.format('yyyy/mm/dd')#/#ben_alias#';
+    if (new_record()) return 'page/404';
+
+    param variables.ben_blogname = this.UserBlog().user();
+    return '/post/#ben_blogname#/#ben_alias#';
   }
 }
