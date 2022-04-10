@@ -1,8 +1,8 @@
 component accessors=true {
   property name='_site'          type='string' default='';
 
-  public CurrentSite function init() {
-    variables._site = url.get('ref') ?: cookie.get('ref') ?: 'nmg';
+  public CurrentSite function init(string site) {
+    variables._site = arguments.site ?: url.get('ref') ?: cookie.get('ref') ?: 'nmg';
     if (valid()) set_cookie();
     return this;
   }

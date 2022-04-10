@@ -3,7 +3,7 @@
 </cfscript>
 <cfoutput>
   <section class='container'>
-    <h2 class='my-4'>Welcome to the Neon Makers Guild!</h2>
+    <h3 class='my-4'>Welcome to the Neon Makers Guild!</h3>
     <div class='row'>
       <div class='col-md-9 border-end'>
         <cfloop array='#mEntries#' item='mEntry' index='idx'>

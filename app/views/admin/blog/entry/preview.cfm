@@ -17,7 +17,7 @@
                     <small>Category &bull; Category</small>
                   </div>
                   <div class='col-12 text-center'>
-                    <h2>#mEntry.title()#</h2>
+                    <h3>#mEntry.title()#</h3>
                   </div>
                   <div class='col-12 text-center'>
                     by #session.user.user()# | #mEntry.posted()#

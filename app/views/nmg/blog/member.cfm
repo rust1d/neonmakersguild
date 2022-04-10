@@ -7,13 +7,13 @@
   <section class='container'>
     <div class='row'>
       <div class='col-md-9 border-end'>
+        #router.include('shared/user/view', { mUser: mUser })#
+
         <cfloop array='#mEntries#' item='mEntry' index='idx'>
           #router.include('shared/blog/entry', { mEntry: mEntry, fold: true })#
         </cfloop>
       </div>
       <div class='col-md-3 border-start'>
-        #router.include('shared/user/view', { mUser: mUser })#
-        <hr>
         #router.include('shared/sidebar')#
       </div>
     </div>

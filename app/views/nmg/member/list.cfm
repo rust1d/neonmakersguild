@@ -1,14 +1,16 @@
 <cfscript>
   mUsers = new app.models.Users().where();
-
-  view = 'list'
 </cfscript>
 
 <script>
   $(function() {
-    $('.view-switch').on('click', function() {
-      $('#view-grid').toggleClass('d-none');
-      $('#view-list').toggleClass('d-none');
+    $('#view-as-grid').on('click', function() {
+      $('#view-list').addClass('d-none');
+      $('#view-grid').removeClass('d-none');
+    });
+    $('#view-as-list').on('click', function() {
+      $('#view-grid').addClass('d-none');
+      $('#view-list').removeClass('d-none');
     });
   });
 </script>
@@ -21,8 +23,8 @@
       </div>
       <div class='col-6 text-end'>
         <div class='btn-group' role='group'>
-          <button type='button' class='view-switch btn btn-nmg'><i class='fad fa-th'></i></button>
-          <button type='button' class='view-switch btn btn-nmg'><i class='fad fa-list'></i></button>
+          <button type='button' id='view-as-grid' class='btn btn-nmg'><i class='fad fa-th'></i></button>
+          <button type='button' id='view-as-list' class='btn btn-nmg'><i class='fad fa-list'></i></button>
         </div>
       </div>
     </div>
@@ -31,7 +33,7 @@
         <cfloop array='#mUsers#' item='mUser'>
           <div class='col-sm-6 col-md-4 col-lg-3'>
             <img class='img-thumbnail w-100 pb-1' src='#mUser.profile_image().src()#' />
-            <a href='#router.hrefenc(page: 'member/view', usid: mUser.usid())#' class='btn btn-nmg btn-sm btn-outline-dark w-100'>
+            <a href='#mUser.seo_link()#' class='btn btn-nmg btn-sm btn-outline-dark w-100'>
               #mUser.UserProfile().firstname()# #mUser.UserProfile().lastname()#
             </a>
           </div>

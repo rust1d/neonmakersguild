@@ -9,9 +9,10 @@ CREATE PROCEDURE blogcategories_search(
   IN _alias       varchar(50)
 )
 BEGIN
-  SELECT blogcategories.*,
+  SELECT blogcategories.*, us_user AS bca_blogname,
          (SELECT COUNT(*) FROM blogentriescategories WHERE bec_bcaid=bca_bcaid) AS bca_entrycnt
     FROM blogcategories
+         INNER JOIN users ON us_usid = bca_blog
    WHERE (_bcaid IS NULL OR bca_bcaid = _bcaid)
      AND (_blog IS NULL OR bca_blog = _blog)
      AND (_category IS NULL OR bca_category = _category)

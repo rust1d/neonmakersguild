@@ -4,6 +4,10 @@ component extends=BaseModel accessors=true {
   property name='bca_category'  type='string'   sqltype='varchar';
   property name='bca_alias'     type='string'   sqltype='varchar';
   property name='bca_entrycnt'  type='numeric';
+  property name='bca_blogname'  type='string';
+
+  belongs_to(name: 'UserBlog',           class: 'Users',                key: 'bca_blog',   relation: 'us_usid');
+
 
   public query function search(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;
@@ -29,5 +33,13 @@ component extends=BaseModel accessors=true {
         errors().append('Category alias #bca_alias# is in use.');
       }
     }
+  }
+
+  public string function seo_link(required string root) {
+    if (new_record()) return 'page/404';
+
+    param variables.bca_blogname = this.UserBlog().user();
+
+    return '/#root#/#bca_blogname#/category/#bca_alias#';
   }
 }

@@ -1,7 +1,7 @@
 component extends=BaseModel accessors=true {
   property name='bpc_bpcid'     type='numeric'  sqltype='integer'  primary_key;
-  property name='bpc_bcaid'     type='numeric'  sqltype='integer';
   property name='bpc_bpaid'     type='numeric'  sqltype='integer';
+  property name='bpc_bcaid'     type='numeric'  sqltype='integer';
   property name='bpc_category'  type='string';
   property name='bpc_alias'     type='string';
   property name='bpc_blogname'  type='string';
@@ -15,7 +15,7 @@ component extends=BaseModel accessors=true {
 
     var sproc = new StoredProc(procedure: 'blogpagescategories_search', datasource: datasource());
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('bpc_bpcid'), null: !arguments.keyExists('bpc_bpcid'));
-    sproc.addParam(cfsqltype: 'integer', value: arguments.get('bpc_benid'), null: !arguments.keyExists('bpc_benid'));
+    sproc.addParam(cfsqltype: 'integer', value: arguments.get('bpc_bpaid'), null: !arguments.keyExists('bpc_bpaid'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('bpc_bcaid'), null: !arguments.keyExists('bpc_bcaid'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 
@@ -29,6 +29,6 @@ component extends=BaseModel accessors=true {
     param variables.bpc_category = this.BlogCategory().category();
     param variables.bpc_alias = this.BlogCategory().alias();
 
-    return '/page/#bpc_bpcid#/#bpc_alias#';
+    return '/page/#bpc_blogname#/category/#bpc_alias#';
   }
 }

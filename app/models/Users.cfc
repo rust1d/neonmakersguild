@@ -54,6 +54,6 @@ component extends=BaseModel accessors=true {
   }
 
   public string function seo_link() {
-    return '/author/#us_usid#/#us_user#';
+    return '/member/#us_user#';
   }
 }

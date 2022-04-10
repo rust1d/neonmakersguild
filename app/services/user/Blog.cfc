@@ -34,7 +34,12 @@ component accessors=true {
     try {
       return mdl.find(pkid)
     } catch (record_not_found err) {
-      return mdl.set({ ben_blog: id(), ben_released: isAuthorized('ReleaseEntries'), ben_posted: now() });
+      return mdl.set({
+        ben_usid: session.user.usid(),
+        ben_blog: id(),
+        ben_released: isAuthorized('ReleaseEntries'),
+        ben_posted: now()
+      });
     }
   }
 
@@ -72,12 +77,12 @@ component accessors=true {
 
   public boolean function isAuthorized(required string role) {
     variables.roles = {
-      addcategory: 1,
-      admin: 2,
-      managecategories: 3,
-      manageusers: 4,
-      releaseentries: 5,
-      pageadmin: 6
+      admin: 1,
+      pageadmin: 2,
+      manageusers: 3,
+      managecategories: 4,
+      addcategory: 5,
+      releaseentries: 6
     }
     var roles = user_roles(session.user.get_pkid());
     return roles.find(variables.roles[role]) || roles.find(variables.roles['admin']);

@@ -8,9 +8,7 @@
               <small>#locals.mEntry.category_links().toList(' &bull; ')#</small>
             </div>
             <div class='col-12 text-center'>
-              <h2>
-                <a href='#locals.mEntry.seo_link()#'>#locals.mEntry.title()#</a>
-              </h2>
+              <h3><a href='#locals.mEntry.seo_link()#'>#locals.mEntry.title()#</a></h3>
             </div>
             <div class='col-12 text-center'>
               by <a href='#locals.mEntry.User().seo_link()#'>#locals.mEntry.User().user()#</a> | #locals.mEntry.posted()#

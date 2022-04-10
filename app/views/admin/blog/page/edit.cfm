@@ -91,7 +91,7 @@
                 <div class='col text-center'>
                   <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-nmg'>Save</button>
                   <button type='button' name='btnPreview' id='btnPreview' class='btn btn-nmg'>Preview</button>
-                  <a href='#router.href('blog/pages/list')#' class='btn btn-warning'>Cancel</a>
+                  <a href='#router.href('blog/page/list')#' class='btn btn-warning'>Cancel</a>
                 </div>
               </div>
             </div>

@@ -32,6 +32,7 @@ component accessors=true {
   private void function redirect_to_site() {
     var href = request.router.href(session.user.get_home());
     if (session.return_to.len()) {
+      writedump(session.return_to);abort;
       href = session.return_to;
       session.return_to = '';
     }

@@ -5,7 +5,7 @@ delimiter ;;
 CREATE PROCEDURE blogentriescategories_search(
   IN _becid    int(11),
   IN _benid    int(11),
-  IN _bcaid    int(11),
+  IN _bcaid    int(11)
 )
 BEGIN
   SELECT blogentriescategories.*,

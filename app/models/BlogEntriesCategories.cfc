@@ -29,6 +29,6 @@ component extends=BaseModel accessors=true {
     param variables.bec_category = this.BlogCategory().category();
     param variables.bec_alias = this.BlogCategory().alias();
 
-    return '/page/category/#bec_blogname#/#bec_alias#';
+    return '/post/#bec_blogname#/category/#bec_alias#';
   }
 }

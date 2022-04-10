@@ -36,7 +36,7 @@ component {
     lock scope='session' type='exclusive' timeout='10' {
       session.started = now();
       session.user = new app.services.CurrentUser();
-      session.site = new app.services.CurrentSite();
+      session.site = new app.services.CurrentSite('nmg');
       session.return_to = '';
     }
   }
@@ -59,8 +59,8 @@ writedump(arguments);
   };
 
   public void function onError(any exception, string eventName) output='true'  {
-    writeLog(text: arguments.eventname, type: 'error', file: 'neonmakersguildErrorLog');
-    writeLog(text: arguments.exception.message, type: 'error', file: 'neonmakersguildErrorLog');
+    // writeLog(text: arguments.eventname, type: 'error', file: 'neonmakersguildErrorLog');
+    // writeLog(text: arguments.exception.message, type: 'error', file: 'neonmakersguildErrorLog');
 
     if (application.isDevelopment) {
       writeDump(arguments);
@@ -90,7 +90,7 @@ writedump(arguments);
           if (url.keyExists('category')) {
             var qry = new app.models.BlogCategories().search(bca_blog: blog_id, bca_alias: url.category);
             if (qry.len()) {
-              url.p = 'blog/category';
+              url.p = url.keyExists('entry') ? 'blog/category_entry' : 'blog/category_page';
               url.bcaid = router.encode(id: qry.bca_bcaid).listLast('=');
             }
           } else if (url.keyExists('entry')) {
@@ -107,11 +107,11 @@ writedump(arguments);
             }
           }
         }
-      } else if (url.keyExists('author')) {
-        var qry = new app.models.Users().search(us_usid: url.id, us_user: url.author);
+      } else if (url.keyExists('user')) {
+        var qry = new app.models.Users().search(us_user: url.user);
         if (qry.len()) {
-          url.p = 'blog/author';
-          url.usid = router.encode(id: qry.us_user).listLast('=');
+          url.p = 'blog/member';
+          url.usid = router.encode(id: qry.us_usid).listLast('=');
         }
       }
     }
@@ -137,6 +137,7 @@ writedump(arguments);
       session.site = new app.services.CurrentSite();
     } else if (url.keyExists('logout') && session.user.loggedIn()) {
       this.onSessionStart();
+      location(application.urls.root & '/index.cfm', false);
     }
   }
 

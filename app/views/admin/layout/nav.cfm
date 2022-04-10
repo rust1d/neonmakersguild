@@ -1,5 +1,5 @@
 <cfoutput>
-  <nav class='navbar navbar-expand-lg navbar-light bg-light'>
+  <nav class='navbar navbar-expand-lg navbar-dark bg-dark'>
     <div class='container-fluid'>
       <a class='navbar-brand' href='#router.href()#'>
         <img src='/assets/images/logo-alt.png'  alt='#session.site.title()# Logo' height='48' class='d-inline-block align-text-top'>
