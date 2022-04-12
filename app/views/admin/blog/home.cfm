@@ -1,7 +1,7 @@
 <cfoutput>
   <ul>
     <li><a href='#router.href('blog/comments')#'>Comments</a></li>
-    <li><a href='#router.href('blog/moderate')#'>Moderate Comments (#mBlog.unmoderated_count()#)</a></li>
+    <li><a href='#router.href('blog/moderate')#'>Moderate Comments</a></li>
     <li><a href='#router.href('blog/settings')#'>Settings</a></li>
     <li><a href='#router.href('blog/subscribers')#'>Subscribers</a></li>
     <li><a href='#router.href('blog/mailsubscribers')#'>Mail Subscribers</a></li>

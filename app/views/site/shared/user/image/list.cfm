@@ -7,8 +7,8 @@
     <div class='card'>
       <div class='card-header bg-nmg'>
         <div class='row'>
-          <div class='col'>
-            <h5>Images</h5>
+          <div class='col fs-5'>
+            Images
           </div>
           <div class='col-auto'>
             <form method='post'>
