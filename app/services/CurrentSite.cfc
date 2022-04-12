@@ -7,6 +7,10 @@ component accessors=true {
     return this;
   }
 
+  public boolean function isA(required string data) {
+    return get_site() == data;
+  }
+
   public string function path() {
     return get_site(); // CAN OVERRIDE IN CHILD
   }

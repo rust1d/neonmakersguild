@@ -22,7 +22,7 @@
       if (file) {
         img = new Image();
         img.onload = function () {
-          $('input[name=ui_filename]').val(file.name);
+          $('input[name=ui_rename]').val(file.name);
           $('input[name=ui_mb]').val(`${(file.size / 1024).toFixed(1)} KB`);
           $('input[name=ui_dimensions]').val(`${this.width} x ${this.height}`);
           URL.revokeObjectURL(this.src);
@@ -118,7 +118,7 @@
                     <div class='col-8' id='file_info'>
                       <div class='input-group input-group-sm mb-1'>
                         <span class='input-group-text w-25 btn-nmg required'>Name</span>
-                        <input type='text' class='form-control' name='ui_filename' required maxlength='100' />
+                        <input type='text' class='form-control' name='ui_rename' required maxlength='100' />
                       </div>
                       <div class='input-group input-group-sm mb-1'>
                         <span class='input-group-text w-25 btn-nmg'>Bytes</span>

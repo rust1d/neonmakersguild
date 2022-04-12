@@ -8,8 +8,7 @@ CREATE PROCEDURE blogpagescategories_search(
   IN _bcaid    int(11)
 )
 BEGIN
-  SELECT blogpagescategories.*,
-         bca_category AS bpc_category, bca_alias AS bpc_alias, us_user AS bpc_blogname
+  SELECT *
     FROM blogpagescategories
          INNER JOIN blogCategories ON bca_bcaid = bpc_bcaid
          INNER JOIN users ON us_usid = bca_blog

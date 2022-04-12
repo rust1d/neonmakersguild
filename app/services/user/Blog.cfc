@@ -150,6 +150,32 @@ component accessors=true {
     return new app.models.BlogPages().where(args);
   }
 
+  public BlogTextBlocks function textblock_find_or_create(required numeric pkid) {
+    var mdl = new app.models.BlogTextBlocks();
+    try {
+      return mdl.find(pkid);
+    } catch (record_not_found err) {
+      return mdl.set({ btb_blog: id() });
+    }
+  }
+
+  public BlogTextBlocks function textblock_by_label(required string label) {
+    var mdl = new app.models.BlogTextBlocks();
+    var matches = mdl.where(btb_label: label);
+    if (matches.len()) return matches.first();
+    return mdl.set({
+      btb_blog: id(),
+      btb_label: label
+    });
+  }
+
+  public array function textblocks(struct params) {
+    if (arguments.keyExists('params')) arguments = arguments.params;
+    var args = { btb_blog: id(), maxrows: 25 }
+    args.append(arguments);
+    return new app.models.BlogTextBlocks().where(args);
+  }
+
   public numeric function unmoderated_count() {
     return new app.models.BlogComments().search(bco_blog: id(), bco_moderated: 0).len();
   }

@@ -7,6 +7,7 @@ component extends=BaseModel accessors=true {
   property name='ui_filename'  type='string'   sqltype='varchar';
   property name='ui_type'      type='string'   sqltype='varchar';
   property name='ui_dla'       type='date';
+  property name='ui_rename'    type='string';
 
   belongs_to(class: 'Users',  key: 'ui_usid', relation: 'us_usid');
 
@@ -100,6 +101,7 @@ component extends=BaseModel accessors=true {
   }
 
   private void function pre_save() {
+    variables.ui_filename = variables.ui_rename ?: variables.ui_filename;
     if (this.filename_changed()) {
       variables.ui_filename = utility.slug(ui_filename);
     }
@@ -146,7 +148,7 @@ component extends=BaseModel accessors=true {
       var filename = result.serverDirectory & '\' & result.serverfile;
       if (isImageFile(filename)) {
         if (!directoryExists(local_path())) directoryCreate(local_path());
-        variables.ui_filename = utility.slug(result.clientfile);
+        variables.ui_filename = utility.slug(variables.ui_rename ?: variables.ui_filename ?: result.clientfile);
         var info = move_final(filename);
         variables.ui_height = info.height;
         variables.ui_width = info.width;

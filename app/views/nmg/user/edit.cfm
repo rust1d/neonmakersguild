@@ -20,11 +20,11 @@
               </div>
               <div class='row'>
                 <div class='col-md-6 mb-3'>
-                  <label class='form-label' for='up_firstname'>First name <sup><i class='text-xsmall text-danger fa fa-asterisk'></i></sup></label>
+                  <label class='form-label' for='up_firstname'>First name</label>
                   <input type='text' class='form-control' name='up_firstname' id='up_firstname' value='#encodeForHTML(mProfile.firstname())#' maxlength='50' />
                 </div>
                 <div class='col-md-6 mb-3'>
-                  <label class='form-label' for='up_lastname'>Last name <sup><i class='text-xsmall text-danger fa fa-asterisk'></i></sup></label>
+                  <label class='form-label' for='up_lastname'>Last name</label>
                   <input type='text' class='form-control' name='up_lastname' id='up_lastname' value='#encodeForHTML(mProfile.lastname())#' maxlength='50' />
                 </div>
                 <div class='col-md-12 mb-3'>
@@ -36,7 +36,6 @@
                   <textarea class='tiny-mce form-control' name='up_bio' id='up_bio'>#encodeForHTML(mProfile.bio())#</textarea>
                 </div>
               </div>
-              <small><sup><i class='text-xsmall text-danger fa fa-asterisk'></i></sup> indicates a required field</small>
               <div class='row my-3'>
                 <div class='col text-center'>
                   <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-nmg'>Save Profile</button>
