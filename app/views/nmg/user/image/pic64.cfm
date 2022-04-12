@@ -1,6 +1,6 @@
 <cfscript>
   if (form.keyExists('uiid')) {
-    mImage = new app.models.UserImages().find(form.uiid);
+    mImage = new app.models.UserImages().find(utility.decode(form.uiid));
     if (mImage.usid()!=session.user.usid()) { // DOES NOT OWN THIS RECORD
       throw('Record not found.', 'record_not_found');
     }

@@ -5,7 +5,7 @@
       if (mImage.usid()!=session.user.usid()) { // DOES NOT OWN THIS RECORD
         throw('Record not found.', 'record_not_found');
       }
-      mImage.destroy(); // HANDLES S3 DELETE
+      mImage.destroy(); // HANDLES FILE DELETE
       request.xhr_data = { 'uiid': form.uiid };
     } else if (form.keyExists('delete')) {
       session.user.profile_image().destroy();

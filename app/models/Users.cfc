@@ -23,6 +23,10 @@ component extends=BaseModel accessors=true {
   has_many(name: 'Entries',      class: 'BlogEntries',     key: 'us_usid',  relation: 'ben_blog');
   has_many(name: 'UserRoles',    class: 'BlogUserRoles',   key: 'us_usid',  relation: 'bur_blog');
 
+  public Blog function blog() {
+    return variables._blog = variables._blog ?: new app.services.user.Blog(us_usid, this);
+  }
+
   public query function search(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;
     if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;

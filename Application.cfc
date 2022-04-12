@@ -13,7 +13,13 @@ component {
     '/site': ExpandPath('/app/views/site'),
     '/cfc': ExpandPath('/assets/cfc'),
     '/services':ExpandPath('/app/services')
-  };
+  }
+
+  // this.javaSettings = {
+  //   LoadPaths: ["/javafiles/"],
+  //   loadColdFusionClassPath: true,
+  //   reloadOnChange: false
+  // }
 
   public boolean function onApplicationStart() {
     set_environment();
@@ -78,43 +84,7 @@ writedump(arguments);
   // PRIVATE
 
   private void function check_redirects() {
-    if (cgi.request_method=='get' && url.keyExists('seo')) {
-      url.delete('seo');
-      url.p = 'blog/page';
-      var router =  new app.services.router('home', session.site.path());
-
-      if (url.keyExists('blog')) {
-        var qry = new app.models.Users().search(us_user: url.blog);
-        if (qry.len()) {
-          var blog_id = qry.us_usid;
-          if (url.keyExists('category')) {
-            var qry = new app.models.BlogCategories().search(bca_blog: blog_id, bca_alias: url.category);
-            if (qry.len()) {
-              url.p = url.keyExists('entry') ? 'blog/category_entry' : 'blog/category_page';
-              url.bcaid = router.encode(id: qry.bca_bcaid).listLast('=');
-            }
-          } else if (url.keyExists('entry')) {
-            qry = new app.models.BlogEntries().search(ben_blog: blog_id, ben_alias: url.entry);
-            if (qry.len()) {
-              url.p = 'blog/entry';
-              url.benid = router.encode(id: qry.ben_benid).listLast('=');
-            }
-          } else if (url.keyExists('page')) {
-            var qry = new app.models.BlogPages().search(bpa_blog: blog_id, bpa_alias: url.page);
-            if (qry.len()) {
-              url.p = 'blog/page';
-              url.bpaid = router.encode(id: qry.bpa_bpaid).listLast('=');
-            }
-          }
-        }
-      } else if (url.keyExists('user')) {
-        var qry = new app.models.Users().search(us_user: url.user);
-        if (qry.len()) {
-          url.p = 'blog/member';
-          url.usid = router.encode(id: qry.us_usid).listLast('=');
-        }
-      }
-    }
+    if (cgi.request_method=='get') new app.services.sites.redirects().perform();
   }
 
   private void function check_reset_app() {

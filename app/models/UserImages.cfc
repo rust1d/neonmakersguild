@@ -46,6 +46,15 @@ component extends=BaseModel accessors=true {
     return remote_path() & thumbnail_name();
   }
 
+  public struct function thumbnail_update() {
+    try {
+      cffile(action: 'upload', filefield: 'thumbnail', destination: local_path() & thumbnail_name(), result: 'result', nameconflict: 'overwrite');
+      return result;
+    } catch (any err) {
+      return err;
+    }
+  }
+
   // PRIVATE
 
   private void function delete_image(required string filefield) {
@@ -61,15 +70,15 @@ component extends=BaseModel accessors=true {
   }
 
   private string function image_name() {
-    return hash(ui_uiid) & '.' & ui_filename.listLast('.');
+    return hash(ui_uiid) & '.jpg' //& ui_filename.listLast('.');
   }
 
   private string function thumbnail_name() {
-    return hash(ui_uiid) & '_tn.' & ui_filename.listLast('.');
+    return hash(ui_uiid) & '_tn.jpg' //& ui_filename.listLast('.');
   }
 
   private string function local_path() {
-    return application.paths.images & '\user\'  & ui_usid % 10 & '\';
+    return application.paths.images & 'user\'  & ui_usid % 10 & '\';
   }
 
   private string function remote_path() {
@@ -87,6 +96,12 @@ component extends=BaseModel accessors=true {
       update_db(); // DIRECTLY CALL UPDATE TO AVOID CALLBACKS
     } else {
       delete_db(); // REMOVE THE RECORD IF IMAGE FAILS
+    }
+  }
+
+  private void function pre_save() {
+    if (this.filename_changed()) {
+      variables.ui_filename = utility.slug(ui_filename);
     }
   }
 
@@ -131,7 +146,7 @@ component extends=BaseModel accessors=true {
       var filename = result.serverDirectory & '\' & result.serverfile;
       if (isImageFile(filename)) {
         if (!directoryExists(local_path())) directoryCreate(local_path());
-        variables.ui_filename = result.clientfile;
+        variables.ui_filename = utility.slug(result.clientfile);
         var info = move_final(filename);
         variables.ui_height = info.height;
         variables.ui_width = info.width;

@@ -12,12 +12,9 @@
           <li class='nav-item'>
             <a class='nav-link active' aria-current='page' href='#router.href()#'><span class='navbar-brand'>#session.site.title()# Admin</span></a>
           </li>
-          <li class='nav-item ms-4 dropdown'>
-            <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Users</a>
-            <ul class='dropdown-menu'>
-              <li><a class='dropdown-item' href='#router.href('user/list')#'>List Users</a></li>
-              <li><a class='dropdown-item' href='#router.href('user/edit')#'>Add User</a></li>
-            </ul>
+
+          <li class='nav-item ms-4'>
+            <a class='nav-link' href='#router.href('user/list')#'>Users</a>
           </li>
 
           <li class='nav-item ms-4 dropdown'>

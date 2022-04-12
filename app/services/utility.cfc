@@ -33,17 +33,21 @@ component {
     return encodeForHTML(data.lcase().rereplace('[^a-z0-9]',' ','all').trim());
   }
 
-  public string function decString(string data = '') {
-    return data.len() ? Decrypt(data, application.secrets.phrase, 'CFMX_COMPAT', 'Hex') : '';
+  public string function decode(string data = '') {
+    if (data.len()==0 || (data.len() MOD 2)!=0) return 0;
+    var chrs = len(data) / 2;
+    var id = Decrypt(data.left(chrs), application.secrets.phrase, 'CFMX_COMPAT', 'Hex');
+    if (data.right(chrs)==hash(id).left(chrs)) return id;
+    return 0;
   }
 
   public string function digits(string data = '') {
     return data.reReplaceNoCase('[^[:digit:]]', '', 'all');
   }
 
-  public string function encString(required string data) {
-    var encoded = Encrypt(data, application.secrets.phrase, 'CFMX_COMPAT','Hex');
-    return URLEncodedFormat(encoded);
+  public string function encode(required string data) {
+    var enc = Encrypt(data, application.secrets.phrase, 'CFMX_COMPAT','Hex');
+    return lcase('#enc##hash(data).left(len(enc))#');
   }
 
   public string function errorString(required any err) {
@@ -64,7 +68,7 @@ component {
     var more = '...';
     if (arguments.keyExists('href')) more &= ' <a href="' & href & '">[more]</a>';
 
-    if (data.mid(size + 1, 1) == ' ') return data.left(size) & more;
+    if (data.mid(size + 1, 1)==' ') return data.left(size) & more;
 
     var space_at = size - data.mid(1,size).reverse().refind('[[:space:]]');
     if (space_at) return data.Left(space_at) & more;
@@ -81,7 +85,7 @@ component {
     var groups = [[]];
     cfloop(index='idx', item='data', array=arr) {
       groups.last().append(data);
-      if (idx mod size == 0 && idx!=arr.len()) groups.append([]);
+      if (idx mod size==0 && idx!=arr.len()) groups.append([]);
     }
     return groups;
   }
@@ -118,11 +122,11 @@ component {
 
   public boolean function isAjax() output=false {
     var headers = getHttpRequestData().headers;
-    return structKeyExists(headers, 'X-Requested-With') && (headers['X-Requested-With'] == 'XMLHttpRequest');
+    return structKeyExists(headers, 'X-Requested-With') && (headers['X-Requested-With']=='XMLHttpRequest');
   }
 
   public boolean function isEmail(string data) {
-    return arguments.keyExists('data') && REFindNoCase('^[A-Z0-9._%+-]+@[\w\.-]+\.[a-zA-Z]{2,32}$', data) == 1;
+    return arguments.keyExists('data') && REFindNoCase('^[A-Z0-9._%+-]+@[\w\.-]+\.[a-zA-Z]{2,32}$', data)==1;
   }
 
   public boolean function isPhone(string data, boolean clean = true) {
@@ -130,9 +134,13 @@ component {
     return isValid('telephone', data);
   }
 
+  public struct function json_content() {
+    return DeserializeJSON(getHTTPRequestData().content);
+  }
+
   public boolean function leftMatch(string data, string part, numeric cnt) {
     if (isNull(data) || isNull(part) || isNull(cnt)) return false;
-    return data.left(cnt) == part.left(cnt);
+    return data.left(cnt)==part.left(cnt);
   }
 
   public struct function moreAfter(required array arr, required numeric limit) {
@@ -291,9 +299,9 @@ component {
   }
 
   public string function slug(string data = 'slug') {
-    data = replace(data.lcase(), '&amp;', 'and', 'all');
-    data = reReplace(data, '&[^;]+;', '', 'all');
-    data = reReplace(data,'[^0-9a-zA-Z- ]','','all');
+    data = replace(data.lcase(), '&amp;', '-', 'all');
+    data = reReplace(data, '&[^;]+;', '-', 'all');
+    data = reReplace(data,'[^0-9a-zA-Z- ]','-','all');
     data = replace(data,' ','-','all');
     data = data.listToArray('-').toList('-');
     return replace(data,' ','-','all');

@@ -1,4 +1,6 @@
 <cfscript>
+  mPage = mBlog.page_by_alias('login');
+
   if (form.keyExists('btnLogin')) {
     new app.services.Login().login(form.username, form.password);
   }
@@ -6,9 +8,10 @@
 
 <cfoutput>
   <section class='container'>
-    <cfset router.include('shared/banner_image') />
-
     <div class='row justify-content-center'>
+      <div class='col-12'>
+        #router.include('shared/blog/page', { mPage: mPage })#
+      </div>
       <div class='col-md-6'>
         <form role='form' method='post'>
           <div class='card'>

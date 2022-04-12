@@ -8,7 +8,7 @@ $(function () {
     const formData = new FormData();
     formData.set('uiid', $('#image_delete').data('uiid'));
     $.post({
-      url: 'xhr.cfm?p=user/images/delete',
+      url: 'xhr.cfm?p=user/image/delete',
       data: formData,
       dataType: 'json',
       contentType: false,
@@ -26,7 +26,7 @@ $(function () {
     const formData = new FormData();
     formData.set('delete', 1);
     $.post({
-      url: 'xhr.cfm?p=user/images/delete',
+      url: 'xhr.cfm?p=user/image/delete',
       data: formData,
       dataType: 'json',
       contentType: false,
@@ -56,7 +56,7 @@ $(function () {
     const formData = new FormData();
     formData.append('uiid', $(obj).data('uiid'));
     $.post({
-      url: 'xhr.cfm?p=user/images/pic64',
+      url: 'xhr.cfm?p=user/image/pic64',
       cache: false,
       data: formData,
       dataType: 'json',
@@ -90,7 +90,7 @@ $(function () {
     formData.append('profile_image', uri_to_blob(resp), 'crop.jpg');
     if (input.files.length) formData.append('ui_filename', input.files[0]);
     $.post({
-      url: 'xhr.cfm?p=user/images/upload',
+      url: 'xhr.cfm?p=user/image/upload',
       cache: false,
       data: formData,
       dataType: 'json',
@@ -111,23 +111,14 @@ $(function () {
     });
   }
 
-  uri_to_blob = function(uri) {
-    const parts = uri.split(',');
-    const mime = parts[0].split(':')[1].split(';')[0];
-    const binary = atob(parts[1]);
-    var data = [];
-    for (var i=0; i<binary.length; i++) data.push(binary.charCodeAt(i));
-    return new Blob([new Uint8Array(data)], { type: mime });
-  }
-
   $('#profile_input').on('change', function() { read_file(this) });
 
-  // $('#image_roll').on('click', 'img', function() {
-  //   read_image(this, function(data) {
-  //     show_cropper();
-  //     $uploader.croppie('bind', { url: data.data });
-  //   });
-  // });
+  $('#image_roll').on('click', 'img', function() {
+    read_image(this, function(data) {
+      show_cropper();
+      $uploader.croppie('bind', { url: data.data });
+    });
+  });
 
   $('#profile_modal').on('hidden.bs.modal', show_picker);
   $('#profile_modal').on('shown.bs.modal', refresh_cropper);

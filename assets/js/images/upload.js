@@ -1,7 +1,7 @@
 
 $(function () {
   var uploader = new plupload.Uploader({
-    url: 'xhr.cfm?p=blog/image/upload',
+    url: 'xhr.cfm?p=user/image/upload',
     filters: {
       chunk_size: '1mb',
       mime_types: [

@@ -20,7 +20,33 @@
   margin-bottom: 48px;
 }
 
+
+.image-crop-wrapper {
+  width: 300px;
+  height: 300px;
+  margin-bottom: 48px;
+}
+
 .image-menu-btn {
   top: -60px;
   right: 10px;
+}
+
+
+.image-crop-btn {
+  bottom: .45rem;
+  right: .45rem;
+  opacity: 0.5!important;
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 20px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+
+.image-crop-btn:hover {
+  opacity:1!important;
 }

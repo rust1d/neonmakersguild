@@ -1,6 +1,6 @@
 component accessors=true {
-  public Blog function init(required numeric blogid) {
-    variables.mBlog = new app.models.Users().find(blogid);
+  public Blog function init(required numeric blogid, Users user) {
+    variables.mBlog = arguments.user ?: new app.models.Users().find(blogid);
     variables.utility = application.utility;
     return this;
   }
@@ -8,6 +8,17 @@ component accessors=true {
   public BlogCategories function category_build(required struct params) {
     params.append({ bca_blog: id() });
     return new app.models.BlogCategories(params);
+  }
+
+  public BlogCategories function category_by_alias(required string alias) {
+    var mdl = new app.models.BlogCategories();
+    var matches = mdl.where(bca_alias: alias);
+    if (matches.len()) return matches.first();
+    return mdl.set({
+      bca_blog: id(),
+      bca_alias: alias,
+      bca_category: 'Category Not Found'
+    });
   }
 
   public BlogCategories function category_find_or_create(required numeric pkid) {
@@ -27,6 +38,17 @@ component accessors=true {
     if (matches.len()==1 && (mCategory.new_record() || matches[1].bcaid()!=mCategory.bcaid())) return application.flash.error('Category exists.');
     if (matches.len()>1) return application.flash.error('blog.category_save too many rows.');
     return mCategory.safe_save();
+  }
+
+  public BlogEntries function entry_by_alias(required string alias) {
+    var mdl = new app.models.BlogEntries();
+    var matches = mdl.where(ben_alias: alias);
+    if (matches.len()) return matches.first();
+    return mdl.set({
+      ben_blog: id(),
+      ben_alias: alias,
+      ben_title: 'Entry Not Found'
+    });
   }
 
   public BlogEntries function entry_find_or_create(required numeric pkid) {
@@ -88,8 +110,23 @@ component accessors=true {
     return roles.find(variables.roles[role]) || roles.find(variables.roles['admin']);
   }
 
+  public string function name() {
+    return mBlog.user();
+  }
+
   public any function onMissingMethod(required string missingMethodName, required struct missingMethodArguments) {
     return invoke(variables.mBlog, missingMethodName, missingMethodArguments);
+  }
+
+  public BlogPages function page_by_alias(required string alias) {
+    var mdl = new app.models.BlogPages();
+    var matches = mdl.where(bpa_alias: alias);
+    if (matches.len()) return matches.first();
+    return mdl.set({
+      bpa_blog: id(),
+      bpa_alias: alias,
+      bpa_title: 'Page Not Found'
+    });
   }
 
   public BlogPages function page_find_or_create(required numeric pkid) {
@@ -98,19 +135,6 @@ component accessors=true {
       return mdl.find(pkid);
     } catch (record_not_found err) {
       return mdl.set({ bpa_blog: id() });
-    }
-  }
-
-  public BlogPages function page_by_alias(required string alias) {
-    var mdl = new app.models.BlogPages().where(bpa_alias: alias);
-    try {
-      return mdl.first();
-    } catch (record_not_found err) {
-      return mdl.set({
-        bpa_blog: id(),
-        bpa_alias: alias,
-        bpa_title: 'Page Not Found'
-       });
     }
   }
 

@@ -68,14 +68,14 @@
                     </div>
                     <cfif mBlog.isAuthorized('AddCategory')>
                       <div class='col-12'>
-                        <label class='form-label' for='bca_category'>Add New Category</label>
+                        <label class='form-label' for='bca_category'>Add Category</label>
                         <input type='text' class='form-control' name='bca_category' id='bca_category' value='#htmlEditFormat(form.get('bca_category'))#' maxlength='50' />
                       </div>
                     </cfif>
                     <div class='col-12'>
                       <div class='input-group'>
                         <span class='input-group-text btn-nmg'>Search Images</span>
-                        <input id='imagesearch' type='text' class='form-control' placeholder='Search' maxlength='20' aria-label='Search' aria-describedby='imagesearch'>
+                        <input id='imagesearch' type='text' class='form-control' placeholder='Search' maxlength='20' data-usid='#mBlog.encoded_key()#'>
                       </div>
                     </div>
                     <div class='col-12'>

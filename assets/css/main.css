@@ -28,12 +28,13 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .text-smallcaps { font-variant: small-caps; }
-
 .text-nmg { color: #5AC5C3!important; }
 .text-nmg-secondary { color: #0c1a19!important; }
 .bg-nmg { background-color: #5AC5C3!important; }
 .bg-nmg-secondary { background-color: #0c1a19!important; }
 .btn-nmg { background-color: #5AC5C3!important; color: #0c1a19 }
+
+.clipped { background-color: cornflowerblue; color: white; }
 
 .container {
   background-color: #ffffff;
@@ -80,4 +81,10 @@ form label.required:after {
   width: 196px;
   height: 196px;
   padding: 3px;
+}
+
+#hidden_input {
+  top: 0;
+  left: 0;
+  opacity: 0;
 }

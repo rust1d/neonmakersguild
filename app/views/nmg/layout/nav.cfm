@@ -28,12 +28,12 @@
           </li>
           <cfif session.user.loggedIn()>
             <li class='nav-item ms-4 dropdown'>
-              <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>My Profile</a>
+              <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Profile</a>
               <ul class='dropdown-menu'>
                 <li><a class='dropdown-item' href='#router.href('user/home')#'>View</a></li>
                 <li><a class='dropdown-item' href='#router.href('user/edit')#'>Edit</a></li>
-                <li><a class='dropdown-item' href='#router.href('user/images')#'>My Images</a></li>
-                <li><a class='dropdown-item' href='#router.href('user/links')#'>My Links</a></li>
+                <li><a class='dropdown-item' href='#router.href('user/image/list')#'>Images</a></li>
+                <li><a class='dropdown-item' href='#router.href('user/links')#'>Links</a></li>
               </ul>
             </li>
           </cfif>

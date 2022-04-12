@@ -24,16 +24,17 @@ $(function() {
 
   $('body').on('click', '.clipable', function() {
     navigator.clipboard.writeText($(this).data('clip'));
-    var el = $(this).addClass('bg-secondary');
-    setTimeout(() => { el.removeClass('bg-secondary') }, 250);
+    var el = $(this).addClass('clipped');
+    setTimeout(() => { el.removeClass('clipped') }, 250);
   });
 
   lookup = function(request, response) {
+    request.usid = $('#imagesearch').data('usid');
     $.post({
-      url: 'xhr.cfm?p=blog/image/json',
+      url: 'xhr.cfm?p=user/image/json',
       contentType: 'application/json',
       dataType: 'json',
-      data: JSON.stringify({ term: request.term }),
+      data: JSON.stringify(request),
       success: function(data) {
         fill_select(data.data);
       }
@@ -50,6 +51,14 @@ $(function() {
     }
   }
 
-  $imagesearch = $('#imagesearch');
-  $imagesearch.autocomplete({ minLength: 2, source: lookup, delay: 500 });
+  uri_to_blob = function(uri) {
+    const parts = uri.split(',');
+    const mime = parts[0].split(':')[1].split(';')[0];
+    const binary = atob(parts[1]);
+    var data = [];
+    for (var i=0; i<binary.length; i++) data.push(binary.charCodeAt(i));
+    return new Blob([new Uint8Array(data)], { type: mime });
+  }
+
+  $('#imagesearch').autocomplete({ minLength: 2, source: lookup, delay: 500 });
 });

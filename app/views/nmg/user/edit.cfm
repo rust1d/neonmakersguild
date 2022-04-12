@@ -15,7 +15,7 @@
             <div class='card-body border-left border-right'>
               <div class='row'>
                 <div class='col-md-12'>
-                  <cfset router.include('user/images/pic') />
+                  <cfset router.include('user/image/pic') />
                 </div>
               </div>
               <div class='row'>

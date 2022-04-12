@@ -52,6 +52,10 @@ component {
     return changed;
   }
 
+  public string function encoded_key() {
+    return utility.encode(primary_key());
+  }
+
   public array function errors() {
     param variables._errors=[];
 
@@ -146,7 +150,7 @@ component {
   }
 
   public any function primary_key() {
-    return variables['get' & primary_key_field()]();
+    return invoke(this, 'get' & primary_key_field());
   }
 
   public void function reload() {
@@ -346,7 +350,7 @@ component {
 
   private void function set_field(required struct field, required any value) {
     try {
-      variables['set' & field.name](value);
+      invoke(this, 'set' & field.name, [value]);
     } catch (any err) {
       if (err.type.contains('CFTypeValidatorFactory')) {
         errors().append('Field #field.name# could not be validated as #field.validate# for value `#value#`.');

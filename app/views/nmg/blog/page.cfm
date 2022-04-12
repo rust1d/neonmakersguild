@@ -1,8 +1,5 @@
 <cfscript>
-  mPage = mBlog.page_by_alias(url.page);
-  if (mPage.new_record()) {
-
-  }
+  mPage = mBlog.page_by_alias(url.page ?: '');
 </cfscript>
 <cfoutput>
   <section class='container'>

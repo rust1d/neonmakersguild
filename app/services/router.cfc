@@ -16,10 +16,7 @@ component accessors=true {
   }
 
   public numeric function decode(string key='id', struct data=url) {
-    if (data.keyExists(key) && data[key].listLen('|')==2) {
-      var id = Decrypt(listFirst(data[key],'|'), application.secrets.phrase, 'CFMX_COMPAT', 'Hex');
-      if (data[key].listLast('|') == hash(id,'SHA-512').left(50)) return id;
-    }
+    if (data.keyExists(key)) return application.utility.decode(data[key]);
     return 0;
   }
 
@@ -38,8 +35,8 @@ component accessors=true {
     var rtn = [];
     for (var key in keys) {
       var data = arguments[key];
-      var enc = Encrypt(data, application.secrets.phrase, 'CFMX_COMPAT','Hex');
-      rtn.append('#key#=#enc#|#hash(data,'SHA-512').left(50)#');
+      var enc = application.utility.encode(data);
+      rtn.append('#key#=#enc#');
     }
     return rtn.toList('&');
   }

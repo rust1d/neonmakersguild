@@ -1,19 +1,7 @@
 <cfscript>
   mUsers = new app.models.Users().where();
+  view = session.user.gets('view');
 </cfscript>
-
-<script>
-  $(function() {
-    $('#view-as-grid').on('click', function() {
-      $('#view-list').addClass('d-none');
-      $('#view-grid').removeClass('d-none');
-    });
-    $('#view-as-list').on('click', function() {
-      $('#view-grid').addClass('d-none');
-      $('#view-list').removeClass('d-none');
-    });
-  });
-</script>
 
 <cfoutput>
   <section class='container'>
@@ -22,25 +10,15 @@
         <h4>Members</h4>
       </div>
       <div class='col-6 text-end'>
-        <div class='btn-group' role='group'>
-          <button type='button' id='view-as-grid' class='btn btn-nmg'><i class='fad fa-th'></i></button>
-          <button type='button' id='view-as-list' class='btn btn-nmg'><i class='fad fa-list'></i></button>
-        </div>
-      </div>
-    </div>
-    <div id='view-grid'>
-      <div class='row'>
-        <cfloop array='#mUsers#' item='mUser'>
-          <div class='col-sm-6 col-md-4 col-lg-3'>
-            <img class='img-thumbnail w-100 pb-1' src='#mUser.profile_image().src()#' />
-            <a href='#mUser.seo_link()#' class='btn btn-nmg btn-sm btn-outline-dark w-100'>
-              #mUser.UserProfile().firstname()# #mUser.UserProfile().lastname()#
-            </a>
+        <form method='post'>
+          <div class='btn-group' role='group'>
+            <button type='#ifin(view=='grid', 'button', 'submit')#' name='btnView' value='grid' class='btn btn-nmg'><i class='#ifin(view=='grid', 'text-warning')# fad fa-th '></i></button>
+            <button type='#ifin(view!='grid', 'button', 'submit')#' name='btnView' value='list' class='btn btn-nmg'><i class='#ifin(view!='grid', 'text-warning')# fad fa-list'></i></button>
           </div>
-        </cfloop>
+        </form>
       </div>
     </div>
-    <div id='view-list' class='d-none'>
+    <cfif view=='list'>
       <cfloop array='#mUsers#' item='mUser'>
         <div class='row p-2 my-2 border'>
           <div class='col-2'>
@@ -57,6 +35,19 @@
           </div>
         </div>
       </cfloop>
-    </div>
+    <cfelse>
+      <div class='row g-4'>
+        <cfloop array='#mUsers#' item='mUser'>
+          <div class='col-6 col-md-4 col-lg-3 col-xl-2'>
+            <a href='#mUser.seo_link()#'>
+              <img class='img-thumbnail w-100' src='#mUser.profile_image().src()#' />
+            </a>
+            <a href='#mUser.seo_link()#' class='btn btn-nmg btn-sm btn-outline-dark w-100 mt-1'>
+              #mUser.UserProfile().firstname()# #mUser.UserProfile().lastname()#
+            </a>
+          </div>
+        </cfloop>
+      </div>
+    </cfif>
   </section>
 </cfoutput>
