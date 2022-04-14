@@ -1,6 +1,7 @@
 <cfscript>
   mPage = mBlog.page_by_alias(url.page ?: '');
 </cfscript>
+
 <cfoutput>
   <section class='container'>
     <div class='row'>

@@ -50,7 +50,7 @@
                   <div class='row mb-3'>
                     <div id='image_roll' class='col-12 text-center thumbnail-sm'>
                       <cfloop array='#mUser.UserImages()#' item='mImage' index='idx'>
-                        <img class='image-roll' src='#mImage.thumbnail_src()#' data-uiid='#mImage.uiid()#' style='#ifin(idx gt 6, "display:none")#' />
+                        <img class='image-roll' src='#mImage.thumbnail_src()#' data-uiid='#mImage.encoded_key()#' style='#ifin(idx gt 6, "display:none")#' />
                       </cfloop>
                     </div>
                     <cfif mUser.UserImages().len() gt 6>

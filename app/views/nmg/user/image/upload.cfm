@@ -1,7 +1,5 @@
 <cfscript>
   if (session.user.isA('Users')) {
-
-
     if (form.keyExists('profile_image')) {
       rtn = {};
       if (form.keyExists('ui_filename')) { // SAVE ORIGINAL
@@ -26,6 +24,7 @@
       if (uiid) {
         mImage = mBlog.image_find_or_create(uiid);
         request.xhr_data = mImage.thumbnail_update();
+        flash.success('Your thumbnail was updated.');
       }
     }
   }

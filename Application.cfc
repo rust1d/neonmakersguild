@@ -107,7 +107,7 @@ writedump(arguments);
       session.site = new app.services.CurrentSite();
     } else if (url.keyExists('logout') && session.user.loggedIn()) {
       this.onSessionStart();
-      location(application.urls.root & '/index.cfm', false);
+      // location(application.urls.root & '/index.cfm', false);
     }
   }
 

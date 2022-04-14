@@ -3,7 +3,6 @@
   mTextBlock = mBlog.textblock_find_or_create(router.decode('btbid'));
 
   if (form.keyExists('btnSubmit')) {
-
     mTextBlock.set(form);
     if (mTextBlock.safe_save()) {
       flash.success('Your textblock was saved.');
@@ -23,7 +22,7 @@
         <form role='form' method='post' id='blogform'>
           <div class='card'>
             <h5 class='card-header bg-nmg'>#mode# TextBlock</h5>
-            <div class='card-body border-left border-right'>
+            <div class='card-body'>
               <div class='row mt-3'>
                 <div class='col-md-8'>
                   <div class='row g-3'>

@@ -1,8 +1,8 @@
-component extends=BaseModel accessors=true {
+component extends=jSoup accessors=true {
   property name='btb_btbid'  type='numeric'  sqltype='integer'  primary_key;
   property name='btb_blog'   type='numeric'  sqltype='integer';
   property name='btb_label'  type='string'   sqltype='varchar';
-  property name='btb_body'   type='string'   sqltype='varchar';
+  property name='btb_body'   type='string'   sqltype='varchar'  html;
 
   belongs_to(name: 'UserBlog', class: 'Users', key: 'btb_blog', relation: 'us_usid');
 

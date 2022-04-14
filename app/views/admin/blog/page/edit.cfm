@@ -38,7 +38,7 @@
         <form role='form' method='post' id='blogform'>
           <div class='card'>
             <h5 class='card-header bg-nmg'>#mode# Page</h5>
-            <div class='card-body border-left border-right'>
+            <div class='card-body'>
               <div class='row mt-3'>
                 <div class='col-md-8'>
                   <div class='row g-3'>

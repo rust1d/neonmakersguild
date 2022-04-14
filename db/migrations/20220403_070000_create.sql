@@ -28,6 +28,7 @@ CREATE TABLE userProfile (
   UNIQUE INDEX (up_usid)
 ) ENGINE=InnoDB;
 
+
 DROP TABLE IF EXISTS userImages;
 
 CREATE TABLE userImages (
@@ -42,20 +43,6 @@ CREATE TABLE userImages (
   PRIMARY KEY (ui_uiid),
   INDEX (ui_usid) USING BTREE
 ) ENGINE=InnoDB;
-
-DROP TABLE IF EXISTS userLinks;
-
-CREATE TABLE userLinks (
-  ul_ulid        INT(11) NOT NULL AUTO_INCREMENT,
-  ul_usid        INT(11) NOT NULL,
-  ul_url         VARCHAR(200),
-  ul_type        VARCHAR(10),
-  ul_dla         DATETIME DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (ul_ulid),
-  INDEX (ul_usid) USING BTREE
-) ENGINE=InnoDB;
-
-
 
 
 DROP TABLE IF EXISTS BlogCategories;
@@ -116,10 +103,6 @@ CREATE TABLE BlogEntries (
   ben_views                             INT(11) unsigned,
   ben_released                          TINYINT(1),
   ben_mailed                            TINYINT(1),
-  /* ben_summary                           VARCHAR(255),
-  ben_subtitle                          VARCHAR(100),
-  ben_keywords                          VARCHAR(100),
-  ben_duration                          VARCHAR(10), */
   PRIMARY KEY (ben_benid),
   KEY(ben_blog),
   KEY(ben_released),
@@ -152,6 +135,19 @@ CREATE TABLE BlogEntriesRelated (
   KEY(bre_benid),
   KEY(bre_relbenid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+
+
+DROP TABLE IF EXISTS BlogLinks;
+
+CREATE TABLE BlogLinks (
+  bli_bliid                             INT(11) NOT NULL AUTO_INCREMENT,
+  bli_blog                              INT(11) NOT NULL,
+  bli_url                               VARCHAR(200),
+  bli_title                             VARCHAR(100),
+  bli_type                              VARCHAR(15),
+  PRIMARY KEY (bli_bliid),
+  INDEX (bli_blog) USING BTREE
+) ENGINE=InnoDB;
 
 
 DROP TABLE IF EXISTS BlogPages;

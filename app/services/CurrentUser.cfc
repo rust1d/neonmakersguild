@@ -4,6 +4,7 @@ component accessors=true {
   property name='_home'           type='string'   default='home/home';
   property name='_admin'          type='boolean'  default=false;
   property name='_loginattempts'  type='numeric'  default=0;
+  property name='_view'           type='string'   default='grid';
 
   public CurrentUser function init() {
     return this;
@@ -77,5 +78,10 @@ component accessors=true {
 
   public void function set(required string key, required any val) {
     variables[key] = val;
+  }
+
+  public string function view(string data = '') {
+    if (data.len()) variables._view = data;
+    return _view;
   }
 }

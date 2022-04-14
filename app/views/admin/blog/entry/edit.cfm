@@ -9,7 +9,6 @@ preview
 --->
 
 <cfscript>
-
   mEntry = mBlog.entry_find_or_create(router.decode('benid'));
 
   if (form.keyExists('btnSubmit')) {
@@ -51,7 +50,7 @@ preview
         <form role='form' method='post' id='blogform'>
           <div class='card'>
             <h5 class='card-header bg-nmg'>#mode# Entry</h5>
-            <div class='card-body border-left border-right'>
+            <div class='card-body'>
               <div class='row'>
                 <!--- <ul class='nav nav-tabs' id='myTab' role='tablist'>
                   <li class='nav-item' role='presentation'>

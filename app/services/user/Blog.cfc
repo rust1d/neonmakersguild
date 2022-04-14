@@ -12,7 +12,7 @@ component accessors=true {
 
   public BlogCategories function category_by_alias(required string alias) {
     var mdl = new app.models.BlogCategories();
-    var matches = mdl.where(bca_alias: alias);
+    var matches = mdl.where(bca_blog: id(), bca_alias: alias);
     if (matches.len()) return matches.first();
     return mdl.set({
       bca_blog: id(),
@@ -23,7 +23,11 @@ component accessors=true {
 
   public BlogCategories function category_find_or_create(required numeric pkid) {
     var mdl = new app.models.BlogCategories();
-    try { return mdl.find(pkid) } catch (record_not_found err) { return mdl.set({ bca_blog: id() }) }
+    if (pkid==0) return mdl.set({ bca_blog: id() });
+
+    var matches = mdl.where(bca_bcaid: pkid, bca_blog: id());
+    if (matches.len()) return matches.first();
+    request.router.redirect();
   }
 
   public query function category_search(struct params) {
@@ -42,7 +46,7 @@ component accessors=true {
 
   public BlogEntries function entry_by_alias(required string alias) {
     var mdl = new app.models.BlogEntries();
-    var matches = mdl.where(ben_alias: alias);
+    var matches = mdl.where(ben_blog: id(), ben_alias: alias);
     if (matches.len()) return matches.first();
     return mdl.set({
       ben_blog: id(),
@@ -53,16 +57,16 @@ component accessors=true {
 
   public BlogEntries function entry_find_or_create(required numeric pkid) {
     var mdl = new app.models.BlogEntries();
-    try {
-      return mdl.find(pkid)
-    } catch (record_not_found err) {
-      return mdl.set({
-        ben_usid: session.user.usid(),
-        ben_blog: id(),
-        ben_released: isAuthorized('ReleaseEntries'),
-        ben_posted: now()
-      });
-    }
+    if (pkid==0) return mdl.set({
+      ben_usid: session.user.usid(),
+      ben_blog: id(),
+      ben_released: isAuthorized('ReleaseEntries'),
+      ben_posted: now()
+    });
+
+    var matches = mdl.where(ben_benid: pkid, ben_blog: id());
+    if (matches.len()) return matches.first();
+    request.router.redirect();
   }
 
   public array function entries(struct params) {
@@ -110,6 +114,22 @@ component accessors=true {
     return roles.find(variables.roles[role]) || roles.find(variables.roles['admin']);
   }
 
+  public BlogLinks function link_find_or_create(required numeric pkid) {
+    var mdl = new app.models.BlogLinks();
+    if (pkid==0) return mdl.set({ bli_blog: id() });
+
+    var matches = mdl.where(bli_bliid: pkid, bli_blog: id());
+    if (matches.len()) return matches.first();
+    request.router.redirect();
+  }
+
+  public array function links(struct params) {
+    if (arguments.keyExists('params')) arguments = arguments.params;
+    var args = { bli_blog: id(), maxrows: 25 }
+    args.append(arguments);
+    return new app.models.BlogLinks().where(args);
+  }
+
   public string function name() {
     return mBlog.user();
   }
@@ -120,7 +140,7 @@ component accessors=true {
 
   public BlogPages function page_by_alias(required string alias) {
     var mdl = new app.models.BlogPages();
-    var matches = mdl.where(bpa_alias: alias);
+    var matches = mdl.where(bpa_blog: id(), bpa_alias: alias);
     if (matches.len()) return matches.first();
     return mdl.set({
       bpa_blog: id(),
@@ -129,7 +149,19 @@ component accessors=true {
     });
   }
 
+  public Users function owner() {
+    return variables.mBlog;
+  }
+
   public BlogPages function page_find_or_create(required numeric pkid) {
+    var mdl = new app.models.BlogPages();
+    if (pkid==0) return mdl.set({ bpa_blog: id() });
+
+    var matches = mdl.where(bpa_bpaid: pkid, bpa_blog: id());
+    if (matches.len()) return matches.first();
+    request.router.redirect();
+
+
     var mdl = new app.models.BlogPages();
     try {
       return mdl.find(pkid);

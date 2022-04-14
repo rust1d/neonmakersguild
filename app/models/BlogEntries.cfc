@@ -1,11 +1,11 @@
-component extends=BaseModel accessors=true {
+component extends=jSoup accessors=true {
   property name='ben_benid'          type='numeric'  sqltype='integer'    primary_key;
   property name='ben_blog'           type='numeric'  sqltype='integer';
   property name='ben_usid'           type='numeric'  sqltype='integer';
   property name='ben_title'          type='string'   sqltype='varchar';
-  property name='ben_body'           type='string'   sqltype='varchar';
+  property name='ben_body'           type='string'   sqltype='varchar'    html;
   property name='ben_posted'         type='date'     sqltype='timestamp';
-  property name='ben_morebody'       type='string'   sqltype='varchar';
+  property name='ben_morebody'       type='string'   sqltype='varchar'    html;
   property name='ben_alias'          type='string'   sqltype='varchar';
   property name='ben_allowcomments'  type='boolean'  sqltype='tinyint'    default='0';
   property name='ben_attachment'     type='string'   sqltype='varchar';
@@ -50,6 +50,15 @@ component extends=BaseModel accessors=true {
     return isNull(variables.ben_posted) ? '' : ben_posted.format('yyyy-mm-dd HH:nn');
   }
 
+  public string function seo_link() {
+    if (new_record()) return 'page/404';
+
+    param variables.ben_blogname = this.UserBlog().user();
+    return '/post/#ben_blogname#/#ben_alias#';
+  }
+
+  // PRIVATE
+
   private void function pre_save() {
     if (len(variables.ben_alias)==0) variables.delete('ben_alias'); // defaults next line
     param variables.ben_alias = variables.ben_title;
@@ -60,12 +69,5 @@ component extends=BaseModel accessors=true {
         errors().append('Entry alias #ben_alias# is in use.');
       }
     }
-  }
-
-  public string function seo_link() {
-    if (new_record()) return 'page/404';
-
-    param variables.ben_blogname = this.UserBlog().user();
-    return '/post/#ben_blogname#/#ben_alias#';
   }
 }

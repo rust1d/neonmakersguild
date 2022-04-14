@@ -21,6 +21,8 @@
         <tr>
           <th scope='col'><a href='#router.href('blog/textblock/edit')#' class='btn btn-nmg btn-sm btn-outline-dark'><i class='fal fa-plus'></i></a></th>
           <th scope='col'>Label</th>
+          <th scope='col'>Words</th>
+          <th scope='col'>Preview</th>
         </tr>
       </thead>
       <tbody>
@@ -32,6 +34,8 @@
               </a>
             </th>
             <td>#mTextBlock.label()#</td>
+            <td>#mTextBlock.words().len()#</td>
+            <td>#mTextBlock.preview()#</td>
           </tr>
         </cfloop>
       </tbody>

@@ -592,6 +592,99 @@ BEGIN
 END;;
 
 delimiter ;
+DROP procedure IF EXISTS bloglinks_delete;
+
+delimiter ;;
+
+CREATE PROCEDURE bloglinks_delete(
+  IN _bliid integer
+)
+BEGIN
+  DELETE
+    FROM bloglinks
+   WHERE bli_bliid = _bliid;
+
+  SELECT ROW_COUNT() AS delete_count;
+END;;
+
+delimiter ;
+DROP procedure IF EXISTS bloglinks_get_by_ids;
+
+delimiter ;;
+
+CREATE PROCEDURE bloglinks_get_by_ids(
+  IN _ids text
+)
+BEGIN
+  CALL create_temp_table_id_list(_ids);
+
+  SELECT *
+    FROM bloglinks
+         INNER JOIN _id_list ON _il_id = bli_bliid;
+END;;
+
+delimiter ;
+DROP procedure IF EXISTS bloglinks_insert;
+
+delimiter ;;
+
+CREATE PROCEDURE bloglinks_insert(
+  IN _blog     int(11),
+  IN _url      varchar(200),
+  IN _title    varchar(100),
+  IN _type     varchar(15)
+)
+BEGIN
+
+  INSERT INTO bloglinks (
+    bli_blog, bli_url, bli_title, bli_type
+  ) VALUES (
+    _blog, _url, _title, _type
+  );
+
+  CALL bloglinks_get_by_ids(LAST_INSERT_ID());
+END;;
+
+delimiter ;
+DROP procedure IF EXISTS bloglinks_search;
+
+delimiter ;;
+
+CREATE PROCEDURE bloglinks_search(
+  IN _bliid    int(11),
+  IN _blog     int(11)
+)
+BEGIN
+  SELECT *
+    FROM bloglinks
+   WHERE (_bliid IS NULL OR bli_bliid = _bliid)
+     AND (_blog IS NULL OR bli_blog = _blog);
+END;;
+
+delimiter ;
+DROP procedure IF EXISTS bloglinks_update;
+
+delimiter ;;
+
+CREATE PROCEDURE bloglinks_update(
+  IN _bliid    int(11),
+  IN _blog     int(11),
+  IN _url      varchar(200),
+  IN _title    varchar(100),
+  IN _type     varchar(15)
+)
+BEGIN
+  UPDATE bloglinks
+     SET bli_blog  = IFNULL(_blog,   bli_blog),
+         bli_url   = IFNULL(_url,    bli_url),
+         bli_title = IFNULL(_title,  bli_title),
+         bli_type  = IFNULL(_type,   bli_type)
+   WHERE bli_bliid = _bliid;
+
+  CALL bloglinks_get_by_ids(_bliid);
+END;;
+
+delimiter ;
 DROP procedure IF EXISTS blogpagescategories_delete;
 
 delimiter ;;
@@ -680,8 +773,7 @@ CREATE PROCEDURE blogpagescategories_search(
   IN _bcaid    int(11)
 )
 BEGIN
-  SELECT blogpagescategories.*,
-         bca_category AS bpc_category, bca_alias AS bpc_alias, us_user AS bpc_blogname
+  SELECT *
     FROM blogpagescategories
          INNER JOIN blogCategories ON bca_bcaid = bpc_bcaid
          INNER JOIN users ON us_usid = bca_blog
@@ -896,6 +988,98 @@ BEGIN
    WHERE bro_broid = _broid;
 
   CALL blogroles_get_by_ids(_broid);
+END;;
+
+delimiter ;
+DROP procedure IF EXISTS blogtextblocks_delete;
+
+delimiter ;;
+
+CREATE PROCEDURE blogtextblocks_delete(
+  IN _btbid integer
+)
+BEGIN
+  DELETE
+    FROM blogtextblocks
+   WHERE btb_btbid = _btbid;
+
+  SELECT ROW_COUNT() AS delete_count;
+END;;
+
+delimiter ;
+DROP procedure IF EXISTS blogtextblocks_get_by_ids;
+
+delimiter ;;
+
+CREATE PROCEDURE blogtextblocks_get_by_ids(
+  IN _ids text
+)
+BEGIN
+  CALL create_temp_table_id_list(_ids);
+
+  SELECT *
+    FROM blogtextblocks
+         INNER JOIN _id_list ON _il_id = btb_btbid;
+END;;
+
+delimiter ;
+DROP procedure IF EXISTS blogtextblocks_insert;
+
+delimiter ;;
+
+CREATE PROCEDURE blogtextblocks_insert(
+  IN _blog     int(11),
+  IN _label    varchar(100),
+  IN _body     longtext
+)
+BEGIN
+
+  INSERT INTO blogtextblocks (
+    btb_blog, btb_label, btb_body
+  ) VALUES (
+    _blog, _label, _body
+  );
+
+  CALL blogtextblocks_get_by_ids(LAST_INSERT_ID());
+END;;
+
+delimiter ;
+DROP procedure IF EXISTS blogtextblocks_search;
+
+delimiter ;;
+
+CREATE PROCEDURE blogtextblocks_search(
+  IN _btbid    int(11),
+  IN _blog     int(11),
+  IN _label    varchar(100)
+)
+BEGIN
+  SELECT *
+    FROM blogtextblocks
+   WHERE (_btbid IS NULL OR btb_btbid = _btbid)
+     AND (_blog IS NULL OR btb_blog = _blog)
+     AND (_label IS NULL OR btb_label = _label);
+END;;
+
+delimiter ;
+DROP procedure IF EXISTS blogtextblocks_update;
+
+delimiter ;;
+
+CREATE PROCEDURE blogtextblocks_update(
+  IN _btbid    int(11),
+  IN _blog     int(11),
+  IN _label    varchar(100),
+  IN _body     longtext
+)
+BEGIN
+  UPDATE blogtextblocks
+     SET btb_blog  = IFNULL(_blog,   btb_blog),
+         btb_label = IFNULL(_label,  btb_label),
+         btb_body  = IFNULL(_body,   btb_body)
+   WHERE btb_btbid = _btbid;
+
+  CALL blogtextblocks_get_by_ids(_btbid);
 END;;
 
 delimiter ;
@@ -1142,96 +1326,6 @@ BEGIN
    WHERE ui_uiid = _uiid;
 
   CALL userimages_get_by_ids(_uiid);
-END;;
-
-delimiter ;
-DROP procedure IF EXISTS userlinks_delete;
-
-delimiter ;;
-
-CREATE PROCEDURE userlinks_delete(
-  IN _ulid integer
-)
-BEGIN
-  DELETE
-    FROM userlinks
-   WHERE ul_ulid = _ulid;
-
-  SELECT ROW_COUNT() AS delete_count;
-END;;
-
-delimiter ;
-DROP procedure IF EXISTS userlinks_get_by_ids;
-
-delimiter ;;
-
-CREATE PROCEDURE userlinks_get_by_ids(
-  IN _ids text
-)
-BEGIN
-  CALL create_temp_table_id_list(_ids);
-
-  SELECT *
-    FROM userlinks
-         INNER JOIN _id_list ON _il_id = ul_ulid;
-END;;
-
-delimiter ;
-DROP procedure IF EXISTS userlinks_insert;
-
-delimiter ;;
-
-CREATE PROCEDURE userlinks_insert(
-  IN _usid   int(11),
-  IN _url    varchar(200),
-  IN _type   varchar(10)
-)
-BEGIN
-  INSERT INTO userlinks (
-    ul_usid, ul_url, ul_type, ul_dla
-  ) VALUES (
-    _usid, _url, _type, CURRENT_TIMESTAMP
-  );
-
-  CALL userlinks_get_by_ids(LAST_INSERT_ID());
-END;;
-
-delimiter ;
-DROP procedure IF EXISTS userlinks_search;
-
-delimiter ;;
-
-CREATE PROCEDURE userlinks_search(
-  IN _ulid   int(11),
-  IN _usid   int(11)
-)
-BEGIN
-  SELECT *
-    FROM userlinks
-   WHERE (_ulid IS NULL OR ul_ulid = _ulid)
-     AND (_usid IS NULL OR ul_usid = _usid);
-END;;
-
-delimiter ;
-DROP procedure IF EXISTS userlinks_update;
-
-delimiter ;;
-
-CREATE PROCEDURE userlinks_update(
-  IN _ulid   int(11),
-  IN _usid   int(11),
-  IN _url    varchar(200),
-  IN _type   varchar(10)
-)
-BEGIN
-  UPDATE userlinks
-     SET ul_usid = IFNULL(_usid, ul_usid),
-         ul_url  = IFNULL(_url,  ul_url),
-         ul_type = IFNULL(_type, ul_type),
-         ul_dla  = CURRENT_TIMESTAMP
-   WHERE ul_ulid = _ulid;
-
-  CALL userlinks_get_by_ids(_ulid);
 END;;
 
 delimiter ;

@@ -1,6 +1,7 @@
 <cfscript>
   mEntry = mBlog.entries(ben_benid: router.decode('benid')).first();
 </cfscript>
+
 <cfoutput>
   <section class='container'>
     <div class='row'>

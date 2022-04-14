@@ -33,7 +33,7 @@
                 <li><a class='dropdown-item' href='#router.href('user/home')#'>View</a></li>
                 <li><a class='dropdown-item' href='#router.href('user/edit')#'>Edit</a></li>
                 <li><a class='dropdown-item' href='#router.href('user/image/list')#'>Images</a></li>
-                <li><a class='dropdown-item' href='#router.href('user/links')#'>Links</a></li>
+                <li><a class='dropdown-item' href='#router.href('user/link/list')#'>Links</a></li>
               </ul>
             </li>
           </cfif>
@@ -41,9 +41,9 @@
         <ul class='navbar-nav ms-auto'>
           <cfif session.user.loggedIn()>
             <cfif session.user.get_admin()>
-              <li><a class='dropdown-item' href='?ref=admin'>Admin</a></li>
+              <li><a class='dropdown-item' href='#router.href(page: 'home', ref: 'admin')#'>Admin</a></li>
             </cfif>
-            <li><a class='dropdown-item' href='?logout'>Sign Out</a></li>
+            <li><a class='dropdown-item' href='#router.href(page: 'login/login')#&logout'>Sign Out</a></li>
           <cfelse>
             <li class='nav-item'>
               <a class='nav-link' href='#mBlog.page_seo_link('join')#'>Join</a>

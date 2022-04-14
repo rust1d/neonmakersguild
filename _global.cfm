@@ -14,5 +14,5 @@
   variables.safe_save = utility.safe_save;
   variables.flash = application.flash;
 
-  if (form.keyExists('btnView')) session.user.set('view', form.btnView);
+  if (form.keyExists('btnView')) session.user.view(form.btnView);
 </cfscript>

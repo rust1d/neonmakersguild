@@ -16,7 +16,7 @@
         <form role='form' method='post'>
           <div class='card'>
             <h5 class='card-header bg-nmg'>Login</h5>
-            <div class='card-body border-left border-right'>
+            <div class='card-body'>
               <div class='input-group mb-3'>
                 <span class='input-group-text btn-nmg'><i class='fas fa-at'></i></span>
                 <input type='text' class='form-control' name='username' id='username' maxlength='50' placeholder='username' value='#form.get('username')#' required>

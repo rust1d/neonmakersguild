@@ -303,8 +303,7 @@ component {
     data = reReplace(data, '&[^;]+;', '-', 'all');
     data = reReplace(data,'[^0-9a-zA-Z- ]','-','all');
     data = replace(data,' ','-','all');
-    data = data.listToArray('-').toList('-');
-    return replace(data,' ','-','all');
+    return data.listToArray('-').toList('-');
   }
 
   public string function stringToBase64(required string data) {

@@ -27,7 +27,7 @@
         <form role='form' method='post' enctype='multipart/form-data'>
           <div class='card'>
             <h5 class='card-header bg-nmg'>#mode# Category</h5>
-            <div class='card-body border-left border-right'>
+            <div class='card-body'>
               <div class='row g-3'>
                 <div class='col-12'>
                   <label class='form-label required' for='bca_category'>Category</label>

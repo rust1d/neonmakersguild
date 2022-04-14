@@ -1,5 +1,5 @@
 <cfscript>
-  locals.view = session.user.gets('view');
+  locals.view = session.user.view();
   locals.dest = (mBlog.id()==1 && session.site.isA('admin')) ? 'blog' : 'user';
 </cfscript>
 
@@ -11,25 +11,10 @@
           <div class='col fs-5'>
             Images
           </div>
-          <div class='col-auto'>
-            <form method='post'>
-              <div class='input-group input-group-sm'>
-                  <input type='text' class='form-control' name='term' placeholder='search...' aria-label='Search' required>
-                  <button class='btn btn-nmg btn-sm btn-outline-dark' type='submit'><i class='fa fa-search'></i></button>
-              </div>
-            </form>
-          </div>
-          <div class='col-auto'>
-            <form method='post'>
-              <div class='btn-group' role='group'>
-                <button class='btn btn-nmg btn-sm btn-outline-dark' type='#ifin(locals.view=='grid', 'button', 'submit')#' name='btnView' value='grid'><i class='#ifin(locals.view=='grid', 'text-white')# fad fa-th '></i></button>
-                <button class='btn btn-nmg btn-sm btn-outline-dark' type='#ifin(locals.view!='grid', 'button', 'submit')#' name='btnView' value='list'><i class='#ifin(locals.view!='grid', 'text-white')# fad fa-list'></i></button>
-              </div>
-            </form>
-          </div>
+          #router.include('shared/partials/view_and_filter')#
         </div>
       </div>
-      <div class='card-body border-left border-right'>
+      <div class='card-body'>
         <cfif locals.view=='list'>
           <a href='#router.href('#locals.dest#/image/edit')#' class='btn btn-nmg btn-sm btn-outline-dark mt-1'>
             <i class='fal fa-plus'></i> Add Image

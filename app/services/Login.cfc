@@ -26,7 +26,6 @@ component accessors=true {
     session.user.set_pkid(qryUser.us_usid);
     session.user.set_class('Users');
     session.user.set_home('user/home');
-    session.user.set('view','grid');
     if (qryUser.us_permissions GT 0) session.user.set_admin('true');
   }
 

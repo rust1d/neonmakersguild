@@ -12,15 +12,15 @@ component extends=BaseModel accessors=true {
 
   has_one(class: 'UserProfile',     key: 'us_usid',  relation: 'up_usid');
   has_many(class: 'UserImages',     key: 'us_usid',  relation: 'ui_usid');
-  has_many(class: 'UserLinks',      key: 'us_usid',  relation: 'ul_usid');
+  has_many(class: 'BlogComments',   key: 'us_usid',  relation: 'bco_usid');
   has_many(class: 'BlogEntries',    key: 'us_usid',  relation: 'ben_usid');
   has_many(class: 'BlogUserRoles',  key: 'us_usid',  relation: 'bur_usid');
-  has_many(class: 'BlogComments',  key: 'us_usid',  relation: 'bco_usid');
 
   // USERS BLOG
   has_many(name: 'Categories',   class: 'BlogCategories',  key: 'us_usid',  relation: 'bca_blog');
   has_many(name: 'Comments',     class: 'BlogComments',    key: 'us_usid',  relation: 'bco_blog');
   has_many(name: 'Entries',      class: 'BlogEntries',     key: 'us_usid',  relation: 'ben_blog');
+  has_many(name: 'Links',        class: 'BlogLinks',       key: 'us_usid',  relation: 'bli_blog');
   has_many(name: 'UserRoles',    class: 'BlogUserRoles',   key: 'us_usid',  relation: 'bur_blog');
 
   public Blog function blog() {
@@ -59,5 +59,9 @@ component extends=BaseModel accessors=true {
 
   public string function seo_link() {
     return '/member/#us_user#';
+  }
+
+  public array function social_links() {
+    return this.Links().filter(row => row.isSocial());
   }
 }

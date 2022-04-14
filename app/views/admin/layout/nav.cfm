@@ -21,9 +21,10 @@
             <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Blog</a>
             <ul class='dropdown-menu'>
               <li><a class='dropdown-item' href='#router.href('blog/home')#'>Home</a></li>
-              <li><a class='dropdown-item' href='#router.href('blog/entry/list')#'>Entries</a></li>
               <li><a class='dropdown-item' href='#router.href('blog/category/list')#'>Categories</a></li>
+              <li><a class='dropdown-item' href='#router.href('blog/entry/list')#'>Entries</a></li>
               <li><a class='dropdown-item' href='#router.href('blog/image/list')#'>Images</a></li>
+              <li><a class='dropdown-item' href='#router.href('blog/link/list')#'>Links</a></li>
               <li><a class='dropdown-item' href='#router.href('blog/page/list')#'>Pages</a></li>
               <li><a class='dropdown-item' href='#router.href('blog/textblock/list')#'>Text Blocks</a></li>
             </ul>
@@ -48,10 +49,10 @@
         </ul>
         <ul class='navbar-nav'>
           <li class='nav-item'>
-            <a class='nav-link' href='?ref=nmg'>Website</a>
+            <a class='nav-link' href='#router.href(page: 'home', ref: 'nmg')#'>Website</a>
           </li>
           <li class='nav-item'>
-            <a class='nav-link' href='?logout'>Sign Out</a>
+            <a class='nav-link' href='#router.href('login/login')#&logout'>Sign Out</a>
           </li>
         </ul>
       </div>

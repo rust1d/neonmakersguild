@@ -1,6 +1,6 @@
 <cfscript>
   mUsers = new app.models.Users().where();
-  view = session.user.gets('view');
+  view = session.user.view();
 </cfscript>
 
 <cfoutput>
