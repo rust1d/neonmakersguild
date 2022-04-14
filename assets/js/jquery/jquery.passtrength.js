@@ -1,6 +1,6 @@
 ;(function($, window, document, undefined) {
 
-  var pluginName = "passtrength",
+  var pluginName = 'passtrength',
     defaults = {
       minChars: 6,
       passwordToggle: true,
@@ -20,8 +20,8 @@
   Plugin.prototype = {
     init: function() {
       var _this = this,
-        meter = jQuery("<div/>", { class: "passtrengthMeter" }),
-        tooltip = jQuery("<div/>", { class: "tooltip", text: "Enter password." });
+        meter = jQuery('<div/>', { class: 'passtrengthMeter' }),
+        tooltip = jQuery('<div/>', { class: 'tooltip', text: 'Enter password.' });
 
       meter.insertAfter(this.element);
       $(this.element).appendTo(meter);
@@ -29,10 +29,10 @@
       if (this.options.tooltip) {
         tooltip.appendTo(meter);
         var tooltipWidth = tooltip.outerWidth() / 2;
-        tooltip.css("margin-left", -tooltipWidth);
+        tooltip.css('margin-left', -tooltipWidth);
       }
 
-      this.$elem.bind("keyup keydown", function() {
+      this.$elem.bind('keyup keydown', function() {
         value = $(this).val();
         _this.check(value);
       });
@@ -46,10 +46,10 @@
         lower = 0,
         number = 0,
         special = 1,
-        reLower = new RegExp("[a-z]"),
-        reUpper = new RegExp("[A-Z]"),
-        reNumber = new RegExp("[0-9]"),
-        reSpecial = new RegExp("([!,%,&,@,#,$,^,*,?,_,~,=,-])");
+        reLower = new RegExp('[a-z]'),
+        reUpper = new RegExp('[A-Z]'),
+        reNumber = new RegExp('[0-9]'),
+        reSpecial = new RegExp('([!,%,&,@,#,$,^,*,?,_,~,=,-])');
 
       if (value.length >= this.options.minChars) len = 1;
       if (value.match(reLower)) lower = 1;
@@ -61,27 +61,27 @@
     },
 
     addStatus: function(len, lower, upper, number, special) {
-      var status = "",
-        text = "",
-        msg = "",
+      var status = '',
+        text = '',
+        msg = '',
         total = len + lower + upper + number + special,
-        meter = $(this.element).closest(".passtrengthMeter"),
-        tooltip = meter.find(".tooltip");
+        meter = $(this.element).closest('.passtrengthMeter'),
+        tooltip = meter.find('.tooltip');
 
-      meter.attr("class", "passtrengthMeter");
+      meter.attr('class', 'passtrengthMeter');
 
-      if (total==5) status = "valid";
-      else if (total==4) status = "very-strong";
-      else if (total==3) status = "strong";
-      else if (total==2) status = "medium";
-      else status = "weak";
+      if (total==5) status = 'valid';
+      else if (total==4) status = 'very-strong';
+      else if (total==3) status = 'strong';
+      else if (total==2) status = 'medium';
+      else status = 'weak';
 
-      if (total==5) text = "Valid!";
-      //else if (special==0) text = "Must include 1 special char";
-      else if (number==0) text = "Must include 1 numeric char";
-      else if (upper==0) text = "Must include 1 uppercase char";
-      else if (lower==0) text = "Must include 1 lowercase char";
-      else text = "Must be at least " + this.options.minChars + " chars";
+      if (total==5) text = 'Valid!';
+      //else if (special==0) text = 'Must include 1 special char';
+      else if (number==0) text = 'Must include 1 numeric char';
+      else if (upper==0) text = 'Must include 1 uppercase char';
+      else if (lower==0) text = 'Must include 1 lowercase char';
+      else text = 'Must be at least ' + this.options.minChars + ' chars';
 
       if (total!=5) msg = text;
       this.$elem[0].setCustomValidity(msg);
@@ -93,26 +93,26 @@
     },
 
     togglePassword: function() {
-      var buttonShow = jQuery("<span/>", {class: "showPassword", html: "<i class='far fa-eye'></i>"}),
-        input =  jQuery("<input/>", {type: "text"}),
+      var buttonShow = jQuery('<span/>', {class: 'showPassword', html: '<i class="far fa-eye"></i>'}),
+        input =  jQuery('<input/>', {type: 'text'}),
         passwordInput = this;
 
-      buttonShow.appendTo($(this.element).closest(".passtrengthMeter"));
-      input.appendTo($(this.element).closest(".passtrengthMeter")).hide();
+      buttonShow.appendTo($(this.element).closest('.passtrengthMeter'));
+      input.appendTo($(this.element).closest('.passtrengthMeter')).hide();
 
-      $(this.element).bind("keyup keydown", function() {
+      $(this.element).bind('keyup keydown', function() {
         input.val($(passwordInput.element).val());
       });
 
-      input.bind("keyup keydown", function() {
+      input.bind('keyup keydown', function() {
         $(passwordInput.element).val(input.val());
         value = $(this).val();
         _this.check(value);
       });
 
-      $(document).on("click", ".showPassword", function() {
-        buttonShow.find('i').toggleClass("fa-eye");
-        buttonShow.find('i').toggleClass("fa-eye-slash");
+      $(document).on('click', '.showPassword', function() {
+        buttonShow.find('i').toggleClass('fa-eye');
+        buttonShow.find('i').toggleClass('fa-eye-slash');
         input.toggle();
         $(passwordInput.element).toggle();
       });
@@ -121,8 +121,8 @@
 
   $.fn[pluginName] = function(options) {
     return this.each(function() {
-      if (!$.data(this, "plugin_" + pluginName)) {
-        $.data(this, "plugin_" + pluginName, new Plugin(this, options));
+      if (!$.data(this, 'plugin_' + pluginName)) {
+        $.data(this, 'plugin_' + pluginName, new Plugin(this, options));
       }
     });
   }

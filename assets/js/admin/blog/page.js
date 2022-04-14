@@ -1,5 +1,5 @@
 $(function () {
-  $("#btnPreview").on('click', function() {
+  $('#btnPreview').on('click', function() {
     var $frm = $('#blogform').clone();
     $frm[0].target = '_blank';
     $frm[0].action = '?p=blog/page/preview';

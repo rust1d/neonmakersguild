@@ -24,7 +24,7 @@ component extends=BaseModel accessors=true {
   }
 
   public boolean function isSocial() {
-    return (variables.bli_type ?: '') == 'social media';
+    return (variables.bli_type ?: '')=='social media';
   }
 
   public string function social_type() {
@@ -33,10 +33,13 @@ component extends=BaseModel accessors=true {
     var dom = domain();
     if (dom.len()==0) return '';
 
-    for (var type in new app.services.SocialIcons().types()) {
-      if (dom.contains(type)) return type;
-    }
+    for (var type in social_types()) if (dom.contains(type)) return type;
+
     return '';
+  }
+
+  public array function social_types() {
+    return listToArray('facebook,flickr,instagram,linkedin,pinterest,snapchat,twitter,vimeo,youtube');
   }
 
   public string function social_link(string size = '2x') {
@@ -55,9 +58,13 @@ component extends=BaseModel accessors=true {
 
   // PRIVATE
 
+  private void function post_load() {
+    if (!isNull(variables.bli_url)) variables.bli_url = utility.url_add_protocol(bli_url);
+  }
+
   private void function pre_save() {
     if (this.url_changed()) {
-      if (bli_url.reMatch('^http*.').len()==0) bli_url = 'https://' & bli_url;
+      variables.bli_url = utility.url_add_protocol(bli_url);
     }
   }
 }

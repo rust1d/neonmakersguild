@@ -15,11 +15,11 @@ component {
     '/services':ExpandPath('/app/services')
   }
 
-  // this.javaSettings = {
-  //   LoadPaths: ["/javafiles/"],
-  //   loadColdFusionClassPath: true,
-  //   reloadOnChange: false
-  // }
+  this.javaSettings = {
+    LoadPaths: ['/assets/java/'],
+    loadColdFusionClassPath: true,
+    reloadOnChange: false
+  }
 
   public boolean function onApplicationStart() {
     set_environment();

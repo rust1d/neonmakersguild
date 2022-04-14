@@ -9,9 +9,9 @@
         if (form.checkValidity() === false) {
           event.preventDefault();
           event.stopPropagation();
-          var divsToHide = document.getElementsByClassName("hide-invalid"); //divsToHide is an array
+          var divsToHide = document.getElementsByClassName('hide-invalid'); //divsToHide is an array
           for(var i = 0; i < divsToHide.length; i++){
-              divsToHide[i].style.display = "none";
+              divsToHide[i].style.display = 'none';
           }
         }
         form.classList.add('was-validated');

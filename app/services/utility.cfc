@@ -158,9 +158,11 @@ component {
   }
 
   public string function ordinalDate(required string data) {
-    dateSuffix=["st", "nd", "rd", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th", "th", "st"];
     if (!isDate(data)) return data;
-    strDate = data.format('mmm d') & '<sup>' & dateSuffix[data.format('d')] & '</sup>, ' & data.format('yyyy');
+
+    var suff = listToArray('st,nd,rd,th,th,th,th,th,th,th,th,th,th,th,th,th,th,th,th,th,st,nd,rd,th,th,th,th,th,th,th,st');
+    return "#data.format('mmm d')#<sup>#suff[day(data)]#</sup> #data.format('yyyy')#";
+    return data.format('mmm d') & '<sup>' & suff[day(data)] & '</sup>, ' & data.format('yyyy');
     return strDate;
   }
 
@@ -318,11 +320,11 @@ component {
     return binaryEncode(stringToBinary(data), 'hex');
   }
 
-  public string function url_add_protocol(required string url) {
-    // ADD http:// TO URL IF MISSING
-    if (isNull(arguments.url) || arguments.url.trim().isEmpty()) return;
-    if (arguments.url.reMatch('^http*.').len()) return arguments.url;
-    return 'http://' & arguments.url;
+  public string function url_add_protocol(string data = '') {
+    if (data.trim().isEmpty()) return '';
+    if (data.reMatch('^http*.').len()) return data;
+    var proto = (cgi.https=='on') ? 'https' : 'http';
+    return '#proto#://' & data;
   }
 
   public struct function url_to_struct(string data) {

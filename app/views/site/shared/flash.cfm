@@ -6,7 +6,7 @@
       <cfset closeable = messages.filter(msg => msg.closeable).len() />
       <cfset dismissible = closeable ? 'alert-dismissible' : '' />
 
-      <div class='alert #dismissible# fade show alert-#type# my-2' role='alert'>
+      <div class='alert #dismissible# fade show alert-#type# mt-3' role='alert'>
         <cfif type EQ 'danger'>
           One or more errors have been detected:
           <ul class='mb-0'>
@@ -20,7 +20,7 @@
           </cfloop>
         </cfif>
         <cfif closeable>
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
         </cfif>
       </div>
     </cfloop>

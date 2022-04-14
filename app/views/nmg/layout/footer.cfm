@@ -1,6 +1,5 @@
 <cfscript>
   mLinks = mBlog.owner().social_links();
-  // sSocials = new app.services.SocialIcons(arLinks);
 </cfscript>
 
 <style>

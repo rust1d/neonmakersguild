@@ -163,8 +163,6 @@ component accessors=true {
   private void function include_view_scripts(required string partial) {
     if (!template_exists(partial)) return;
     // INCLUDE ALL THE _include.cfm SCRIPT FILES IN THE PATH LEADING TO THE TEMPLATE
-    // ie FOR TEMPLATE "home/college/list.cfm", BOTH "home/_include.cfm" AND "home/college/_include.cfm" WOULD
-    // BE INCLUDED (IF FOUND) IN THAT ORDER.
     var parts = getDirectoryFromPath(partial).listToArray('/').prepend('');
     var path = '';
     var filename = '';
