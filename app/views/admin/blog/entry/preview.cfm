@@ -5,33 +5,27 @@
 </cfscript>
 
 <cfoutput>
-  <section class='container'>
     <div class='row justify-content-center'>
-      <div class='col-md-8 border-end'>
-        <div class='card mt-4 border-0 mb-5'>
-          <div class='card-body border'>
-            <div class='row'>
+      <div class='col-md-10'>
+        <div class='card'>
+          <div class='card-body'>
+            <div class='row g-2'>
+              <div class='col-12 text-center text-uppercase'>
+                <small>Category &bull; Category</small>
+              </div>
+              <div class='col-12 fs-2 text-center'>
+                #mEntry.title()#
+              </div>
+              <div class='col-12 text-center'>
+                by #session.user.user()# | #mEntry.posted()#
+              </div>
               <div class='col-12'>
-                <div class='row g-2'>
-                  <div class='col-12 text-center text-uppercase'>
-                    <small>Category &bull; Category</small>
-                  </div>
-                  <div class='col-12 text-center'>
-                    <h3>#mEntry.title()#</h3>
-                  </div>
-                  <div class='col-12 text-center'>
-                    by #session.user.user()# | #mEntry.posted()#
-                  </div>
-                  <div class='col-12'>
-                    #mEntry.body()#
-                    #mEntry.morebody()#
-                  </div>
-                </div>
+                #mEntry.body()#
+                #mEntry.morebody()#
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </section>
 </cfoutput>

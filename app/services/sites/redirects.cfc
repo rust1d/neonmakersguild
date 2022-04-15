@@ -50,7 +50,7 @@ component {
     } else if (url.keyExists('user')) {
       var qry = new app.models.Users().search(us_user: url.user);
       if (qry.len()) {
-        url.p = 'blog/member';
+        url.p = 'member/view';
         url.usid = router.encode(id: qry.us_usid).listLast('=');
       }
     }

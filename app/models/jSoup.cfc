@@ -19,7 +19,7 @@ component extends=BaseModel accessors=true {
   }
 
   public string function preview(numeric chars=100) {
-    if (html().len() < chars) return html();
+    if (text().len() < chars) return text();
     var data = text().left(chars).listToArray(' ');
     data.pop();
     return data.toList(' ');

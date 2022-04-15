@@ -1,6 +1,6 @@
 <cfoutput>
   <nav class='navbar navbar-expand-lg navbar-light bg-light'>
-    <div class='container-fluid'>
+    <div class='container'>
       <a class='navbar-brand' href='#router.href()#'>
         <img src='/assets/images/logo.png'  alt='#session.site.title()# Logo' height='48' class='d-inline-block align-text-top'>
       </a>
@@ -30,10 +30,11 @@
             <li class='nav-item ms-4 dropdown'>
               <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Profile</a>
               <ul class='dropdown-menu'>
-                <li><a class='dropdown-item' href='#router.href('user/home')#'>View</a></li>
-                <li><a class='dropdown-item' href='#router.href('user/edit')#'>Edit</a></li>
+                <li><a class='dropdown-item' href='#session.user.seo_link()#'>View Profile</a></li>
+                <li><a class='dropdown-item' href='#router.href('user/edit')#'>Edit Bio</a></li>
                 <li><a class='dropdown-item' href='#router.href('user/image/list')#'>Images</a></li>
                 <li><a class='dropdown-item' href='#router.href('user/link/list')#'>Links</a></li>
+                <li><a class='dropdown-item' href='#router.href('user/settings')#'>Settings</a></li>
               </ul>
             </li>
           </cfif>

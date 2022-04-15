@@ -12,7 +12,7 @@
         <div class='col-12 text-center align-middle'>
           <p id='social'>
             <cfloop array='#mLinks#' item='mLink'>
-              <span class='p-3'>#mLink.social_link()#</span>
+              <span class='p-3'>#mLink.icon_link()#</span>
             </cfloop>
           </p>
           <p id='legal' class='small'>

@@ -21,35 +21,36 @@
 </cfscript>
 
 <cfoutput>
-  <section class='container'>
-    <div class='row mb-3'>
-      <div class='col'>
-        <form role='form' method='post' enctype='multipart/form-data'>
-          <div class='card'>
-            <h5 class='card-header bg-nmg'>#mode# Category</h5>
-            <div class='card-body'>
-              <div class='row g-3'>
-                <div class='col-12'>
-                  <label class='form-label required' for='bca_category'>Category</label>
-                  <input type='text' class='form-control' name='bca_category' id='bca_category' value='#htmlEditFormat(mCategory.category())#' maxlength='50' required />
-                </div>
-                <div class='col-12'>
-                  <label class='form-label' for='bca_alias'>Alias</label>
-                  <input type='text' class='form-control' name='bca_alias' id='bca_alias' value='#htmlEditFormat(mCategory.alias())#' maxlength='50' />
-                  <small>Used when creating SES URLs. If you leave the field blank it will be generated for you.</small>
-                </div>
+  <div class='row mb-3'>
+    <div class='col'>
+      <form role='form' method='post' enctype='multipart/form-data'>
+        <div class='card'>
+          <div class='card-header btn-nmg'>
+            <div class='row'>
+              <div class='col fs-5'>#mode# Category</div>
+            </div>
+          </div>
+          <div class='card-body'>
+            <div class='row g-3'>
+              <div class='col-12'>
+                <label class='form-label required' for='bca_category'>Category</label>
+                <input type='text' class='form-control' name='bca_category' id='bca_category' value='#htmlEditFormat(mCategory.category())#' maxlength='50' required />
               </div>
-              <div class='row mt-3'>
-                <div class='col text-center'>
-                  <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-nmg'>Save</button>
-                  <a href='#router.href('blog/category/list')#' class='btn btn-warning'>Cancel</a>
-                </div>
+              <div class='col-12'>
+                <label class='form-label' for='bca_alias'>Alias</label>
+                <input type='text' class='form-control' name='bca_alias' id='bca_alias' value='#htmlEditFormat(mCategory.alias())#' maxlength='50' />
+                <small>Used when creating SES URLs. If you leave the field blank it will be generated for you.</small>
               </div>
             </div>
-            <div class='card-footer bg-nmg border-top-0'></div>
+            <div class='row mt-3'>
+              <div class='col text-center'>
+                <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-nmg'>Save</button>
+                <a href='#router.href('blog/category/list')#' class='btn btn-nmg-cancel'>Cancel</a>
+              </div>
+            </div>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
-  </section>
+  </div>
 </cfoutput>

@@ -28,10 +28,6 @@ component accessors=true {
     return valid();
   }
 
-  public string function title() {
-    return application.settings.title; // CAN OVERRIDE IN CHILD
-  }
-
   public boolean function valid() {
     return FileExists(expandPath('/app/services/sites/#get_site()#.cfc'));
   }

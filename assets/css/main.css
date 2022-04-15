@@ -8,7 +8,7 @@ body {
   font-family: 'Poppins', sans-serif;
   font-size: 1em;
   color: #0c1a19;
-  background-color: #ffffff!important;
+  background-color: #ffffff;
   background-size: cover;
   background-repeat: no-repeat;
   min-height: 100vh;
@@ -27,18 +27,18 @@ h1,h2,h3,h4,h5,h6 {
   font-family: 'Poppins', 'Arimo', sans-serif;
 }
 
+.text-page-head { font-family: 'Poppins' }
+.text-marker { font-family: 'Permanent Marker' }
+
 .text-smallcaps { font-variant: small-caps; }
-.text-nmg { color: #5AC5C3!important; }
-.text-nmg-secondary { color: #0c1a19!important; }
-.bg-nmg { background-color: #5AC5C3!important; }
-.bg-nmg-secondary { background-color: #0c1a19!important; }
-.btn-nmg { background-color: #5AC5C3!important; color: #0c1a19 }
+.text-nmg { color: #5AC5C3; }
+.text-nmg-secondary { color: #0c1a19; }
+.bg-nmg { background-color: #5AC5C3; }
+.bg-nmg-secondary { background-color: #0c1a19; }
+
+.btn-nmg { background-color: #5AC5C3; color: #0c1a19; border-color: #0c1a19; }
 
 .clipped { background-color: cornflowerblue; color: white; }
-
-.container {
-  background-color: #ffffff;
-}
 
 .content {
   min-height: 60vh;
@@ -51,13 +51,17 @@ h1,h2,h3,h4,h5,h6 {
   height: 30px;
   text-align: center;
   padding: 6px 0;
-  font-size: 12px;
   line-height: 1.428571429;
   border-radius: 15px;
 }
 
 .btn-floating:hover {
   opacity:1!important;
+}
+
+.btn-floating-br {
+  bottom: 8px;
+  right: 8px;
 }
 
 form label.required:after {

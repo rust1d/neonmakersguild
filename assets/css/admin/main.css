@@ -1,4 +1,26 @@
+body {
+  background-color: #eeeeee;
+}
+
 .image-menu-btn {
   top: -10px;
   right: 10px;
+}
+
+.btn-nmg {
+  color: #31C5F2;
+  background-color: #0c1a19;
+  border-color: #31C5F2;
+}
+
+.btn-nmg-cancel {
+  color: #ffc107;
+  background-color: #0c1a19;
+  border-color: #ffc107;
+}
+
+.btn-nmg-delete {
+  color: #c04551;
+  background-color: #0c1a19;
+  border-color: #c04551;
 }

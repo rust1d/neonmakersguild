@@ -11,7 +11,7 @@
     }
   }
 
-  social_link = mLink.social_link('lg');
+  icon_link = mLink.icon_link('lg');
   mode = mLink.new_record() ? 'Add' : 'Edit';
 </cfscript>
 
@@ -21,7 +21,7 @@
       <div class='col'>
         <form role='form' method='post' enctype='multipart/form-data'>
           <div class='card'>
-            <h5 class='card-header bg-nmg'>#mode# Link</h5>
+            <h5 class='card-header btn-nmg'>#mode# Link</h5>
             <div class='card-body'>
               <div class='row g-3'>
                 <div class='col-md-3'>
@@ -31,9 +31,9 @@
                       <option value='#type#' #ifin(mLink.type()==type, 'selected')#>#type#</option>
                     </cfloop>
                   </select>
-                  <cfif social_link.len()>
+                  <cfif icon_link.len()>
                     <div class='pt-2 small'>
-                      This link will use the #social_link# icon.
+                      This link will use the #icon_link# icon.
                     </div>
                   </cfif>
                 </div>
@@ -46,7 +46,6 @@
                   <input type='text' class='form-control' name='bli_url' id='bli_url' value='#htmlEditFormat(mLink.url())#' maxlength='200' required />
                 </div>
               </div>
-
               <div class='row mt-3'>
                 <div class='col text-center'>
                   <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-nmg'>Save</button>
@@ -54,7 +53,6 @@
                 </div>
               </div>
             </div>
-            <div class='card-footer bg-nmg border-top-0'></div>
           </div>
         </form>
       </div>

@@ -42,21 +42,26 @@ component extends=BaseModel accessors=true {
     return listToArray('facebook,flickr,instagram,linkedin,pinterest,snapchat,twitter,vimeo,youtube');
   }
 
-  public string function social_link(string size = '2x') {
+  public string function icon_link(string size = '2x') {
+    if (isNull(variables.bli_url)) return '';
     var type = social_type();
-    if (type.len()==0) return '';
-    return '<a href="#bli_url#" target="_blank"><i class="fa-#size# fa-brands fa-#type#"></i></a>';
+    var icon = type.len() ? 'fa-brands fa-#type#' : icons().get(bli_type ?: 'bookmark');
+    return '<a href="#bli_url#" target="_blank"><i class="fa-#size# #icon#"></i></a>';
   }
 
   public array function types() {
-    return [
-      'bookmark',
-      'social media',
-      'website'
-    ]
+    return icons().keyArray();
   }
 
   // PRIVATE
+
+  private struct function icons() {
+    return {
+      'bookmark': 'fa-solid fa-square-arrow-up-right',
+      'social media': 'fa-regular fa-sparkles',
+      'website': 'fa-regular fa-globe'
+    }
+  }
 
   private void function post_load() {
     if (!isNull(variables.bli_url)) variables.bli_url = utility.url_add_protocol(bli_url);

@@ -19,7 +19,7 @@
             </div>
             <cfif locals.fold && len(locals.mEntry.morebody())>
               <div class='col-12 text-center text-uppercase'>
-                <a href='#router.hrefenc(page: 'blog/entry', benid: locals.mEntry.benid())#'>Read more</a>
+                <a href='#locals.mEntry.seo_link()#'>Read more</a>
               </div>
             </cfif>
           </div>

@@ -1,9 +1,9 @@
-component extends=BaseModel accessors=true {
+component extends=jSoup accessors=true {
   property name='bpa_bpaid'       type='numeric'  sqltype='integer'  primary_key;
   property name='bpa_blog'        type='numeric'  sqltype='integer';
   property name='bpa_title'       type='string'   sqltype='varchar';
   property name='bpa_alias'       type='string'   sqltype='varchar';
-  property name='bpa_body'        type='string'   sqltype='varchar';
+  property name='bpa_body'        type='string'   sqltype='varchar'  html;
   property name='bpa_standalone'  type='numeric'  sqltype='tinyint'  default='0';
   property name='bpa_blogname'    type='string';
 

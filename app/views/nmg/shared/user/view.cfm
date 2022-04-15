@@ -1,6 +1,6 @@
 <cfoutput>
   <div class='card'>
-    <div class='card-header bg-nmg'>
+    <div class='card-header btn-nmg'>
     </div>
     <div class='card-body'>
       <div class='row mb-3'>
@@ -13,7 +13,7 @@
         </div>
         <div class='col-auto'>
           <cfloop array='#locals.mUser.social_links()#' item='locals.mLink'>
-            <span class='p-3'>#locals.mLink.social_link()#</span>
+            <span class='p-3'>#locals.mLink.icon_link()#</span>
           </cfloop>
         </div>
       </div>
@@ -25,6 +25,5 @@
         </div>
       </div>
     </div>
-    <div class='card-footer bg-nmg border-top-0'></div>
   </div>
 </cfoutput>

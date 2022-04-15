@@ -11,7 +11,7 @@
       <div class='col-12'>
         <form role='form' method='post'>
           <div class='card'>
-            <h5 class='card-header bg-nmg'>User Profile</h5>
+            <h5 class='card-header btn-nmg'>User Profile</h5>
             <div class='card-body'>
               <div class='row'>
                 <div class='col-md-12'>
@@ -39,10 +39,10 @@
               <div class='row my-3'>
                 <div class='col text-center'>
                   <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-nmg'>Save Profile</button>
+                  <a href='#router.href(session.user.get_home())#' class='btn btn-warning'>Cancel</a>
                 </div>
               </div>
             </div>
-            <div class='card-footer bg-nmg border-top-0'></div>
           </div>
         </form>
       </div>

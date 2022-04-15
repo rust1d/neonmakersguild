@@ -1,7 +1,13 @@
 <cfset router.include('layout/nav') />
+
 <cfset router.include('shared/flash_container') />
+
 <main class='content py-3'>
-  <cfset router.include() />
+  <section class='container'>
+    <cfset router.include() />
+  </section>
 </main>
+
 <cfset router.include('shared/flash_onload') />
+
 <cfset router.include('layout/footer') />

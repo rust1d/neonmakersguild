@@ -46,7 +46,7 @@ $(function() {
     $sel.find('div').remove();
     for (var idx in rows) {
       var row = rows[idx];
-      var htm = `<div class='col-3 p-1'><img class='w-100 img-thumbnail clipable' src=${row.thumbnail} data-clip=${row.image} title='${row.filename} - ${row.dimensions}' /></div>`
+      var htm = `<div class='col-4 p-1'><img class='w-100 img-thumbnail clipable' src=${row.thumbnail} data-clip=${row.image} title='${row.filename} - ${row.dimensions}' /></div>`
       $sel.append(htm);
     }
   }
