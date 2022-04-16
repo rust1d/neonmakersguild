@@ -13,7 +13,7 @@
         #mBlock.body()#
       </div>
     </cfif>
-    <div class='col-md-8'>
+    <div class='col-12 col-md-10 col-lg-8'>
       <form role='form' method='post'>
         <div class='card'>
           <h5 class='card-header bg-nmg'>Login</h5>

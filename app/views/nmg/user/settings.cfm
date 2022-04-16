@@ -48,7 +48,7 @@
               </p>
               <div class='mb-3 text-center'>
                 <button type='submit' name='btnSave' class='btn btn-nmg'>Update</button>
-                <a href='#router.href(session.user.get_home())#' class='btn btn-warning'>Cancel</a>
+                <a href='#router.href(session.user.get_home())#' class='btn btn-nmg-cancel'>Cancel</a>
               </div>
             </div>
           </div>

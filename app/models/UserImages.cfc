@@ -132,10 +132,10 @@ component extends=BaseModel accessors=true {
       info = ImageInfo(img);
     }
 
-    cfimage(action: 'write', source: img, destination: local_path() & image_name(), quality: 1);
+    cfimage(action: 'write', source: img, destination: local_path() & image_name(), quality: 1, overwrite: 'true');
     info.append(GetFileInfo(local_path() & image_name()));
     img = make_thumbnail(img);
-    cfimage(action: 'write', source: img, destination: local_path() & thumbnail_name(), quality: 1);
+    cfimage(action: 'write', source: img, destination: local_path() & thumbnail_name(), quality: 1, overwrite: 'true');
 
     return info;
   }
