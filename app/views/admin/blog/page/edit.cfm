@@ -1,4 +1,4 @@
-<cfprocessingdirective pageencoding='utf-8'>
+
 <cfscript>
   mPage = mBlog.page_find_or_create(router.decode('bpaid'));
 

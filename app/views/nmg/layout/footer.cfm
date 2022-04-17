@@ -1,17 +1,10 @@
-<cfscript>
-  mLinks = mBlog.owner().social_links();
-</cfscript>
-
-<style>
-</style>
-
 <cfoutput>
-  <div id='footer' class='bg-light pt-3'>
-    <div class='container bg-light'>
+  <div id='footer' class='bg-nmg-dark pt-3'>
+    <div class='container'>
       <div class='row mt-3'>
         <div class='col-12 text-center align-middle'>
           <p id='social'>
-            <cfloop array='#mLinks#' item='mLink'>
+            <cfloop array='#mBlog.owner().social_links()#' item='mLink'>
               <span class='p-3'>#mLink.icon_link()#</span>
             </cfloop>
           </p>

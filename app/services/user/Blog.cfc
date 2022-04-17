@@ -5,6 +5,13 @@ component accessors=true {
     return this;
   }
 
+  public array function categories(struct params) {
+    if (arguments.keyExists('params')) arguments = arguments.params;
+    var args = { bca_blog: id(), maxrows: 100 }
+    args.append(arguments);
+    return new app.models.BlogCategories().where(args);
+  }
+
   public BlogCategories function category_build(required struct params) {
     params.append({ bca_blog: id() });
     return new app.models.BlogCategories(params);

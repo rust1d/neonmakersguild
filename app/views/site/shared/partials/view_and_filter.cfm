@@ -9,8 +9,8 @@
     <div class='col-auto'>
       <form method='post'>
         <div class='input-group input-group-sm'>
-            <input type='text' class='form-control' name='term' placeholder='search...' aria-label='Search' required>
-            <button class='btn btn-sm btn-nmg' type='submit'><i class='fa fa-search'></i></button>
+          <input type='text' class='form-control' name='term' placeholder='search...' aria-label='Search' required />
+          <button class='btn btn-sm btn-nmg' type='submit'><i class='fa fa-search'></i></button>
         </div>
       </form>
     </div>

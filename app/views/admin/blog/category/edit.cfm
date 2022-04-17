@@ -1,4 +1,4 @@
-<cfprocessingdirective pageencoding='utf-8'>
+
 
 <cfscript>
   bcaid = router.decode('bcaid');

@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class='card-body'>
-      <table class='table'>
+      <table class='table table-nmg'>
         <thead>
           <tr>
             <th scope='col'>

@@ -2,17 +2,18 @@
 
 <cfset router.include('shared/flash_container') />
 
-<main class='content py-3'>
+<main class='content'>
   <section class='container'>
     <div class='row'>
-      <div class='col-md-9'>
+      <div class='col-md-9 p-3'>
         <cfset router.include() />
       </div>
-      <div class='col-md-3'>
-        <cfif ListFind('member/view,user/home', router.template())>
-          <cfset router.include('member/sidebar') />
-        <cfelse>
+      <div class='col-md-3 p-3'>
+        <cfif mBlog.id()==1>
           <cfset router.include('shared/sidebar') />
+          <!--- <cfif ListFind('member/view,user/home', router.template())> --->
+        <cfelse>
+          <cfset router.include('member/sidebar') />
         </cfif>
       </div>
     </div>

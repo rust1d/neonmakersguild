@@ -1,8 +1,8 @@
 <cfscript>
   string function morecols(numeric idx, numeric size) {
     if (idx==1) return 'col-12';
-    // if (size%2==0)
-
+    if (size%2==0 && idx==2) return 'col-12';
+    return 'col-6'
   }
 
   usid = router.decode('usid');
@@ -15,7 +15,7 @@
 <cfoutput>
   <div class='row'>
     <cfloop array='#mEntries#' item='mEntry' index='idx'>
-      <div class='col-#ifin(idx==1, 12, 6)#'>
+      <div class='#morecols(idx, mEntries.len())#'>
         #router.include('shared/blog/entry', { mEntry: mEntry, fold: true })#
       </div>
     </cfloop>

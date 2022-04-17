@@ -46,6 +46,10 @@ component extends=jSoup accessors=true {
     return links;
   }
 
+  public string function post_date() {
+    return isNull(variables.ben_posted) ? '' : utility.ordinalDate(ben_posted);
+  }
+
   public string function posted() {
     return isNull(variables.ben_posted) ? '' : ben_posted.format('yyyy-mm-dd HH:nn');
   }

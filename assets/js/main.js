@@ -13,7 +13,9 @@ $(function() {
         { title: '25%', value: 'w-25' }
       ]}
     ],
-    content_css: 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css',
+    skin_url: '/assets/css',
+    skin: 'nmg',
+    content_css: 'nmg',
     image_dimensions: false,
     object_resizing: false,
     image_advtab: true,

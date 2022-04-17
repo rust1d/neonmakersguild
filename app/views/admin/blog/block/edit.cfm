@@ -1,4 +1,4 @@
-<cfprocessingdirective pageencoding='utf-8'>
+
 <cfscript>
   mTextBlock = mBlog.textblock_find_or_create(router.decode('btbid'));
 

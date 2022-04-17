@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class='card-body'>
-      <table class='table'>
+      <table class='table table-nmg'>
         <thead>
           <tr>
             <th scope='col'><a href='#router.href('blog/block/edit')#' class='btn btn-sm btn-nmg'><i class='fal fa-plus'></i></a></th>

@@ -1,5 +1,5 @@
 <cfoutput>
-  <nav class='navbar navbar-expand-lg navbar-dark bg-dark'>
+  <nav class='navbar navbar-expand-lg navbar-dark navbar-nmg'>
     <div class='container'>
       <a class='navbar-brand' href='#router.href()#'>
         <img src='/assets/images/logo-alt.png'  alt='#session.site.title()# Logo' height='48'>
@@ -10,7 +10,7 @@
       <div class='collapse navbar-collapse' id='navbarNavDropdown'>
         <ul class='navbar-nav me-auto'>
           <li class='nav-item'>
-            <a class='nav-link active' aria-current='page' href='#router.href()#'><span class='navbar-brand'>#session.site.title()#</span></a>
+            <a class='nav-link active' aria-current='page' href='#router.href()#'>#session.site.title()#</a>
           </li>
           <li class='nav-item ms-4'><a class='nav-link' href='#router.href('user/list')#'>Users</a></li>
           <li class='nav-item ms-4'><a class='nav-link' href='#router.href('blog/link/list')#'>Links</a></li>
@@ -37,35 +37,3 @@
     </div>
   </nav>
 </cfoutput>
-
-<!--- <cfoutput>
-  <nav class='navbar navbar-expand-lg navbar-dark bg-dark'>
-    <div class='container'>
-      <a class='navbar-brand text-middle' href='#router.href()#'>
-        <img src='/assets/images/logo-alt.png'  alt='#session.site.title()# Logo' height='48'>
-        <span>&nbsp; #session.site.title()#</span>
-      </a>
-      <button class='navbar-toggler' type='button' data-bs-toggle='collapse' data-bs-target='##navbarNavDropdown' aria-controls='navbarNavDropdown' aria-expanded='false' aria-label='Toggle navigation'>
-        <span class='navbar-toggler-icon'></span>
-      </button>
-      <div class='collapse navbar-collapse' id='navbarNavDropdown'>
-        <ul class='navbar-nav mx-auto'>
-          <li class='nav-item'><a class='nav-link' href='#router.href('user/list')#'>Users</a></li>
-          <li class='nav-item'><a class='nav-link' href='#router.href('blog/entry/list')#'>Entries</a></li>
-          <li class='nav-item'><a class='nav-link' href='#router.href('blog/image/list')#'>Images</a></li>
-          <li class='nav-item'><a class='nav-link' href='#router.href('blog/page/list')#'>Pages</a></li>
-          <li class='nav-item'><a class='nav-link' href='#router.href('blog/block/list')#'>Blocks</a></li>
-          <li class='nav-item'><a class='nav-link' href='#router.href('blog/category/list')#'>Categories</a></li>
-        </ul>
-        <ul class='navbar-nav'>
-          <li class='nav-item'>
-            <a class='nav-link' href='#router.href(page: 'home', ref: 'nmg')#'>Website</a>
-          </li>
-          <li class='nav-item'>
-            <a class='nav-link' href='#router.href('login/login')#&logout'>Sign Out</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-</cfoutput> --->

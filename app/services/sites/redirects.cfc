@@ -19,6 +19,7 @@ component {
     if (isNull(variables._blog)) {
       var mdl = new app.models.Users().where(us_user: url.blog);
       variables._blog = mdl.len() ? mdl.first().blog() : new app.services.user.Blog(1);
+      url.blogid = variables._blog.id();
     }
     return variables._blog;
   }
@@ -52,6 +53,7 @@ component {
       if (qry.len()) {
         url.p = 'member/view';
         url.usid = router.encode(id: qry.us_usid).listLast('=');
+        url.blogid = qry.us_usid;
       }
     }
   }
