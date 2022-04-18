@@ -8,4 +8,9 @@ $(function () {
     $frm.appendTo('body').submit();
     $frm.remove();
   });
+
+  $('#btnCancel').on('click', function() {
+    if (!confirm('Are you sure you want to cancel this entry?')) return;
+    window.location = '?p=blog/entry/list';
+  });
 });

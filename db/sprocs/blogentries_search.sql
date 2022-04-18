@@ -24,7 +24,7 @@ BEGIN
      AND (_alias IS NULL OR ben_alias = _alias)
      AND (_released IS NULL OR ben_released = _released)
      AND (_bcaid IS NULL OR EXISTS (SELECT 1 FROM BlogEntriesCategories WHERE bec_bcaid=_bcaid AND bec_benid=ben_benid))
-  ORDER BY ben_posted DESC;
+  ORDER BY ben_posted DESC, ben_benid DESC;
 END;;
 
 delimiter ;

@@ -8,7 +8,7 @@ a {
 }
 
 a:hover {
-  color: #31C5F2;
+  color: #5AC5C3;
 }
 
 .bg-nmg {
@@ -16,23 +16,23 @@ a:hover {
 }
 
 .border-nmg {
-  border-color: #31C5F2;
+  border-color: #5AC5C3;
 }
 
 .btn-nmg {
   color: #C0C0C0;
   background-color: #0c1a19;
-  border-color: #31C5F2;
+  border-color: #5AC5C3;
 }
 
 .btn-nmg:hover {
-  color: #31C5F2;
+  color: #5AC5C3;
 }
 
 .btn-nmg-cancel {
   color: #ffc107;
   background-color: #0c1a19;
-  border-color: #31C5F2;
+  border-color: #5AC5C3;
 }
 
 .btn-nmg-cancel:hover {
@@ -43,7 +43,7 @@ a:hover {
 .btn-nmg-delete {
   color: #c04551;
   background-color: #0c1a19;
-  border-color: #31C5F2;
+  border-color: #5AC5C3;
 }
 
 .btn-nmg-delete:hover {
@@ -53,7 +53,7 @@ a:hover {
 
 .card {
   background-color: #203030;
-  border-color: #31C5F2 !important;
+  border-color: #5AC5C3 !important;
 }
 
 .clipped {
@@ -64,11 +64,11 @@ a:hover {
 .form-control {
   background-color: #F0FFFF;
   color: #0c1a19;
-  border-color: #31C5F2;
+  border-color: #5AC5C3;
 }
 
 .img-thumbnail {
-  border-color: #31C5F2;
+  border-color: #5AC5C3;
   background-color: #0c1a19;
 }
 
@@ -90,7 +90,7 @@ a:hover {
 }
 
 .navbar-nmg .navbar-nav .nav-link:hover {
-  color: #31C5F2;
+  color: #5AC5C3;
 }
 
 .navbar-nmg a.dropdown-item {
@@ -99,7 +99,7 @@ a:hover {
 
 .navbar-nmg a.dropdown-item:focus, .navbar-nmg a.dropdown-item:hover {
   background-color: #0c1a19;
-  color: #31C5F2;
+  color: #5AC5C3;
 }
 
 .table-nmg {

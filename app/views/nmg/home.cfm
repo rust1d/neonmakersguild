@@ -1,5 +1,5 @@
 <cfscript>
-  mEntries = mBlog.entries(maxrows: 5);
+  mEntries = mBlog.entries(ben_released: true, maxrows: 5);
 </cfscript>
 
 <cfoutput>

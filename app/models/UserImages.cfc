@@ -22,6 +22,7 @@ component extends=BaseModel accessors=true {
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('ui_uiid'), null: !arguments.keyExists('ui_uiid'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('ui_usid'), null: !arguments.keyExists('ui_usid'));
     sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),    null: !arguments.keyExists('term'));
+    sproc.addParam(cfsqltype: 'float',   value: arguments.get('ratio'),   null: !arguments.keyExists('ratio'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 
     return sproc.execute().getProcResultSets().qry;

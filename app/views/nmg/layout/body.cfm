@@ -9,7 +9,7 @@
         <cfset router.include() />
       </div>
       <div class='col-md-3 p-3'>
-        <cfif mBlog.id()==1>
+        <cfif mUserBlog.id()==1>
           <cfset router.include('shared/sidebar') />
           <!--- <cfif ListFind('member/view,user/home', router.template())> --->
         <cfelse>

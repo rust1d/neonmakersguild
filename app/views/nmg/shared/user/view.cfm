@@ -1,6 +1,6 @@
 <cfoutput>
   <div class='card'>
-    <div class='card-header btn-nmg'>
+    <div class='card-header bg-nmg'>
     </div>
     <div class='card-body'>
       <div class='row mb-3'>

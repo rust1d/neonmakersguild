@@ -30,7 +30,7 @@
     <div class='col-12 col-md-10 col-lg-8'>
       <form role='form' method='post'>
         <div class='card'>
-          <h5 class='card-header btn-nmg'>Change Password</h5>
+          <h5 class='card-header bg-nmg'>Change Password</h5>
           <div class='card-body'>
             <p>
               <label class='form-label' for='password'>New Password</label>

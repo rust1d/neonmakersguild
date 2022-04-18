@@ -16,91 +16,12 @@
   mode = mImage.new_record() ? 'Add' : 'Edit';
 </cfscript>
 
-<script>
-  $(document).ready(() => {
-    $('#hidden_input').change(function () {
-      const file = this.files[0];
-      if (file) {
-        img = new Image();
-        img.onload = function () {
-          $('input[name=ui_rename]').val(file.name);
-          $('input[name=ui_mb]').val(`${(file.size / 1024).toFixed(1)} KB`);
-          $('input[name=ui_dimensions]').val(`${this.width} x ${this.height}`);
-          URL.revokeObjectURL(this.src);
-        };
-        img.src =  URL.createObjectURL(file);
-        $('#image_preview').attr('src', img.src);
-      }
-    });
-
-    var $nailer = $('#thumbnail_crop').croppie({
-      viewport: { width: 290, height: 290, type: 'square' },
-      enableExif: true
-    });
-
-    read_image = function() {
-      const formData = new FormData();
-      formData.append('uiid', $(this).data('uiid'));
-      $.post({
-        url: 'xhr.cfm?p=user/image/pic64',
-        cache: false,
-        data: formData,
-        dataType: 'json',
-        contentType: false,
-        processData: false,
-        error: function(err) { console.log(err) },
-        success: function(data) {
-          show_cropper();
-          $nailer.croppie('bind', { url: data.data });
-        }
-      });
-    }
-
-    show_cropper = function() {
-      $('#thumbnail_view').addClass('d-none');
-      $('.image-crop-wrapper').removeClass('d-none');
-    }
-
-    hide_cropper = function() {
-      $('#thumbnail_view').removeClass('d-none');
-      $('.image-crop-wrapper').addClass('d-none');
-    }
-
-    upload_file = function(resp) {
-      const formData = new FormData();
-      formData.append('thumbnail', uri_to_blob(resp), 'crop.jpg');
-      formData.append('uiid', $('#btnOpen').data('uiid'));
-      $.post({
-        url: 'xhr.cfm?p=user/image/upload',
-        cache: false,
-        data: formData,
-        dataType: 'json',
-        contentType: false,
-        processData: false,
-        complete: function() {  },
-        error: function(err) { console.error(err) },
-        success: function(results) {
-          $('#thumbnail_src').attr('src', resp);
-          if (results.messages.length) $('#flash-messages').replaceWith(results.messages);
-          hide_cropper();
-          // location.reload();
-        }
-      });
-    }
-
-    $('#btnCrop').on('click', function(ev) {
-      $nailer.croppie('result', { type: 'canvas', size: 'viewport' }).then(upload_file);
-    });
-
-    $('#btnCancel').on('click', hide_cropper);
-    $('#btnOpen').on('click', read_image);
-  });
-</script>
+<script src='/assets/js/image/edit.js'></script>
 
 <cfoutput>
   <form role='form' method='post' enctype='multipart/form-data'>
     <div class='card'>
-      <h5 class='card-header btn-nmg'>
+      <h5 class='card-header bg-nmg'>
         #mode# <cfif mode is 'add'>image<cfelse>#mImage.filename()#</cfif>
       </h5>
       <div class='card-body'>
@@ -146,32 +67,34 @@
           </form>
         <cfelse>
           <div class='row g-3'>
-            <div class='col-md-4 col-12 text-center position-relative'>
+            <div class='col-auto'>
               <div id='thumbnail_view'>
                 <div class='position-relative'>
-                  <img id='thumbnail_src' src='#mImage.thumbnail_src()#' class='w-100 img-thumbnail' />
+                  <img id='thumbnail_src' src='#mImage.thumbnail_src()#' class='profile-crop-wrapper img-thumbnail' />
                   <button type='button' id='btnOpen' data-uiid='#mImage.encoded_key()#' title='change thumbnail' class='image-crop-btn rounded-circle btn btn-nmg btn-outline-dark fa-thin fa-photo-film'></button>
                 </div>
-                <div class='input-group input-group-sm mb-1 position-absolute bottom-0 start-0'>
+                <div class='input-group input-group-sm mt-1'>
                   <input type='text' class='form-control' name='ui_filename' value='#mImage.filename()#' />
                   <button type='submit' name='btnSubmit' class='btn btn-sm btn-nmg'>rename</button>
                 </div>
               </div>
               <div class='image-crop-wrapper d-none'>
-                <div id='thumbnail_crop' class='mb-5'></div>
-                <div class='text-center'>
+                <div id='thumbnail_crop' class='profile-crop-wrapper img-thumbnail'></div>
+                <div class='text-center my-3'>
                   <button type='button' class='btn btn-sm btn-nmg' id='btnCrop'>Save thumbnail</button>
                   <button type='button' class='btn btn-sm btn-nmg' id='btnCancel'>Cancel</button>
                 </div>
+                <br clear='all'>
               </div>
             </div>
-            <div class='col-md-8 col-12 text-center'>
+            <div class='col-md'>
               <img src='#mImage.image_src()#' class='w-100 img-thumbnail clipable' data-clip='#mImage.image_src()#' />
               <!--- <small class='fst-italic muted'>#mImage.dimensions()# pixels &bull; #mImage.size_mb()#</small> --->
             </div>
           </div>
+
           <div class='row g-3'>
-            <div class='col-md-4 col-12 text-center'>
+            <div class='col-md-3 col-12 text-center'>
               <hr>
               <button type='submit' name='btnDelete' id='btnDelete' class='btn btn-nmg-delete'>Delete</button>
               <a href='#router.href('#dest#/image/list')#' class='btn btn-nmg-cancel'>Cancel</a>

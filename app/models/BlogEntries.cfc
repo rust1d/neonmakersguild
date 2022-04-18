@@ -1,20 +1,18 @@
 component extends=jSoup accessors=true {
-  property name='ben_benid'          type='numeric'  sqltype='integer'    primary_key;
-  property name='ben_blog'           type='numeric'  sqltype='integer';
-  property name='ben_usid'           type='numeric'  sqltype='integer';
-  property name='ben_title'          type='string'   sqltype='varchar';
-  property name='ben_body'           type='string'   sqltype='varchar'    html;
-  property name='ben_posted'         type='date'     sqltype='timestamp';
-  property name='ben_morebody'       type='string'   sqltype='varchar'    html;
-  property name='ben_alias'          type='string'   sqltype='varchar';
-  property name='ben_allowcomments'  type='boolean'  sqltype='tinyint'    default='0';
-  property name='ben_attachment'     type='string'   sqltype='varchar';
-  property name='ben_filesize'       type='numeric'  sqltype='integer';
-  property name='ben_mimetype'       type='string'   sqltype='varchar';
-  property name='ben_views'          type='numeric'  sqltype='integer';
-  property name='ben_released'       type='boolean'  sqltype='tinyint'    default='0';
-  property name='ben_mailed'         type='numeric'  sqltype='tinyint';
-  property name='ben_blogname'       type='string';
+  property name='ben_benid'     type='numeric'  sqltype='integer'    primary_key;
+  property name='ben_blog'      type='numeric'  sqltype='integer';
+  property name='ben_usid'      type='numeric'  sqltype='integer';
+  property name='ben_posted'    type='date'     sqltype='timestamp';
+  property name='ben_title'     type='string'   sqltype='varchar';
+  property name='ben_alias'     type='string'   sqltype='varchar';
+  property name='ben_image'     type='string'   sqltype='varchar';
+  property name='ben_body'      type='string'   sqltype='varchar'    html;
+  property name='ben_morebody'  type='string'   sqltype='varchar'    html;
+  property name='ben_comments'  type='boolean'  sqltype='tinyint'    default='false';
+  property name='ben_views'     type='numeric'  sqltype='integer';
+  property name='ben_released'  type='boolean'  sqltype='tinyint'    default='false';
+  property name='ben_promoted'  type='boolean'  sqltype='tinyint'    default='false';
+  property name='ben_blogname'  type='string';
 
   has_many(name: 'BlogEntryCategories',  class: 'BlogEntriesCategories',  key: 'ben_benid',  relation: 'bec_benid');
   has_many(name: 'RelatedBlogEntries',   class: 'BlogEntriesRelated',     key: 'ben_benid',  relation: 'ber_benid');

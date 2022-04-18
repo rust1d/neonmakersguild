@@ -1,13 +1,13 @@
 <cfscript>
   mEntry = new app.models.BlogEntries(form);
   flash.info('This is a preview of the `#mEntry.title()#` post.', false);
-
 </cfscript>
 
 <cfoutput>
     <div class='row justify-content-center'>
       <div class='col-md-10'>
-        <div class='card'>
+        <div class='card border'>
+          <div class='aspect-2-1' style='background-image: url(#mEntry.image()#)'></div>
           <div class='card-body'>
             <div class='row g-2'>
               <div class='col-12 text-center text-uppercase'>

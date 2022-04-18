@@ -1,5 +1,5 @@
 <cfoutput>
-  <div id='footer' class='bg-nmg-dark pt-3'>
+  <div id='footer' class='bg-nmg pt-3'>
     <div class='container'>
       <div class='row mt-3'>
         <div class='col-12 text-center align-middle'>

@@ -1,5 +1,6 @@
 <cfoutput>
   <div class='card border mb-3'>
+    <div class='aspect-2-1' style='background-image: url(#locals.mEntry.image()#)'></div>
     <div class='card-body'>
       <div class='row'>
         <div class='col-12 px-4'>

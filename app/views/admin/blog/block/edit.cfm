@@ -14,13 +14,14 @@
 </cfscript>
 
 <script src='/assets/js/admin/blog/block.js'></script>
+<script src='/assets/js/image/select.js'></script>
 
 <cfoutput>
   <div class='row mb-3'>
     <div class='col'>
       <form role='form' method='post' id='blogform'>
         <div class='card'>
-          <div class='card-header btn-nmg'>
+          <div class='card-header bg-nmg'>
             <div class='row'>
               <div class='col fs-5'>#mode# Content Block</div>
             </div>

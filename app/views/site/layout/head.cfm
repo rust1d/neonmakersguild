@@ -25,7 +25,6 @@
   <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap'>
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.css' integrity='sha512-zxBiDORGDEAYDdKLuYU9X/JaJo/DPzE42UubfBw9yg8Qvb2YRRIQ8v4KsGHOx2H1/+sdSXyXxLXv5r7tHc9ygg==' crossorigin='anonymous' referrerpolicy='no-referrer' />
 
-
   <script src='https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js'></script>
   <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js' integrity='sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM' crossorigin='anonymous'></script>
   <script src='https://code.jquery.com/jquery-3.6.0.min.js' integrity='sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=' crossorigin='anonymous'></script>
@@ -40,12 +39,6 @@
   <script src='/assets/js/jquery/jquery.passtrength.js'></script>
   <script src='/assets/js/bs_needs_validation.js'></script>
   <script src='/assets/js/main.js'></script>
-
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/plupload/3.1.5/plupload.full.min.js' integrity='sha512-yLlgKhLJjLhTYMuClLJ8GGEzwSCn/uwigfXug5Wf2uU5UdOtA8WRSMJHJcZ+mHgHmNY+lDc/Sfp86IT9hve0Rg==' crossorigin='anonymous' referrerpolicy='no-referrer'></script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/plupload/3.1.5/jquery.plupload.queue/jquery.plupload.queue.min.js' integrity='sha512-Fn6cBLKAk/IXJZvGyCNGqS4otOtBh9MV7g9paw1ltw3W00Z7HIehOYXYeVWNsyd9PyohmC3RjKA3v25/xEEizQ==' crossorigin='anonymous' referrerpolicy='no-referrer'></script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/plupload/3.1.5/jquery.ui.plupload/jquery.ui.plupload.min.js' integrity='sha512-EUeKv8Kx25nyaYsCUU7+FuK6wFAn3bPNh4gS7+MBkznOtEjbm3U5VKo1OLJSL67MkjoFTonK/JwckVeRcbqXMA==' crossorigin='anonymous' referrerpolicy='no-referrer'></script>
-  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/plupload/3.1.5/jquery.plupload.queue/css/jquery.plupload.queue.min.css' integrity='sha512-50UY9VY37/VxML0pGNJb59uufYoNCfrnYb81jx6AswTD5mRhdnXfBeyA6uxOfygxRZqj7jCjDjtIXRmTlOc48w==' crossorigin='anonymous' referrerpolicy='no-referrer' />
-  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/plupload/3.1.5/jquery.ui.plupload/css/jquery.ui.plupload.min.css' integrity='sha512-5kSSFJmWS26fqHGZl2ZYGaf10cC6hBEIWw/LxBlJ28KaMQtK1NwuAhQlClirbCPz7W5yiJQFhKpeZHWkRSG6BA==' crossorigin='anonymous' referrerpolicy='no-referrer' />
 
   <script>
     var SERVER = {};

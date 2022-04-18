@@ -16,7 +16,7 @@
     <div class='col-12 col-md-10 col-lg-8'>
       <form role='form' method='post'>
         <div class='card'>
-          <h5 class='card-header bg-nmg'>Login</h5>
+          <h5 class='card-header bg-nmg bg-nmg'>Login</h5>
           <div class='card-body'>
             <div class='input-group mb-3'>
               <span class='input-group-text btn-nmg'><i class='fas fa-person-dots-from-line'></i></span>

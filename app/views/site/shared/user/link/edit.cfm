@@ -21,7 +21,7 @@
       <div class='col'>
         <form role='form' method='post' enctype='multipart/form-data'>
           <div class='card'>
-            <h5 class='card-header btn-nmg'>#mode# Link</h5>
+            <h5 class='card-header bg-nmg'>#mode# Link</h5>
             <div class='card-body'>
               <div class='row g-3'>
                 <div class='col-md-3'>

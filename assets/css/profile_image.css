@@ -17,14 +17,14 @@
 .profile-crop-wrapper {
   width: 300px;
   height: 300px;
-  margin-bottom: 48px;
+  margin-bottom: 3rem;
 }
 
 
 .image-crop-wrapper {
   width: 300px;
   height: 300px;
-  margin-bottom: 48px;
+  margin-bottom: 3rem;
 }
 
 .image-menu-btn {
@@ -34,7 +34,7 @@
 
 
 .image-crop-btn {
-  bottom: .45rem;
+  bottom: 3.45rem;
   right: .45rem;
   opacity: 0.5!important;
   position: absolute;

@@ -5,7 +5,7 @@
 
 <cfoutput>
   <div class='card'>
-    <div class='card-header btn-nmg'>
+    <div class='card-header bg-nmg'>
       <div class='row'>
         <div class='col fs-5'>Members</div>
         #router.include('shared/partials/view_and_filter')#
