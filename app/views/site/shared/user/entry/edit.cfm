@@ -4,6 +4,7 @@
   if (form.keyExists('btnSubmit')) {
     param form.categories = '';
     param form.ben_released = false;
+    param form.ben_comments = false;
 
     if (len(form.get('bca_category'))) {
       qry = mBlog.category_search(bca_category: form.bca_category);
@@ -28,7 +29,7 @@
   qryCats = mBlog.categories();
   mode = mEntry.new_record() ? 'Add' : 'Edit';
 
-  mImages = mBlog.images(ratio: 2, maxrows: 10);
+  mImages = mBlog.images(ratio: 2, maxrows: 12);
 </cfscript>
 
 <cfparam name='form.sendemail' default='true'>
@@ -48,89 +49,91 @@
             </div>
           </div>
           <div class='card-body'>
-            <div class='row g-3'>
-              <div class='col-md-9'>
-                <div class='row g-3'>
-                  <div class='col-12'>
-                    <label class='form-label required' for='ben_title'>Title</label>
-                    <input type='text' class='form-control' name='ben_title' id='ben_title' value='#htmlEditFormat(mEntry.title())#' maxlength='100' required />
-                  </div>
-                  <div class='col-12'>
-                    <label class='form-label required' for='ben_image'>Post Header Image URL <small>(2:1 ratio)</small></label>
-                    <input type='text' class='form-control' name='ben_image' id='ben_image' value='#htmlEditFormat(mEntry.image())#' maxlength='150' required />
-                    <div class='small text-muted'>All images must be hosted on this site. For best results, image should be 1200 x 600 pixels.</div>
-                  </div>
-                  <div class='col-12 col-md-6'>
-                    <div id='image_header' class='aspect-2-1' style='background-image: url(#mEntry.image()#)'></div>
-                  </div>
-                  <cfif mImages.len()>
-                    <div class='col-12 col-md-6'>
-                      <div class='row ps-2'>
-                        <cfloop array='#mImages#' item='mImage'>
-                          <div class='col-sm-4 col-md-3 col-lg-2 p-1'>
-                            <img class='w-100 img-thumbnail clipable' src='#mImage.thumbnail_src()#' data-clip='#mImage.image_src()#' onclick='image_header(this)' title='#mImage.filename()# -#mImage.dimensions()#' />
-                          </div>
-                        </cfloop>
-                      </div>
-                      <small class='text-muted'>Recent header images. Click image to copy url.</small>
+            <div class='row g-2'>
+              <div class='col-12'>
+                <label class='form-label required' for='ben_title'>Title</label>
+                <input type='text' class='form-control form-control-sm' name='ben_title' id='ben_title' value='#htmlEditFormat(mEntry.title())#' maxlength='100' required />
+              </div>
+              <div class='col-12'>
+                <label class='form-label' for='ben_alias'>Alias</label> <small class='text-muted ps-3'>auto-generated from title if left blank</small>
+                <input type='text' class='form-control form-control-sm' name='ben_alias' id='ben_alias' value='#mEntry.alias()#' maxlength='100' />
+              </div>
+              <div class='col-12'>
+                <label class='form-label required' for='headersearch'>Header Image</label> <small class='text-muted ps-3'>search and click thumbnail to set header image</small>
+                <div class='input-group input-group-sm'>
+                  <span class='input-group-text btn-nmg'><i class='fa fa-search'></i></span>
+                  <input type='text' class='form-control' id='headersearch' name='headersearch' placeholder='type to search images...' maxlength='20' data-usid='#mBlog.encoded_key()#' />
+                </div>
+                <input type='text' class='form-control form-control-sm text-muted mt-2' name='ben_image' id='ben_image' value='#htmlEditFormat(mEntry.image())#' maxlength='150' readonly required />
+                <div id='headerselect' class='row g-1 mt-1'>
+                  <cfif mImages.len()==0><div class='col-sm-3 col-md-2 col-lg-1'><img class='w-100 img-thumbnail' src='/assets/images/profile_placeholder.png' /></div></cfif>
+                  <cfloop array='#mImages#' item='mImage'>
+                    <div class='col-3 col-md-2 col-xl-1'>
+                      <img class='w-100 img-thumbnail border-success' src='#mImage.thumbnail_src()#' data-clip='#mImage.image_src()#' onclick='image_header(this)' title='#mImage.filename()# -#mImage.dimensions()#' />
                     </div>
-                  </cfif>
-
-                  <div class='col-12'>
-                    <label class='form-label required' for='ben_body'>Post <small>(above fold)</small></label>
-                    <textarea class='tiny-mce form-control' name='ben_body' id='ben_body'>#htmlEditFormat(mEntry.body())#</textarea>
-                    <div class='small text-muted'>The post above the fold should be under 50 words and will be used when displaying a summary.</div>
-                  </div>
-                  <div class='col-12'>
-                    <label class='form-label required' for='ben_morebody'>Post <small>(below fold)</small></label>
-                    <textarea class='tiny-mce form-control' name='ben_morebody' id='ben_morebody'>#htmlEditFormat(mEntry.morebody())#</textarea>
-                  </div>
+                  </cfloop>
                 </div>
               </div>
-              <div class='col-md-3'>
-                <div class='row g-3'>
-                  <div class='col-12'>
-                    <label class='form-label' for='ben_alias'>Alias <small>(auto-generated)</small></label>
-                    <input type='text' class='form-control' name='ben_alias' id='ben_alias' value='#mEntry.alias()#' maxlength='100' />
-                  </div>
-                  <div class='col-12'>
-                    <label class='form-label required' for='ben_posted'>Post After</label>
-                    <input type='text' class='form-control' name='ben_posted' id='ben_posted' value='#mEntry.posted()#' maxlength='20' required />
-                    <div class='small text-muted'>yyyy-mm-dd hh24:mi</div>
-                  </div>
-                  <div class='col-12'>
-                    <div class='form-check form-switch'>
-                      <input class='form-check-input' type='checkbox' id='ben_released' name='ben_released' value='yes' #ifin(mEntry.released(), 'checked')#>
-                      <label class='form-check-label' for='ben_released'>Released</label>
+              <div class='col-12 col-lg-9'>
+                <label class='form-label text-muted'><small>Images with a 2:1 width/height ratio and dimensions 1200 x 600 are recommended.</small></label>
+                <div id='image_header' class='aspect-2-1 rounded' style='background-image: url(#mEntry.image()#)'></div>
+              </div>
+              <div class='col-12 col-lg-3'>
+                <div class='row g-2'>
+                  <div class='col-12 col-md-6 col-lg-12'>
+                    <div class='row g-2'>
+                      <div class='col-12'>
+                        <label class='form-label required' for='ben_posted'>Post After</label>
+                        <input type='text' class='form-control form-control-sm' name='ben_posted' id='ben_posted' value='#mEntry.posted()#' maxlength='20' title='YYYY-MM-DD HH24:MI' required />
+                      </div>
+                      <div class='col-6 col-md-12 col-lg-6'>
+                        <label class='form-label mb-0' for='ben_released'>Released</label>
+                        <div class='form-check form-switch form-control-lg'>
+                          <input class='form-check-input mb-2' type='checkbox' id='ben_released' name='ben_released' value='yes' #ifin(mEntry.released(), 'checked')#>
+                        </div>
+                      </div>
+                      <div class='col-6 col-md-12 col-lg-6'>
+                        <label class='form-label mb-0' for='ben_comments'>Comments</label>
+                        <div class='form-check form-switch form-control-lg'>
+                          <input class='form-check-input mb-2' type='checkbox' id='ben_comments' name='ben_comments' value='yes' #ifin(mEntry.comments(), 'checked')#>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <div class='col-12'>
+                  <div class='col-12 col-md-6 col-lg-12'>
                     <label class='form-label required' for='categories'>Categories</label>
-                    <select class='form-control' name='categories' id='categories' multiple='multiple' size='8'>
+                    <div class='input-group input-group-sm'>
+                      <input type='text' class='form-control' name='bca_category' id='bca_category' value='#htmlEditFormat(form.get('bca_category'))#' maxlength='50' />
+                      <button class='input-group-text btn-nmg' title='Add Category'><i class='fal fa-plus'></i> &nbsp; Add</button>
+                    </div>
+                    <select class='form-control form-control-sm mt-1' name='categories' id='categories' multiple='multiple' size='7'>
                       <cfloop array='#mBlog.categories()#' item='mCat'>
                         <option value='#mCat.bcaid()#' #ifin(listFind(form.categories, mCat.bcaid()), 'selected')#>#mCat.category()#</option>
                       </cfloop>
                     </select>
                   </div>
-                  <div class='col-12'>
-                    <label class='form-label' for='bca_category'>Add Category</label>
-                    <input type='text' class='form-control' name='bca_category' id='bca_category' value='#htmlEditFormat(form.get('bca_category'))#' maxlength='50' />
-                  </div>
-                  <div class='col-12'>
-                    <label class='form-label' for='imagesearch'>Images</label>
-                    <div class='input-group input-group-sm'>
-                      <input type='text' class='form-control' id='imagesearch' name='imagesearch' placeholder='search images...' maxlength='20' data-usid='#mBlog.encoded_key()#' />
-                      <button class='btn btn-sm btn-nmg' type='button'><i class='fa fa-search'></i></button>
-                    </div>
-                    <small class='text-muted'>Click image to insert into post.</small>
-                  </div>
-                  <div class='col-12'>
-                    <div id='imageselect' class='row g-0'>
-                      <div class='col-4 p-1'><img class='w-100 img-thumbnail' src='/assets/images/profile_placeholder.png' /></div>
-                    </div>
-                  </div>
                 </div>
+              </div>
+              <div class='col-12'>
+                <label class='form-label required mb-0' for='ben_body'><span class='fs-3'>Body</span> <span class='small'>above fold</span></label>
+                <div class='small text-muted mb-1'>Above the fold is typically the first paragraph of the post. It should be under 50 words and contain no images.</div>
+                <textarea class='tiny-mce form-control' name='ben_body' rows='3' id='ben_body'>#htmlEditFormat(mEntry.body())#</textarea>
+              </div>
+              <div class='col-12'>
+                <label class='form-label' for='imagesearch'>Image Search</label> <small class='text-muted ps-3'>search and click image to insert</small>
+                <div class='input-group input-group-sm'>
+                  <span class='input-group-text btn-nmg'><i class='fa fa-search'></i></span>
+                  <input type='text' class='form-control' id='imagesearch' name='imagesearch' placeholder='type to search images...' maxlength='20' data-usid='#mBlog.encoded_key()#' />
+                </div>
+                <div id='imageselect' class='row g-1 mt-1'>
+                  <div class='col-3 col-md-2 col-xl-1'><img class='w-100 img-thumbnail' src='/assets/images/profile_placeholder.png' /></div>
+                </div>
+                <small class='text-muted'>Click image to insert into post.</small>
+              </div>
+              <div class='col-12'>
+                <label class='form-label required mb-0' for='ben_morebody'><span class='fs-3'>Body</span> <span class='small'>below fold</span></label>
+                <textarea class='tiny-mce form-control' name='ben_morebody' rows='20' id='ben_morebody'>#htmlEditFormat(mEntry.morebody())#</textarea>
               </div>
             </div>
             <div class='row mt-5'>

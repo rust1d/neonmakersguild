@@ -1,8 +1,25 @@
 $(function() {
-  tinymce.init({
-    selector: 'textarea.tiny-mce',
-    plugins: 'autolink autosave code fullscreen help image importcss lists media preview table visualchars wordcount',
-    toolbar: 'code fullscreen image media preview restoredraft table visualchars wordcount',
+  let tiny_params = {
+    plugins: 'autolink autosave code fullscreen help image importcss lists media preview searchreplace table visualchars wordcount',
+    toolbar: 'fullscreen code | undo redo | editing | aligning | styling | image media | fontfamily fontsize forecolor backcolor | numlist bullist',
+    toolbar_groups: {
+      aligning: {
+        icon: 'align-center',
+        tooltip: 'Alignment',
+        items: 'alignleft aligncenter alignright alignjustify alignnone | indent outdent'
+      },
+      editing: {
+        icon: 'edit-block',
+        tooltip: 'Edit',
+        items: 'selectall | cut copy paste pastetext remove'
+      },
+      styling: {
+        icon: 'permanent-pen',
+        tooltip: 'Edit',
+        items: 'bold italic | underline strikethrough | subscript superscript | h1 h2 h3 h4 h5 h6 | blockquote'
+      }
+    },
+    font_family_formats: 'Select Font=system-ui;Andale Mono=andale mono,times; Arial Black=arial black,avant garde; Arial=arial,helvetica,sans-serif; Arimo=arimo; Book Antiqua=book antiqua,palatino; Comic Sans MS=comic sans ms,sans-serif; Courier New=courier new,courier; Georgia=georgia,palatino; Helvetica=helvetica; Impact=impact,chicago; Montserrat=montserrat; Permanent Marker=permanent marker; Poppins=poppins; Roboto=roboto; Symbol=symbol; Tahoma=tahoma,arial,helvetica,sans-serif; Terminal=terminal,monaco; Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva; Webdings=webdings; Wingdings=wingdings,zapf dingbats;',
     toolbar_mode: 'floating',
     image_class_list: [
       { title: 'None', value: 'w-100 my-3' },
@@ -28,7 +45,14 @@ $(function() {
     table_appearance_options: false,
     relative_urls : true,
     remove_script_host : false,
+  };
+
+  $('textarea.tiny-mce').each(function() {
+    var high = 160 + this.rows * 20;
+    var params = { height: high, target: this }
+    tinymce.init({ ...tiny_params, ...params });
   });
+
 
   $('body').on('click', '.clipable', function() {
     navigator.clipboard.writeText($(this).data('clip'));

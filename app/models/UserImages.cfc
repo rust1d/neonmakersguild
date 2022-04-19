@@ -1,8 +1,8 @@
 component extends=BaseModel accessors=true {
   property name='ui_uiid'      type='numeric'  sqltype='integer'    primary_key;
   property name='ui_usid'      type='numeric'  sqltype='integer';
-  property name='ui_width'     type='numeric'  sqltype='integer';
-  property name='ui_height'    type='numeric'  sqltype='integer';
+  property name='ui_width'     type='numeric'  sqltype='integer'    default='0';
+  property name='ui_height'    type='numeric'  sqltype='integer'    default='0';
   property name='ui_size'      type='numeric'  sqltype='integer';
   property name='ui_filename'  type='string'   sqltype='varchar';
   property name='ui_type'      type='string'   sqltype='varchar';
@@ -42,6 +42,10 @@ component extends=BaseModel accessors=true {
 
   public string function image_src64() {
     return utility.imageToBase64(application.urls.root & image_src());
+  }
+
+  public string function ratio() {
+    return variables.ui_height==0 ? 0 : ui_width / ui_height;
   }
 
   public string function thumbnail_src() {

@@ -12,7 +12,8 @@
             'filename': mImage.filename(),
             'image': mImage.image_src(),
             'thumbnail': mImage.thumbnail_src(),
-            'dimensions': mImage.dimensions()
+            'dimensions': mImage.dimensions(),
+            'ratio': mImage.ratio()
           });
         }
       }
