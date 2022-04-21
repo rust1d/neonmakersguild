@@ -44,7 +44,6 @@ component accessors=true {
   }
 
   public boolean function category_save(required BlogCategories mCategory) {
-    if (mCategory.new_record() && !isAuthorized('AddCategory')) return application.flash.error('Sorry you are not authorized to add categories.');
     var matches = mCategory.where(bca_blog: id(), bca_category: mCategory.category());
     if (matches.len()==1 && (mCategory.new_record() || matches[1].bcaid()!=mCategory.bcaid())) return application.flash.error('Category exists.');
     if (matches.len()>1) return application.flash.error('blog.category_save too many rows.');
@@ -67,7 +66,7 @@ component accessors=true {
     if (pkid==0) return mdl.set({
       ben_usid: session.user.usid(),
       ben_blog: id(),
-      ben_released: isAuthorized('ReleaseEntries'),
+      ben_released: true,
       ben_image: '/assets/images/1200x600.png',
       ben_posted: now()
     });

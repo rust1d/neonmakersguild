@@ -40,7 +40,9 @@ component accessors=true {
   }
 
   private string function image_src() {
-    return application.urls.root & '/assets/images/profile/' & subfolder() & '/' & image_name();
+    var ts = '';
+    if (session.user.loggedIn() && session.user.usid()==usid) ts = '?#now().format('HHnnss')#';
+    return application.urls.root & '/assets/images/profile/' & subfolder() & '/' & image_name() & ts;
   }
 
   private string function path_to_file() {

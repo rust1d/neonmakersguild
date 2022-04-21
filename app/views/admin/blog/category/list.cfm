@@ -7,13 +7,11 @@
     <div class='card-header bg-nmg'>
       <div class='row'>
         <div class='col fs-5'>Categories</div>
-        <cfif mBlog.isAuthorized('AddCategory')>
-          <div class='col-auto'>
-            <a href='#router.href('blog/category/edit')#' class='btn btn-sm btn-nmg' title='Add'>
-              <i class='fal fa-plus'></i>
-            </a>
-          </div>
-        </cfif>
+        <div class='col-auto'>
+          <a href='#router.href('blog/category/edit')#' class='btn btn-sm btn-nmg' title='Add'>
+            <i class='fal fa-plus'></i>
+          </a>
+        </div>
         #router.include('shared/partials/view_and_filter', { viewer: false })#
       </div>
     </div>
@@ -22,9 +20,7 @@
         <thead>
           <tr>
             <th scope='col'>
-              <cfif mBlog.isAuthorized('AddCategory')>
-                <a href='#router.href('blog/category/edit')#' class='btn btn-sm btn-nmg'><i class='fal fa-plus'></i></a>
-              </cfif>
+              <a href='#router.href('blog/category/edit')#' class='btn btn-sm btn-nmg'><i class='fal fa-plus'></i></a>
             </th>
             <th scope='col'>Category</th>
             <th scope='col'>Entries</th>

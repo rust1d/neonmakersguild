@@ -2,38 +2,39 @@
   dest = (mBlog.id()==1 && session.site.isA('admin')) ? 'blog' : 'user';
 
   if (form.keyExists('btnSubmit')) {
-    param form.categories = '';
+    param form.ben_categories = '';
     param form.ben_released = false;
     param form.ben_comments = false;
 
-    if (len(form.get('bca_category'))) {
-      qry = mBlog.category_search(bca_category: form.bca_category);
-      if (qry.len()) {
-        form.categories = form.categories.listAppend(qry.bca_bcaid);
+    categories = [];
+    for (category in form.ben_categories) {
+      if (isNumeric(category)) {
+        categories.append(category);
       } else {
-        mCategory = mBlog.category_build(form);
-        if (mBlog.category_save(mCategory)) form.categories = form.categories.listAppend(mCategory.bcaid());
+        qry = mBlog.category_search(bca_category: category);
+        if (qry.len()) {
+          categories.append(qry.bca_bcaid);
+        } else {
+          mCategory = mBlog.category_build({ bca_category: category });
+          if (mBlog.category_save(mCategory)) categories.append(mCategory.bcaid());
+        }
       }
     }
 
     mEntry.set(form);
     if (mEntry.safe_save()) {
-      mEntry.BlogEntryCategories(replace: form.categories ?: '');
-      mEntry.RelatedBlogEntries(replace: form.relatedEntries ?: '');
+      mEntry.BlogEntryCategories(replace: categories.toList());
       flash.success('Your entry was saved.');
       router.redirect('#dest#/entry/list');
     }
   }
 
-  param form.categories = mEntry.BlogEntryCategories().map(row => row.bec_bcaid()).toList();
+  param form.ben_categories = mEntry.BlogEntryCategories().map(row => row.bec_bcaid()).toList();
   qryCats = mBlog.categories();
   mode = mEntry.new_record() ? 'Add' : 'Edit';
 
   mImages = mBlog.images(ratio: 2, maxrows: 12);
 </cfscript>
-
-<cfparam name='form.sendemail' default='true'>
-<cfparam name='form.bca_category' default=''>
 
 <script src='/assets/js/admin/blog/entry.js'></script>
 <script src='/assets/js/image/select.js'></script>
@@ -102,14 +103,14 @@
                   </div>
 
                   <div class='col-12 col-md-6 col-lg-12'>
-                    <label class='form-label required' for='categories'>Categories</label>
+                    <label class='form-label required' for='ben_categories'>Categories</label>
                     <div class='input-group input-group-sm'>
-                      <input type='text' class='form-control' name='bca_category' id='bca_category' value='#htmlEditFormat(form.get('bca_category'))#' maxlength='50' />
-                      <button class='input-group-text btn-nmg' title='Add Category'><i class='fal fa-plus'></i> &nbsp; Add</button>
+                      <input type='text' class='form-control' name='bca_category' id='bca_category' maxlength='50' />
+                      <button type='button' id='btnAddCategory' class='input-group-text btn-nmg' title='Add Category'><i class='fal fa-plus'></i> &nbsp; Add</button>
                     </div>
-                    <select class='form-control form-control-sm mt-1' name='categories' id='categories' multiple='multiple' size='7'>
+                    <select class='form-control form-control-sm mt-1' name='ben_categories' id='ben_categories' multiple='multiple' size='7'>
                       <cfloop array='#mBlog.categories()#' item='mCat'>
-                        <option value='#mCat.bcaid()#' #ifin(listFind(form.categories, mCat.bcaid()), 'selected')#>#mCat.category()#</option>
+                        <option value='#mCat.bcaid()#' #ifin(listFind(form.ben_categories, mCat.bcaid()), 'selected')#>#mCat.category()#</option>
                       </cfloop>
                     </select>
                   </div>

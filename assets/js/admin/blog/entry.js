@@ -13,4 +13,18 @@ $(function () {
     if (!confirm('Are you sure you want to cancel this entry?')) return;
     window.location = '?p=blog/entry/list';
   });
+
+  $('#btnAddCategory').on('click', function() {
+    var $cat = $('#bca_category');
+    var data = $cat.val().trim();
+    $cat.val('');
+    if (!data.length) return $cat.focus();
+    var matches = $("#ben_categories").find('option').filter((row,obj) => obj.text.localeCompare(data)==0);
+    if (matches.length) {
+      matches[0].selected = true;
+      $cat.val('');
+      return;
+    }
+    $("#ben_categories").prepend(`<option value='${data}' selected>${data}</option>`);
+  });
 });

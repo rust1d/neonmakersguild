@@ -1,7 +1,8 @@
 $(function () {
   var $uploader = $('#upload_profile').croppie({
     viewport: { width: 290, height: 290, type: 'square' },
-    enableExif: true
+    enableExif: true,
+    enableOrientation: true
   });
 
   delete_image = function() {

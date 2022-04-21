@@ -1,12 +1,5 @@
-
-
 <cfscript>
   bcaid = router.decode('bcaid');
-  if (!mBlog.isAuthorized('AddCategory') && bcaid==0) {
-    flash.warning('Sorry you are not authorized to add categories.');
-    router.redirect('blog/category/list');
-  }
-
   mCategory = mBlog.category_find_or_create(bcaid);
 
   if (form.keyExists('btnSubmit')) {

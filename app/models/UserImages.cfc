@@ -130,6 +130,8 @@ component extends=BaseModel accessors=true {
 
   private struct function move_final(required string filename) {
     var img = ImageRead(filename);
+// writedump(ImageGetEXIFMetadata(img));abort;
+    var orientation = ImageGetEXIFTag(img, 'orientation');
 
     var info = ImageInfo(img);
     if (info.height > image_longest_side || info.width > image_longest_side) { // ENFORCE MAX DIMENSION

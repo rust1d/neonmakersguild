@@ -70,12 +70,10 @@
                       </cfloop>
                     </select>
                   </div>
-                  <cfif mBlog.isAuthorized('AddCategory')>
-                    <div class='col-12'>
-                      <label class='form-label' for='bca_category'>Add Category</label>
-                      <input type='text' class='form-control' name='bca_category' id='bca_category' value='#htmlEditFormat(form.get('bca_category'))#' maxlength='50' />
-                    </div>
-                  </cfif>
+                  <div class='col-12'>
+                    <label class='form-label' for='bca_category'>Add Category</label>
+                    <input type='text' class='form-control' name='bca_category' id='bca_category' value='#htmlEditFormat(form.get('bca_category'))#' maxlength='50' />
+                  </div>
                   <div class='col-12'>
                     <div class='input-group'>
                       <span class='input-group-text btn-nmg'>Search Images</span>

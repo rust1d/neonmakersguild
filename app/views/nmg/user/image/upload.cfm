@@ -14,11 +14,11 @@
           rtn['image'] = mImage.image_src();
         }
       }
-     if (session.user.profile_image().set()) {
-       rtn['profile_image'] = session.user.profile_image().src();
-       request.xhr_data = rtn;
-       flash.success('Your profile image was uploaded.');
-     }
+      if (session.user.profile_image().set()) {
+        rtn['profile_image'] = session.user.profile_image().src();
+        request.xhr_data = rtn;
+        flash.success('Your profile image was uploaded.');
+      }
     } else if (form.keyExists('thumbnail') && form.keyExists('uiid')) {
       uiid = utility.decode(form.uiid);
       if (uiid) {
