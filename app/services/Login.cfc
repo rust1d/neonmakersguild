@@ -1,11 +1,13 @@
 component accessors=true {
-  public void function login(required string user, required string password) {
+  public void function login(required string user, required string password, numeric pkid=0) {
     try {
       if (user.len()) {
-        var qryUser = new app.models.Users().search(us_user: user);
-        if (qryUser.len()==1) {
-          if (application.bcrypt.checkpw(password, qryUser.us_password)) {
-            sessionize_user(qryUser);
+        var mUsers = new app.models.Users().where(us_user: user);
+        if (mUsers.len()==1) {
+          var mUser = mUsers.first()
+          if (pkid==mUser.usid() || application.bcrypt.checkpw(password, mUser.us_password())) {
+            mUser.update_last_login();
+            sessionize_user(mUser);
             redirect_to_site();
           }
         }
@@ -22,11 +24,11 @@ component accessors=true {
 
   // PRIVATE
 
-  private void function sessionize_user(required query qryUser) {
-    session.user.set_pkid(qryUser.us_usid);
+  private void function sessionize_user(required Users mUser) {
+    session.user.set_pkid(mUser.usid());
     session.user.set_class('Users');
     session.user.set_home('user/home');
-    if (qryUser.us_permissions GT 0) session.user.set_admin('true');
+    if (mUser.permissions() GT 0) session.user.set_admin('true');
   }
 
   private void function redirect_to_site() {

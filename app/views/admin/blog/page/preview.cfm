@@ -1,6 +1,6 @@
 <cfscript>
   mPage = new app.models.BlogPages(request.unclean);
-  flash.info('This is a preview of the `#mPage.title()#` page.', false);
+  flash.info('This is a preview of the `#mPage.title()#` page. You can safely close this page.', false);
 </cfscript>
 
 <cfoutput>

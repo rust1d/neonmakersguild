@@ -10,6 +10,7 @@ CREATE TABLE users (
   us_deleted     TINYINT(1) DEFAULT 0,
   us_added       DATETIME DEFAULT CURRENT_TIMESTAMP,
   us_dla         DATETIME DEFAULT CURRENT_TIMESTAMP,
+  us_dll         DATETIME DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (us_usid),
   UNIQUE INDEX (us_email)
 ) ENGINE=InnoDB;
@@ -65,23 +66,15 @@ CREATE TABLE BlogComments (
   bco_bcoid                             INT(11) NOT NULL AUTO_INCREMENT,
   bco_blog                              INT(11) NOT NULL,
   bco_benid                             INT(11) NOT NULL,
-  ben_usid                              INT(11),
-  bco_name                              VARCHAR(50),
-  bco_email                             VARCHAR(50),
+  bco_usid                              INT(11),
   bco_comment                           TEXT,
-  bco_posted                            DATETIME,
-  bco_subscribe                         TINYINT(1),
-  bco_website                           VARCHAR(255),
-  bco_moderated                         TINYINT(1),
-  bco_subscribeonly                     TINYINT(1),
-  bco_kill                              VARCHAR(35),
+  bco_history                           TEXT,
+  bco_added                             DATETIME,
+  bco_dla                               DATETIME,
   PRIMARY KEY (bco_bcoid),
   KEY(bco_blog),
   KEY(bco_benid),
-  KEY(bco_posted),
-  KEY(bco_moderated),
-  KEY(bco_email),
-  KEY(bco_name)
+  KEY(bco_usid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -120,19 +113,19 @@ CREATE TABLE BlogEntriesCategories (
   PRIMARY KEY (bec_becid),
   KEY(bec_benid),
   KEY(bec_bcaid)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS BlogEntriesRelated;
 
-CREATE TABLE BlogEntriesRelated (
+/* CREATE TABLE BlogEntriesRelated (
   bre_breid                             INT(11) NOT NULL AUTO_INCREMENT,
   bre_benid                             INT(11) NOT NULL,
   bre_relbenid                          INT(11) NOT NULL,
   PRIMARY KEY (bre_breid),
   KEY(bre_benid),
   KEY(bre_relbenid)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8; */
 
 
 DROP TABLE IF EXISTS BlogLinks;
@@ -140,9 +133,10 @@ DROP TABLE IF EXISTS BlogLinks;
 CREATE TABLE BlogLinks (
   bli_bliid                             INT(11) NOT NULL AUTO_INCREMENT,
   bli_blog                              INT(11) NOT NULL,
+  bli_type                              VARCHAR(20),
   bli_url                               VARCHAR(200),
   bli_title                             VARCHAR(100),
-  bli_type                              VARCHAR(15),
+  bli_description                       VARCHAR(200),
   PRIMARY KEY (bli_bliid),
   INDEX (bli_blog) USING BTREE
 ) ENGINE=InnoDB;
@@ -166,27 +160,17 @@ CREATE TABLE BlogPages (
 
 DROP TABLE IF EXISTS BlogSearchStats;
 
-CREATE TABLE BlogSearchStats (
-  bss_term                              VARCHAR(255),
-  bss_searched                          DATETIME,
-  bss_blog                              VARCHAR(50)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
-
-
 DROP TABLE IF EXISTS BlogSubscribers;
 
 CREATE TABLE BlogSubscribers (
   bsu_bsuid                             INT(11) NOT NULL AUTO_INCREMENT,
-  bsu_email                             VARCHAR(50),
-  bsu_token                             VARCHAR(35),
   bsu_blog                              INT(11) NOT NULL,
+  bsu_email                             VARCHAR(50),
   bsu_verified                          TINYINT(1),
   PRIMARY KEY (bsu_bsuid),
   KEY(bsu_blog),
-  KEY(bsu_verified),
-  KEY(bsu_email),
-  KEY(bsu_token)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+  KEY(bsu_email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS BlogTextBlocks;

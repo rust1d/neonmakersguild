@@ -10,7 +10,8 @@ BEGIN
   SELECT *
     FROM bloglinks
    WHERE (_bliid IS NULL OR bli_bliid = _bliid)
-     AND (_blog IS NULL OR bli_blog = _blog);
+     AND (_blog IS NULL OR bli_blog = _blog)
+     ORDER BY bli_type, bli_title;
 END;;
 
 delimiter ;

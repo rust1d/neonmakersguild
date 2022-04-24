@@ -106,3 +106,7 @@ a:hover {
   color: #F0FFFF;
   vertical-align: middle!important;
 }
+
+.btn-long {
+  width: 12rem;
+}

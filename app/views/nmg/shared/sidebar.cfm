@@ -1,7 +1,13 @@
+<cfscript>
+  mBlocks = mBlog.textblocks(btb_label: 'sidebar-%');
+</cfscript>
+
 <cfoutput>
-  <div class='row'>
-    <div class='col-12'>
-      The Side Bar is open.
-    </div>
+  <div class='row g-3'>
+    <cfloop array='#mBlocks#' item='mBlock'>
+      <div class='col-12'>
+        #mBlock.body()#
+      </div>
+    </cfloop>
   </div>
 </cfoutput>

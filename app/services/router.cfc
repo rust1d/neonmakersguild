@@ -41,6 +41,10 @@ component accessors=true {
     return rtn.toList('&');
   }
 
+  public void function go(required string dest) {
+    location(dest, false);
+  }
+
   public string function href(string page='') {
     var path = '';
     if (page.trim().len()) path = '/?p=' & page.trim();
@@ -112,6 +116,10 @@ component accessors=true {
 
   public string function template() {
     return variables._template;
+  }
+
+  public boolean function template_exists(required string partial, boolean shared = false) {
+    return fileExists(physical_path(partial, shared));
   }
 
   public boolean function template_is(required string data) {
@@ -207,10 +215,6 @@ component accessors=true {
   private string function physical_path(required string partial, boolean shared = false) {
     var path = shared ? default_site : site;
     return clean(application.paths.root & views_path & path & '/' & partial & '.cfm');
-  }
-
-  private boolean function template_exists(required string partial, boolean shared = false) {
-    return fileExists(physical_path(partial, shared));
   }
 
   private string function template_from_url() {

@@ -1,12 +1,12 @@
 
 INSERT INTO users (us_usid, us_user, us_password, us_email, us_permissions) VALUES
-  (1, 'maker',        '$2a$10$qpPypwMXn5R6yvGamY/jEuGWXagktAy.VNblzZUtq/f.Eq4wqZxke', 'maker@org', 3),
-  (2, 'eve',          '$2a$10$qpPypwMXn5R6yvGamY/jEuGWXagktAy.VNblzZUtq/f.Eq4wqZxke', 'admin@org', 2),
-  (3, 'danielle',     '$2a$10$qpPypwMXn5R6yvGamY/jEuGWXagktAy.VNblzZUtq/f.Eq4wqZxke', 'danielle@org', 2),
-  (4, 'cameron',      '$2a$10$qpPypwMXn5R6yvGamY/jEuGWXagktAy.VNblzZUtq/f.Eq4wqZxke', 'cameron@org', 2),
-  (5, 'alleson',      '$2a$10$qpPypwMXn5R6yvGamY/jEuGWXagktAy.VNblzZUtq/f.Eq4wqZxke', 'alleson@org', 2),
-  (6, 'nick',         '$2a$10$qpPypwMXn5R6yvGamY/jEuGWXagktAy.VNblzZUtq/f.Eq4wqZxke', 'nick@org', 2),
-  (7, 'robert',       '$2a$10$qpPypwMXn5R6yvGamY/jEuGWXagktAy.VNblzZUtq/f.Eq4wqZxke', 'robert@org', 2);
+  (1, 'maker',        '$2a$10$qpPypwMXn5R6yvGamY/jEuGWXagktAy.VNblzZUtq/f.Eq4wqZxke', 'maker@neonmakersguild.org', 3),
+  (2, 'eve',          '$2a$10$qpPypwMXn5R6yvGamY/jEuGWXagktAy.VNblzZUtq/f.Eq4wqZxke', 'admin@neonmakersguild.org', 2),
+  (3, 'danielle',     '$2a$10$qpPypwMXn5R6yvGamY/jEuGWXagktAy.VNblzZUtq/f.Eq4wqZxke', 'danielle@neonmakersguild.org', 2),
+  (4, 'cameron',      '$2a$10$qpPypwMXn5R6yvGamY/jEuGWXagktAy.VNblzZUtq/f.Eq4wqZxke', 'cameron@neonmakersguild.org', 2),
+  (5, 'alleson',      '$2a$10$qpPypwMXn5R6yvGamY/jEuGWXagktAy.VNblzZUtq/f.Eq4wqZxke', 'alleson@neonmakersguild.org', 2),
+  (6, 'nick',         '$2a$10$qpPypwMXn5R6yvGamY/jEuGWXagktAy.VNblzZUtq/f.Eq4wqZxke', 'nick@neonmakersguild.org', 2),
+  (7, 'robert',       '$2a$10$qpPypwMXn5R6yvGamY/jEuGWXagktAy.VNblzZUtq/f.Eq4wqZxke', 'robert@neonmakersguild.org', 2);
 
 INSERT INTO userProfile (up_usid, up_firstname, up_lastname, up_bio, up_location) VALUES
   (1, 'site', 'owner', 'can do anything', 'the throne room'),
@@ -42,14 +42,28 @@ INSERT INTO blogPages (bpa_blog, bpa_title, bpa_alias, bpa_body, bpa_standalone)
   (1, 'Join NeonMakersGuild.org!', 'join', '<h2>Membership in the NMG is $XXX annually and includes all these amazing benefits...</h2>\r\n<ul>\r\n<li>directory of resources</li>\r\n<li>one page listing in our member\'s profile</li>\r\n<li>monthly meet-ups (via zoom or in-person)</li>\r\n<li>Access to our bender\'s forum</li>\r\n<li>monthly newsletter</li>\r\n<li>library and achives</li>\r\n</ul>\r\n<h2>Sounds great! Sign me up!</h2>\r\n<p>Complete this form and send payment to: your mom.</p>', 0),
   (1, 'Resources', 'resources', '<h1>Neon Material Suppliers</h1>\r\n<ul>\r\n<li><a href=\"https://www.brillite.com/index.php\" target=\"_blank\" rel=\"noopener\">FMS Brillite</a></li>\r\n<li><a href=\"https://www.wccdusa.com/\" target=\"_blank\" rel=\"noopener\">West Coast Custom Designs</a></li>\r\n<li><a href=\"http://www.t2-neonpower.com/\" target=\"_blank\" rel=\"noopener\">Tech 22</a></li>\r\n<li><a href=\"http://ablontech.com/\" target=\"_blank\" rel=\"noopener\">Ablon Technologies</a></li>\r\n<li><a href=\"https://www.abitechsupply.com/\" target=\"_blank\" rel=\"noopener\">Abitech Sign Supply</a></li>\r\n<li><a href=\"http://www.agfburner.com/\" target=\"_blank\" rel=\"noopener\">AGF Burner, Inc.</a></li>\r\n<li><a href=\"http://www.monarchneon.com/\" target=\"_blank\" rel=\"noopener\">Monarch Neon Supply</a></li>\r\n</ul>\r\n<hr>\r\n<h1>Neon Classes and Workshops</h1>\r\n<ul>\r\n<li><a href=\"https://www.wnsaseattle.org/\" target=\"_blank\" rel=\"noopener\">Western Neon School of Art</a></li>\r\n<li><a href=\"https://urbanglass.org/classes/category/neon\" target=\"_blank\" rel=\"noopener\">Urban Glass</a></li>\r\n<li><a href=\"https://www.radiantneon.com/book-online\" target=\"_blank\" rel=\"noopener\">Radiant Neon</a></li>\r\n<li><a href=\"https://www.hexneon.com/book-a-class\" target=\"_blank\" rel=\"noopener\">Hex Neon</a></li>\r\n<li><a href=\"http://www.eveningneon.com/learn/neon-workshops/\" target=\"_blank\" rel=\"noopener\">Evening Neon</a></li>\r\n<li><a href=\"https://store.neonmona.org/collections/classes\" target=\"_blank\" rel=\"noopener\">Museum of Neon Art</a></li>\r\n<li><a href=\"https://randomneon.com/the-neon-weekend/\" target=\"_blank\" rel=\"noopener\">Random Neon</a></li>\r\n</ul>', 0);
 
-INSERT INTO blogLinks (bli_blog, bli_type, bli_title, bli_url) VALUES
-  (1, 'social media', 'facebook', 'https://www.facebook.com'),
-  (1, 'social media', 'instagram', 'https://www.instagram.com'),
-  (1, 'social media', 'twitter', 'https://www.twitter.com'),
-  (1, 'social media', 'youtube', 'https://www.youtube.com'),
-  (2, 'social media', 'facebook', 'https://www.facebook.com/Evening-Neon-224164732762'),
-  (2, 'social media', 'instagram', 'https://www.instagram.com/eveningneon'),
-  (2, 'website', 'Evening Neon', 'https://www.eveningneon.com');
+INSERT INTO bloglinks (bli_blog, bli_type, bli_url, bli_title, bli_description) VALUES
+ (1, 'social media', 'https://www.facebook.com', 'facebook', NULL),
+ (1, 'social media', 'https://www.instagram.com', 'instagram', NULL),
+ (1, 'social media', 'https://www.twitter.com', 'twitter', NULL),
+ (1, 'social media', 'https://www.youtube.com', 'youtube', NULL),
+ (1, 'resource/supplier', 'https://www.wccdusa.com/', 'West Coast Custom Designs', 'transformers, tube supports, end caps, dimmers, flask gases, housings, electrodes, high temp pattern fabric, GTO'),
+ (1, 'resource/supplier', 'https://www.brillite.com/index.php', 'FMS Brillite', 'Brillite, Neon, Tubing, Electrodes, McMahan, Supports, Stazon, Blockout, Paint, Quality, fms, neon tubes'),
+ (1, 'resource/supplier', 'http://www.t2-neonpower.com/', 'Tech 22', 'neon power supplies,  cold cathode supplies, sign controllers'),
+ (1, 'resource/supplier', 'http://ablontech.com/', 'Ablon Technologies', 'glass, equipment, gto, electrodes, neon, cold cathode'),
+ (1, 'resource/supplier', 'https://www.abitechsupply.com/', 'Abitech Sign Supply', 'glass, equipment, gto, electrodes, power supplies, housings'),
+ (1, 'resource/supplier', 'http://www.agfburner.com/', 'AGF Burner, Inc.', 'burners, brazing tips, air-gas venturi mixers, testing equipment, blowpipes'),
+ (1, 'resource/supplier', 'http://www.monarchneon.com/', 'Monarch Neon Supplies', 'swivels, adapters, o-rings for manifolds, replacement wire for digital temperature leads, hoses'),
+ (1, 'resource/class', 'https://www.wnsaseattle.org/', 'Western Neon School of Art', 'Western Neon School of Art is a non-profit institution based in Seattle supporting the exploration of light, space, and interactive technologies.'),
+ (1, 'resource/class', 'https://urbanglass.org/classes/category/neon', 'Urban Glass', 'New York City based nonprofit established in 1977, fosters experimentation and advances the use and critical understanding of glass as a creative medium.'),
+ (1, 'resource/class', 'https://www.radiantneon.com/book-online', 'Radiant Neon', 'Classes for aspiring neon professionals'),
+ (1, 'resource/class', 'https://www.hexneon.com/book-a-class', 'Hex Neon', 'Hex is founded on a love of design, education, architectural history, and above all neon.'),
+ (1, 'resource/class', 'http://www.eveningneon.com/learn/neon-workshops/', 'Evening Neon', 'One on one workshops'),
+ (1, 'resource/class', 'https://store.neonmona.org/collections/classes', 'The Museum of Neon Art', 'Encourages learning, curiosity and expression through the preservation, collection and interpretation of neon, electric and kinetic art.'),
+ (1, 'resource/class', 'https://randomneon.com/the-neon-weekend/', 'Random Neon', 'neon classes in Nutley, NJ, held the last weekend of every month.'),
+ (2, 'social media', 'https://www.facebook.com/Evening-Neon-224164732762', 'facebook', NULL),
+ (2, 'social media', 'https://www.instagram.com/eveningneon', 'instagram', NULL),
+ (2, 'website', 'https://www.eveningneon.com', 'Evening Neon', NULL);
 
 
 INSERT INTO blogentries(ben_benid, ben_blog, ben_usid, ben_title, ben_body, ben_posted, ben_morebody, ben_alias, ben_comments, ben_image, ben_views, ben_released) VALUES

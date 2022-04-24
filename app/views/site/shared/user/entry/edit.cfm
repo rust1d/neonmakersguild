@@ -101,7 +101,6 @@
                       </div>
                     </div>
                   </div>
-
                   <div class='col-12 col-md-6 col-lg-12'>
                     <label class='form-label required' for='ben_categories'>Categories</label>
                     <div class='input-group input-group-sm'>

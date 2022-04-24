@@ -1,6 +1,6 @@
 <cfscript>
   mTextBlock = new app.models.BlogTextBlocks(request.unclean);
-  flash.info('This is a preview of the `#mTextBlock.label()#` content block.', false);
+  flash.info('This is a preview of the `#mTextBlock.label()#` content block. You can safely close this page.', false);
 </cfscript>
 
 <cfoutput>

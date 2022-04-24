@@ -8,6 +8,7 @@ component extends=BaseModel accessors=true {
   property name='us_deleted'      type='numeric'  sqltype='tinyint'    default='0';
   property name='us_added'        type='date';
   property name='us_dla'          type='date';
+  property name='us_dll'          type='date';
   property name='password'        type='string';
 
   has_one(class: 'UserProfile',     key: 'us_usid',  relation: 'up_usid');
@@ -18,7 +19,7 @@ component extends=BaseModel accessors=true {
 
   // USERS BLOG
   has_many(name: 'Categories',   class: 'BlogCategories',  key: 'us_usid',  relation: 'bca_blog');
-  has_many(name: 'Comments',     class: 'BlogComments',    key: 'us_usid',  relation: 'bco_blog');
+  // has_many(name: 'Comments',     class: 'BlogComments',    key: 'us_usid',  relation: 'bco_blog');
   has_many(name: 'Entries',      class: 'BlogEntries',     key: 'us_usid',  relation: 'ben_blog');
   has_many(name: 'Links',        class: 'BlogLinks',       key: 'us_usid',  relation: 'bli_blog');
   has_many(name: 'UserRoles',    class: 'BlogUserRoles',   key: 'us_usid',  relation: 'bur_blog');
@@ -63,5 +64,13 @@ component extends=BaseModel accessors=true {
 
   public array function social_links() {
     return this.Links().filter(row => row.isSocial());
+  }
+
+  public void function update_last_login() {
+    if (new_record()) return;
+
+    var sproc = new StoredProc(procedure: 'users_update_dll', datasource: datasource());
+    sproc.addParam(cfsqltype: 'integer', value: variables.us_usid);
+    sproc.execute();
   }
 }

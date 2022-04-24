@@ -16,9 +16,9 @@ BEGIN
   SET _deleted = IFNULL(_deleted, 0);
 
   INSERT INTO users (
-    us_user, us_password, us_email, us_permissions, us_active, us_deleted, us_added, us_dla
+    us_user, us_password, us_email, us_permissions, us_active, us_deleted, us_added, us_dla, us_dll
   ) VALUES (
-    _user, _password, _email, _permissions, _active, _deleted, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+    _user, _password, _email, _permissions, _active, _deleted, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
   );
 
   CALL users_get_by_ids(LAST_INSERT_ID());

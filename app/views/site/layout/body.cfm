@@ -3,7 +3,7 @@
 <cfset router.include('shared/flash_container') />
 
 <main class='content py-3'>
-  <section class='container'>
+  <section class='container-xl'>
     <cfset router.include() />
   </section>
 </main>

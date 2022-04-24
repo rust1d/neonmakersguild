@@ -27,34 +27,25 @@
             </div>
           </div>
           <div class='card-body'>
-            <div class='row mt-3'>
-              <div class='col-md-9'>
-                <div class='row g-3'>
-                  <div class='col-12'>
-                    <label class='form-label required' for='btb_label'>Label</label>
-                    <input type='text' class='form-control' name='btb_label' id='btb_label' value='#htmlEditFormat(mTextBlock.label())#' maxlength='100' required />
-                  </div>
-                  <div class='col-12'>
-                    <label class='form-label required' for='btb_body'>Body</label>
-                    <textarea class='tiny-mce form-control' name='btb_body' id='btb_body'>#htmlEditFormat(mTextBlock.body())#</textarea>
-                  </div>
-                </div>
+            <div class='row g-3'>
+              <div class='col-12'>
+                <label class='form-label required' for='btb_label'>Label</label>
+                <input type='text' class='form-control' name='btb_label' id='btb_label' value='#htmlEditFormat(mTextBlock.label())#' maxlength='100' required />
               </div>
-              <div class='col-md-3'>
-                <div class='row g-3'>
-                  <div class='col-12'>
-                    <label class='form-label required' for='btb_label'>Image Search</label>
-                    <div class='input-group'>
-                      <span class='input-group-text btn-nmg'>Search Images</span>
-                      <input id='imagesearch' type='text' class='form-control' placeholder='Search' maxlength='20' data-usid='#mBlog.encoded_key()#'>
-                    </div>
-                  </div>
-                  <div class='col-12'>
-                    <div id='imageselect' class='row g-0'>
-                      <div class='col-4 p-1'><img class='w-100 img-thumbnail' src='/assets/images/profile_placeholder.png' /></div>
-                    </div>
-                  </div>
+              <div class='col-12'>
+                <label class='form-label' for='imagesearch'>Image Search</label> <small class='text-muted ps-3'>search and click image to insert</small>
+                <div class='input-group input-group-sm'>
+                  <span class='input-group-text btn-nmg'><i class='fa fa-search'></i></span>
+                  <input type='text' class='form-control' id='imagesearch' name='imagesearch' placeholder='type to search images...' maxlength='20' data-usid='#mBlog.encoded_key()#' />
                 </div>
+                <div id='imageselect' class='row g-1 mt-1'>
+                  <div class='col-3 col-md-2 col-xl-1'><img class='w-100 img-thumbnail' src='/assets/images/profile_placeholder.png' /></div>
+                </div>
+                <small class='text-muted'>Click image to insert into post.</small>
+              </div>
+              <div class='col-12'>
+                <label class='form-label required' for='btb_body'>Body</label>
+                <textarea class='tiny-mce form-control' rows='15' name='btb_body' id='btb_body'>#htmlEditFormat(mTextBlock.body())#</textarea>
               </div>
             </div>
             <div class='row mt-5'>

@@ -15,8 +15,8 @@
         #router.include('shared/partials/view_and_filter', { viewer: false })#
       </div>
     </div>
-    <div class='card-body'>
-      <table class='table table-nmg'>
+    <div class='card-body table-responsive'>
+      <table class='table table-sm table-nmg'>
         <thead>
           <tr>
             <th scope='col'>

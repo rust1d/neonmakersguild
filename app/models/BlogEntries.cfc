@@ -1,21 +1,22 @@
 component extends=jSoup accessors=true {
-  property name='ben_benid'     type='numeric'  sqltype='integer'    primary_key;
-  property name='ben_blog'      type='numeric'  sqltype='integer';
-  property name='ben_usid'      type='numeric'  sqltype='integer';
-  property name='ben_posted'    type='date'     sqltype='timestamp';
-  property name='ben_title'     type='string'   sqltype='varchar';
-  property name='ben_alias'     type='string'   sqltype='varchar';
-  property name='ben_image'     type='string'   sqltype='varchar';
-  property name='ben_body'      type='string'   sqltype='varchar'    html;
-  property name='ben_morebody'  type='string'   sqltype='varchar'    html;
-  property name='ben_comments'  type='boolean'  sqltype='tinyint'    default='false';
-  property name='ben_views'     type='numeric'  sqltype='integer';
-  property name='ben_released'  type='boolean'  sqltype='tinyint'    default='false';
-  property name='ben_promoted'  type='boolean'  sqltype='tinyint'    default='false';
-  property name='ben_blogname'  type='string';
+  property name='ben_benid'         type='numeric'  sqltype='integer'    primary_key;
+  property name='ben_blog'          type='numeric'  sqltype='integer';
+  property name='ben_usid'          type='numeric'  sqltype='integer';
+  property name='ben_posted'        type='date'     sqltype='timestamp';
+  property name='ben_title'         type='string'   sqltype='varchar';
+  property name='ben_alias'         type='string'   sqltype='varchar';
+  property name='ben_image'         type='string'   sqltype='varchar';
+  property name='ben_body'          type='string'   sqltype='varchar'    html;
+  property name='ben_morebody'      type='string'   sqltype='varchar'    html;
+  property name='ben_comments'      type='boolean'  sqltype='tinyint'    default='false';
+  property name='ben_views'         type='numeric'  sqltype='integer';
+  property name='ben_released'      type='boolean'  sqltype='tinyint'    default='false';
+  property name='ben_promoted'      type='boolean'  sqltype='tinyint'    default='false';
+  property name='ben_blogname'      type='string';
+  property name='ben_comment_cnt'   type='numeric';
 
+  has_many(name: 'BlogComments',         class: 'BlogComments',           key: 'ben_benid',  relation: 'bco_benid');
   has_many(name: 'BlogEntryCategories',  class: 'BlogEntriesCategories',  key: 'ben_benid',  relation: 'bec_benid');
-  has_many(name: 'RelatedBlogEntries',   class: 'BlogEntriesRelated',     key: 'ben_benid',  relation: 'ber_benid');
   belongs_to(name: 'User',               class: 'Users',                  key: 'ben_usid',   relation: 'us_usid');
   belongs_to(name: 'UserBlog',           class: 'Users',                  key: 'ben_blog',   relation: 'us_usid');
 

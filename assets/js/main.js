@@ -43,7 +43,7 @@ $(function() {
     object_resizing: false,
     image_advtab: false,
     table_appearance_options: false,
-    relative_urls : true,
+    relative_urls : false,
     remove_script_host : false,
   };
 

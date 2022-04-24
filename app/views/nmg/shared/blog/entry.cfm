@@ -8,21 +8,23 @@
             <div class='col-12 text-center text-uppercase'>
               <small>#locals.mEntry.category_links().toList(' &bull; ')#</small>
             </div>
-            <div class='col-12 text-center'>
-              <h3><a href='#locals.mEntry.seo_link()#'>#locals.mEntry.title()#</a></h3>
+            <div class='col-12 text-center fs-3'>
+              <a href='#locals.mEntry.seo_link()#'>#locals.mEntry.title()#</a>
             </div>
             <div class='col-12 text-center'>
-              <a href='#locals.mEntry.User().seo_link()#'>#locals.mEntry.User().user()#</a> &bull; <small>#locals.mEntry.post_date()#</small>
+              <a href='#locals.mEntry.User().seo_link()#'>#locals.mEntry.User().user()#</a>
+              &bull; <small>#locals.mEntry.post_date()#</small>
             </div>
             <div class='col-12'>
               #locals.mEntry.body()#
               <cfif !locals.fold>#locals.mEntry.morebody()#</cfif>
             </div>
-            <cfif locals.fold && len(locals.mEntry.morebody())>
-              <div class='col-12 text-center text-uppercase'>
-                <a href='#locals.mEntry.seo_link()#'>Read more</a>
-              </div>
-            </cfif>
+            <div class='col-12 small text-center text-uppercase'>
+              <cfif locals.fold && len(locals.mEntry.morebody())>
+                <a href='#locals.mEntry.seo_link()#'>Read more</a> &bull;
+              </cfif>
+              <small><a href='#locals.mEntry.seo_link()###comments'>#utility.plural_label(locals.mEntry.comment_cnt(), 'comment')#</a></small>
+            </div>
           </div>
         </div>
       </div>

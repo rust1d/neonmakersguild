@@ -1,6 +1,6 @@
 <cfscript>
   mEntry = new app.models.BlogEntries(form);
-  flash.info('This is a preview of the `#mEntry.title()#` post.', false);
+  flash.info('This is a preview of the `#mEntry.title()#` post. You can safely close this page.', false);
 </cfscript>
 
 <cfoutput>

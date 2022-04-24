@@ -32,6 +32,7 @@ component {
     application.email.supportplus = 'Neon Makers Guild <#application.email.support#>';
     application.paths.root = ExpandPath('\');
     application.paths.images = application.paths.root & 'assets\images\';
+    application.paths.templates = 'app\views\templates\';
     application.settings.title = 'Neon Makers Guild';
     application.settings.tiny = 'g2016x44cjzgv7h689qtbieaowb03dksphmy0umsojeab13b';
 
@@ -58,7 +59,7 @@ component {
 
   public boolean function onMissingTemplate(string targetpage) {
     writelog(file: '404', text: '#arguments.targetpage#?#cgi.query_string#');
-    new app.services.AdminEmailer(subject: 'onMissingTemplate').send_error(args: arguments);
+    new app.services.email.AdminEmailer(subject: 'onMissingTemplate').send_error(args: arguments);
     // location(application.urls.root & '/index.cfm', false);
 writedump(arguments);
     return true;
@@ -78,13 +79,14 @@ writedump(arguments);
       // try { data = isDefined('session') ? session.user.dump() : {} } catch (any err) {}
       application.sentry.captureException(exception: arguments.exception, additionalData: data);
     }
-    new app.services.AdminEmailer(subject: 'Application Error').send_error(arguments.exception);
+    new app.services.email.AdminEmailer(subject: 'Application Error').send_error(arguments.exception);
   };
 
   // PRIVATE
 
   private void function check_redirects() {
-    if (cgi.request_method=='get') new app.services.sites.redirects().perform();
+    // if (cgi.request_method=='get') 
+    new app.services.sites.redirects().perform();
   }
 
   private void function check_reset_app() {
@@ -117,7 +119,7 @@ writedump(arguments);
     for (key in form.fieldnames.listToArray()) {
       request.unclean[key] = form[key].reReplace('[^\x00-\x7F]', '-', 'all').trim();
       form[key] = request.unclean[key];
-      if (listfindNoCase('up_bio,ben_body,ben_morebody,bpa_body', key)) continue;
+      if (listfindNoCase('up_bio,ben_body,ben_morebody,bpa_body,btb_body', key)) continue;
       form[key] = form[key].reReplace('<[^>]*>', '', 'all').reReplace('[<>]', '?', 'all');
     }
   }

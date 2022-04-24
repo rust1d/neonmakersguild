@@ -13,7 +13,8 @@ CREATE PROCEDURE blogentries_search(
   IN _bcaid       int(11)
 )
 BEGIN
-  SELECT blogentries.*, us_user AS ben_blogname
+  SELECT blogentries.*, us_user AS ben_blogname,
+         (SELECT COUNT(*) FROM blogcomments WHERE bco_benid=ben_benid) AS ben_comment_cnt
     FROM blogentries
          INNER JOIN users ON us_usid = ben_blog
    WHERE (_benid IS NULL OR ben_benid = _benid)

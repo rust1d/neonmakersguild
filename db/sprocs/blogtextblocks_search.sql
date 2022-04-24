@@ -12,7 +12,8 @@ BEGIN
     FROM blogtextblocks
    WHERE (_btbid IS NULL OR btb_btbid = _btbid)
      AND (_blog IS NULL OR btb_blog = _blog)
-     AND (_label IS NULL OR btb_label = _label);
+     AND (_label IS NULL OR btb_label = _label OR (RIGHT(_label,1)='%' AND btb_label like _label))
+     ORDER BY CASE WHEN _label IS NULL THEN btb_btbid ELSE btb_label END;
 END;;
 
 delimiter ;

@@ -17,8 +17,8 @@
         #router.include('shared/partials/view_and_filter', { viewer: false })#
       </div>
     </div>
-    <div class='card-body'>
-      <table class='table table-nmg'>
+    <div class='card-body table-responsive'>
+      <table class='table table-sm table-nmg'>
         <thead>
           <tr>
             <th scope='col'><a href='#router.href('blog/page/edit')#' class='btn btn-sm btn-nmg'><i class='fal fa-plus'></i></a></th>

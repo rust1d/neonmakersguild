@@ -37,7 +37,7 @@ component {
     if (data.len()==0 || (data.len() MOD 2)!=0) return 0;
     var chrs = len(data) / 2;
     var id = Decrypt(data.left(chrs), application.secrets.phrase, 'CFMX_COMPAT', 'Hex');
-    if (data.right(chrs)==hash(id).left(chrs)) return id;
+    if (data.right(chrs)==left(hash(id) & data, chrs)) return id;
     return 0;
   }
 
@@ -47,7 +47,8 @@ component {
 
   public string function encode(required string data) {
     var enc = Encrypt(data, application.secrets.phrase, 'CFMX_COMPAT','Hex');
-    return lcase('#enc##hash(data).left(len(enc))#');
+    var hsh = left(hash(data) & enc, len(enc));
+    return lcase('#enc##hsh#');
   }
 
   public string function errorString(required any err) {
@@ -159,11 +160,8 @@ component {
 
   public string function ordinalDate(required string data) {
     if (!isDate(data)) return data;
-
     var suff = listToArray('st,nd,rd,th,th,th,th,th,th,th,th,th,th,th,th,th,th,th,th,th,st,nd,rd,th,th,th,th,th,th,th,st');
-    return "#data.format('mmm d')#<sup>#suff[day(data)]#</sup> #data.format('yyyy')#";
-    return data.format('mmm d') & '<sup>' & suff[day(data)] & '</sup>, ' & data.format('yyyy');
-    return strDate;
+    return "#data.format('mmm d')##suff[day(data)]# #data.format('yyyy')#";
   }
 
   public string function ordinalNumber(required numeric data) {

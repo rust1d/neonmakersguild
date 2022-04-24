@@ -3,9 +3,5 @@
 </cfscript>
 
 <cfoutput>
-  <div class='row'>
-    <div class='col'>
-      #router.include('shared/blog/page', { mPage: mPage })#
-    </div>
-  </div>
+    #router.include('shared/blog/page', { mPage: mPage })#
 </cfoutput>

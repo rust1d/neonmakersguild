@@ -62,7 +62,7 @@
                 </div>
                 <div class='col-12'>
                   <label class='form-label' for='up_bio'>Bio</label>
-                  <textarea class='tiny-mce form-control' name='up_bio' id='up_bio'>#encodeForHTML(mProfile.bio())#</textarea>
+                  <textarea class='tiny-mce form-control' rows='15' name='up_bio' id='up_bio'>#encodeForHTML(mProfile.bio())#</textarea>
                 </div>
               </cfif>
               <div class='col-md-6'>

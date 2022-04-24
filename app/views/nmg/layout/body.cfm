@@ -3,12 +3,12 @@
 <cfset router.include('shared/flash_container') />
 
 <main class='content'>
-  <section class='container'>
+  <section class='container-xl'>
     <div class='row'>
-      <div class='col-md-9 p-3'>
+      <div class='col-lg-9 p-3'>
         <cfset router.include() />
       </div>
-      <div class='col-md-3 p-3'>
+      <div class='col-lg-3 p-3'>
         <cfif mUserBlog.id()==1>
           <cfset router.include('shared/sidebar') />
           <!--- <cfif ListFind('member/view,user/home', router.template())> --->
