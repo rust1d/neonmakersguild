@@ -30,7 +30,7 @@
             <a class='nav-link' href='#router.href(page: 'home', ref: 'nmg')#'>Website</a>
           </li>
           <li class='nav-item ms-4'>
-            <a class='nav-link' href='#router.href('login/login')#&logout'>Sign Out</a>
+            <a class='nav-link' href='/login?logout'>Sign Out</a>
           </li>
         </ul>
       </div>

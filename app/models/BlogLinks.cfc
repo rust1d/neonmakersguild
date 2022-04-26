@@ -40,6 +40,10 @@ component extends=BaseModel accessors=true {
     return (variables.bli_type ?: '')=='social media';
   }
 
+  public boolean function isWebsite() {
+    return (variables.bli_type ?: '')=='website';
+  }
+
   public string function social_type() {
     if (!isSocial()) return '';
 

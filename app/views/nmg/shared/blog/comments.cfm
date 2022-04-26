@@ -26,7 +26,7 @@
             </div>
           <cfelse>
             <div class='col-12'>
-              <a href='#router.href('login/login')#'>Login</a> to leave a comment...
+              <a href='/login'>Login</a> to leave a comment...
             </div>
           </cfif>
           <div class='col-12 fs-5 text-uppercase'>

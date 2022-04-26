@@ -91,7 +91,7 @@ CREATE TABLE BlogEntries (
   ben_body                              LONGTEXT,
   ben_morebody                          LONGTEXT,
   ben_comments                          TINYINT(1),
-  ben_views                             INT(11) unsigned,
+  ben_views                             INT(11),
   ben_released                          TINYINT(1),
   ben_promoted                          TINYINT(1),
   PRIMARY KEY (ben_benid),
@@ -117,16 +117,6 @@ CREATE TABLE BlogEntriesCategories (
 
 
 DROP TABLE IF EXISTS BlogEntriesRelated;
-
-/* CREATE TABLE BlogEntriesRelated (
-  bre_breid                             INT(11) NOT NULL AUTO_INCREMENT,
-  bre_benid                             INT(11) NOT NULL,
-  bre_relbenid                          INT(11) NOT NULL,
-  PRIMARY KEY (bre_breid),
-  KEY(bre_benid),
-  KEY(bre_relbenid)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8; */
-
 
 DROP TABLE IF EXISTS BlogLinks;
 
@@ -221,3 +211,65 @@ CREATE TABLE BlogPagesCategories  (
   KEY(bpc_bpaid),
   KEY(bpc_bcaid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
+
+
+DROP TABLE IF EXISTS forums;
+
+CREATE TABLE forums (
+  fo_foid                    INT(11) NOT NULL AUTO_INCREMENT,
+  fo_name                    VARCHAR(50) NOT NULL,
+  fo_alias                   VARCHAR(50) NOT NULL,
+  fo_description             VARCHAR(255) NOT NULL,
+  fo_active                  TINYINT(1) DEFAULT 1,
+  fo_threads                 INT(11) DEFAULT 0,
+  fo_messages                INT(11) DEFAULT 0,
+  fo_last_fmid               INT(11),
+  PRIMARY KEY (fo_foid),
+  KEY (fo_last_fmid)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS forumThreads;
+
+CREATE TABLE forumThreads (
+  ft_ftid                    INT(11) NOT NULL AUTO_INCREMENT,
+  ft_foid                    INT(11) NOT NULL,
+  ft_usid                    INT(11) NOT NULL,
+  ft_subject                 VARCHAR(100) NOT NULL,
+  ft_alias                   VARCHAR(100) NOT NULL,
+  ft_sticky                  TINYINT(1) DEFAULT 0,
+  ft_locked                  TINYINT(1) DEFAULT 0,
+  ft_messages                INT(11) DEFAULT 0,
+  ft_views                   INT(11) DEFAULT 0,
+  ft_last_fmid               INT(11),
+  ft_deleted_by              INT(11),
+  ft_deleted                 DATETIME,
+  ft_added                   DATETIME DEFAULT CURRENT_TIMESTAMP,
+  ft_dla                     DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (ft_ftid),
+  KEY (ft_foid),
+  KEY (ft_usid)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS forumMessages;
+
+CREATE TABLE forumMessages (
+  fm_fmid                    INT(11) NOT NULL AUTO_INCREMENT,
+  fm_foid                    INT(11) NOT NULL,
+  fm_ftid                    INT(11) NOT NULL,
+  fm_usid                    INT(11) NOT NULL,
+  fm_body                    TEXT,
+  fm_history                 TEXT,
+  fm_deleted_by              INT(11),
+  fm_deleted                 DATETIME,
+  fm_added                   DATETIME DEFAULT CURRENT_TIMESTAMP,
+  fm_dla                     DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (fm_fmid),
+  KEY (fm_foid),
+  KEY (fm_ftid),
+  KEY (fm_usid)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+insert into forums (fo_name, fo_alias, fo_description) values ('Bending Forum', 'bending', 'for benderings.'),  ('Pumping Forum', 'Pumping', 'for pumperings.');

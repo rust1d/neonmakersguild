@@ -13,13 +13,14 @@
           <li class='nav-item ms-4 dropdown'>
             <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Members</a>
             <ul class='dropdown-menu'>
-              <li><a class='dropdown-item' href='#router.href('member/list')#'>List</a></li>
-              <li><a class='dropdown-item' href='#mBlog.page_seo_link('join')#'>Join</a></li>
+              <li><a class='dropdown-item' href='/members'>List</a></li>
+              <li><a class='dropdown-item' href='/join'>Join</a></li>
               <!--- <li><a class='dropdown-item' href='#router.href('member/login')#'>Login</a></li> --->
             </ul>
           </li>
-          <li class='nav-item ms-4'><a class='nav-link' href='#mBlog.page_seo_link('Resources')#'>Resources</a></li>
-          <li class='nav-item ms-4'><a class='nav-link' href='#mBlog.page_seo_link('about')#'>About</a></li>
+          <li class='nav-item ms-4'><a class='nav-link' href='/resources'>Resources</a></li>
+          <li class='nav-item ms-4'><a class='nav-link' href='/about'>About</a></li>
+          <li class='nav-item ms-4'><a class='nav-link' href='/forums'>Forums</a></li>
           <cfif session.user.loggedIn()>
             <li class='nav-item ms-4 dropdown'>
               <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Profile</a>
@@ -39,10 +40,10 @@
             <cfif session.user.get_admin()>
               <li class='nav-item'><a class='nav-link' href='#router.href(page: 'home', ref: 'admin')#'>Admin</a></li>
             </cfif>
-            <li class='nav-item'><a class='nav-link' href='#router.href(page: 'login/login')#&logout'>Sign Out</a></li>
+            <li class='nav-item'><a class='nav-link' href='/login?logout'>Sign Out</a></li>
           <cfelse>
-            <li class='nav-item'><a class='nav-link' href='#mBlog.page_seo_link('join')#'>Join</a></li>
-            <li class='nav-item'><a class='nav-link' href='#router.href('login/login')#'>Sign In</a></li>
+            <li class='nav-item'><a class='nav-link' href='/join'>Join</a></li>
+            <li class='nav-item'><a class='nav-link' href='/login'>Sign In</a></li>
           </cfif>
         </ul>
       </div>

@@ -161,7 +161,7 @@ component {
   public string function ordinalDate(required string data) {
     if (!isDate(data)) return data;
     var suff = listToArray('st,nd,rd,th,th,th,th,th,th,th,th,th,th,th,th,th,th,th,th,th,st,nd,rd,th,th,th,th,th,th,th,st');
-    return "#data.format('mmm d')##suff[day(data)]# #data.format('yyyy')#";
+    return "#data.format('mmmm d')##suff[day(data)]# #data.format('yyyy')#";
   }
 
   public string function ordinalNumber(required numeric data) {

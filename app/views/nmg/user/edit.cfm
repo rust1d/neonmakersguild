@@ -34,7 +34,7 @@
             <label class='form-label' for='imagesearch'>Image Search</label>
             <div class='input-group input-group-sm'>
               <span class='input-group-text btn-nmg'><i class='fa fa-search'></i></span>
-              <input type='text' class='form-control' id='imagesearch' name='imagesearch' placeholder='type to search images...' maxlength='20' data-usid='#mBlog.encoded_key()#' />
+              <input type='text' class='form-control' id='imagesearch' name='imagesearch' placeholder='type to search images...' maxlength='20' data-usid='#mUserBlog.encoded_key()#' />
             </div>
             <div id='imageselect' class='row g-1 mt-1'>
               <div class='col-3 col-md-2 col-xl-1'><img class='w-100 img-thumbnail' src='/assets/images/profile_placeholder.png' /></div>

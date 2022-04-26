@@ -79,6 +79,30 @@ a:hover {
   background-color: #e0eeee;
 }
 
+.forum-thumbnail {
+  width: 48px;
+  height: 48px;
+  border-color: #0c4040;
+  background-color: #e0eeee;
+}
+
+.thread-thumbnail {
+  width: 96px;
+  height: 96px;
+  border-color: #0c4040;
+  background-color: #e0eeee;
+}
+
+.thread-user {
+  min-width: 128px;
+  /* min-height: 196px; */
+}
+
+.thread-message {
+  min-height: 164px;
+  border-radius: 2rem!important;
+}
+
 .clipped {
   background-color: cornflowerblue;
   border-color: cornflowerblue;

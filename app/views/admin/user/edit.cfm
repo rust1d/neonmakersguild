@@ -58,7 +58,7 @@
                 </div>
                 <div class='col-12'>
                   <label class='form-label' for='up_location'>Location</label>
-                  <input type='text' class='form-control' id='up_location' name='up_location' value='#encodeForHTML(mProfile.location())#' maxlength='100'>
+                  <input type='text' class='form-control' id='up_location' name='up_location' value='#encodeForHTML(mProfile.location())#' maxlength='100' />
                 </div>
                 <div class='col-12'>
                   <label class='form-label' for='up_bio'>Bio</label>

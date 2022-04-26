@@ -59,7 +59,7 @@ component extends=BaseModel accessors=true {
   }
 
   public string function seo_link() {
-    return '/member/#us_user#';
+    return lcase('/member/#us_user#');
   }
 
   public array function social_links() {
@@ -72,5 +72,9 @@ component extends=BaseModel accessors=true {
     var sproc = new StoredProc(procedure: 'users_update_dll', datasource: datasource());
     sproc.addParam(cfsqltype: 'integer', value: variables.us_usid);
     sproc.execute();
+  }
+
+  public array function website_links() {
+    return this.Links().filter(row => row.isWebsite());
   }
 }

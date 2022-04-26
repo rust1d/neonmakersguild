@@ -43,11 +43,27 @@ component {
     }
   }
 
+  private void function rewrite_forum() {
+    var qry = new app.models.Forums().search(fo_alias: url.forum);
+    if (qry.len()==0) return;
+    url.foid = qry.fo_foid;
+    if (url.keyExists('ftid')) {
+      qry = new app.models.ForumThreads().search(ft_foid: url.foid, ft_ftid: url.ftid);
+      if (qry.len()==0) return;
+      url.ftid = qry.ft_ftid;
+      url.p = 'forum/thread';
+    } else {
+      url.p = 'forum/threads'
+    }
+  }
+
   private void function rewrite_seo() {
     url.delete('seo');
     url.p = 'blog/page'; // default to page for 404
     if (url.keyExists('blog')) {
       return rewrite_blog();
+    } else if (url.keyExists('forum')) {
+      return rewrite_forum();
     } else if (url.keyExists('user')) {
       var qry = new app.models.Users().search(us_user: url.user);
       if (qry.len()) {

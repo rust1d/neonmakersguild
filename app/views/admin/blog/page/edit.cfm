@@ -57,7 +57,7 @@
                     <input type='text' class='form-control' name='bpa_title' id='bpa_title' value='#htmlEditFormat(mPage.title())#' maxlength='100' required />
                   </div>
                   <div class='col-12'>
-                    <label class='form-label' for='bpa_alias'>Alias</label> <small class='text-muted ps-3'>auto-generated from title if left blank</small>
+                    <label class='form-label' for='bpa_alias'>SEO Alias</label> <small class='text-muted ps-3'>auto-generated from title if left blank</small>
                     <input type='text' class='form-control' name='bpa_alias' id='bpa_alias' value='#mPage.alias()#' maxlength='100' />
                   </div>
                 </div>

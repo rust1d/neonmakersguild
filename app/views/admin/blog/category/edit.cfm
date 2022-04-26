@@ -30,7 +30,7 @@
                 <input type='text' class='form-control' name='bca_category' id='bca_category' value='#htmlEditFormat(mCategory.category())#' maxlength='50' required />
               </div>
               <div class='col-12'>
-                <label class='form-label' for='bca_alias'>Alias</label>
+                <label class='form-label' for='bca_alias'>SEO Alias</label>
                 <input type='text' class='form-control' name='bca_alias' id='bca_alias' value='#htmlEditFormat(mCategory.alias())#' maxlength='50' />
                 <small>Used when creating SES URLs. If you leave the field blank it will be generated for you.</small>
               </div>

@@ -1,3 +1,3 @@
 <cfscript>
-  router.include('shared/user/image/json', { mBlog: mUser.blog() });
+  router.include('shared/user/image/json', { mBlog: mUserBlog });
 </cfscript>

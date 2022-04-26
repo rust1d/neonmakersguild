@@ -37,4 +37,9 @@
       <a class='btn btn-nmg' href='#router.href('blog/category/list')#'><i class='fal fa-list'></i></a>
       <a class='btn btn-nmg' href='#router.href('blog/category/edit')#'><i class='fal fa-plus'></i></a>
     </div>
+    <div class='my-2'>
+      <a class='btn btn-nmg btn-long text-start' href='#router.href('forum/list')#'>Forums</a>
+      <a class='btn btn-nmg' href='#router.href('forum/list')#'><i class='fal fa-list'></i></a>
+      <a class='btn btn-nmg' href='#router.href('forum/edit')#'><i class='fal fa-plus'></i></a>
+    </div>
 </cfoutput>
