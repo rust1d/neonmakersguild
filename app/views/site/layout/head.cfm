@@ -39,6 +39,7 @@
   <script src='/assets/js/jquery/jquery.passtrength.js'></script>
   <script src='/assets/js/bs_needs_validation.js'></script>
   <script src='/assets/js/main.js'></script>
+  <script src='/assets/js/tiny.js'></script>
 
   <script>
     var SERVER = {};
