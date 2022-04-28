@@ -25,7 +25,7 @@
 <cfoutput>
   <div class='row justify-content-center'>
     <div class='col'>
-      <form role='form' method='post'>
+      <form method='post'>
         <div class='card'>
           <div class='card-header bg-nmg'>
             <div class='row'>

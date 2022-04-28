@@ -3,14 +3,12 @@
 </cfscript>
 
 <cfoutput>
-  <div class='row'>
+  <div class='row g-3'>
     <div class='col fs-2 text-center text-page-head'>Welcome to the Neon Makers Guild!</div>
-  </div>
-  <div class='row'>
-    <div class='col'>
-      <cfloop array='#mEntries#' item='mEntry' index='idx'>
+    <cfloop array='#mEntries#' item='mEntry' index='idx'>
+      <div class='col-12'>
         #router.include('shared/blog/entry', { mEntry: mEntry, fold: idx gt 3 })#
-      </cfloop>
-    </div>
+      </div>
+    </cfloop>
   </div>
 </cfoutput>

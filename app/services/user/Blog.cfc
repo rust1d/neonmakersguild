@@ -67,6 +67,7 @@ component accessors=true {
       ben_usid: session.user.usid(),
       ben_blog: id(),
       ben_released: true,
+      ben_comments: true,
       ben_image: '/assets/images/1200x600.png',
       ben_posted: now()
     });

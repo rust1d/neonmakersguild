@@ -1,7 +1,7 @@
 <cfoutput>
-  <div id='footer' class='bg-nmg pt-3'>
-    <div class='container'>
-      <div class='row mt-3'>
+  <div id='footer' class='bg-nmg mt-5'>
+    <div class='container-xxl'>
+      <div class='row pt-5'>
         <div class='col-12 text-center align-middle'>
           <p id='social'>
             <cfloop array='#mBlog.owner().social_links()#' item='mLink'>

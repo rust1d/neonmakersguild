@@ -21,7 +21,7 @@ component extends=BaseModel accessors=true {
 
     var sproc = new StoredProc(procedure: 'forums_search', datasource: datasource());
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('fo_foid'),      null: !arguments.keyExists('fo_foid'));
-    sproc.addParam(cfsqltype: 'integer', value: arguments.get('fo_last_fmid'), null: !arguments.keyExists('fo_last_fmid'));
+    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('fo_alias'),     null: !arguments.keyExists('fo_alias'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 
     return sproc.execute().getProcResultSets().qry;

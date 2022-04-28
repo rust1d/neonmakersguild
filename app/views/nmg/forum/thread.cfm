@@ -45,7 +45,6 @@
         </ol>
       </nav>
     </div>
-
     <div class='col-12'>
       <div class='fs-4'>
         <a href='#mThread.seo_link()#'>#mThread.subject()#</a>
@@ -56,7 +55,6 @@
         <a href='#mThread.seo_link()#' class='small'>#mThread.posted()#</a>
       </div>
     </div>
-
     <div class='col-12'>
       <div class='card'>
         <div class='card-header'>
@@ -68,13 +66,7 @@
                 </a>
               </div>
             </cfif>
-            <div class='col'>
-              <div class='input-group input-group-sm'>
-                <button class='btn btn-sm btn-nmg' type='button'><i class='fa-solid fa-caret-left'></i></button>
-                <span class='input-group-text btn-nmg'>Page 1 of 1</span>
-                <button class='btn btn-sm btn-nmg' type='button'><i class='fa-solid fa-caret-right'></i></button>
-              </div>
-            </div>
+            #router.include('shared/partials/pager', { page: 1, records: mThread.ForumMessages().len() })#
             #router.include('shared/partials/view_and_filter', { viewer: false })#
           </div>
         </div>
@@ -118,8 +110,7 @@
                       <textarea class='form-control tiny-forum' rows='8' name='fm_body' id='fm_body'></textarea>
                     </div>
                     <div class='col-12 text-center'>
-                      <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-sm btn-nmg'>Save</button>
-                      <a href='#router.href('user/list')#' class='btn btn-sm btn-nmg-cancel'>Cancel</a>
+                      <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-sm btn-nmg'>Post Reply</button>
                     </div>
                   </div>
                 </div>

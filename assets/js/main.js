@@ -5,6 +5,23 @@ $(function() {
     setTimeout(() => { el.removeClass('clipped') }, 250);
   });
 
+  $('a[data-link]').on('click', function() {
+    if (this.dataset.link) {
+      $.post({
+        url: 'xhr.cfm?p=actions/link',
+        cache: false,
+        data: this.dataset.link,
+        dataType: 'json',
+        contentType: false,
+        processData: false,
+        error: function(err) { console.log(err) },
+        success: function(data) {
+          console.log(data);
+        }
+      });
+    }
+  });
+
   uri_to_blob = function(uri) {
     const parts = uri.split(',');
     const mime = parts[0].split(':')[1].split(';')[0];

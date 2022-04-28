@@ -83,14 +83,12 @@ a:hover {
   width: 48px;
   height: 48px;
   border-color: #0c4040;
-  background-color: #e0eeee;
 }
 
 .thread-thumbnail {
   width: 96px;
   height: 96px;
   border-color: #0c4040;
-  background-color: #e0eeee;
 }
 
 .thread-user {
@@ -99,7 +97,7 @@ a:hover {
 }
 
 .thread-message {
-  min-height: 164px;
+  min-height: 156px;
   border-radius: 2rem!important;
 }
 

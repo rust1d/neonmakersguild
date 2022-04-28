@@ -19,9 +19,9 @@
       </div>
     </cfif>
     <div class='col-12 col-md-10 col-lg-8'>
-      <form role='form' method='post'>
+      <form method='post'>
         <div class='card'>
-          <h5 class='card-header bg-nmg bg-nmg'>Login</h5>
+          <h5 class='card-header'>Login</h5>
           <div class='card-body'>
             <div class='row g-3'>
               <div class='col-12'>
@@ -49,6 +49,5 @@
     <div class='col-12 text-center links'>
       <a class='text-sm' href='#router.href('login/forgot')#'>Forgot Login?</a>
     </div>
-
   </div>
 </cfoutput>

@@ -3,23 +3,33 @@ $(function() {
     aligning: {
       icon: 'align-center',
       tooltip: 'Alignment',
-      items: 'alignleft aligncenter alignright alignjustify alignnone | indent outdent'
+      items: 'alignleft aligncenter alignright alignjustify alignnone'
     },
     editing: {
       icon: 'edit-block',
       tooltip: 'Edit',
-      items: 'selectall | cut copy paste pastetext remove'
+      items: 'selectall | cut copy paste pastetext removeformat remove'
+    },
+    font: {
+      icon: 'change-case',
+      tooltip: 'Font, Size, Color',
+      items: 'fontfamily fontsize forecolor backcolor'
+    },
+    lists: {
+      icon: 'list-bull-circle',
+      tooltip: 'Lists',
+      items: 'numlist bullist | indent outdent'
     },
     styling: {
-      icon: 'permanent-pen',
-      tooltip: 'Edit',
-      items: 'bold italic | underline strikethrough | subscript superscript | h1 h2 h3 h4 h5 h6 | blockquote'
+      icon: 'paragraph',
+      tooltip: 'Styling',
+      items: 'blocks | bold italic | blockquote | underline strikethrough | subscript superscript'
     }
   };
 
   let tiny_params = {
     plugins: 'autolink autosave code fullscreen help image importcss link lists media preview searchreplace table visualchars wordcount',
-    toolbar: 'fullscreen code | undo redo | editing | aligning | styling | image media | link unlink | fontfamily fontsize forecolor backcolor | numlist bullist',
+    toolbar: 'fullscreen | code | undo redo | editing | styling | font | aligning | lists | link unlink | image media',
     toolbar_groups: toolbar_groups,
     font_family_formats: 'Select Font=system-ui;Andale Mono=andale mono,times; Arial Black=arial black,avant garde; Arial=arial,helvetica,sans-serif; Arimo=arimo; Book Antiqua=book antiqua,palatino; Comic Sans MS=comic sans ms,sans-serif; Courier New=courier new,courier; Georgia=georgia,palatino; Helvetica=helvetica; Impact=impact,chicago; Montserrat=montserrat; Permanent Marker=permanent marker; Poppins=poppins; Roboto=roboto; Symbol=symbol; Tahoma=tahoma,arial,helvetica,sans-serif; Terminal=terminal,monaco; Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva; Webdings=webdings; Wingdings=wingdings,zapf dingbats;',
     toolbar_mode: 'floating',
@@ -56,7 +66,7 @@ $(function() {
 
   let tiny_forum = {
     plugins: 'autolink autosave fullscreen help image link lists media preview visualchars wordcount',
-    toolbar: 'fullscreen | undo redo | editing | aligning | styling | image media | link unlink | fontfamily fontsize forecolor backcolor | numlist bullist',
+    toolbar: 'fullscreen | undo redo | editing | styling | font | aligning | lists | link unlink | image media',
     toolbar_groups: toolbar_groups,
     font_family_formats: 'Select Font=system-ui;Andale Mono=andale mono,times; Arial Black=arial black,avant garde; Arial=arial,helvetica,sans-serif; Arimo=arimo; Book Antiqua=book antiqua,palatino; Comic Sans MS=comic sans ms,sans-serif; Courier New=courier new,courier; Georgia=georgia,palatino; Helvetica=helvetica; Impact=impact,chicago; Montserrat=montserrat; Permanent Marker=permanent marker; Poppins=poppins; Roboto=roboto; Symbol=symbol; Tahoma=tahoma,arial,helvetica,sans-serif; Terminal=terminal,monaco; Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva; Webdings=webdings; Wingdings=wingdings,zapf dingbats;',
     toolbar_mode: 'floating',

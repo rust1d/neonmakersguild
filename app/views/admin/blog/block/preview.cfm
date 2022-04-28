@@ -4,12 +4,17 @@
 </cfscript>
 
 <cfoutput>
-    <div class='row justify-content-center'>
+    <div class='row g-3 justify-content-center'>
       <div class='col-sm-10 col-md-6'>
         <div class='card'>
           <div class='card-body'>
               #mTextBlock.body()#
           </div>
+        </div>
+      </div>
+      <div class='col-12'>
+        <div class='text-center'>
+          <button type='button' onclick='window.close()' class='btn btn-nmg'>Close Preview</button>
         </div>
       </div>
     </div>

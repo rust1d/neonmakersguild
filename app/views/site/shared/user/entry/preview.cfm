@@ -4,7 +4,7 @@
 </cfscript>
 
 <cfoutput>
-    <div class='row justify-content-center'>
+    <div class='row g-3 justify-content-center'>
       <div class='col-md-10'>
         <div class='card border'>
           <div class='aspect-2-1' style='background-image: url(#mEntry.image()#)'></div>
@@ -25,6 +25,11 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      <div class='col-12'>
+        <div class='text-center'>
+          <button type='button' onclick='window.close()' class='btn btn-nmg'>Close Preview</button>
         </div>
       </div>
     </div>

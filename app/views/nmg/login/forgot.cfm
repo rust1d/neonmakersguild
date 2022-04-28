@@ -19,14 +19,14 @@
 <cfoutput>
   <div class='row g-3 justify-content-center'>
     <cfif mBlock.persisted()>
-      <div class='col-12 col-md-10 col-lg-9'>
+      <div class='col-12'>
         #mBlock.body()#
       </div>
     </cfif>
-    <div class='col-12 col-md-10 col-lg-9'>
-      <form role='form' method='post'>
+    <div class='col-12 col-md-10 col-lg-8'>
+      <form method='post'>
         <div class='card'>
-          <h5 class='card-header bg-nmg bg-nmg'>Login Recovery</h5>
+          <h5 class='card-header'>Login Recovery</h5>
           <div class='card-body'>
             <div class='row g-3'>
               <div class='col-12'>
@@ -38,6 +38,7 @@
               <div class='col-12'>
                 <div class='text-center'>
                   <button type='submit' name='btnSend' class='btn btn-nmg'>Send Email</button>
+                  <a href='/login' class='btn btn-nmg-cancel'>Cancel</a>
                 </div>
               </div>
             </div>

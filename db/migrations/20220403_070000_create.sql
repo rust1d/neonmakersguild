@@ -127,6 +127,8 @@ CREATE TABLE BlogLinks (
   bli_url                               VARCHAR(200),
   bli_title                             VARCHAR(100),
   bli_description                       VARCHAR(200),
+  bli_clicks                            INT(11) NOT NULL DEFAULT 0,
+  bli_dla                               DATETIME DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (bli_bliid),
   INDEX (bli_blog) USING BTREE
 ) ENGINE=InnoDB;
@@ -140,7 +142,7 @@ CREATE TABLE BlogPages (
   bpa_title                             VARCHAR(100),
   bpa_alias                             VARCHAR(100),
   bpa_body                              LONGTEXT,
-  bpa_standalone                        TINYINT(1) NOT NULL default '0',
+  bpa_standalone                        TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (bpa_bpaid),
   KEY(bpa_blog),
   KEY(bpa_alias),

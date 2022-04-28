@@ -12,7 +12,7 @@ component accessors = true {
     variables.attachments = [];
 
     param variables.to = application.email.admin;
-    param variables.from = 'rust1d@usa.net';
+    param variables.from = application.email.support;;
 
     return this;
   }
@@ -50,6 +50,37 @@ component accessors = true {
     if (isDefined('session')) msg.append('<hr>SESSION:' & dump_obj(session));
 
     variables.body = msg.toList('<br>');
+    send();
+  }
+
+  public void function send_form() {
+    savecontent variable='variables.body' {
+      writeOutput('
+        <html>
+          <head>
+            <style type="text/css">
+              table,p,h1,h2,h3,h4,h5,h6 {font-family:"Segoe UI", Helvetica, sans-serif;font-size:1em;line-height:1.3em;}
+              table {width:640px;}
+              td {padding:2px 10px 3px 3px; vertical-align:top;}
+              td.key {width: 150px;}
+              td.user {white-space: pre-wrap;overflow-wrap: break-word;}
+            </style>
+          </head>
+          <body>
+            <table>'); for (var key in form.fieldnames.listToArray()) writeOutput('
+              <tr>
+                <td class="key">#key.replace("_"," ","all")#</td>
+                <td class="user">#encodeForHTML(form.get(key))#</td>
+              </tr>'); writeOutput('
+              <tr><td class="key"><br /></td><td>&nbsp;</td></tr>
+              <tr><td class="key">Referrer</td><td>#CGI.http_referer.listLast('=')#</td></tr>
+              <tr><td class="key">IP</td><td>#CGI.remote_addr#</td></tr>
+              <tr><td class="key">Time</td><td>#DateTimeFormat(now(),"EEE, MMM d, yyyy @ HH:nn z")#</td></tr>
+            </table>
+          </body>
+        </html>'
+      );
+    }
     send();
   }
 

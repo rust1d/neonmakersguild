@@ -4,15 +4,15 @@
 </cfscript>
 
 <cfoutput>
-  <div class='row'>
-    <div class='col'>
-      <div class='text-center rounded p-3 mb-3 bg-nmg'>
-        <h3><a href='#mCategory.seo_link('post')#'>#mCategory.category()#</a></h3>
-        <small>Posts by Category</small>
-      </div>
-      <cfloop array='#mEntries#' item='mEntry' index='idx'>
-        #router.include('shared/blog/entry', { mEntry: mEntry, fold: true })#
-      </cfloop>
+  <div class='row g-3'>
+    <div class='col-12 text-center rounded-pill p-3 bg-nmg-light'>
+      <div class='fs-2'><a href='#mCategory.seo_link('post')#'>#mCategory.category()#</a></div>
+      <small>Posts by Category</small>
     </div>
+    <cfloop array='#mEntries#' item='mEntry' index='idx'>
+      <div class='col-12'>
+        #router.include('shared/blog/entry', { mEntry: mEntry, fold: true })#
+      </div>
+    </cfloop>
   </div>
 </cfoutput>

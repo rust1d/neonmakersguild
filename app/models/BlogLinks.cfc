@@ -5,6 +5,7 @@ component extends=BaseModel accessors=true {
   property name='bli_url'          type='string'   sqltype='varchar';
   property name='bli_title'        type='string'   sqltype='varchar';
   property name='bli_description'  type='string'   sqltype='varchar';
+  property name='bli_clicks'       type='numeric'  sqltype='integer';
 
   belongs_to(name: 'UserBlog', class: 'Users', key: 'bli_blog', relation: 'us_usid');
 
@@ -18,6 +19,10 @@ component extends=BaseModel accessors=true {
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 
     return sproc.execute().getProcResultSets().qry;
+  }
+
+  public string function datadash() {
+    return serializeJSON({ 'blog': bli_blog, 'pkid': bli_bliid });
   }
 
   public string function domain() {

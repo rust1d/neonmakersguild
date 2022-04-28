@@ -4,7 +4,7 @@
   <meta name='keywords' content='' />
   <meta name='description' content='' />
 
-  <cfheader name='Content-Security-Policy' value="script-src 'self' 'unsafe-inline' cdn.tiny.cloud cdnjs.cloudflare.com cdn.jsdelivr.net code.jquery.com *.fontawesome.com *.neonmakersguild.org *.googletagmanager.com www.google.com www.google-analytics.com ajax.googleapis.com;" />
+  <cfheader name='Content-Security-Policy' value="script-src 'self' 'unsafe-inline' cdn.tiny.cloud cdnjs.cloudflare.com cdn.jsdelivr.net code.jquery.com *.fontawesome.com *.neonmakersguild.org www.gstatic.com *.googletagmanager.com www.google.com www.google-analytics.com ajax.googleapis.com;" />
   <cfheader name='Content-Security-Policy' value="style-src 'self' 'unsafe-inline' cdn.tiny.cloud cdnjs.cloudflare.com cdn.jsdelivr.net *.fontawesome.com *.neonmakersguild.org neonmakersguild.org *.googleapis.com code.jquery.com;" />
   <cfheader name='Content-Security-Policy' value="font-src 'self' fonts.googleapis.com fonts.gstatic.com *.fontawesome.com;" />
 
@@ -32,6 +32,7 @@
   <script src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js'></script>
   <script src='https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js'/></script>
   <script src='https://cdn.jsdelivr.net/npm/exif-js'></script>
+  <script src='https://www.google.com/recaptcha/api.js?render=6LeaIakfAAAAAFfh-JbzqJOJlqyI6JlFIKbkZNjZ'></script>
 
   <script src='https://cdn.tiny.cloud/1/g2016x44cjzgv7h689qtbieaowb03dksphmy0umsojeab13b/tinymce/6/tinymce.min.js' referrerpolicy='origin'></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js' integrity='sha512-Gs+PsXsGkmr+15rqObPJbenQ2wB3qYvTHuJO6YJzPe/dTLvhy0fmae2BcnaozxDo5iaF8emzmCZWbQ1XXiX2Ig==' crossorigin='anonymous' referrerpolicy='no-referrer'></script>

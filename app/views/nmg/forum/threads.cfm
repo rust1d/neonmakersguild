@@ -73,7 +73,6 @@
         #mForum.description()#
       </div>
     </div>
-
     <div class='col-12'>
       <div class='card'>
         <div class='card-header'>
@@ -85,13 +84,7 @@
                 </a>
               </div>
             </cfif>
-            <div class='col'>
-              <div class='input-group input-group-sm'>
-                <button class='btn btn-sm btn-nmg' type='button'><i class='fa-solid fa-caret-left'></i></button>
-                <span class='input-group-text btn-nmg'>Page 1 of 1</span>
-                <button class='btn btn-sm btn-nmg' type='button'><i class='fa-solid fa-caret-right'></i></button>
-              </div>
-            </div>
+            #router.include('shared/partials/pager', { page: 1, records: mForum.ForumThreads().len() })#
             #router.include('shared/partials/view_and_filter', { viewer: false })#
           </div>
         </div>
@@ -119,7 +112,6 @@
               </div>
             </div>
           </cfif>
-
           <cfloop array='#mForum.ForumThreads()#' item='mThread'>
             <div class='row border-top pt-3'>
               <div class='col-auto'>

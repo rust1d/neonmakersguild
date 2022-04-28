@@ -1,4 +1,4 @@
-<cfscript>
+<!--- <cfscript>
   mUser = new app.models.Users().find(router.decode('usid'));
   mEntries = mBlog.entries(ben_usid: router.decode('usid'), maxrows: 5);
 </cfscript>
@@ -13,4 +13,4 @@
       </cfloop>
     </div>
   </div>
-</cfoutput>
+</cfoutput> --->

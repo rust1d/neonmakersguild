@@ -32,15 +32,16 @@
 <script src='/assets/js/blog/comments.js'></script>
 
 <cfoutput>
-  <div class='row'>
-    <div class='col'>
+  <div class='row g-3'>
+    <div class='col-12'>
       #router.include('shared/blog/entry', { mEntry: mEntry, fold: false })#
     </div>
-  </div>
-
-  <div class='row'>
-    <div class='col'>
-      #router.include('shared/blog/comments', { mEntry: mEntry })#
+    <div class='col-12'>
+      <cfif mEntry.comments()>
+        #router.include('shared/blog/comments', { mEntry: mEntry })#
+      <cfelse>
+        <small>Comments have been disabled for this post.</small>
+      </cfif>
     </div>
   </div>
 </cfoutput>

@@ -21,7 +21,7 @@ component extends=BaseModel accessors=true {
   public string function preview(numeric chars=100) {
     if (text().len() < chars) return text();
     var data = text().left(chars).listToArray(' ');
-    data.pop();
+    data.pop(); // REMOVES LAST WORD, WHICH IS LIKELY CUT OFF
     return data.toList(' ');
   }
 
@@ -29,7 +29,7 @@ component extends=BaseModel accessors=true {
     return document().text();
   }
 
-  public array function words() {
+  public array function words() { // COUNT
     return document().words();
   }
 }

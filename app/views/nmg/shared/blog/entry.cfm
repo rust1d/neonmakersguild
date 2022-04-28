@@ -1,5 +1,5 @@
 <cfoutput>
-  <div class='card border mb-3'>
+  <div class='card border'>
     <div class='aspect-2-1' style='background-image: url(#locals.mEntry.image()#)'></div>
     <div class='card-body'>
       <div class='row'>
@@ -23,7 +23,9 @@
               <cfif locals.fold && len(locals.mEntry.morebody())>
                 <a href='#locals.mEntry.seo_link()#'>Read more</a> &bull;
               </cfif>
-              <small><a href='#locals.mEntry.seo_link()###comments'>#utility.plural_label(locals.mEntry.comment_cnt(), 'comment')#</a></small>
+              <cfif mEntry.comments()>
+                <small><a href='#locals.mEntry.seo_link()###comments'>#utility.plural_label(locals.mEntry.comment_cnt(), 'comment')#</a></small>
+              </cfif>
             </div>
           </div>
         </div>

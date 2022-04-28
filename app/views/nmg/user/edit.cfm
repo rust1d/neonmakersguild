@@ -8,7 +8,7 @@
 <script src='/assets/js/image/select.js'></script>
 
 <cfoutput>
-  <form role='form' method='post'>
+  <form method='post'>
     <div class='card'>
       <h5 class='card-header bg-nmg'>User Profile</h5>
       <div class='card-body'>

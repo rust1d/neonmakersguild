@@ -40,7 +40,7 @@
 <script src='/assets/js/image/select.js'></script>
 
 <cfoutput>
-  <div class='row mb-3'>
+  <div class='row'>
     <div class='col'>
       <form role='form' method='post' id='blogform' class='needs-validation' novalidate>
         <div class='card'>

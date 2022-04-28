@@ -7,14 +7,15 @@ CREATE PROCEDURE bloglinks_insert(
   IN _type           varchar(20),
   IN _url            varchar(200),
   IN _title          varchar(100),
-  IN _description    varchar(200)
+  IN _description    varchar(200),
+  IN _clicks         int(11)
 )
 BEGIN
 
   INSERT INTO bloglinks (
-    bli_blog, bli_type, bli_url, bli_title, bli_description
+    bli_blog, bli_type, bli_url, bli_title, bli_description, bli_clicks, bli_dla
   ) VALUES (
-    _blog, _type, _url, _title, _description
+    _blog, _type, _url, _title, _description, _clicks, CURRENT_TIMESTAMP
   );
 
   CALL bloglinks_get_by_ids(LAST_INSERT_ID());

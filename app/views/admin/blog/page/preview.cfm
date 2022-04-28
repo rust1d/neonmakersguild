@@ -6,7 +6,7 @@
 <cfoutput>
   <div class='card'>
     <div class='card-body'>
-      <div class='row g-2'>
+      <div class='row g-3'>
         <div class='col-12 fs-2 text-center'>
           #mPage.title()#
         </div>
