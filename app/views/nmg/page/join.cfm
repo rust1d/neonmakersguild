@@ -2,7 +2,7 @@
   if (form.keyExists('G-RECAPTCHA-RESPONSE')) {
     try {
       service = new http(method: 'post', url: ' https://www.google.com/recaptcha/api/siteverify');
-      service.addParam(type: 'url', name: 'secret', value: '6LeaIakfAAAAALk0-X9XpTdt3rbnuE8Nt9ydcbxl');
+      service.addParam(type: 'url', name: 'secret', value: application.secrets.recaptcha);
       service.addParam(type: 'url', name: 'response', value: form['G-RECAPTCHA-RESPONSE']);
       result = service.send().getPrefix();
       response = deserializeJSON(result.fileContent);
@@ -30,6 +30,9 @@
   function onSubmit(token) {
     document.getElementById('membership-form').submit();
   }
+  $(function() {
+    $('#legal').append('')
+  })
 </script>
 
 <cfoutput>
@@ -66,5 +69,10 @@
         </div>
       </div>
     </form>
+  </div>
+  <div class='mt-1 smaller muted text-center'>
+    Protected by reCAPTCHA &bull;
+    <a href='https://policies.google.com/privacy' target='_blank'>Privacy</a> &bull;
+    <a href='https://policies.google.com/terms' target='_blank'>Terms</a>
   </div>
 </cfoutput>

@@ -3,6 +3,8 @@
   padding: 0;
 }
 
+.grecaptcha-badge { visibility: hidden; }
+
 .nmg-color { color: #5AC5C3; }
 .nmg-color-alt { color: #31C5F2; }
 .nmg-color-text { color: #0c1a19; }

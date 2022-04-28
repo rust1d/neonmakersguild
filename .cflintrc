@@ -93,6 +93,9 @@
 		},
 		{
 			"code": "PARSE_ERROR"
+		},
+		{
+			"code": "AVOID_USING_ISDATE"
 		}
 	],
 	"includes": [],

@@ -19,4 +19,9 @@
       </div>
     </div>
   </div>
+
+    <div class='mt-3 text-center'>
+      <button type='button' onclick='window.close()' class='btn btn-nmg'>Close Preview</button>
+    </div>
+
 </cfoutput>
