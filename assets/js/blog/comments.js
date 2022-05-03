@@ -1,7 +1,7 @@
 $(function() {
   $('a.comment-edit').on('click', function(event) {
     event.preventDefault();
-    var $div = $('#comment-' + this.dataset.bcoid);
+    var $div = $('#comment-' + this.dataset.key);
     $div.find('.comment').hide();
     $('#edit_popin').detach().appendTo($div).removeClass('d-none');
     var frm = $('#edit_comment')[0].form;

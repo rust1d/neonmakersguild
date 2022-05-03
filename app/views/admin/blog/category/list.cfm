@@ -12,7 +12,7 @@
             <i class='fal fa-plus'></i>
           </a>
         </div>
-        #router.include('shared/partials/view_and_filter', { viewer: false })#
+        #router.include('shared/partials/filter_and_page')#
       </div>
     </div>
     <div class='card-body table-responsive'>

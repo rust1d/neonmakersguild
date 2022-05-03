@@ -21,7 +21,7 @@ $(function() {
   image_lookup = function(request, response) {
     request.usid = $('#imagesearch').data('usid');
     $.post({
-      url: 'xhr.cfm?p=user/image/json',
+      url: '/xhr.cfm?p=user/image/json',
       contentType: 'application/json',
       dataType: 'json',
       data: JSON.stringify(request),
@@ -44,7 +44,7 @@ $(function() {
   header_lookup = function(request, response) {
     request.usid = $('#headersearch').data('usid');
     $.post({
-      url: 'xhr.cfm?p=user/image/json',
+      url: '/xhr.cfm?p=user/image/json',
       contentType: 'application/json',
       dataType: 'json',
       data: JSON.stringify(request),

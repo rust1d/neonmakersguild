@@ -193,6 +193,22 @@ component {
     throw('not implemented - define in extended class', 'not_implemented');
   }
 
+  public query function search_paged(required StoredProc sproc, required struct params) {
+    sproc.addParam(cfsqltype: 'varchar', value: utility.paging(params));
+    sproc.addProcResult(name: 'qryPage', resultset: 2);
+    var results = sproc.execute().getProcResultSets();
+    var paging = results.qryPage.getRow(1);
+    paging['count'] = results.qry.len();
+    variables._pagination = utility.pagination(paging);
+    if (params.keyExists('term')) variables._pagination['term'] = params.term;
+
+    return results.qry;
+  }
+
+  public struct function pagination() {
+    return variables._pagination ?: {};
+  }
+
   public BaseModel function set(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;
     setter(arguments);

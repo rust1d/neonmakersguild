@@ -185,6 +185,53 @@ component {
     }
   }
 
+  public struct function original_url() {
+    var data = getHttpRequestData().headers.get('X-Original-URL') ?: request.router.url();
+    return {
+      'href': application.urls.root & '/' & data.listFirst('?').listToArray('/').toList('/'),
+      'params': url_to_struct(data)
+    }
+  }
+
+  public string function page_url_next(struct pagination = {}) {
+    var data = original_url();
+    if (pagination.keyExists('term')) data.params['term'] = pagination.term;
+    data.params['page'] = pagination.next;
+    return data.href.listAppend(struct_to_url(data.params), '?');
+  }
+
+  public string function page_url_prev(struct pagination = {}) {
+    var data = original_url();
+    if (pagination.keyExists('term')) data.params['term'] = pagination.term;
+    if (pagination.page>2) {
+      data.params['page'] = pagination.prev;
+    } else {
+      data.params.delete('page'); // canonical page 1
+    }
+    return data.href.listAppend(struct_to_url(data.params), '?');
+  }
+
+  public struct function pagination(required struct data) {
+    data['first'] = data.page == 1 ? true : false;
+    data['last'] = data.page == data.pages ? true : false;
+    data['one_page'] = data.first && data.last;
+    data['next'] = data.page + 1;
+    data['prev'] = data.page - 1;
+    data['start'] = 1 + data.prev * data.page_size;
+    data['end'] = data.start + data.count - 1;
+    return data;
+  }
+
+  public string function paging(struct params) {
+    if (!isNumeric(params.get('page')) || params.page < 1) params.page = 1;
+    if (!isNumeric(params.get('maxrows')) || params.maxrows < 1) params.maxrows = 25;
+    params.offset = (params.page - 1) * params.maxrows;
+    return serializeJSON({
+      'offset': params.offset,
+      'limit': params.maxrows
+    });
+  }
+
   public string function phoneFormat(string data = '', string mask = '(xxx) xxx-xxxx') {
     var phone = data.ReReplace('[^[:digit:]]', '', 'all').trim();
     var startpattern = mask.ListFirst('- ').ReReplace('[^x]', '', 'all');
@@ -318,6 +365,12 @@ component {
     return binaryEncode(stringToBinary(data), 'hex');
   }
 
+  public string function struct_to_url(required struct data) {
+    var qry = [];
+    for (var key in data.keyList()) qry.append('#key#=#data[key]#');
+    return qry.toList('&');
+  }
+
   public string function url_add_protocol(string data = '') {
     if (data.trim().isEmpty()) return '';
     if (data.reMatch('^http*.').len()) return data;
@@ -327,6 +380,7 @@ component {
 
   public struct function url_to_struct(string data) {
     param data = urlDecode(cgi.query_string);
+    if (data.listLen('?')==1) return {};
     return data.listLast('?').listToArray('&').map(v => v.listToArray('=')).reduce((h,v) => h.append({ '#v[1]#': v[2] ?: '' }), {});
   }
 }

@@ -106,3 +106,7 @@ form label.required:after {
 .pager {
   min-width: 10rem;
 }
+
+input[name=term] {
+  max-width: 8rem;
+}

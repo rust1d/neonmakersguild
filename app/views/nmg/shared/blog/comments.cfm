@@ -45,7 +45,7 @@
                 <cfif len(mComment.history())>&bull; <small class='fst-italic muted' title='#mComment.edited()#'>edited</small></cfif>
                 <cfif session.user.loggedIn() && mComment.usid()==session.user.usid()>&bull; <a class='comment-edit' data-bcoid='#mComment.bcoid()#' data-key='#mComment.encoded_key()#'><i class='fal fa-pencil'></i></a></cfif>
               </div>
-              <div id='comment-#mComment.bcoid()#' class='mb-3'>
+              <div id='comment-#mComment.encoded_key()#' class='mb-3'>
                 <div class='comment border rounded bg-nmg px-3 py-1'>#mComment.comment()#</div>
               </div>
             </div>

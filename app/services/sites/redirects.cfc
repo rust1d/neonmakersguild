@@ -35,8 +35,8 @@ component {
       if (mdl.new_record()) return;
       url.p = 'blog/entry';
       url.benid = mdl.encoded_key();
-    } else if (url.keyExists('page')) {
-      var mdl = blog().page_by_alias(url.page);
+    } else if (url.keyExists('slug')) {
+      var mdl = blog().page_by_alias(url.slug);
       if (mdl.new_record()) return;
       url.p = 'blog/page';
       url.bpaid = mdl.encoded_key();

@@ -8,7 +8,8 @@
     <div class='card-header bg-nmg'>
       <div class='row'>
         <div class='col fs-5'>Members</div>
-        #router.include('shared/partials/view_and_filter')#
+        #router.include('shared/partials/filter_and_page')#
+        #router.include('shared/partials/viewer')#
       </div>
     </div>
     <div class='card-body'>

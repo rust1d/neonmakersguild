@@ -9,7 +9,7 @@ $(function () {
     const formData = new FormData();
     formData.set('uiid', $('#image_delete').data('uiid'));
     $.post({
-      url: 'xhr.cfm?p=user/image/delete',
+      url: '/xhr.cfm?p=user/image/delete',
       data: formData,
       dataType: 'json',
       contentType: false,
@@ -27,7 +27,7 @@ $(function () {
     const formData = new FormData();
     formData.set('delete', 1);
     $.post({
-      url: 'xhr.cfm?p=user/image/delete',
+      url: '/xhr.cfm?p=user/image/delete',
       data: formData,
       dataType: 'json',
       contentType: false,
@@ -57,7 +57,7 @@ $(function () {
     const formData = new FormData();
     formData.append('uiid', $(obj).data('uiid'));
     $.post({
-      url: 'xhr.cfm?p=user/image/pic64',
+      url: '/xhr.cfm?p=user/image/pic64',
       cache: false,
       data: formData,
       dataType: 'json',
@@ -91,7 +91,7 @@ $(function () {
     formData.append('profile_image', uri_to_blob(resp), 'crop.jpg');
     if (input.files.length) formData.append('ui_filename', input.files[0]);
     $.post({
-      url: 'xhr.cfm?p=user/image/upload',
+      url: '/xhr.cfm?p=user/image/upload',
       cache: false,
       data: formData,
       dataType: 'json',

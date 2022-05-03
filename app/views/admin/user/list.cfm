@@ -15,7 +15,8 @@
             </a>
           </div>
         </div>
-        #router.include('shared/partials/view_and_filter')#
+        #router.include('shared/partials/filter_and_page')#
+        #router.include('shared/partials/viewer')#
       </div>
     </div>
     <div class='card-body'>

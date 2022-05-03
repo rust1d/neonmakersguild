@@ -4,7 +4,7 @@
       <div class='row pt-5'>
         <div class='col-12 text-center align-middle'>
           <p id='social'>
-            <cfloop array='#mBlog.owner().social_links()#' item='mLink'>
+            <cfloop array='#mBlog.owner().profile_links()#' item='mLink'>
               <span class='p-3'>#mLink.icon_link()#</span>
             </cfloop>
           </p>

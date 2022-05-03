@@ -23,7 +23,7 @@ $(document).ready(() => {
     const formData = new FormData();
     formData.append('uiid', $(this).data('uiid'));
     $.post({
-      url: 'xhr.cfm?p=user/image/pic64',
+      url: '/xhr.cfm?p=user/image/pic64',
       cache: false,
       data: formData,
       dataType: 'json',
@@ -52,7 +52,7 @@ $(document).ready(() => {
     formData.append('thumbnail', uri_to_blob(resp), 'crop.jpg');
     formData.append('uiid', $('#btnOpen').data('uiid'));
     $.post({
-      url: 'xhr.cfm?p=user/image/upload',
+      url: '/xhr.cfm?p=user/image/upload',
       cache: false,
       data: formData,
       dataType: 'json',

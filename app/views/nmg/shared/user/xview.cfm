@@ -1,4 +1,4 @@
-<cfoutput>
+<!--- <cfoutput>
   <div class='card'>
     <div class='card-header bg-nmg'>
     </div>
@@ -26,4 +26,4 @@
       </div>
     </div>
   </div>
-</cfoutput>
+</cfoutput> --->

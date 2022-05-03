@@ -16,12 +16,15 @@ component extends=BaseModel accessors=true {
     var sproc = new StoredProc(procedure: 'bloglinks_search', datasource: datasource());
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('bli_bliid'), null: !arguments.keyExists('bli_bliid'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('bli_blog'),  null: !arguments.keyExists('bli_blog'));
+    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('bli_type'),  null: !arguments.keyExists('bli_type'));
+    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),      null: !arguments.keyExists('term'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 
-    return sproc.execute().getProcResultSets().qry;
+    return search_paged(sproc, arguments);
   }
 
   public string function datadash() {
+    if (new_record()) return '';
     return serializeJSON({ 'blog': bli_blog, 'pkid': bli_bliid });
   }
 
@@ -29,16 +32,32 @@ component extends=BaseModel accessors=true {
     return isNull(variables.bli_url) ? '' : utility.getDomain(bli_url);
   }
 
+  public string function icon_link(string size = '2x') {
+    if (isNull(variables.bli_url)) return '';
+    return "<a href='#bli_url#' data-link='#datadash()#' target='_blank'>#icon(size)#</a>";
+  }
+
+  public string function icon(string size = '2x') {
+    if (isNull(variables.bli_url)) return '';
+    var type = social_type();
+    var icon = type.len() ? 'fa-brands fa-#type#' : icons().get(bli_type ?: 'bookmark') ?: 'fa-regular fa-block-question';
+    return "<i class='fa-#size# #icon#'></i>";
+  }
+
+  public boolean function isBookmark() {
+    return (variables.bli_type ?: '')=='bookmark';
+  }
+
   public boolean function isClass() {
-    return ListLast(variables.bli_type ?: '', '/')=='class';
+    return (variables.bli_type ?: '')=='resources-classes';
   }
 
   public boolean function isResource() {
-    return ListFirst(variables.bli_type ?: '', '/')=='resource';
+    return ListFirst(variables.bli_type ?: '', '-')=='resource';
   }
 
   public boolean function isSupplier() {
-    return ListLast(variables.bli_type ?: '', '/')=='supplier';
+    return (variables.bli_type ?: '')=='resources-suppliers';
   }
 
   public boolean function isSocial() {
@@ -64,15 +83,8 @@ component extends=BaseModel accessors=true {
     return listToArray('facebook,flickr,instagram,linkedin,pinterest,snapchat,tiktok,twitter,vimeo,youtube');
   }
 
-  public string function icon_link(string size = '2x') {
-    if (isNull(variables.bli_url)) return '';
-    var type = social_type();
-    var icon = type.len() ? 'fa-brands fa-#type#' : icons().get(bli_type ?: 'bookmark') ?: 'fa-regular fa-block-question';
-    return '<a href="#bli_url#" target="_blank"><i class="fa-#size# #icon#"></i></a>';
-  }
-
   public array function types() {
-    if (bli_blog==1) return icons().keyArray().sort('text');
+    if (bli_blog==1) return ['bookmark','social media','resources-classes','resources-other','resources-suppliers'];
 
     return ['bookmark','social media','website'];
   }
@@ -81,11 +93,12 @@ component extends=BaseModel accessors=true {
 
   private struct function icons() {
     return {
-      'bookmark':           'fa-solid fa-square-arrow-up-right',
-      'social media':       'fa-regular fa-sparkles',
-      'website':            'fa-regular fa-globe',
-      'resource/class':     'fa-solid fa-school',
-      'resource/supplier':  'fa-solid fa-truck-field'
+      'bookmark':            'fa-solid fa-square-arrow-up-right',
+      'social media':        'fa-regular fa-sparkles',
+      'website':             'fa-regular fa-globe',
+      'resources-classes':   'fa-solid fa-school',
+      'resources-other':     'fa-solid fa-link',
+      'resources-suppliers': 'fa-solid fa-truck-field'
     }
   }
 

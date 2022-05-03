@@ -84,8 +84,8 @@
                 </a>
               </div>
             </cfif>
-            #router.include('shared/partials/pager', { page: 1, records: mForum.ForumThreads().len() })#
-            #router.include('shared/partials/view_and_filter', { viewer: false })#
+            <!--- #router.include('shared/partials/pager', { page: 1, records: mForum.ForumThreads().len() })# --->
+            #router.include('shared/partials/filter_and_page')#
           </div>
         </div>
         <div class='card-body'>

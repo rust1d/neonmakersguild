@@ -58,13 +58,19 @@ component extends=BaseModel accessors=true {
     return variables._profile_image = variables._profile_image ?: new services.user.ProfileImage(us_usid);
   }
 
+  public array function profile_links() {
+    var data = this.Links().filter(row => row.isWebsite());
+    data.append(this.Links().filter(row => row.isSocial()), true);
+    return data;
+  }
+
   public string function seo_link() {
     return lcase('/member/#us_user#');
   }
 
-  public array function social_links() {
-    return this.Links().filter(row => row.isSocial());
-  }
+  // public array function social_links() {
+  //   return this.Links().filter(row => row.isSocial());
+  // }
 
   public void function update_last_login() {
     if (new_record()) return;
@@ -74,7 +80,7 @@ component extends=BaseModel accessors=true {
     sproc.execute();
   }
 
-  public array function website_links() {
-    return this.Links().filter(row => row.isWebsite());
-  }
+  // public array function website_links() {
+  //   return this.Links().filter(row => row.isWebsite());
+  // }
 }

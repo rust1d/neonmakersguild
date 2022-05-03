@@ -65,7 +65,7 @@ $(function() {
   });
 
   let tiny_forum = {
-    plugins: 'autolink autosave fullscreen help image link lists media preview visualchars wordcount',
+    plugins: 'autolink autosave code fullscreen help image link lists media preview visualchars wordcount',
     toolbar: 'fullscreen | undo redo | editing | styling | font | aligning | lists | link unlink | image media',
     toolbar_groups: toolbar_groups,
     font_family_formats: 'Select Font=system-ui;Andale Mono=andale mono,times; Arial Black=arial black,avant garde; Arial=arial,helvetica,sans-serif; Arimo=arimo; Book Antiqua=book antiqua,palatino; Comic Sans MS=comic sans ms,sans-serif; Courier New=courier new,courier; Georgia=georgia,palatino; Helvetica=helvetica; Impact=impact,chicago; Montserrat=montserrat; Permanent Marker=permanent marker; Poppins=poppins; Roboto=roboto; Symbol=symbol; Tahoma=tahoma,arial,helvetica,sans-serif; Terminal=terminal,monaco; Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva; Webdings=webdings; Wingdings=wingdings,zapf dingbats;',
@@ -75,9 +75,13 @@ $(function() {
     remove_script_host : false,
   };
 
-  $('textarea.tiny-forum').each(function() {
-    var high = 160 + this.rows * 20;
-    var params = { height: high, target: this }
+  init_tinyforum = function(txt) {
+    var high = 160 + txt.rows * 20;
+    var params = { height: high, target: txt }
     tinymce.init({ ...tiny_forum, ...params });
+  }
+
+  $('textarea.tiny-forum').each(function() {
+    init_tinyforum(this);
   });
 });

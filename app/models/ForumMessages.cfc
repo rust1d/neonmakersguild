@@ -16,6 +16,14 @@ component extends=BaseModel accessors=true {
   belongs_to(name: 'ForumThread',  class: 'ForumThreads',  key: 'fm_ftid',  relation: 'ft_ftid');
   belongs_to(name: 'User',         class: 'Users',         key: 'fm_usid',  relation: 'us_usid');
 
+  public numeric function age() {
+    return now().diff('h', fm_added ?: now());
+  }
+
+  public boolean function editable() {
+    return age() <= 24;
+  }
+
   public string function more() {
     if (isNull(variables.fm_body)) return '';
     var words = fm_body.left(30).listToArray(' ');

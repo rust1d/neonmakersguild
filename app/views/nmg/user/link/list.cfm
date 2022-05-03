@@ -1,3 +1,3 @@
-<cfoutput>
-  #router.include('shared/user/link/list', { mLinks: mUser.Links() })#
-</cfoutput>
+<cfscript>
+  router.include('shared/user/link/list', { mBlog: mUserBlog });
+</cfscript>

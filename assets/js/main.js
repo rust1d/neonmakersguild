@@ -8,18 +8,20 @@ $(function() {
   $('a[data-link]').on('click', function() {
     if (this.dataset.link) {
       $.post({
-        url: 'xhr.cfm?p=actions/link',
+        url: '/xhr.cfm?p=actions/link',
         cache: false,
         data: this.dataset.link,
         dataType: 'json',
         contentType: false,
         processData: false,
         error: function(err) { console.log(err) },
-        success: function(data) {
-          console.log(data);
-        }
+        success: function(data) { console.log(data) }
       });
     }
+  });
+
+  $('#btnDelete').on('click', function(event) {
+    if (!confirm('Are you sure you want to delete this record?')) event.preventDefault();
   });
 
   uri_to_blob = function(uri) {

@@ -13,7 +13,7 @@
     </div>
     <cfif request.router.template_exists('page/#locals.mPage.alias()#')>
       <div class='col-12'>
-        #router.include('page/#locals.mPage.alias()#')#
+        #router.include('page/#locals.mPage.alias()#', { mPage: locals.mPage })#
       </div>
     </cfif>
   </div>

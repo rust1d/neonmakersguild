@@ -25,6 +25,14 @@ component extends=BaseModel accessors=true {
     return sproc.execute().getProcResultSets().qry;
   }
 
+  public numeric function age() {
+    return now().diff('h', bco_added ?: now());
+  }
+
+  public boolean function editable() {
+    return age() <= 24;
+  }
+
   public string function edited() {
     return isNull(variables.bco_dla) ? '' : utility.ordinalDate(bco_dla) & bco_dla.format(' @ HH:nn');
   }

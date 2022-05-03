@@ -15,7 +15,7 @@ BEGIN
   INSERT INTO bloglinks (
     bli_blog, bli_type, bli_url, bli_title, bli_description, bli_clicks, bli_dla
   ) VALUES (
-    _blog, _type, _url, _title, _description, _clicks, CURRENT_TIMESTAMP
+    _blog, _type, _url, _title, _description, 0, CURRENT_TIMESTAMP
   );
 
   CALL bloglinks_get_by_ids(LAST_INSERT_ID());

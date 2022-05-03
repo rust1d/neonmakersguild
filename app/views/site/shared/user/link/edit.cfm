@@ -9,6 +9,10 @@
       flash.success('Your link was saved.');
       router.redirect('#dest#/link/list');
     }
+  } else if (form.keyExists('btnDelete')) {
+    mLink.destroy();
+    flash.success('Your link was deleted.');
+    router.redirect('#dest#/link/list');
   }
 
   icon_link = mLink.icon_link('lg');
@@ -42,18 +46,19 @@
             </div>
           </div>
           <div class='col-12'>
-            <label class='form-label' for='bli_title'>Title</label>
-            <input type='text' class='form-control' name='bli_title' id='bli_title' value='#htmlEditFormat(mLink.title())#' maxlength='100' />
+            <label class='form-label required' for='bli_title'>Title</label>
+            <input type='text' class='form-control' name='bli_title' id='bli_title' value='#htmlEditFormat(mLink.title())#' maxlength='100' required />
           </div>
           <div class='col-12'>
-            <label class='form-label required' for='bli_description'>Description</label>
+            <label class='form-label' for='bli_description'>Description</label>
             <input type='text' class='form-control' name='bli_description' id='bli_description' value='#htmlEditFormat(mLink.description())#' maxlength='200' />
-            <small>Only displayed for "resource" links.</small>
+            <small>Only displayed for "resource" links but used for searching all types.</small>
           </div>
         </div>
         <div class='row mt-3'>
           <div class='col text-center'>
             <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-nmg'>Save</button>
+            <cfif mLink.persisted()><button type='submit' name='btnDelete' id='btnDelete' class='btn btn-nmg-delete'>Delete</button></cfif>
             <a href='#router.href('#dest#/link/list')#' class='btn btn-nmg-cancel'>Cancel</a>
           </div>
         </div>

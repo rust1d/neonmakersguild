@@ -85,7 +85,7 @@ writedump(arguments);
   // PRIVATE
 
   private void function check_redirects() {
-    // if (cgi.request_method=='get') 
+    // if (cgi.request_method=='get')
     new app.services.sites.redirects().perform();
   }
 
@@ -119,7 +119,8 @@ writedump(arguments);
     for (key in form.fieldnames.listToArray()) {
       request.unclean[key] = form[key].reReplace('[^\x00-\x7F]', '-', 'all').trim();
       form[key] = request.unclean[key];
-      if (listfindNoCase('up_bio,ben_body,ben_morebody,bpa_body,btb_body', key)) continue;
+      // TEXTAREAS THAT WE EXPECT HTML IN MUST BE WHITELISTED
+      if (listfindNoCase('up_bio,ben_body,ben_morebody,bpa_body,btb_body,fm_body,edit_message', key)) continue;
       form[key] = form[key].reReplace('<[^>]*>', '', 'all').reReplace('[<>]', '?', 'all');
     }
   }

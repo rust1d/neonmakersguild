@@ -131,11 +131,14 @@ component accessors=true {
     request.router.redirect();
   }
 
-  public array function links(struct params) {
+  public struct function links(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;
     var args = { bli_blog: id(), maxrows: 25 }
     args.append(arguments);
-    return new app.models.BlogLinks().where(args);
+    var mdl = new app.models.BlogLinks();
+    var data['rows'] = mdl.where(args);
+    data['pagination'] = mdl.pagination();
+    return data;
   }
 
   public string function name() {

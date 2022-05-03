@@ -13,7 +13,7 @@ CREATE TABLE users (
   us_dll         DATETIME DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (us_usid),
   UNIQUE INDEX (us_email)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS userProfile;
 
@@ -27,7 +27,7 @@ CREATE TABLE userProfile (
   up_dla         DATETIME DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (up_upid),
   UNIQUE INDEX (up_usid)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS userImages;
@@ -43,7 +43,7 @@ CREATE TABLE userImages (
   ui_dla         DATETIME DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (ui_uiid),
   INDEX (ui_usid) USING BTREE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS BlogCategories;
@@ -131,7 +131,7 @@ CREATE TABLE BlogLinks (
   bli_dla                               DATETIME DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (bli_bliid),
   INDEX (bli_blog) USING BTREE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS BlogPages;

@@ -15,10 +15,16 @@
             <ul class='dropdown-menu'>
               <li><a class='dropdown-item' href='/members'>List</a></li>
               <li><a class='dropdown-item' href='/join'>Join</a></li>
-              <!--- <li><a class='dropdown-item' href='#router.href('member/login')#'>Login</a></li> --->
             </ul>
           </li>
-          <li class='nav-item ms-4'><a class='nav-link' href='/resources'>Resources</a></li>
+          <li class='nav-item ms-4 dropdown'>
+            <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Resources</a>
+            <ul class='dropdown-menu'>
+              <li><a class='dropdown-item' href='/resources/suppliers'>Suppliers</a></li>
+              <li><a class='dropdown-item' href='/resources/classes'>Classes</a></li>
+              <li><a class='dropdown-item' href='/resources/other'>Other</a></li>
+            </ul>
+          </li>
           <li class='nav-item ms-4'><a class='nav-link' href='/about'>About</a></li>
           <li class='nav-item ms-4'><a class='nav-link' href='/forums'>Forums</a></li>
           <cfif session.user.loggedIn()>
