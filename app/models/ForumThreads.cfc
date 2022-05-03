@@ -14,6 +14,7 @@ component extends=BaseModel accessors=true {
   property name='ft_added'        type='date';
   property name='ft_dla'          type='date';
   property name='fo_alias'        type='string';
+  property name='us_user'         type='string';
 
   belongs_to(name: 'Forum',        class: 'Forums',        key: 'ft_foid',  relation: 'fo_foid');
   belongs_to(name: 'User',         class: 'Users',         key: 'ft_usid',  relation: 'us_usid');
@@ -36,9 +37,10 @@ component extends=BaseModel accessors=true {
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('ft_ftid'), null: !arguments.keyExists('ft_ftid'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('ft_foid'), null: !arguments.keyExists('ft_foid'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('ft_usid'), null: !arguments.keyExists('ft_usid'));
+    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),    null: !arguments.keyExists('term'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 
-    return sproc.execute().getProcResultSets().qry;
+    return search_paged(sproc, arguments);
   }
 
   public string function seo_link() {

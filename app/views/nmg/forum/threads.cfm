@@ -31,6 +31,14 @@
   }
 
   mBlock = mBlog.textblock_by_label('forum-' & mForum.alias());
+
+  param url.term = form.get('term') ?: '';
+  params = { maxrows: 25 };
+  if (len(url.term)) params.term = url.term;
+  if (len(url.get('page'))) params.page = url.page;
+  mdl = new app.models.ForumThreads();
+  mThreads = mdl.where(params);
+  pagination = mdl.pagination();
 </cfscript>
 
 <script>
@@ -46,7 +54,6 @@
         $('div.message-field').slideDown();
       }
     });
-
   })
 </script>
 
@@ -84,8 +91,7 @@
                 </a>
               </div>
             </cfif>
-            <!--- #router.include('shared/partials/pager', { page: 1, records: mForum.ForumThreads().len() })# --->
-            #router.include('shared/partials/filter_and_page')#
+            #router.include('shared/partials/filter_and_page', { pagination: pagination })#
           </div>
         </div>
         <div class='card-body'>
@@ -112,7 +118,7 @@
               </div>
             </div>
           </cfif>
-          <cfloop array='#mForum.ForumThreads()#' item='mThread'>
+          <cfloop array='#mThreads#' item='mThread'>
             <div class='row border-top pt-3'>
               <div class='col-auto'>
                 <a href='#mThread.User().seo_link()#'>
@@ -148,6 +154,11 @@
               </div>
             </div>
           </cfloop>
+        </div>
+        <div class='card-footer bg-nmg'>
+          <div class='row align-items-center'>
+            #router.include('shared/partials/filter_and_page', { pagination: pagination, footer: true })#
+          </div>
         </div>
         <div class='card-footer'>
           <div class='row'>
