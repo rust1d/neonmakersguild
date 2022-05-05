@@ -11,6 +11,10 @@
     } else {
       flash.error('An error occurred while uploading. Please try again or contact #session.site.mailto_site()#.');
     }
+  } else if (form.keyExists('btnDelete')) {
+    mImage.destroy();
+    flash.success('Your image was deleted.');
+    router.redirect('#dest#/image/list');
   }
 
   mode = mImage.new_record() ? 'Add' : 'Edit';
@@ -32,9 +36,6 @@
                 <div class='row g-3'>
                   <div class='col-12'>
                     Images will be resized to a max height/width of 1200 and a 300x300 thumbnail will be cropped from the center for previews.
-                  </div>
-                  <div class='col-12 small text-muted'>
-                    Once an image has been used on the site it cannot be deleted.
                   </div>
                   <div class='col-12' id='file_info'>
                     <div class='input-group input-group-sm mb-1'>
@@ -89,7 +90,6 @@
             </div>
             <div class='col-md'>
               <img src='#mImage.image_src()#' class='w-100 img-thumbnail clipable' data-clip='#mImage.image_src()#' />
-              <!--- <small class='fst-italic muted'>#mImage.dimensions()# pixels &bull; #mImage.size_mb()#</small> --->
             </div>
           </div>
 
@@ -107,6 +107,11 @@
               <div class='text-muted'>
                 <i class='fal fa-copy'></i> <span class='clipable' data-clip='#mImage.thumbnail_src()#'>#mImage.thumbnail_src()#</span> (thumbnail)
               </div>
+              <cfif mImage.uses().len()>
+                <div class='text-danger small' title='Uses: #mImage.uses().map(row => '#row.src_table#-#row.src_pkid#').toList()#'>
+                  This image is used in posted content. Deleting the record will remove it from your profile but the image will still exist in the posted content.
+                </div>
+              </cfif>
             </div>
           </div>
         </cfif>

@@ -1,8 +1,5 @@
 <cfscript>
-  locals.params = { bli_type: url.slug }
-  param url.term = form.get('term') ?: '';
-  if (len(url.term)) locals.params.term = url.term;
-  if (len(url.get('page'))) locals.params.page = url.page;
+  locals.params = utility.paged_term_params(bli_type: url.slug)
   locals.results = mBlog.links(locals.params);
 </cfscript>
 

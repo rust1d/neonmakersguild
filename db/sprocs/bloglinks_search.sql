@@ -18,7 +18,11 @@ BEGIN
    WHERE (_bliid IS NULL OR bli_bliid = _bliid)
      AND (_blog IS NULL OR bli_blog = _blog)
      AND (_type IS NULL OR bli_type = CONVERT(_type USING utf8))
-     AND (_term IS NULL OR CONCAT(bli_url, ' ', IFNULL(bli_title, ''), ' ', IFNULL(bli_description, '')) REGEXP CONVERT(_term USING utf8))
+     AND (_term IS NULL OR
+           bli_url = CONVERT(_term USING utf8) OR
+           bli_title REGEXP CONVERT(_term USING utf8) OR
+           bli_description REGEXP CONVERT(_term USING utf8)
+         )
      ORDER BY bli_type, bli_title, bli_bliid
      LIMIT _limit OFFSET _offset;
 

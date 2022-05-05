@@ -3,19 +3,31 @@ DROP procedure IF EXISTS userimages_search;
 delimiter ;;
 
 CREATE PROCEDURE userimages_search(
-  IN _uiid   int(11),
-  IN _usid   int(11),
-  IN _term   varchar(50),
-  IN _ratio  float
+  IN _uiid     INT(11),
+  IN _usid     INT(11),
+  IN _ratio    FLOAT,
+  IN _term     VARCHAR(20),
+  IN _paging   VARCHAR(50)
 )
 BEGIN
-  SELECT *
+  DECLARE _limit INT(11) DEFAULT get_page_data(_paging, 'limit');
+  DECLARE _offset INT(11) DEFAULT get_page_data(_paging, 'offset');
+
+  SELECT SQL_CALC_FOUND_ROWS *
     FROM userimages
    WHERE (_uiid IS NULL OR ui_uiid = _uiid)
      AND (_usid IS NULL OR ui_usid = _usid)
-     AND (_term IS NULL OR ui_filename REGEXP CONVERT(_term USING latin1))
      AND (_ratio IS NULL OR round(ui_width/ui_height,2) = _ratio)
-     ORDER BY ui_dla desc;
+     AND (_term IS NULL OR
+           ui_filename REGEXP CONVERT(_term USING utf8) OR
+           (LEFT(_term,1)='x' AND CONCAT('x', ui_height)=CONVERT(_term USING utf8)) OR
+           (RIGHT(_term,1)='x' AND CONCAT(ui_width, 'x')=CONVERT(_term USING utf8)) OR
+           round(ui_width/ui_height,2) = CONVERT(_term, DECIMAL)
+         )
+     ORDER BY ui_dla desc, ui_uiid desc
+     LIMIT _limit OFFSET _offset;
+
+  SELECT FOUND_ROWS() AS total, IF(FOUND_ROWS() < _limit, FOUND_ROWS(), _limit) AS page_size, CEIL(FOUND_ROWS()/_limit) AS pages, 1+ROUND(_offset/_limit) AS page;
 END;;
 
 delimiter ;

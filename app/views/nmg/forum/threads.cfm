@@ -30,15 +30,11 @@
     }
   }
 
-  mBlock = mBlog.textblock_by_label('forum-' & mForum.alias());
-
-  param url.term = form.get('term') ?: '';
-  params = { maxrows: 25 };
-  if (len(url.term)) params.term = url.term;
-  if (len(url.get('page'))) params.page = url.page;
   mdl = new app.models.ForumThreads();
-  mThreads = mdl.where(params);
+  mThreads = mdl.where(utility.paged_term_params());
   pagination = mdl.pagination();
+
+  mBlock = mBlog.textblock_by_label('forum-' & mForum.alias());
 </cfscript>
 
 <script>
@@ -83,9 +79,9 @@
     <div class='col-12'>
       <div class='card'>
         <div class='card-header'>
-          <div class='row'>
+          <div class='row align-items-center'>
             <cfif !session.user.loggedIn()>
-              <div class='col'>
+              <div class='col-auto'>
                 <a href='/login' class='btn btn-sm btn-nmg' title='Login'>
                   <i class='fas fa-person-dots-from-line'></i> Login to post
                 </a>
@@ -158,18 +154,6 @@
         <div class='card-footer bg-nmg'>
           <div class='row align-items-center'>
             #router.include('shared/partials/filter_and_page', { pagination: pagination, footer: true })#
-          </div>
-        </div>
-        <div class='card-footer'>
-          <div class='row'>
-            <div class='col-2'>
-              Threads #mForum.threads()#
-            </div>
-            <div class='col-2'>
-              Messages #mForum.messages()#
-            </div>
-            <div class='col-8'>
-            </div>
           </div>
         </div>
       </div>

@@ -6,7 +6,7 @@
       var usid = utility.decode(data.usid);
       var mBlog = new app.services.user.Blog(usid ? usid : 1);
       if (data.term.len()>=2) {
-        var mImages = mBlog.images(term: data.term, maxrows: 20);
+        var mImages = mBlog.images(term: data.term, maxrows: 20).rows;
         for (var mImage in mImages) {
           options.append({
             'usid': data,

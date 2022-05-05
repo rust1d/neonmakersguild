@@ -14,24 +14,6 @@ component extends=BaseModel accessors=true {
   variables.image_longest_side = 1200; // ALL IMAGES WILL BE RESIZED BEFORE UPLOAD TO CDN
   variables.thumbnail_size = 300; // ALL IMAGES WILL BE RESIZED BEFORE UPLOAD TO CDN
 
-  public query function search(struct params) {
-    if (arguments.keyExists('params')) arguments = arguments.params;
-    if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
-
-    var sproc = new StoredProc(procedure: 'userimages_search', datasource: datasource());
-    sproc.addParam(cfsqltype: 'integer', value: arguments.get('ui_uiid'), null: !arguments.keyExists('ui_uiid'));
-    sproc.addParam(cfsqltype: 'integer', value: arguments.get('ui_usid'), null: !arguments.keyExists('ui_usid'));
-    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),    null: !arguments.keyExists('term'));
-    sproc.addParam(cfsqltype: 'float',   value: arguments.get('ratio'),   null: !arguments.keyExists('ratio'));
-    sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
-
-    return sproc.execute().getProcResultSets().qry;
-  }
-
-  public string function size_mb() {
-    return isNull(variables.ui_size) ? 0 : numberFormat(variables.ui_size/1024/1024, '.0') & ' MB';
-  }
-
   public string function dimensions() {
     return isNull(variables.ui_width) ? '' : '#ui_width# x #ui_height#';
   }
@@ -48,6 +30,24 @@ component extends=BaseModel accessors=true {
     return variables.ui_height==0 ? 0 : ui_width / ui_height;
   }
 
+  public query function search(struct params) {
+    if (arguments.keyExists('params')) arguments = arguments.params;
+    if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
+
+    var sproc = new StoredProc(procedure: 'userimages_search', datasource: datasource());
+    sproc.addParam(cfsqltype: 'integer', value: arguments.get('ui_uiid'), null: !arguments.keyExists('ui_uiid'));
+    sproc.addParam(cfsqltype: 'integer', value: arguments.get('ui_usid'), null: !arguments.keyExists('ui_usid'));
+    sproc.addParam(cfsqltype: 'float',   value: arguments.get('ratio'),   null: !arguments.keyExists('ratio'));
+    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),    null: !arguments.keyExists('term'));
+    sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
+
+    return search_paged(sproc, arguments);
+  }
+
+  public string function size_mb() {
+    return isNull(variables.ui_size) ? 0 : numberFormat(variables.ui_size/1024/1024, '.0') & ' MB';
+  }
+
   public string function thumbnail_src() {
     return remote_path() & thumbnail_name();
   }
@@ -61,6 +61,18 @@ component extends=BaseModel accessors=true {
     }
   }
 
+  public array function uses() {
+    if (new_record()) return [];
+
+    if (isNull(variables._uses)) {
+      var sproc = new StoredProc(procedure: 'userimages_uses', datasource: datasource());
+      sproc.addParam(cfsqltype: 'varchar', value: hash(ui_uiid));
+      sproc.addProcResult(name: 'qry', resultset: 1);
+      variables._uses = utility.query_to_array(sproc.execute().getProcResultSets().qry);
+    }
+    return variables._uses;
+  }
+
   // PRIVATE
 
   private void function delete_image(required string filefield) {
@@ -68,8 +80,8 @@ component extends=BaseModel accessors=true {
     if (field.isEmpty()) return;
 
     try {
-      fileDelete(local_path() & image_name());
-      fileDelete(local_path() & thumbnail_name());
+      if (fileExists(local_path() & image_name())) fileDelete(local_path() & image_name());
+      if (fileExists(local_path() & thumbnail_name())) fileDelete(local_path() & thumbnail_name());
       return;
     } catch (any err) { }
     errors().append('Could not delete #image_name()#.');
@@ -93,7 +105,7 @@ component extends=BaseModel accessors=true {
 
   private void function post_destroy(required boolean success) {
     if (!success) return;
-    delete_image('ui_filename');
+    if (uses().isEmpty()) delete_image('ui_filename');
   }
 
   private void function post_insert(required boolean success) {
@@ -130,7 +142,6 @@ component extends=BaseModel accessors=true {
 
   private struct function move_final(required string filename) {
     var img = ImageRead(filename);
-// writedump(ImageGetEXIFMetadata(img));abort;
     var orientation = ImageGetEXIFTag(img, 'orientation');
 
     var info = ImageInfo(img);

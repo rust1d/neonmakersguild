@@ -4,8 +4,7 @@ component extends=BaseModel accessors=true {
   property name='us_password'     type='string'   sqltype='varchar';
   property name='us_email'        type='string'   sqltype='varchar';
   property name='us_permissions'  type='numeric'  sqltype='tinyint'    default='0';
-  property name='us_active'       type='numeric'  sqltype='tinyint'    default='1';
-  property name='us_deleted'      type='numeric'  sqltype='tinyint'    default='0';
+  property name='us_deleted'      type='date'     sqltype='timestamp';
   property name='us_added'        type='date';
   property name='us_dla'          type='date';
   property name='us_dll'          type='date';
@@ -33,12 +32,14 @@ component extends=BaseModel accessors=true {
     if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
 
     var sproc = new StoredProc(procedure: 'users_search', datasource: datasource());
-    sproc.addParam(cfsqltype: 'integer', value: arguments.get('us_usid'),  null: !arguments.keyExists('us_usid'));
-    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('us_user'), null: !arguments.keyExists('us_user'));
-    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('us_email'), null: !arguments.keyExists('us_email'));
+    sproc.addParam(cfsqltype: 'integer', value: arguments.get('us_usid'),   null: !arguments.keyExists('us_usid'));
+    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('us_user'),   null: !arguments.keyExists('us_user'));
+    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('us_email'),  null: !arguments.keyExists('us_email'));
+    sproc.addParam(cfsqltype: 'tinyint', value: arguments.get('isdeleted'), null: !arguments.keyExists('isdeleted'));
+    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),      null: !arguments.keyExists('term'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 
-    return sproc.execute().getProcResultSets().qry;
+    return search_paged(sproc, arguments);
   }
 
   private void function pre_save() {

@@ -1,5 +1,8 @@
 <cfscript>
-  mUsers = new app.models.Users().where();
+  mdl = new app.models.Users();
+  mUsers = mdl.where(utility.paged_term_params());
+  pagination = mdl.pagination();
+
   view = session.user.view();
 </cfscript>
 
@@ -7,7 +10,6 @@
   <div class='card'>
     <div class='card-header bg-nmg'>
       <div class='row'>
-        <div class='col fs-5'>Users</div>
         <div class='col-auto'>
           <div class='input-group input-group-sm'>
             <a href='#router.href('user/edit')#' class='btn btn-sm btn-nmg' title='Add'>
@@ -15,7 +17,8 @@
             </a>
           </div>
         </div>
-        #router.include('shared/partials/filter_and_page')#
+        <div class='col fs-5'>Users</div>
+        #router.include('shared/partials/filter_and_page', { pagination: pagination })#
         #router.include('shared/partials/viewer')#
       </div>
     </div>

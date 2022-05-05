@@ -193,11 +193,22 @@ component {
     }
   }
 
+  public struct function paged_term_params(struct params) {
+    if (arguments.keyExists('params')) arguments = arguments.params;
+    var term = url.get('term') ?: form.get('term') ?: '';
+    var page = url.get('page') ?: 1;
+    var args = { maxrows: 25 }
+    args.append(arguments);
+    if (len(term)) args.term = term;
+    if (!form.keyExists('term') && page > 1) args.page = page;
+    return args;
+  }
+
   public string function page_url_next(struct pagination = {}) {
     var data = original_url();
     if (pagination.keyExists('term')) data.params['term'] = pagination.term;
     data.params['page'] = pagination.next;
-    return data.href.listAppend(struct_to_url(data.params), '?');
+    return data.href.listAppend(struct_to_url(data.params), '?', false);
   }
 
   public string function page_url_prev(struct pagination = {}) {
@@ -208,7 +219,7 @@ component {
     } else {
       data.params.delete('page'); // canonical page 1
     }
-    return data.href.listAppend(struct_to_url(data.params), '?');
+    return data.href.listAppend(struct_to_url(data.params), '?', false);
   }
 
   public struct function pagination(required struct data) {

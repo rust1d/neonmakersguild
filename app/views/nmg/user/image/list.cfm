@@ -1,3 +1,3 @@
-<cfoutput>
-  #router.include('shared/user/image/list', { mImages: mUser.UserImages() })#
-</cfoutput>
+<cfscript>
+  router.include('shared/user/image/list', { mBlog: mUserBlog });
+</cfscript>

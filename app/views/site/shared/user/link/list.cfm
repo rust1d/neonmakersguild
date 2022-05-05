@@ -1,10 +1,6 @@
 <cfscript>
   locals.dest = (locals.mBlog.id()==1 && session.site.isA('admin')) ? 'blog' : 'user';
-  param url.term = form.get('term') ?: '';
-  locals.params = { }
-  if (len(url.term)) locals.params.term = url.term;
-  if (len(url.get('page'))) locals.params.page = url.page;
-  locals.results = locals.mBlog.links(locals.params);
+  locals.results = locals.mBlog.links(utility.paged_term_params());
 </cfscript>
 
 <cfoutput>

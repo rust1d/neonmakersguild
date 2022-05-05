@@ -8,8 +8,7 @@ CREATE PROCEDURE users_update(
   IN _password      varchar(100),
   IN _email         varchar(50),
   IN _permissions   tinyint(4),
-  IN _active        tinyint(1),
-  IN _deleted       tinyint(1)
+  IN _deleted       datetime
 )
 BEGIN
   UPDATE users

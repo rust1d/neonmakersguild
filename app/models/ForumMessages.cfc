@@ -11,6 +11,7 @@ component extends=BaseModel accessors=true {
   property name='fm_dla'         type='date';
   property name='fo_alias'       type='string';
   property name='ft_alias'       type='string';
+  property name='us_user'        type='string';
 
   belongs_to(name: 'Forum',        class: 'Forums',        key: 'fm_foid',  relation: 'fo_foid');
   belongs_to(name: 'ForumThread',  class: 'ForumThreads',  key: 'fm_ftid',  relation: 'ft_ftid');
@@ -39,9 +40,10 @@ component extends=BaseModel accessors=true {
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('fm_foid'), null: !arguments.keyExists('fm_foid'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('fm_ftid'), null: !arguments.keyExists('fm_ftid'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('fm_usid'), null: !arguments.keyExists('fm_usid'));
+    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),    null: !arguments.keyExists('term'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 
-    return sproc.execute().getProcResultSets().qry;
+    return search_paged(sproc, arguments);
   }
 
   public string function posted() {

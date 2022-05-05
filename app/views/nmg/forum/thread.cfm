@@ -40,11 +40,15 @@
     }
   }
 
+  mdl = new app.models.ForumMessages();
+  mMessages = mdl.where(utility.paged_term_params());
+  pagination = mdl.pagination();
+  if (pagination.first) mThread.view();
+
   mBlock = mBlog.textblock_by_label('forum-' & mForum.alias());
 </cfscript>
 
 <script src='/assets/js/blog/messages.js'></script>
-
 
 <cfoutput>
   <div class='row g-3 pt-3'>
@@ -75,21 +79,19 @@
     <div class='col-12'>
       <div class='card'>
         <div class='card-header'>
-          <div class='row'>
-            <div class='col'>
-              <cfif !session.user.loggedIn()>
+          <div class='row align-items-center'>
+            <cfif !session.user.loggedIn()>
+              <div class='col-auto'>
                 <a href='/login' class='btn btn-sm btn-nmg' title='Login'>
                   <i class='fas fa-person-dots-from-line'></i> Login to post
                 </a>
-              </cfif>
-            </div>
-
-            <!--- #router.include('shared/partials/pager', { page: 1, records: mThread.ForumMessages().len() })# --->
-            #router.include('shared/partials/filter_and_page')#
+              </div>
+            </cfif>
+            #router.include('shared/partials/filter_and_page', { pagination: pagination })#
           </div>
         </div>
         <form method='post'>
-          <cfloop array='#mThread.ForumMessages()#' item='mMessage' index='idx'>
+          <cfloop array='#mMessages#' item='mMessage' index='idx'>
             <div class='row g-0 bg-nmg border-top border-nmg'>
               <div class='col-auto text-center'>
                 <div class='pt-4 thread-user'>

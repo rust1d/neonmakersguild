@@ -84,18 +84,6 @@ component accessors=true {
     return new app.models.BlogEntries().where(args);
   }
 
-  public UserImages function image_find_or_create(required numeric pkid) {
-    var mdl = new app.models.UserImages();
-    try { return mdl.find(pkid) } catch (record_not_found err) { return mdl.set({ ui_usid: id() }) }
-  }
-
-  public array function images(struct params) {
-    if (arguments.keyExists('params')) arguments = arguments.params;
-    var args = { ui_usid: id(), maxrows: 25 }
-    args.append(arguments);
-    return new app.models.UserImages().where(args);
-  }
-
   public string function getProperty(required string prop) {
     var props = {
       'moderate':   true,
@@ -107,6 +95,21 @@ component accessors=true {
 
   public numeric function id() {
     return mBlog.usid();
+  }
+
+  public UserImages function image_find_or_create(required numeric pkid) {
+    var mdl = new app.models.UserImages();
+    try { return mdl.find(pkid) } catch (record_not_found err) { return mdl.set({ ui_usid: id() }) }
+  }
+
+  public struct function images(struct params) {
+    if (arguments.keyExists('params')) arguments = arguments.params;
+    var args = { ui_usid: id(), maxrows: 24 }
+    args.append(arguments);
+    var mdl = new app.models.UserImages();
+    var data['rows'] = mdl.where(args);
+    data['pagination'] = mdl.pagination();
+    return data;
   }
 
   public boolean function isAuthorized(required string role) {

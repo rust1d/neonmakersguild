@@ -1,15 +1,13 @@
 <cfscript>
   locals.view = session.user.view();
-  locals.dest = (mBlog.id()==1 && session.site.isA('admin')) ? 'blog' : 'user';
+  locals.dest = (locals.mBlog.id()==1 && session.site.isA('admin')) ? 'blog' : 'user';
+  locals.results = locals.mBlog.images(utility.paged_term_params());
 </cfscript>
 
 <cfoutput>
   <div class='card'>
     <div class='card-header bg-nmg'>
       <div class='row'>
-        <div class='col fs-5'>
-          Images
-        </div>
         <div class='col-auto'>
           <div class='input-group input-group-sm'>
             <a href='#router.href('#locals.dest#/image/edit')#' class='btn btn-sm btn-nmg' title='Add Image'>
@@ -17,13 +15,14 @@
             </a>
           </div>
         </div>
-        #router.include('shared/partials/filter_and_page')#
+        <div class='col fs-5'>Images</div>
+        #router.include('shared/partials/filter_and_page', { pagination: locals.results.pagination })#
         #router.include('shared/partials/viewer')#
       </div>
     </div>
     <div class='card-body'>
       <cfif locals.view=='list'>
-        <cfloop array='#locals.mImages#' item='locals.mImage' index='idx'>
+        <cfloop array='#locals.results.rows#' item='locals.mImage' index='idx'>
           <div class='row my-3'>
             <div class='col-3'>
               <a href='#router.hrefenc(page: '#locals.dest#/image/edit', uiid: locals.mImage.uiid())#'>
@@ -53,7 +52,7 @@
               <img src='/assets/images/image_new.png' class='w-100 img-thumbnail' />
             </a>
           </div>
-          <cfloop array='#locals.mImages#' item='locals.mImage' index='idx'>
+          <cfloop array='#locals.results.rows#' item='locals.mImage' index='idx'>
             <div class='col-2 text-center' title='#locals.mImage.dimensions()# &bull; #locals.mImage.size_mb()#'>
               <div class='position-relative'>
                 <a href='#router.hrefenc(page: '#locals.dest#/image/edit', uiid: locals.mImage.uiid())#' title='#locals.mImage.filename()#' class='align-bottom'>

@@ -33,7 +33,7 @@
   qryCats = mBlog.categories();
   mode = mEntry.new_record() ? 'Add' : 'Edit';
 
-  mImages = mBlog.images(ratio: 2, maxrows: 12);
+  mImages = mBlog.images(ratio: 2, maxrows: 12).rows;
 </cfscript>
 
 <script src='/assets/js/admin/blog/entry.js'></script>

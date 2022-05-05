@@ -4,13 +4,6 @@
 
 <cfoutput>
   <cfif locals.keyExists('pagination')>
-    <cfif locals.pagination.keyExists('term')>
-      <div class='col-auto'>
-        <button onclick='window.location=window.location.href' class='border btn-nmg border-nmg rounded p-1 small'>
-          #locals.pagination.term# &nbsp; <i class='fas fa-times'></i>
-        </button>
-      </div>
-    </cfif>
     <div class='col small'>
       <cfif locals.footer>
         <cfif locals.pagination.total gt locals.pagination.page_size>#locals.pagination.start# - #locals.pagination.end# of </cfif>
@@ -18,6 +11,13 @@
       </cfif>
     </div>
     <cfif !locals.footer>
+      <cfif locals.pagination.keyExists('term')>
+        <div class='col-auto'>
+          <button onclick='window.location=window.location.href' class='border btn-nmg border-nmg rounded p-1 small'>
+            #locals.pagination.term# &nbsp; <i class='fas fa-times'></i>
+          </button>
+        </div>
+      </cfif>
       <div class='col-auto'>
         <form method='post'>
           <div class='input-group input-group-sm'>

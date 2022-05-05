@@ -51,6 +51,16 @@ component extends=BaseModel accessors=true {
     return '/forum/#fo_alias#/#ft_ftid#/#ft_alias#';
   }
 
+  public void function view() {
+    if (new_record()) return;
+
+    queryExecute(
+      'UPDATE forumthreads SET ft_views=ft_views+1 WHERE ft_ftid=:pkid',
+      { pkid: { value: variables.ft_ftid, cfsqltype: 'integer' } }, { datasource: datasource() }
+    );
+    variables.ft_views++;
+  }
+
   // PRIVATE
 
   private void function pre_save() {

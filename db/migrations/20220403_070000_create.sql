@@ -1,13 +1,16 @@
 DROP TABLE IF EXISTS users;
 
+alter table users drop column us_active;
+alter table users drop column us_deleted;
+alter table users add column us_deleted datetime after us_permissions;
+
 CREATE TABLE users (
   us_usid        INT(11) NOT NULL AUTO_INCREMENT,
   us_user        VARCHAR(50) NOT NULL,
   us_password    VARCHAR(100) NOT NULL,
   us_email       VARCHAR(50) NOT NULL,
   us_permissions TINYINT(4) DEFAULT 0,
-  us_active      TINYINT(1) DEFAULT 1,
-  us_deleted     TINYINT(1) DEFAULT 0,
+  us_deleted     DATETIME,
   us_added       DATETIME DEFAULT CURRENT_TIMESTAMP,
   us_dla         DATETIME DEFAULT CURRENT_TIMESTAMP,
   us_dll         DATETIME DEFAULT CURRENT_TIMESTAMP,
