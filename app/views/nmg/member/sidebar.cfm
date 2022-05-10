@@ -18,5 +18,13 @@
         </cfloop>
       </div>
     </div>
+    <div class='col-12'>
+      <div class='row justify-content-center'>
+        <cfloop array='#mUserBlog.owner().bookmark_links()#' item='mLink'>
+          <div class='col-auto'>#mLink.icon_link()#</div>
+          <div class='col smaller'><a class='small' href='#mLink.url()#' data-link='#mLink.datadash()#' target='_blank'>#mLink.title()#</a></div>
+        </cfloop>
+      </div>
+    </div>
   </div>
 </cfoutput>

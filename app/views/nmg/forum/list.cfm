@@ -17,7 +17,7 @@
             <a href='#mForum.seo_link()#'>#mForum.name()#</a>
           </div>
           <div class='card-body'>
-            #mForum.description()#
+            <a href='#mForum.seo_link()#'>#mForum.description()#</a>
           </div>
           <div class='card-footer'>
             <div class='row'>

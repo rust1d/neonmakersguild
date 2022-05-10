@@ -1,5 +1,4 @@
 <cfscript>
-  application.paths.templates = '\app\views\templates\';
   if (form.keyExists('btnSend')) {
     key = utility.isEmail(form.contact) ? 'us_email' : 'us_user';
     params = { maxrows: 2, '#key#': form.contact }

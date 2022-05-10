@@ -20,10 +20,10 @@ BEGIN
 
   INSERT INTO blogentries (
     ben_blog, ben_usid, ben_posted, ben_title, ben_alias, ben_image, ben_body, ben_morebody,
-    ben_comments, ben_views, ben_released, ben_promoted
+    ben_comments, ben_views, ben_released, ben_promoted, ben_added, ben_dla
   ) VALUES (
     _blog, _usid, _posted, _title, _alias, _image, _body, _morebody,
-    _comments, _views, _released, _promoted
+    _comments, _views, _released, _promoted, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
   );
 
   CALL blogentries_get_by_ids(LAST_INSERT_ID());

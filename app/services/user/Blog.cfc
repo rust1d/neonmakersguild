@@ -77,11 +77,14 @@ component accessors=true {
     request.router.redirect();
   }
 
-  public array function entries(struct params) {
+  public struct function entries(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;
     var args = { ben_blog: id(), maxrows: 25 }
     args.append(arguments);
-    return new app.models.BlogEntries().where(args);
+    var mdl = new app.models.BlogEntries();
+    var data = { 'rows': mdl.where(args) };
+    data['pagination'] = mdl.pagination();
+    return data;
   }
 
   public string function getProperty(required string prop) {
@@ -107,7 +110,7 @@ component accessors=true {
     var args = { ui_usid: id(), maxrows: 24 }
     args.append(arguments);
     var mdl = new app.models.UserImages();
-    var data['rows'] = mdl.where(args);
+    var data = { 'rows': mdl.where(args) };
     data['pagination'] = mdl.pagination();
     return data;
   }
@@ -139,7 +142,7 @@ component accessors=true {
     var args = { bli_blog: id(), maxrows: 25 }
     args.append(arguments);
     var mdl = new app.models.BlogLinks();
-    var data['rows'] = mdl.where(args);
+    var data = { 'rows': mdl.where(args) };
     data['pagination'] = mdl.pagination();
     return data;
   }
@@ -215,11 +218,14 @@ component accessors=true {
     });
   }
 
-  public array function textblocks(struct params) {
+  public struct function textblocks(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;
     var args = { btb_blog: id(), maxrows: 25 }
     args.append(arguments);
-    return new app.models.BlogTextBlocks().where(args);
+    var mdl = new app.models.BlogTextBlocks();
+    var data = { 'rows': mdl.where(args) };
+    data['pagination'] = mdl.pagination();
+    return data;
   }
 
   public numeric function unmoderated_count() {

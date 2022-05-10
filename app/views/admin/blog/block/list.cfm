@@ -1,12 +1,11 @@
 <cfscript>
-  mTextBlocks = mBlog.textblocks();
+  results = mBlog.textblocks(utility.paged_term_params());
 </cfscript>
 
 <cfoutput>
   <div class='card'>
     <div class='card-header bg-nmg'>
       <div class='row'>
-        <div class='col fs-5'>Content Blocks</div>
         <div class='col-auto'>
           <div class='input-group input-group-sm'>
             <a href='#router.href('blog/block/edit')#' class='btn btn-sm btn-nmg' title='Add'>
@@ -14,7 +13,8 @@
             </a>
           </div>
         </div>
-        #router.include('shared/partials/filter_and_page')#
+        <div class='col fs-5'>Content Blocks</div>
+        #router.include('shared/partials/filter_and_page', { pagination: results.pagination })#
       </div>
     </div>
     <div class='card-body table-responsive'>
@@ -28,7 +28,7 @@
           </tr>
         </thead>
         <tbody>
-          <cfloop array='#mTextBlocks#' item='mTextBlock'>
+          <cfloop array='#results.rows#' item='mTextBlock'>
             <tr>
               <th scope='row'>
                 <a href='#router.hrefenc(page: 'blog/block/edit', btbid: mTextBlock.btbid())#' class='btn btn-sm btn-nmg'>

@@ -27,4 +27,13 @@ $(function () {
     }
     $("#ben_categories").prepend(`<option value='${data}' selected>${data}</option>`);
   });
+
+  $('#ben_title').on('blur', function() {
+    var ben_alias = this.form.ben_alias;
+    if (ben_alias.dataset.mode=='Add' || ben_alias.value.length==0) ben_alias.value = slugger(this.value);
+  });
+
+  $('#helpModal').on('shown.bs.modal', function(ev) {
+    $(`#${ev.relatedTarget.name}`)[0].scrollIntoView();
+  });
 });

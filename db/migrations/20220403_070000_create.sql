@@ -1,8 +1,8 @@
 DROP TABLE IF EXISTS users;
 
-alter table users drop column us_active;
-alter table users drop column us_deleted;
-alter table users add column us_deleted datetime after us_permissions;
+-- alter table users drop column us_active;
+-- alter table users drop column us_deleted;
+-- alter table users add column us_deleted datetime after us_permissions;
 
 CREATE TABLE users (
   us_usid        INT(11) NOT NULL AUTO_INCREMENT,
@@ -97,6 +97,8 @@ CREATE TABLE BlogEntries (
   ben_views                             INT(11),
   ben_released                          TINYINT(1),
   ben_promoted                          TINYINT(1),
+  ben_added                             DATETIME,
+  ben_dla                               DATETIME,
   PRIMARY KEY (ben_benid),
   KEY(ben_blog),
   KEY(ben_usid),
@@ -106,6 +108,9 @@ CREATE TABLE BlogEntries (
   KEY(ben_released)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- alter table BlogEntries add column ben_added datetime after ben_promoted;
+-- alter table BlogEntries add column ben_dla datetime after ben_added;
+-- update blogentries set ben_added = ben_posted, ben_dla = ben_posted
 
 DROP TABLE IF EXISTS BlogEntriesCategories;
 

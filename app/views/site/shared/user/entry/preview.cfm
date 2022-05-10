@@ -20,7 +20,6 @@
               by #session.user.user()# | #mEntry.posted()#
             </div>
             <div class='col-12'>
-              #mEntry.body()#
               #mEntry.morebody()#
             </div>
           </div>

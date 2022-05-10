@@ -12,10 +12,10 @@
 body {
   margin-bottom: 140px;
   font-family: 'Poppins', sans-serif;
-  font-size: 1em;
   background-size: cover;
   background-repeat: no-repeat;
   min-height: 100vh;
+  font-size: calc(16px + 1.15 * ((100vw - 320px) / 680));
 }
 
 a {
@@ -108,4 +108,18 @@ form label.required:after {
 
 input[name=term] {
   max-width: 8rem;
+}
+
+figure.image img {
+  margin-bottom: 0.5rem!important;
+}
+
+figure.image figcaption {
+  font-size: .875em;
+  /* text-align: center!important; */
+}
+
+.blended-icon {
+  background-color: transparent!important;
+  opacity: .75;
 }

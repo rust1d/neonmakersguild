@@ -19,7 +19,7 @@ BEGIN
      AND (_blog IS NULL OR bli_blog = _blog)
      AND (_type IS NULL OR bli_type = CONVERT(_type USING utf8))
      AND (_term IS NULL OR
-           bli_url = CONVERT(_term USING utf8) OR
+           bli_url REGEXP CONVERT(_term USING utf8) OR
            bli_title REGEXP CONVERT(_term USING utf8) OR
            bli_description REGEXP CONVERT(_term USING utf8)
          )

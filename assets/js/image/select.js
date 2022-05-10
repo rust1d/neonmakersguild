@@ -5,13 +5,14 @@ $(function() {
   }
 
   image_insert = function(img) {
-    var htm = `<img class="w-100 img-thumbnail" id=newimg src="${img.dataset.clip}" alt="${img.title}"></img>`;
+    var htm = `<img class="img-fluid my-3" id=newimg src="${img.dataset.clip}" alt="${img.title}"></img>`;
     tinymce.activeEditor.execCommand('mceInsertContent', false, htm);
     var newimg = tinymce.activeEditor.getDoc().getElementById('newimg');
     newimg.removeAttribute('id');
     tinymce.activeEditor.execCommand('mceSelectNode', false, newimg);
     tinymce.activeEditor.execCommand('mceImage');
-    tinymce.activeEditor.execCommand('mceRemoveNode');
+    // tinymce.activeEditor.execCommand('mceRemoveNode');
+    tinymce.activeEditor.execCommand('mceReplaceContent', false, '<span class=hold></span>');
   }
 
   $('#imageselect').on('click', 'img.clipable', function() {

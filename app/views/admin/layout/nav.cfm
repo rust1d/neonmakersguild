@@ -27,7 +27,7 @@
         </ul>
         <ul class='navbar-nav'>
           <li class='nav-item ms-4'>
-            <a class='nav-link' href='#router.href(page: 'home', ref: 'nmg')#'>Website</a>
+            <a class='nav-link' href='#router.href(page: '', ref: 'nmg')#'>Website</a>
           </li>
           <li class='nav-item ms-4'>
             <a class='nav-link' href='/login?logout'>Sign Out</a>

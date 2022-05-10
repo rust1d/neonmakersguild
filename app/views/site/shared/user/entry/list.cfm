@@ -1,13 +1,12 @@
 <cfscript>
-  locals.mEntries = mBlog.entries();
   locals.dest = (mBlog.id()==1 && session.site.isA('admin')) ? 'blog' : 'user';
+  locals.results = locals.mBlog.entries(utility.paged_term_params());
 </cfscript>
 
 <cfoutput>
   <div class='card'>
     <div class='card-header bg-nmg'>
       <div class='row'>
-        <div class='col fs-5'>Entries</div>
         <div class='col-auto'>
           <div class='input-group input-group-sm'>
             <a href='#router.href('#locals.dest#/entry/edit')#' class='btn btn-sm btn-nmg' title='Add'>
@@ -15,7 +14,8 @@
             </a>
           </div>
         </div>
-        #router.include('shared/partials/filter_and_page')#
+        <div class='col fs-5'>Entries</div>
+        #router.include('shared/partials/filter_and_page', { pagination: locals.results.pagination })#
       </div>
     </div>
     <div class='card-body table-responsive'>
@@ -30,7 +30,7 @@
           </tr>
         </thead>
         <tbody>
-          <cfloop array='#locals.mEntries#' item='locals.mEntry'>
+          <cfloop array='#locals.results.rows#' item='locals.mEntry'>
             <tr>
               <th scope='row'>
                 <a href='#router.hrefenc(page: '#locals.dest#/entry/edit', benid: locals.mEntry.benid())#' class='btn btn-sm btn-nmg'>

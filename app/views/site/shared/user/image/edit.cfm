@@ -107,12 +107,16 @@
               <div class='text-muted'>
                 <i class='fal fa-copy'></i> <span class='clipable' data-clip='#mImage.thumbnail_src()#'>#mImage.thumbnail_src()#</span> (thumbnail)
               </div>
-              <cfif mImage.uses().len()>
-                <div class='text-danger small' title='Uses: #mImage.uses().map(row => '#row.src_table#-#row.src_pkid#').toList()#'>
-                  This image is used in posted content. Deleting the record will remove it from your profile but the image will still exist in the posted content.
-                </div>
-              </cfif>
             </div>
+
+            <cfif mImage.uses().len()>
+              <div class='col-12 text-danger small mt-3 border border-danger p-3'>
+                <p>This image is used in posted content. Deleting the image now will only remove it from the library.
+                A copy of the image remain in the tubes to support the posted content. To completely delete an image
+                from the server, remove it from all posted content first.</p>
+                Used in: #mImage.uses().map(row => '#row.src_table#: #row.src_pkid#').toList(', ')#
+              </div>
+            </cfif>
           </div>
         </cfif>
       </div>

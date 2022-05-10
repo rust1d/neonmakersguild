@@ -29,7 +29,7 @@
               <a href='/login'>Login</a> to leave a comment...
             </div>
           </cfif>
-          <div class='col-12 fs-5 text-uppercase'>
+          <div class='col-12 fs-6'>
             #utility.plural_label(locals.mEntry.comment_cnt(), 'comment')# on "#locals.mEntry.title()#"
           </div>
           <cfloop array='#locals.mEntry.BlogComments()#' item='mComment'>
@@ -42,8 +42,12 @@
               <div class='small mb-2'>
                 <a href='#mComment.User().seo_link()#'>#mComment.User().user()#</a>
                 &bull; <small>#mComment.posted()#</small>
-                <cfif len(mComment.history())>&bull; <small class='fst-italic muted' title='#mComment.edited()#'>edited</small></cfif>
-                <cfif session.user.loggedIn() && mComment.usid()==session.user.usid()>&bull; <a class='comment-edit' data-bcoid='#mComment.bcoid()#' data-key='#mComment.encoded_key()#'><i class='fal fa-pencil'></i></a></cfif>
+                <cfif len(mComment.history())>
+                  &bull; <small class='fst-italic muted' title='#mComment.edited()#'>edited</small>
+                </cfif>
+                <cfif session.user.loggedIn() && mComment.usid()==session.user.usid()>
+                  &bull; <a class='comment-edit' data-bcoid='#mComment.bcoid()#' data-key='#mComment.encoded_key()#'><i class='fal fa-pencil'></i></a>
+                </cfif>
               </div>
               <div id='comment-#mComment.encoded_key()#' class='mb-3'>
                 <div class='comment border rounded bg-nmg px-3 py-1'>#mComment.comment()#</div>

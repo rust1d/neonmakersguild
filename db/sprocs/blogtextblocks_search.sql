@@ -5,15 +5,23 @@ delimiter ;;
 CREATE PROCEDURE blogtextblocks_search(
   IN _btbid    int(11),
   IN _blog     int(11),
-  IN _label    varchar(100)
+  IN _label    varchar(100),
+  IN _term     VARCHAR(20),
+  IN _paging   VARCHAR(50)
 )
 BEGIN
-  SELECT *
+  DECLARE _limit INT(11) DEFAULT get_page_data(_paging, 'limit');
+  DECLARE _offset INT(11) DEFAULT get_page_data(_paging, 'offset');
+
+  SELECT SQL_CALC_FOUND_ROWS *
     FROM blogtextblocks
    WHERE (_btbid IS NULL OR btb_btbid = _btbid)
      AND (_blog IS NULL OR btb_blog = _blog)
      AND (_label IS NULL OR btb_label = _label OR (RIGHT(_label,1)='%' AND btb_label like _label))
-     ORDER BY CASE WHEN _label IS NULL THEN btb_btbid ELSE btb_label END;
+   ORDER BY CASE WHEN _label IS NULL THEN btb_btbid ELSE btb_label END
+   LIMIT _limit OFFSET _offset;
+
+  SELECT FOUND_ROWS() AS total, IF(FOUND_ROWS() < _limit, FOUND_ROWS(), _limit) AS page_size, CEIL(FOUND_ROWS()/_limit) AS pages, 1+ROUND(_offset/_limit) AS page;
 END;;
 
 delimiter ;

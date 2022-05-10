@@ -1,5 +1,7 @@
 <cfscript>
-  mEntry = mBlog.entries(ben_benid: router.decode('benid')).first();
+  results = mBlog.entries(ben_benid: router.decode('benid'));
+  mEntry = results.rows.first();
+  mEntry.view(); // inc views
 
   if (session.user.loggedIn()) {
     if (form.keyExists('btnCommentEdit')) {
@@ -40,7 +42,7 @@
       <cfif mEntry.comments()>
         #router.include('shared/blog/comments', { mEntry: mEntry })#
       <cfelse>
-        <small>Comments have been disabled for this post.</small>
+        <small class='text-muted'>Comments have been disabled for this post.</small>
       </cfif>
     </div>
   </div>

@@ -185,8 +185,8 @@ component {
     }
   }
 
-  public struct function original_url() {
-    var data = getHttpRequestData().headers.get('X-Original-URL') ?: request.router.url();
+  public struct function original_url(string href) {
+    var data = arguments.get('href') ?: getHttpRequestData().headers.get('X-Original-URL') ?: request.router.url();
     return {
       'href': application.urls.root & '/' & data.listFirst('?').listToArray('/').toList('/'),
       'params': url_to_struct(data)
@@ -195,6 +195,7 @@ component {
 
   public struct function paged_term_params(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;
+
     var term = url.get('term') ?: form.get('term') ?: '';
     var page = url.get('page') ?: 1;
     var args = { maxrows: 25 }
@@ -204,15 +205,15 @@ component {
     return args;
   }
 
-  public string function page_url_next(struct pagination = {}) {
-    var data = original_url();
+  public string function page_url_next(struct pagination = {}, string href) {
+    var data = original_url(arguments.get('href'));
     if (pagination.keyExists('term')) data.params['term'] = pagination.term;
     data.params['page'] = pagination.next;
     return data.href.listAppend(struct_to_url(data.params), '?', false);
   }
 
-  public string function page_url_prev(struct pagination = {}) {
-    var data = original_url();
+  public string function page_url_prev(struct pagination = {}, string href) {
+    var data = original_url(arguments.get('href'));
     if (pagination.keyExists('term')) data.params['term'] = pagination.term;
     if (pagination.page>2) {
       data.params['page'] = pagination.prev;

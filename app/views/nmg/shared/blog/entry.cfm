@@ -16,15 +16,18 @@
               &bull; <small>#locals.mEntry.post_date()#</small>
             </div>
             <div class='col-12'>
-              #locals.mEntry.body()#
-              <cfif !locals.fold>#locals.mEntry.morebody()#</cfif>
+              <cfif locals.fold>
+                #locals.mEntry.body()#
+              <cfelse>
+                #locals.mEntry.morebody()#
+              </cfif>
             </div>
             <div class='col-12 small text-center text-uppercase'>
               <cfif locals.fold && len(locals.mEntry.morebody())>
-                <a href='#locals.mEntry.seo_link()#'>Read more</a> &bull;
+                <a href='#locals.mEntry.seo_link()#'>Read more</a>
               </cfif>
-              <cfif mEntry.comments()>
-                <small><a href='#locals.mEntry.seo_link()###comments'>#utility.plural_label(locals.mEntry.comment_cnt(), 'comment')#</a></small>
+              <cfif locals.mEntry.comments()>
+                &bull; <small><a href='#locals.mEntry.seo_link()###comments'>#utility.plural_label(locals.mEntry.comment_cnt(), 'comment')#</a></small>
               </cfif>
             </div>
           </div>

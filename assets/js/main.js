@@ -32,4 +32,8 @@ $(function() {
     for (var i=0; i<binary.length; i++) data.push(binary.charCodeAt(i));
     return new Blob([new Uint8Array(data)], { type: mime });
   }
+
+  slugger = function(txt) {
+    return txt.toLowerCase().replace(/[^\w ]+/g, '').replace(/ +/g, '-');
+  }
 });

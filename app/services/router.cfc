@@ -52,7 +52,7 @@ component accessors=true {
     arguments.delete('page');
     var qry = [];
     for (var key in arguments.keyList()) qry.append('#key#=#arguments[key]#');
-    if (qry.len()) path &= '&' & qry.toList('&');
+    if (qry.len()) path &= (path.len() ? '&' : '?') & qry.toList('&');
 
     return application.urls.root & path;
   }

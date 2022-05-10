@@ -9,9 +9,11 @@ component extends=jSoup accessors=true {
   property name='ben_body'          type='string'   sqltype='varchar'    html;
   property name='ben_morebody'      type='string'   sqltype='varchar'    html;
   property name='ben_comments'      type='boolean'  sqltype='tinyint'    default='false';
-  property name='ben_views'         type='numeric'  sqltype='integer';
+  property name='ben_views'         type='numeric'  sqltype='integer'    default='0';
   property name='ben_released'      type='boolean'  sqltype='tinyint'    default='false';
   property name='ben_promoted'      type='boolean'  sqltype='tinyint'    default='false';
+  property name='ben_added'         type='date';
+  property name='ben_dla'           type='date';
   property name='ben_blogname'      type='string';
   property name='ben_comment_cnt'   type='numeric';
 
@@ -32,9 +34,10 @@ component extends=jSoup accessors=true {
     sproc.addParam(cfsqltype: 'varchar',   value: arguments.get('ben_alias'),    null: !arguments.keyExists('ben_alias'));
     sproc.addParam(cfsqltype: 'tinyint',   value: arguments.get('ben_released'), null: !arguments.keyExists('ben_released'));
     sproc.addParam(cfsqltype: 'integer',   value: arguments.get('bca_bcaid'),    null: !arguments.keyExists('bca_bcaid'));
+    sproc.addParam(cfsqltype: 'varchar',   value: arguments.get('term'),         null: !arguments.keyExists('term'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 
-    return sproc.execute().getProcResultSets().qry;
+    return search_paged(sproc, arguments);
   }
 
   public array function category_links() {
@@ -53,6 +56,16 @@ component extends=jSoup accessors=true {
     return isNull(variables.ben_posted) ? '' : ben_posted.format('yyyy-mm-dd HH:nn');
   }
 
+  public string function posted_date() {
+    param variables.ben_posted = now();
+    return ben_posted.format('yyyy-mm-dd');
+  }
+
+  public string function posted_time() {
+    param variables.ben_posted = now();
+    return ben_posted.format('HH:nn');
+  }
+
   public string function seo_link() {
     if (new_record()) return 'page/404';
 
@@ -60,17 +73,34 @@ component extends=jSoup accessors=true {
     return '/post/#ben_blogname#/#ben_alias#';
   }
 
+  public void function view() {
+    if (new_record()) return;
+
+    param variables.ben_views = 0;
+    variables.ben_views++;
+
+    queryExecute(
+      'UPDATE blogentries SET ben_views=IFNULL(ben_views,0)+1 WHERE ben_benid=:pkid',
+      { pkid: { value: variables.ben_benid, cfsqltype: 'integer' } }, { datasource: datasource() }
+    );
+  }
+
   // PRIVATE
 
+  private void function post_load() {
+    param variables.ben_posted = now();
+  }
+
   private void function pre_save() {
+    if (!isDate(variables.get('ben_posted'))) variables.ben_posted = now();
     if (len(variables.ben_alias)==0) variables.delete('ben_alias'); // defaults next line
     param variables.ben_alias = variables.ben_title;
     if (this.alias_changed()) {
       variables.ben_alias = utility.slug(ben_alias);
-      var qry = this.search(ben_alias: ben_alias);
-      if (qry.len() && qry.ben_benid != primary_key()) {
-        errors().append('Entry alias #ben_alias# is in use.');
-      }
+      // var qry = this.search(ben_alias: ben_alias);
+      // if (qry.len() && qry.ben_benid != primary_key()) {
+      //   errors().append('Entry alias #ben_alias# is in use.');
+      // }
     }
   }
 }

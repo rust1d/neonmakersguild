@@ -10,13 +10,8 @@
       <div class='collapse navbar-collapse' id='navbarNavDropdown'>
         <ul class='navbar-nav'>
           <li class='nav-item'><a class='nav-link' aria-current='page' href='#router.href()#'>#session.site.title()#</a></li>
-          <li class='nav-item ms-4 dropdown'>
-            <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Members</a>
-            <ul class='dropdown-menu'>
-              <li><a class='dropdown-item' href='/members'>List</a></li>
-              <li><a class='dropdown-item' href='/join'>Join</a></li>
-            </ul>
-          </li>
+          <!--- <li class='nav-item ms-4'><a class='nav-link' href='/blog'>Blog</a></li> --->
+          <li class='nav-item ms-4'><a class='nav-link' href='/about'>About</a></li>
           <li class='nav-item ms-4 dropdown'>
             <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Resources</a>
             <ul class='dropdown-menu'>
@@ -25,8 +20,14 @@
               <li><a class='dropdown-item' href='/resources/other'>Other</a></li>
             </ul>
           </li>
-          <li class='nav-item ms-4'><a class='nav-link' href='/about'>About</a></li>
-          <li class='nav-item ms-4'><a class='nav-link' href='/forums'>Forums</a></li>
+          <li class='nav-item ms-4 dropdown'>
+            <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Members</a>
+            <ul class='dropdown-menu'>
+              <li><a class='dropdown-item' href='/join'>Join</a></li>
+              <li><a class='dropdown-item' href='/members'>Member List</a></li>
+              <li><a class='dropdown-item' href='/forums'>Forums</a></li>
+            </ul>
+          </li>
           <cfif session.user.loggedIn()>
             <li class='nav-item ms-4 dropdown'>
               <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Profile</a>
@@ -44,7 +45,7 @@
         <ul class='navbar-nav ms-auto'>
           <cfif session.user.loggedIn()>
             <cfif session.user.get_admin()>
-              <li class='nav-item'><a class='nav-link' href='#router.href(page: 'home', ref: 'admin')#'>Admin</a></li>
+              <li class='nav-item'><a class='nav-link' href='#router.href(page: '', ref: 'admin')#'>Admin</a></li>
             </cfif>
             <li class='nav-item'><a class='nav-link' href='/login?logout'>Sign Out</a></li>
           <cfelse>

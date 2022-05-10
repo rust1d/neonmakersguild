@@ -1,6 +1,6 @@
 <cfscript>
   mCategory = mBlog.category_find_or_create(router.decode('bcaid'));
-  mEntries = mBlog.entries(bca_bcaid: router.decode('bcaid'), maxrows: 10);
+  results = mBlog.entries(utility.paged_term_params(bca_bcaid: router.decode('bcaid'), maxrows: 10));
 </cfscript>
 
 <cfoutput>
@@ -9,7 +9,7 @@
       <div class='fs-2'><a href='#mCategory.seo_link('post')#'>#mCategory.category()#</a></div>
       <small>Posts by Category</small>
     </div>
-    <cfloop array='#mEntries#' item='mEntry' index='idx'>
+    <cfloop array='#results.rows#' item='mEntry' index='idx'>
       <div class='col-12'>
         #router.include('shared/blog/entry', { mEntry: mEntry, fold: true })#
       </div>

@@ -1,5 +1,5 @@
 <cfscript>
-  mBlocks = mBlog.textblocks(btb_label: 'sidebar-%');
+  mBlocks = mBlog.textblocks(btb_label: 'sidebar-%').rows;
 </cfscript>
 
 <cfoutput>

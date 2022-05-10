@@ -1,7 +1,5 @@
 <cfset router.include('layout/nav') />
-
 <cfset router.include('shared/flash_container') />
-
 
 <main class='content'>
   <section class='container-xxl'>

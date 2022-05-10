@@ -3,17 +3,22 @@ DROP procedure IF EXISTS blogentries_search;
 delimiter ;;
 
 CREATE PROCEDURE blogentries_search(
-  IN _benid       int(11),
-  IN _blog        int(11),
-  IN _usid        int(11),
-  IN _title       varchar(100),
-  IN _posted      datetime,
-  IN _alias       varchar(100),
-  IN _released    tinyint(1),
-  IN _bcaid       int(11)
+  IN _benid       INT(11),
+  IN _blog        INT(11),
+  IN _usid        INT(11),
+  IN _title       VARCHAR(100),
+  IN _posted      DATETIME,
+  IN _alias       VARCHAR(100),
+  IN _released    TINYINT(1),
+  IN _bcaid       INT(11),
+  IN _term        VARCHAR(20),
+  IN _paging      VARCHAR(50)
 )
 BEGIN
-  SELECT blogentries.*, us_user AS ben_blogname,
+  DECLARE _limit INT(11) DEFAULT get_page_data(_paging, 'limit');
+  DECLARE _offset INT(11) DEFAULT get_page_data(_paging, 'offset');
+
+  SELECT SQL_CALC_FOUND_ROWS blogentries.*, us_user AS ben_blogname,
          (SELECT COUNT(*) FROM blogcomments WHERE bco_benid=ben_benid) AS ben_comment_cnt
     FROM blogentries
          INNER JOIN users ON us_usid = ben_blog
@@ -23,9 +28,20 @@ BEGIN
      AND (_title IS NULL OR ben_title = _title)
      AND (_posted IS NULL OR ben_posted = _posted)
      AND (_alias IS NULL OR ben_alias = _alias)
-     AND (_released IS NULL OR ben_released = _released)
+     AND (_released IS NULL OR (ben_released = _released AND ben_posted < CURRENT_TIMESTAMP))
      AND (_bcaid IS NULL OR EXISTS (SELECT 1 FROM BlogEntriesCategories WHERE bec_bcaid=_bcaid AND bec_benid=ben_benid))
-  ORDER BY ben_posted DESC, ben_benid DESC;
+     AND (_term IS NULL OR
+           us_user = CONVERT(_term USING utf8) OR
+           ben_title REGEXP CONVERT(_term USING utf8) OR
+           ben_alias REGEXP CONVERT(_term USING utf8) OR
+           ben_body REGEXP CONVERT(_term USING utf8) OR
+           ben_morebody REGEXP CONVERT(_term USING utf8)
+         )
+     ORDER BY
+     CASE WHEN _released IS NULL THEN ben_added ELSE ben_posted END DESC, ben_benid DESC
+     LIMIT _limit OFFSET _offset;
+
+  SELECT FOUND_ROWS() AS total, IF(FOUND_ROWS() < _limit, FOUND_ROWS(), _limit) AS page_size, CEIL(FOUND_ROWS()/_limit) AS pages, 1+ROUND(_offset/_limit) AS page;
 END;;
 
 delimiter ;

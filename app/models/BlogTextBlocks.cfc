@@ -14,9 +14,10 @@ component extends=jSoup accessors=true {
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('btb_btbid'), null: !arguments.keyExists('btb_btbid'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('btb_blog'),  null: !arguments.keyExists('btb_blog'));
     sproc.addParam(cfsqltype: 'varchar', value: arguments.get('btb_label'), null: !arguments.keyExists('btb_label'));
+    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),      null: !arguments.keyExists('term'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 
-    return sproc.execute().getProcResultSets().qry;
+    return search_paged(sproc, arguments);
   }
 
   private void function pre_save() {

@@ -27,6 +27,10 @@ component extends=BaseModel accessors=true {
     return variables._blog = variables._blog ?: new app.services.user.Blog(us_usid, this);
   }
 
+  public array function bookmark_links() {
+    return variables._bookmark_links = variables._bookmark_links ?: blog().links(bli_type: 'bookmark').rows;
+  }
+
   public query function search(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;
     if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
@@ -42,6 +46,36 @@ component extends=BaseModel accessors=true {
     return search_paged(sproc, arguments);
   }
 
+  public ProfileImage function profile_image() {
+    return variables._profile_image = variables._profile_image ?: new services.user.ProfileImage(us_usid);
+  }
+
+  public array function profile_links() {
+    return social_links().append(website_links(), true);
+  }
+
+  public string function seo_link() {
+    return lcase('/member/#us_user#');
+  }
+
+  public array function social_links() {
+    return variables._social_links = variables._social_links ?: blog().links(bli_type: 'social media').rows;
+  }
+
+  public void function update_last_login() {
+    if (new_record()) return;
+
+    var sproc = new StoredProc(procedure: 'users_update_dll', datasource: datasource());
+    sproc.addParam(cfsqltype: 'integer', value: variables.us_usid);
+    sproc.execute();
+  }
+
+  public array function website_links() {
+    return variables._website_links = variables._website_links ?: blog().links(bli_type: 'website').rows;
+  }
+
+  // PRIVATE
+
   private void function pre_save() {
     if (!IsNull(password) && password.trim().len()) {
       variables.us_password = application.bcrypt.hashpw(password);
@@ -54,34 +88,4 @@ component extends=BaseModel accessors=true {
       }
     }
   }
-
-  public ProfileImage function profile_image() {
-    return variables._profile_image = variables._profile_image ?: new services.user.ProfileImage(us_usid);
-  }
-
-  public array function profile_links() {
-    var data = this.Links().filter(row => row.isWebsite());
-    data.append(this.Links().filter(row => row.isSocial()), true);
-    return data;
-  }
-
-  public string function seo_link() {
-    return lcase('/member/#us_user#');
-  }
-
-  // public array function social_links() {
-  //   return this.Links().filter(row => row.isSocial());
-  // }
-
-  public void function update_last_login() {
-    if (new_record()) return;
-
-    var sproc = new StoredProc(procedure: 'users_update_dll', datasource: datasource());
-    sproc.addParam(cfsqltype: 'integer', value: variables.us_usid);
-    sproc.execute();
-  }
-
-  // public array function website_links() {
-  //   return this.Links().filter(row => row.isWebsite());
-  // }
 }
