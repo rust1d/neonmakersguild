@@ -3,7 +3,11 @@
 
 <main class='content'>
   <section class='container-xxl'>
-    <cfif router.slug().listFirst('-')=='forum'>
+    <cfset router.include() />
+  </section>
+</main>
+
+    <!--- <cfif router.slug().listFirst('-')=='forum'>
       <cfset router.include() />
     <cfelseif router.slug().listFirst('-')=='user' || router.slug()=='member-view'>
       <div class='row'>
@@ -23,9 +27,8 @@
           <cfset router.include('shared/sidebar') />
         </div>
       </div>
-    </cfif>
-  </section>
-</main>
+    </cfif> --->
+
 
 <cfset router.include('shared/flash_onload') />
 

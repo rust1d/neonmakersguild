@@ -11,9 +11,9 @@
       </cfif>
     </div>
     <cfif !locals.footer>
-      <cfif locals.pagination.keyExists('term')>
+      <cfif locals.pagination.term.len()>
         <div class='col-auto'>
-          <button onclick='window.location=window.location.href' class='border btn-nmg border-nmg rounded p-1 small'>
+          <button onclick='window.location=window.location.href' class='border btn btn-sm btn-nmg border-nmg rounded p-1'>
             #locals.pagination.term# &nbsp; <i class='fas fa-times'></i>
           </button>
         </div>

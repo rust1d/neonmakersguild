@@ -15,10 +15,8 @@ component extends=BaseModel accessors=true {
   has_many(class: 'BlogComments',   key: 'us_usid',  relation: 'bco_usid');
   has_many(class: 'BlogEntries',    key: 'us_usid',  relation: 'ben_usid');
   has_many(class: 'BlogUserRoles',  key: 'us_usid',  relation: 'bur_usid');
-
   // USERS BLOG
   has_many(name: 'Categories',   class: 'BlogCategories',  key: 'us_usid',  relation: 'bca_blog');
-  // has_many(name: 'Comments',     class: 'BlogComments',    key: 'us_usid',  relation: 'bco_blog');
   has_many(name: 'Entries',      class: 'BlogEntries',     key: 'us_usid',  relation: 'ben_blog');
   has_many(name: 'Links',        class: 'BlogLinks',       key: 'us_usid',  relation: 'bli_blog');
   has_many(name: 'UserRoles',    class: 'BlogUserRoles',   key: 'us_usid',  relation: 'bur_blog');
@@ -29,6 +27,15 @@ component extends=BaseModel accessors=true {
 
   public array function bookmark_links() {
     return variables._bookmark_links = variables._bookmark_links ?: blog().links(bli_type: 'bookmark').rows;
+  }
+
+  public struct function counts() {
+    var sproc = new StoredProc(procedure: 'user_counts', datasource: datasource());
+    sproc.addParam(cfsqltype: 'integer', value: us_usid);
+    sproc.addProcResult(name: 'qry', resultset: 1);
+    var data = sproc.execute().getProcResultSets().qry.getRow(1);
+    data.activity_cnt = data.post_cnt + data.comment_cnt + data.thread_cnt + data.message_cnt;
+    return data;
   }
 
   public query function search(struct params) {
@@ -43,7 +50,7 @@ component extends=BaseModel accessors=true {
     sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),      null: !arguments.keyExists('term'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 
-    return search_paged(sproc, arguments);
+    return paged_search(sproc, arguments);
   }
 
   public ProfileImage function profile_image() {
@@ -51,7 +58,16 @@ component extends=BaseModel accessors=true {
   }
 
   public array function profile_links() {
-    return social_links().append(website_links(), true);
+    return website_links().append(social_links(), true);
+  }
+
+  public query function recent_activity(struct params) {
+    if (arguments.keyExists('params')) arguments = arguments.params;
+    var sproc = new StoredProc(procedure: 'user_recentActivity', datasource: datasource());
+    sproc.addParam(cfsqltype: 'integer', value: us_usid);
+    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'), null: !arguments.keyExists('term'));
+    sproc.addProcResult(name: 'qry', resultset: 1);
+    return paged_search(sproc, arguments);
   }
 
   public string function seo_link() {

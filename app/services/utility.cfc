@@ -205,15 +205,15 @@ component {
     return args;
   }
 
-  public string function page_url_next(struct pagination = {}, string href) {
-    var data = original_url(arguments.get('href'));
+  public string function page_url_next(struct pagination = {}) {
+    var data = original_url(pagination.get('next_href'));
     if (pagination.keyExists('term')) data.params['term'] = pagination.term;
     data.params['page'] = pagination.next;
     return data.href.listAppend(struct_to_url(data.params), '?', false);
   }
 
-  public string function page_url_prev(struct pagination = {}, string href) {
-    var data = original_url(arguments.get('href'));
+  public string function page_url_prev(struct pagination = {}) {
+    var data = original_url(pagination.get('prev_href'));
     if (pagination.keyExists('term')) data.params['term'] = pagination.term;
     if (pagination.page>2) {
       data.params['page'] = pagination.prev;
@@ -221,27 +221,6 @@ component {
       data.params.delete('page'); // canonical page 1
     }
     return data.href.listAppend(struct_to_url(data.params), '?', false);
-  }
-
-  public struct function pagination(required struct data) {
-    data['first'] = data.page == 1 ? true : false;
-    data['last'] = data.page == data.pages ? true : false;
-    data['one_page'] = data.first && data.last;
-    data['next'] = data.page + 1;
-    data['prev'] = data.page - 1;
-    data['start'] = 1 + data.prev * data.page_size;
-    data['end'] = data.start + data.count - 1;
-    return data;
-  }
-
-  public string function paging(struct params) {
-    if (!isNumeric(params.get('page')) || params.page < 1) params.page = 1;
-    if (!isNumeric(params.get('maxrows')) || params.maxrows < 1) params.maxrows = 25;
-    params.offset = (params.page - 1) * params.maxrows;
-    return serializeJSON({
-      'offset': params.offset,
-      'limit': params.maxrows
-    });
   }
 
   public string function phoneFormat(string data = '', string mask = '(xxx) xxx-xxxx') {

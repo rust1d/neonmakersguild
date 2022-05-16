@@ -17,7 +17,7 @@
       }
       if (mUser.safe_save()) {
         flash.success('You have successfully updated your password.');
-        router.redirect(session.user.get_home());
+        router.go(session.user.get_home());
       }
     }
   }
@@ -42,7 +42,7 @@
               </div>
               <div class='col-12 text-center'>
                 <button type='submit' name='btnSave' class='btn btn-nmg'>Update</button>
-                <a href='#router.href(session.user.get_home())#' class='btn btn-nmg-cancel'>Cancel</a>
+                <a href='#session.user.get_home()#' class='btn btn-nmg-cancel'>Cancel</a>
               </div>
             </div>
           </div>

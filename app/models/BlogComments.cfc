@@ -1,9 +1,9 @@
-component extends=BaseModel accessors=true {
+component extends=jSoup accessors=true {
   property name='bco_bcoid'    type='numeric'  sqltype='integer'    primary_key;
   property name='bco_blog'     type='numeric'  sqltype='integer';
   property name='bco_benid'    type='numeric'  sqltype='integer';
   property name='bco_usid'     type='numeric'  sqltype='integer';
-  property name='bco_comment'  type='string'   sqltype='varchar';
+  property name='bco_comment'  type='string'   sqltype='varchar'    html; // NOT REALLY HTML JUST WANT THE COUNT/PREVIEW
   property name='bco_history'  type='string'   sqltype='varchar';
   property name='bco_added'    type='date';
   property name='bco_dla'      type='date';

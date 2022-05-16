@@ -123,3 +123,8 @@ figure.image figcaption {
   background-color: transparent!important;
   opacity: .75;
 }
+
+.carousel-control-next-icon, .carousel-control-prev-icon {
+  width: 5rem;
+  height: 5rem;
+}

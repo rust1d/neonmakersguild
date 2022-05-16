@@ -12,7 +12,7 @@ component accessors = true {
     variables.attachments = [];
 
     param variables.to = application.email.admin;
-    param variables.from = application.email.support;;
+    param variables.from = application.email.support;
 
     return this;
   }

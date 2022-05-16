@@ -7,7 +7,6 @@ component {
 
   public void function SendLoginLink(required Users mUser) {
     var send_to = application.isDevelopment ? application.email.admin : mUser.email();
-    writedump(send_to);
     var mMailer = new app.services.email.Emailer(
       to: send_to,
       testmode: true,

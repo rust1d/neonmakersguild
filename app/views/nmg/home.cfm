@@ -1,5 +1,7 @@
 <cfscript>
   results = mBlog.entries(utility.paged_term_params(ben_released: true, maxrows: 10));
+  results.pagination.next_href = '/blog';
+  results.pagination.prev_href = '';
 </cfscript>
 
 <cfoutput>

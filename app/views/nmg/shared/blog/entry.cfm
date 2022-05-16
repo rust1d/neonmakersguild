@@ -25,9 +25,10 @@
             <div class='col-12 small text-center text-uppercase'>
               <cfif locals.fold && len(locals.mEntry.morebody())>
                 <a href='#locals.mEntry.seo_link()#'>Read more</a>
+                <cfif locals.mEntry.comments()>&bull;</cfif>
               </cfif>
               <cfif locals.mEntry.comments()>
-                &bull; <small><a href='#locals.mEntry.seo_link()###comments'>#utility.plural_label(locals.mEntry.comment_cnt(), 'comment')#</a></small>
+                <small><a href='#locals.mEntry.seo_link()###comments'>#utility.plural_label(locals.mEntry.comment_cnt(), 'comment')#</a></small>
               </cfif>
             </div>
           </div>

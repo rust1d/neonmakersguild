@@ -16,7 +16,6 @@ BEGIN
          us_password    = IFNULL(_password,    us_password),
          us_email       = IFNULL(_email,       us_email),
          us_permissions = IFNULL(_permissions, us_permissions),
-         us_active      = IFNULL(_active,      us_active),
          us_deleted     = IFNULL(_deleted,     us_deleted),
          us_dla         = CURRENT_TIMESTAMP
    WHERE us_usid = _usid;

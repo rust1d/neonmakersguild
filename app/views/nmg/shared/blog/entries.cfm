@@ -4,6 +4,11 @@
       <div class='col-12'>
         #router.include('shared/blog/entry', { mEntry: locals.mEntry, fold: !locals.results.pagination.first || locals.idx gt 2 })#
       </div>
+      <cfif locals.idx!=locals.results.rows.len()>
+        <div class='fs-1 text-center text-nmg'>
+          &bull; <img src='/assets/images/logo-1600.png' height='32'/> &bull;
+        </div>
+      </cfif>
     </cfloop>
     <cfif !locals.results.pagination.one_page>
       <div class='col-6 text-center text-uppercase'>

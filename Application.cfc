@@ -32,7 +32,7 @@ component {
     application.email.supportplus = 'Neon Makers Guild <#application.email.support#>';
     application.paths.root = ExpandPath('\');
     application.paths.images = application.paths.root & 'assets\images\';
-    application.paths.templates = 'app\views\templates\';
+    application.paths.templates = '\app\views\templates\';
     application.settings.title = 'Neon Makers Guild';
     application.settings.tiny = 'g2016x44cjzgv7h689qtbieaowb03dksphmy0umsojeab13b';
 
@@ -79,7 +79,11 @@ writedump(arguments);
       // try { data = isDefined('session') ? session.user.dump() : {} } catch (any err) {}
       application.sentry.captureException(exception: arguments.exception, additionalData: data);
     }
-    new app.services.email.AdminEmailer(subject: 'Application Error').send_error(arguments.exception);
+    if (isDefined('application.email.support')) {
+      new app.services.email.AdminEmailer(subject: 'Application Error').send_error(arguments.exception);
+    } else {
+      writedump(arguments.exception);
+    }
   };
 
   // PRIVATE
@@ -176,21 +180,21 @@ writedump(arguments);
 
   private void function setup_development() {
     application.env = 'development';
-    application.email.admin = 'john@neonmakersguild.org';
+    application.email.admin = 'rust1d@usa.net';
     application.urls.root = 'https://local.neonmakersguild.org';
     application.urls.images = '/assets/images';
   }
 
   private void function setup_staging() {
     application.env = 'staging';
-    application.email.admin = 'john@neonmakersguild.org';
+    application.email.admin = 'rust1d@usa.net';
     application.urls.root = 'https://staging.neonmakersguild.org';
     application.urls.images = '/assets/images';
   }
 
   private void function setup_production() {
     application.env = 'production';
-    application.email.admin = 'eve@neonmakersguild.org';
+    application.email.admin = 'rust1d@usa.net';
     application.urls.root = 'https://neonmakersguild.org';
     application.urls.images = '/assets/images';
   }

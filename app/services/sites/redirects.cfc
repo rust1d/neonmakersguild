@@ -68,7 +68,8 @@ component {
       var qry = new app.models.Users().search(us_user: url.user);
       if (qry.len()) {
         url.p = 'member/view';
-        url.usid = router.encode(id: qry.us_usid).listLast('=');
+        url.tab = url.tab.lcase();
+        url.usid = utility.encode(qry.us_usid);
         url.blogid = qry.us_usid;
       }
     }

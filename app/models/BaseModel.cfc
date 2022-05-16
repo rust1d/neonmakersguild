@@ -145,6 +145,23 @@ component {
     throw('Method #missingMethodName# not found in #class()#', 'method_missing');
   }
 
+  public query function paged_search(required StoredProc sproc, required struct params) {
+    if (!isNumeric(params.get('page')) || params.page < 1) params.page = 1;
+    if (!isNumeric(params.get('maxrows')) || params.maxrows < 1) params.maxrows = 100;
+    params.offset = (params.page - 1) * params.maxrows;
+    sproc.addParam(cfsqltype: 'varchar', value: serializeJSON({ 'offset': params.offset, 'limit': params.maxrows }));
+    sproc.addProcResult(name: 'qryPage', resultset: 2);
+    var results = sproc.execute().getProcResultSets();
+    variables._pagination = results.qryPage.getRow(1);
+    request.pagination['last'] = variables._pagination;
+    request.pagination[sproc.getproperties().procedure] = variables._pagination;
+    return results.qry;
+  }
+
+  public struct function pagination() {
+    return variables._pagination ?: {};
+  }
+
   public boolean function persisted() {
     return !IsNull(primary_key());
   }
@@ -191,22 +208,6 @@ component {
 
   public query function search(struct params) {
     throw('not implemented - define in extended class', 'not_implemented');
-  }
-
-  public query function search_paged(required StoredProc sproc, required struct params) {
-    sproc.addParam(cfsqltype: 'varchar', value: utility.paging(params));
-    sproc.addProcResult(name: 'qryPage', resultset: 2);
-    var results = sproc.execute().getProcResultSets();
-    var paging = results.qryPage.getRow(1);
-    paging['count'] = results.qry.len();
-    variables._pagination = utility.pagination(paging);
-    if (params.keyExists('term')) variables._pagination['term'] = params.term;
-
-    return results.qry;
-  }
-
-  public struct function pagination() {
-    return variables._pagination ?: {};
   }
 
   public BaseModel function set(struct params) {

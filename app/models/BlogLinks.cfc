@@ -20,7 +20,7 @@ component extends=BaseModel accessors=true {
     sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),      null: !arguments.keyExists('term'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 
-    return search_paged(sproc, arguments);
+    return paged_search(sproc, arguments);
   }
 
   public string function datadash() {
@@ -34,7 +34,7 @@ component extends=BaseModel accessors=true {
 
   public string function icon_link(string size = '2x') {
     if (isNull(variables.bli_url)) return '';
-    return "<a href='#bli_url#' data-link='#datadash()#' target='_blank'>#icon(size)#</a>";
+    return "<a href='#bli_url#' title='#bli_title#' data-link='#datadash()#' target='_blank'>#icon(size)#</a>";
   }
 
   public string function icon(string size = '2x') {

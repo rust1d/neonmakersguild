@@ -36,4 +36,5 @@ $(function() {
   slugger = function(txt) {
     return txt.toLowerCase().replace(/[^\w ]+/g, '').replace(/ +/g, '-');
   }
+
 });

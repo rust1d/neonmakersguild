@@ -1,8 +1,8 @@
 <cfoutput>
-  <nav class='navbar navbar-expand-lg navbar-dark navbar-nmg'>
+  <nav class='navbar navbar-expand-lg navbar-dark navbar-nmg mb-3'>
     <div class='container'>
       <a class='navbar-brand' href='#router.href()#'>
-        <img src='/assets/images/logo-alt.png'  alt='#session.site.title()# Logo' height='48'>
+        <img src='/assets/images/logo-alt-1600.png'  alt='#session.site.title()# Logo' height='48'>
       </a>
       <button class='navbar-toggler' type='button' data-bs-toggle='collapse' data-bs-target='##navbarNavDropdown' aria-controls='navbarNavDropdown' aria-expanded='false' aria-label='Toggle navigation'>
         <span class='navbar-toggler-icon'></span>

@@ -49,7 +49,7 @@
         <div class='row my-3'>
           <div class='col text-center'>
             <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-nmg'>Save Profile</button>
-            <a href='#router.href(session.user.get_home())#' class='btn btn-nmg-cancel'>Cancel</a>
+            <a href='#session.user.get_home()#' class='btn btn-nmg-cancel'>Cancel</a>
           </div>
         </div>
       </div>

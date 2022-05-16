@@ -40,7 +40,7 @@ component extends=BaseModel accessors=true {
     sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),    null: !arguments.keyExists('term'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 
-    return search_paged(sproc, arguments);
+    return paged_search(sproc, arguments);
   }
 
   public string function seo_link() {

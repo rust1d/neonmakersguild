@@ -32,7 +32,7 @@ BEGIN
    ORDER BY us_usid
      LIMIT _limit OFFSET _offset;
 
-  SELECT FOUND_ROWS() AS total, IF(FOUND_ROWS() < _limit, FOUND_ROWS(), _limit) AS page_size, CEIL(FOUND_ROWS()/_limit) AS pages, 1+ROUND(_offset/_limit) AS page;
+  call pagination(FOUND_ROWS(), _limit, _offset, _term);
 END;;
 
 delimiter ;
