@@ -198,7 +198,7 @@ component {
 
     var term = url.get('term') ?: form.get('term') ?: '';
     var page = url.get('page') ?: 1;
-    var args = { maxrows: 25 }
+    var args = { maxrows: form.get('maxrows') ?: 25 }
     args.append(arguments);
     if (len(term)) args.term = term;
     if (!form.keyExists('term') && page > 1) args.page = page;
@@ -207,14 +207,14 @@ component {
 
   public string function page_url_next(struct pagination = {}) {
     var data = original_url(pagination.get('next_href'));
-    if (pagination.keyExists('term')) data.params['term'] = pagination.term;
+    if (pagination.term.len()) data.params['term'] = pagination.term;
     data.params['page'] = pagination.next;
     return data.href.listAppend(struct_to_url(data.params), '?', false);
   }
 
   public string function page_url_prev(struct pagination = {}) {
     var data = original_url(pagination.get('prev_href'));
-    if (pagination.keyExists('term')) data.params['term'] = pagination.term;
+    if (pagination.term.len()) data.params['term'] = pagination.term;
     if (pagination.page>2) {
       data.params['page'] = pagination.prev;
     } else {

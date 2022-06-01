@@ -10,7 +10,8 @@ BEGIN
   SELECT *
     FROM forums
    WHERE (_foid IS NULL OR fo_foid = _foid)
-     AND (_alias IS NULL OR fo_alias = CONVERT(_alias USING utf8));
+     AND (_alias IS NULL OR fo_alias = CONVERT(_alias USING utf8))
+   ORDER BY fo_order;
 END;;
 
 delimiter ;

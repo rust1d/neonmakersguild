@@ -10,9 +10,9 @@ CREATE PROCEDURE pagination(
 )
 BEGIN
   IF (_found=0) THEN
-    SELECT 0 AS total, 0 AS page_size, 0 AS pages, 0 AS page, 0 AS first, 0 AS last, 1 AS one_page, 0 AS next, 0 AS prev, 0 AS start, 0 AS `end`, 0 AS count, _term AS term;
+    SELECT 0 AS total, 0 AS page_size, 0 AS pages, 0 AS page, 0 AS first, 0 AS last, 1 AS one_page, 0 AS next, 0 AS prev, 0 AS start, 0 AS `end`, 0 AS `count`, _term AS term;
   ELSE
-    SELECT *, IF(last, total, 1 - start + page_size) AS `end`, IF(last, total - start, page_size) AS count, _term AS term
+    SELECT *, IF(last, total, start + page_size - 1) AS `end`, IF(last && !first, total - start, page_size) AS `count`, _term AS term
     FROM (
            SELECT *, page=1 AS first, page=pages AS last, pages=1 AS one_page, page+1 AS next, page-1 AS prev, 1 + (page-1) * page_size AS start
              FROM (

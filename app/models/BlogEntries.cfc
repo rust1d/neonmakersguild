@@ -11,7 +11,7 @@ component extends=jSoup accessors=true {
   property name='ben_comments'      type='boolean'  sqltype='tinyint'    default='false';
   property name='ben_views'         type='numeric'  sqltype='integer'    default='0';
   property name='ben_released'      type='boolean'  sqltype='tinyint'    default='false';
-  property name='ben_promoted'      type='boolean'  sqltype='tinyint'    default='false';
+  property name='ben_promoted'      type='date'     sqltype='timestamp';
   property name='ben_added'         type='date';
   property name='ben_dla'           type='date';
   property name='ben_blogname'      type='string';
@@ -33,6 +33,7 @@ component extends=jSoup accessors=true {
     sproc.addParam(cfsqltype: 'timestamp', value: arguments.get('ben_posted'),   null: !arguments.keyExists('ben_posted'));
     sproc.addParam(cfsqltype: 'varchar',   value: arguments.get('ben_alias'),    null: !arguments.keyExists('ben_alias'));
     sproc.addParam(cfsqltype: 'tinyint',   value: arguments.get('ben_released'), null: !arguments.keyExists('ben_released'));
+    sproc.addParam(cfsqltype: 'tinyint',   value: arguments.get('ben_promoted'), null: !arguments.keyExists('ben_promoted'));
     sproc.addParam(cfsqltype: 'integer',   value: arguments.get('bca_bcaid'),    null: !arguments.keyExists('bca_bcaid'));
     sproc.addParam(cfsqltype: 'varchar',   value: arguments.get('term'),         null: !arguments.keyExists('term'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);

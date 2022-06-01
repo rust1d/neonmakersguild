@@ -49,7 +49,7 @@
             <div class='row align-items-center'>
               <div class='col fs-5'>#mode# Entry</div>
               <div class='col-auto'>
-                <a class='ms-2 blended-icon' data-bs-toggle='modal' data-bs-target='##helpModal'><i class='fas fa-2xl fa-circle-question'></i></a>
+                <a class='ms-2 blended-icon' data-bs-toggle='modal' data-bs-target='##helpModal'><i class='fas fa-xl fa-circle-question'></i></a>
               </div>
             </div>
           </div>

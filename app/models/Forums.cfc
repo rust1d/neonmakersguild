@@ -4,6 +4,8 @@ component extends=BaseModel accessors=true {
   property name='fo_alias'        type='string'   sqltype='varchar';
   property name='fo_description'  type='string'   sqltype='varchar';
   property name='fo_active'       type='numeric'  sqltype='tinyint'  default='1';
+  property name='fo_admin'        type='numeric'  sqltype='tinyint'  default='0';
+  property name='fo_order'        type='numeric'  sqltype='integer'  default='0';
   property name='fo_threads'      type='numeric'  sqltype='integer'  default='0';
   property name='fo_messages'     type='numeric'  sqltype='integer'  default='0';
   property name='fo_last_fmid'    type='numeric'  sqltype='integer';

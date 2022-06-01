@@ -1,6 +1,8 @@
 <cfscript>
-  mCategory = mBlog.category_find_or_create(router.decode('bcaid'));
-  results = mBlog.entries(utility.paged_term_params(bca_bcaid: router.decode('bcaid'), maxrows: 10));
+  bcaid = router.decode('bcaid');
+
+  mCategory = mBlog.category_find_or_create(bcaid);
+  results = mBlog.entries(utility.paged_term_params(ben_released: true, ben_promoted: true, bca_bcaid: bcaid, maxrows: 10));
 </cfscript>
 
 <cfoutput>

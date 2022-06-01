@@ -96,7 +96,7 @@ CREATE TABLE BlogEntries (
   ben_comments                          TINYINT(1),
   ben_views                             INT(11),
   ben_released                          TINYINT(1),
-  ben_promoted                          TINYINT(1),
+  ben_promoted                          DATETIME,
   ben_added                             DATETIME,
   ben_dla                               DATETIME,
   PRIMARY KEY (ben_benid),
@@ -111,6 +111,10 @@ CREATE TABLE BlogEntries (
 -- alter table BlogEntries add column ben_added datetime after ben_promoted;
 -- alter table BlogEntries add column ben_dla datetime after ben_added;
 -- update blogentries set ben_added = ben_posted, ben_dla = ben_posted
+
+-- ALTER TABLE BlogEntries DROP COLUMN ben_promoted;
+-- ALTER TABLE BlogEntries ADD COLUMN ben_promoted DATETIME after ben_released;
+
 
 DROP TABLE IF EXISTS BlogEntriesCategories;
 
@@ -231,12 +235,17 @@ CREATE TABLE forums (
   fo_alias                   VARCHAR(50) NOT NULL,
   fo_description             VARCHAR(255) NOT NULL,
   fo_active                  TINYINT(1) DEFAULT 1,
+  fo_admin                   TINYINT(1) DEFAULT 0,
+  fo_order                   INT(11) DEFAULT 0,
   fo_threads                 INT(11) DEFAULT 0,
   fo_messages                INT(11) DEFAULT 0,
   fo_last_fmid               INT(11),
   PRIMARY KEY (fo_foid),
   KEY (fo_last_fmid)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+/* alter table forums add column fo_admin tinyint after fo_active default 0;
+alter table forums add column fo_order tinyint after fo_admin; */
 
 
 DROP TABLE IF EXISTS forumThreads;

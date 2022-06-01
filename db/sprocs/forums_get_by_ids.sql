@@ -10,7 +10,8 @@ BEGIN
 
   SELECT *
     FROM forums
-         INNER JOIN _id_list ON _il_id = fo_foid;
+         INNER JOIN _id_list ON _il_id = fo_foid
+   ORDER BY fo_order;
 END;;
 
 delimiter ;

@@ -14,10 +14,9 @@ CREATE PROCEDURE blogentries_insert(
   IN _comments    tinyint(1),
   IN _views       int(11) unsigned,
   IN _released    tinyint(1),
-  IN _promoted    tinyint(1)
+  IN _promoted    datetime
 )
 BEGIN
-
   INSERT INTO blogentries (
     ben_blog, ben_usid, ben_posted, ben_title, ben_alias, ben_image, ben_body, ben_morebody,
     ben_comments, ben_views, ben_released, ben_promoted, ben_added, ben_dla

@@ -15,7 +15,7 @@ CREATE PROCEDURE blogentries_update(
   IN _comments    tinyint(1),
   IN _views       int(11) unsigned,
   IN _released    tinyint(1),
-  IN _promoted    tinyint(1)
+  IN _promoted    datetime
 )
 BEGIN
   UPDATE blogentries
