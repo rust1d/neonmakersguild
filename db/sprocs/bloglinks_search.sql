@@ -6,7 +6,7 @@ CREATE PROCEDURE bloglinks_search(
   IN _bliid    INT(11),
   IN _blog     INT(11),
   IN _type     VARCHAR(20),
-  IN _term     VARCHAR(20),
+  IN _term     VARCHAR(25),
   IN _paging   VARCHAR(50)
 )
 BEGIN

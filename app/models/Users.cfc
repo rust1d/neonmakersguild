@@ -17,8 +17,10 @@ component extends=BaseModel accessors=true {
   has_many(class: 'BlogUserRoles',  key: 'us_usid',  relation: 'bur_usid');
   // USERS BLOG
   has_many(name: 'Categories',   class: 'BlogCategories',  key: 'us_usid',  relation: 'bca_blog');
+  has_many(name: 'Documents',    class: 'Documents',       key: 'us_usid',  relation: 'doc_blog');
   has_many(name: 'Entries',      class: 'BlogEntries',     key: 'us_usid',  relation: 'ben_blog');
   has_many(name: 'Links',        class: 'BlogLinks',       key: 'us_usid',  relation: 'bli_blog');
+  has_many(name: 'Tags',         class: 'Tags',            key: 'us_usid',  relation: 'tag_blog');
   has_many(name: 'UserRoles',    class: 'BlogUserRoles',   key: 'us_usid',  relation: 'bur_blog');
 
   public Blog function blog() {

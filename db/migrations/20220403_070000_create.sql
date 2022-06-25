@@ -128,8 +128,6 @@ CREATE TABLE BlogEntriesCategories (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS BlogEntriesRelated;
-
 DROP TABLE IF EXISTS BlogLinks;
 
 CREATE TABLE BlogLinks (
@@ -161,8 +159,6 @@ CREATE TABLE BlogPages (
   KEY(bpa_title)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
-
-DROP TABLE IF EXISTS BlogSearchStats;
 
 DROP TABLE IF EXISTS BlogSubscribers;
 
@@ -292,3 +288,42 @@ CREATE TABLE forumMessages (
 
 
 insert into forums (fo_name, fo_alias, fo_description) values ('Bending Forum', 'bending', 'for benderings.'),  ('Pumping Forum', 'Pumping', 'for pumperings.');
+
+
+DROP TABLE IF EXISTS documents;
+
+CREATE TABLE documents (
+  doc_docid        INT(11) NOT NULL AUTO_INCREMENT,
+  doc_blog         INT(11),
+  doc_type         VARCHAR(10),
+  doc_filename     VARCHAR(100),
+  doc_description  VARCHAR(500),
+  doc_size         INT(11),
+  doc_clicks       INT(11) NOT NULL DEFAULT 0,
+  doc_added        DATETIME DEFAULT NULL,
+  doc_dla          DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (doc_docid) USING BTREE,
+  KEY (doc_blog)
+) ENGINE = InnoDB;
+
+DROP TABLE IF EXISTS tags;
+
+CREATE TABLE tags (
+  tag_tagid  INT(11) NOT NULL AUTO_INCREMENT,
+  tag_blog   INT(11),
+  tag_tag    VARCHAR(25) DEFAULT NULL,
+  PRIMARY KEY (tag_tagid),
+  KEY (tag_blog),
+  UNIQUE INDEX (tag_tag)
+) ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS documentTags;
+
+CREATE TABLE documentTags (
+  dt_dtid   INT(11) NOT NULL AUTO_INCREMENT,
+  dt_docid  INT(11) NOT NULL,
+  dt_tagid  INT(11) NOT NULL,
+  PRIMARY KEY (dt_dtid),
+  KEY (dt_docid),
+  KEY (dt_tagid)
+) ENGINE=InnoDB;

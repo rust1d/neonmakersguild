@@ -7,7 +7,7 @@ CREATE PROCEDURE forummessages_search(
   IN _foid   int(11),
   IN _ftid   int(11),
   IN _usid   int(11),
-  IN _term   VARCHAR(20),
+  IN _term   VARCHAR(25),
   IN _paging VARCHAR(50)
 )
 BEGIN
@@ -19,8 +19,7 @@ BEGIN
          INNER JOIN forumThreads ON ft_ftid = fm_ftid
          INNER JOIN forums ON fo_foid = fm_foid
          INNER JOIN users ON us_usid = fm_usid
-   WHERE fm_deleted IS NULL
-     AND (_fmid IS NULL OR fm_fmid = _fmid)
+   WHERE (_fmid IS NULL OR fm_fmid = _fmid)
      AND (_foid IS NULL OR fm_foid = _foid)
      AND (_ftid IS NULL OR fm_ftid = _ftid)
      AND (_usid IS NULL OR fm_usid = _usid)
@@ -29,7 +28,7 @@ BEGIN
            fm_body REGEXP CONVERT(_term USING utf8) OR
            fm_history REGEXP CONVERT(_term USING utf8)
          )
-   ORDER BY fm_dla DESC, fm_fmid DESC
+   ORDER BY fm_added, fm_fmid
      LIMIT _limit OFFSET _offset;
 
   call pagination(FOUND_ROWS(), _limit, _offset, _term);

@@ -20,10 +20,12 @@
               <li><a class='dropdown-item' href='#router.href('blog/entry/list')#'>Blog Entries</a></li>
               <li><a class='dropdown-item' href='#router.href('blog/page/list')#'>Site Pages</a></li>
               <li><a class='dropdown-item' href='#router.href('blog/block/list')#'>Content Blocks</a></li>
+              <li><a class='dropdown-item' href='#router.href('blog/library/list')#'>Library</a></li>
+              <li><a class='dropdown-item' href='#router.href('blog/image/list')#'>Images</a></li>
             </ul>
           </li>
-          <li class='nav-item ms-4'><a class='nav-link' href='#router.href('blog/image/list')#'>Images</a></li>
           <li class='nav-item ms-4'><a class='nav-link' href='#router.href('blog/category/list')#'>Categories</a></li>
+          <li class='nav-item ms-4'><a class='nav-link' href='#router.href('blog/tag/list')#'>Tags</a></li>
         </ul>
         <ul class='navbar-nav'>
           <li class='nav-item ms-4'>

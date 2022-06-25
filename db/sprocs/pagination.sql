@@ -6,7 +6,7 @@ CREATE PROCEDURE pagination(
   IN _found  INTEGER,
   IN _limit  INTEGER,
   IN _offset INTEGER,
-  IN _term   VARCHAR(20)
+  IN _term   VARCHAR(25)
 )
 BEGIN
   IF (_found=0) THEN

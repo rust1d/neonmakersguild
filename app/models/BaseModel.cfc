@@ -145,7 +145,9 @@ component {
     throw('Method #missingMethodName# not found in #class()#', 'method_missing');
   }
 
-  public query function paged_search(required StoredProc sproc, required struct params) {
+  public query function paged_search(required StoredProc sproc, required struct args) {
+    var params = {};
+    params.append(args);
     if (!isNumeric(params.get('page')) || params.page < 1) params.page = 1;
     if (!isNumeric(params.get('maxrows')) || params.maxrows < 1) params.maxrows = 100;
     params.offset = (params.page - 1) * params.maxrows;
@@ -153,6 +155,7 @@ component {
     sproc.addProcResult(name: 'qryPage', resultset: 2);
     var results = sproc.execute().getProcResultSets();
     variables._pagination = results.qryPage.getRow(1);
+    variables._pagination['args'] = args;
     request.pagination['last'] = variables._pagination;
     request.pagination[sproc.getproperties().procedure] = variables._pagination;
     return results.qry;
@@ -170,6 +173,11 @@ component {
     return invoke(this, 'get' & primary_key_field());
   }
 
+  public any function relation_through(required string name) {
+    var match = relations().filter(relation => relation.getClass() == name);
+    return match?.first();
+  }
+
   public void function reload() {
     if (!persisted()) return;
     this.find(primary_key());
@@ -179,7 +187,7 @@ component {
     try {
       save();
     } catch (any err) {
-      if (err.type != 'record_not_valid') application.flash.error(application.utility.errorString(err));
+      if (err.type != 'record_not_valid') application.flash.error(utility.errorString(err));
     }
     for (var err in errors()) application.flash.error(err);
     return errors().len() ? false : true;
@@ -487,7 +495,7 @@ component {
     return relation;
   }
 
-  private BaseRelation function belongs_to(required string class, required string key, required string relation, string type = GetFunctionCalledName()) {
+  private BaseRelation function belongs_to(required string class, required string key, required string relation, string type = GetFunctionCalledName(), boolean preloaded = false) {
     return add_relation(arguments);
   }
 
@@ -496,6 +504,12 @@ component {
   }
 
   private BaseRelation function has_many(required string class, required string key, required string relation, string type = GetFunctionCalledName()) {
+    return add_relation(arguments);
+  }
+
+   // "BRIDGE" RELATION: ALLOWS CALLING PARENT->[MANY-TO-MANY]->CHILD RELATIONS AS PARENT->[CHILD]
+   // ie Categories->[ArticleCategories]->Article CAN BE CALLED AS Categories->[Article]
+  private BaseRelation function has_many_through(required string class, required string through, string type = GetFunctionCalledName()) {
     return add_relation(arguments);
   }
 
@@ -510,6 +524,12 @@ component {
 
   private any function relation_load(required string name, struct params = {}) {
     var relation = relation_find(name);
+
+    if (relation.gettype()=='has_many_through') {
+      var real_relation = relation_through(relation.getRelation()); // REAL RELATION
+      return real_relation.load(this).map(row => invoke(row, relation.through()));
+    }
+
     var data = relation.load(this);
     var method = params.keyList();
 
@@ -546,17 +566,26 @@ component {
   }
 
   public void function relation_link(required struct params) {
-    if (!params.keyExists('_relation')) return;
+    if (new_record()) return;
 
-    var klass = params._relation.getParent().class();
+    if (params.keyExists('_relation')) {
+      var klass = params._relation.getParent().class();
+      for (relation in relations()) {
+        if (relation.getType()=='belongs_to' && relation.getClass()==klass && isNull(relation.records())) {
+          relation.load(this, params._relation.getParent());
+        }
+      }
+    }
     for (relation in relations()) {
-      if (relation.getType()=='belongs_to' && relation.getClass()==klass && isNull(relation.records())) {
-        relation.load(this, params._relation.getParent());
+      if (relation.getPreloaded() && isNull(relation.getChildren())) {
+        relation.load(this, new 'app.models.#relation.getClass()#'(params, true));
       }
     }
   }
 
   // CALLBACK STUBS
+  // BY DEFAULT THESE STUBS DO NOTHING BUT CAN BE EXTENDED IN THE CHILD CLASS AS NEEDED.
+  // FOR EXAMPLE, AFTER SAVING A STUDENT YOU MAY WANT TO USE THE post_save() TO UPDATE SSN IN THE SEC TABLE
   private void function pre_init(struct data) {}
   private void function post_init() {}
   private void function pre_insert() {}

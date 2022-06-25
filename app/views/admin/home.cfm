@@ -18,6 +18,11 @@
       <a class='btn btn-nmg' href='#router.href('blog/entry/edit')#'><i class='fal fa-plus'></i></a>
     </div>
     <div class='my-2'>
+      <a class='btn btn-nmg btn-long text-start' href='#router.href('blog/library/list')#'>Library</a>
+      <a class='btn btn-nmg' href='#router.href('blog/library/list')#'><i class='fal fa-list'></i></a>
+      <a class='btn btn-nmg' href='#router.href('blog/library/edit')#'><i class='fal fa-plus'></i></a>
+    </div>
+    <div class='my-2'>
       <a class='btn btn-nmg btn-long text-start' href='#router.href('blog/page/list')#'>Site Pages</a>
       <a class='btn btn-nmg' href='#router.href('blog/page/list')#'><i class='fal fa-list'></i></a>
       <a class='btn btn-nmg' href='#router.href('blog/page/edit')#'><i class='fal fa-plus'></i></a>
@@ -36,6 +41,11 @@
       <a class='btn btn-nmg btn-long text-start' href='#router.href('blog/category/list')#'>Categories</a>
       <a class='btn btn-nmg' href='#router.href('blog/category/list')#'><i class='fal fa-list'></i></a>
       <a class='btn btn-nmg' href='#router.href('blog/category/edit')#'><i class='fal fa-plus'></i></a>
+    </div>
+    <div class='my-2'>
+      <a class='btn btn-nmg btn-long text-start' href='#router.href('blog/tag/list')#'>Tags</a>
+      <a class='btn btn-nmg' href='#router.href('blog/tag/list')#'><i class='fal fa-list'></i></a>
+      <a class='btn btn-nmg' href='#router.href('blog/tag/edit')#'><i class='fal fa-plus'></i></a>
     </div>
     <div class='my-2'>
       <a class='btn btn-nmg btn-long text-start' href='#router.href('forum/list')#'>Forums</a>

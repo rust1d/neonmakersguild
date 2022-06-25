@@ -1,5 +1,5 @@
 <cfscript>
-  results = mBlog.entries(ben_benid: router.decode('benid'));
+  results = mUserBlog.entries(ben_benid: router.decode('benid'));
   mEntry = results.rows.first();
   mEntry.view(); // inc views
 

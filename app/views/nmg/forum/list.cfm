@@ -1,5 +1,7 @@
 <cfscript>
-  mForums = new app.models.Forums().where();
+  params = { };
+  if (!session.user.get_admin()) params.fo_admin = 0;
+  mForums = new app.models.Forums().where(params);
   mBlock = mBlog.textblock_by_label('forums');
 </cfscript>
 
@@ -12,9 +14,10 @@
     </cfif>
     <cfloop array='#mForums#' item='mForum'>
       <div class='col-12'>
-        <div class='card'>
+        <div class='card #ifin(mForum.admin(),'card-admin')#'>
           <div class='card-header fs-5'>
             <a href='#mForum.seo_link()#'>#mForum.name()#</a>
+            <cfif mForum.admin()><span class='float-end badge btn-nmg'>Admins Only</span></cfif>
           </div>
           <div class='card-body'>
             <a href='#mForum.seo_link()#'>#mForum.description()#</a>

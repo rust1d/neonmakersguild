@@ -1,9 +1,9 @@
-component extends=BaseModel accessors=true {
+component extends=jsoup accessors=true {
   property name='fm_fmid'        type='numeric'  sqltype='integer'    primary_key;
   property name='fm_foid'        type='numeric'  sqltype='integer';
   property name='fm_ftid'        type='numeric'  sqltype='integer';
   property name='fm_usid'        type='numeric'  sqltype='integer';
-  property name='fm_body'        type='string'   sqltype='varchar';
+  property name='fm_body'        type='string'   sqltype='varchar'    html;
   property name='fm_history'     type='string'   sqltype='varchar';
   property name='fm_deleted_by'  type='numeric'  sqltype='integer';
   property name='fm_deleted'     type='date'     sqltype='timestamp';
@@ -22,13 +22,29 @@ component extends=BaseModel accessors=true {
   }
 
   public boolean function editable() {
-    return age() <= 24;
+    return age() <= 24 && !deleted();
+  }
+
+  public boolean function deleted() {
+    return !isNull(variables.fm_deleted);
+  }
+
+  public Users function deleted_by() {
+    return variables._deleted_by = variables._deleted_by ?: new app.models.Users().find(fm_deleted_by);
+  }
+
+  public string function deleted_label() {
+    return 'Deleted by #deleted_by().user()# on #deleted_on()#';
+  }
+
+  public string function deleted_on() {
+    return isNull(variables.fm_deleted) ? '' : utility.ordinalDate(fm_deleted) & fm_deleted.format(' @ HH:nn');
   }
 
   public string function more() {
     if (isNull(variables.fm_body)) return '';
-    var words = fm_body.left(30).listToArray(' ');
-    return utility.slice(words, max(3, max(words.len()-1, 1))).toList(' ') & '&hellip;';
+    var data = words().toList().left(30).listToArray();
+    return utility.slice(data, max(3, max(data.len()-1, 1))).toList(' ') & '&hellip;';
   }
 
   public query function search(struct params) {

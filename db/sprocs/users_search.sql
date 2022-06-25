@@ -7,7 +7,7 @@ CREATE PROCEDURE users_search(
   IN _user     VARCHAR(50),
   IN _email    VARCHAR(50),
   IN _deleted  TINYINT(1),
-  IN _term     VARCHAR(20),
+  IN _term     VARCHAR(25),
   IN _paging   VARCHAR(50)
 )
 BEGIN

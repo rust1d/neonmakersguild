@@ -113,3 +113,49 @@ figure.image figcaption {
 .btn-long {
   width: 12rem;
 }
+
+div.taglist input {
+  margin: .25rem;
+  border: none;
+  width: auto;
+  max-width: inherit;
+  display: inline!important;
+}
+
+div.taglist span.badge {
+  padding: .65rem;
+  margin-left: .25rem;
+  color: #0c1a19;
+  background-color: #909999;
+}
+
+div.taglist span.badge i {
+  margin-left: .5rem;
+  cursor: pointer;
+}
+
+ul.ui-autocomplete {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  float: left;
+  display: none;
+  min-width: 200px;
+  max-height: 50vh;
+  overflow-y: auto;
+  margin: 0 0 10px 25px;
+  list-style: none;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-color: rgba(0, 0, 0, 0.2);
+  padding: 5px;
+  font-size:15px;
+  cursor:pointer;
+}
+
+ul.ui-autocomplete li.ui-state-focus {
+  color: #ffffff;
+  background-color: #444b55
+
+}

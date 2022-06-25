@@ -88,11 +88,11 @@ component extends=BaseModel accessors=true {
   }
 
   private string function image_name() {
-    return hash(ui_uiid) & '.jpg' //& ui_filename.listLast('.');
+    return hash(ui_uiid) & '.jpg';
   }
 
   private string function thumbnail_name() {
-    return hash(ui_uiid) & '_tn.jpg' //& ui_filename.listLast('.');
+    return hash(ui_uiid) & '_tn.jpg';
   }
 
   private string function local_path() {

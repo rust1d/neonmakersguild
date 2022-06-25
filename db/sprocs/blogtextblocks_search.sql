@@ -6,7 +6,7 @@ CREATE PROCEDURE blogtextblocks_search(
   IN _btbid    int(11),
   IN _blog     int(11),
   IN _label    varchar(100),
-  IN _term     VARCHAR(20),
+  IN _term     VARCHAR(25),
   IN _paging   VARCHAR(50)
 )
 BEGIN

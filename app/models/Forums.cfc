@@ -22,8 +22,9 @@ component extends=BaseModel accessors=true {
     if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
 
     var sproc = new StoredProc(procedure: 'forums_search', datasource: datasource());
-    sproc.addParam(cfsqltype: 'integer', value: arguments.get('fo_foid'),      null: !arguments.keyExists('fo_foid'));
-    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('fo_alias'),     null: !arguments.keyExists('fo_alias'));
+    sproc.addParam(cfsqltype: 'integer', value: arguments.get('fo_foid'),  null: !arguments.keyExists('fo_foid'));
+    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('fo_alias'), null: !arguments.keyExists('fo_alias'));
+    sproc.addParam(cfsqltype: 'tinyint', value: arguments.get('fo_admin'), null: !arguments.keyExists('fo_admin'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 
     return sproc.execute().getProcResultSets().qry;

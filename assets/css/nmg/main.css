@@ -61,11 +61,28 @@ a:hover {
 .card {
   background-color: #fafafa;
   border-color: #0c4040 !important;
-  /* border-width: 2px !important; */
 }
 
 .card .card-header {
   background-color: #e0eeee;
+}
+
+.card-admin {
+  background-color: #203030;
+  color: #F0FFFF;
+  border-color: #31C5F2 !important;
+}
+
+.card-admin .card-header {
+  background-color: #0c1a19;
+}
+
+.card-admin a {
+  color: #F0FFFF;
+}
+
+.card-admin a:hover {
+  color: #31C5F2;
 }
 
 .form-control {

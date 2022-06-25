@@ -4,7 +4,7 @@ delimiter ;;
 
 CREATE PROCEDURE user_recentActivity(
   IN _usid     INT(11),
-  IN _term     VARCHAR(20),
+  IN _term     VARCHAR(25),
   IN _paging   VARCHAR(50)
 )
 BEGIN

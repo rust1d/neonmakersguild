@@ -50,6 +50,21 @@ component accessors=true {
     return mCategory.safe_save();
   }
 
+  public Documents function document_find_or_create(required numeric pkid) {
+    var mdl = new app.models.Documents();
+    try { return mdl.find(pkid) } catch (record_not_found err) { return mdl.set({ doc_blog: id() }) }
+  }
+
+  public struct function documents(struct params) {
+    if (arguments.keyExists('params')) arguments = arguments.params;
+    var args = { ui_usid: id(), maxrows: 24 }
+    args.append(arguments);
+    var mdl = new app.models.Documents();
+    var data = { 'rows': mdl.where(args) };
+    data['pagination'] = mdl.pagination();
+    return data;
+  }
+
   public BlogEntries function entry_by_alias(required string alias) {
     var mdl = new app.models.BlogEntries();
     var matches = mdl.where(ben_blog: id(), ben_alias: alias);
@@ -197,6 +212,40 @@ component accessors=true {
     var args = { bpa_blog: id(), maxrows: 25 }
     args.append(arguments);
     return new app.models.BlogPages().where(args);
+  }
+
+  public array function tags(struct params) {
+    if (arguments.keyExists('params')) arguments = arguments.params;
+    var args = { tag_blog: id(), maxrows: 100 }
+    args.append(arguments);
+    return new app.models.Tags().where(args);
+  }
+
+  public Tags function tag_build(required struct params) {
+    params.append({ tag_blog: id() });
+    return new app.models.Tags(params);
+  }
+
+  public Tags function tag_find_or_create(required numeric pkid) {
+    var mdl = new app.models.Tags();
+    if (pkid==0) return mdl.set({ tag_blog: id() });
+
+    var matches = mdl.where(tag_tagid: pkid, tag_blog: id());
+    if (matches.len()) return matches.first();
+    request.router.redirect();
+  }
+
+  public query function tag_search(struct params) {
+    if (arguments.keyExists('params')) arguments = arguments.params;
+    arguments.tag_blog = id();
+    return new app.models.Tags().search(arguments);
+  }
+
+  public boolean function tag_save(required Tags mtag) {
+    var matches = mtag.where(tag_blog: id(), tag_tag: mtag.tag());
+    if (matches.len()==1 && (mtag.new_record() || matches[1].tagid()!=mtag.tagid())) return application.flash.error('tag exists.');
+    if (matches.len()>1) return application.flash.error('blog.tag_save too many rows.');
+    return mtag.safe_save();
   }
 
   public BlogTextBlocks function textblock_find_or_create(required numeric pkid) {

@@ -12,7 +12,7 @@ CREATE PROCEDURE blogentries_search(
   IN _released    TINYINT(1),
   IN _promoted    TINYINT(1),
   IN _bcaid       INT(11),
-  IN _term        VARCHAR(20),
+  IN _term        VARCHAR(25),
   IN _paging      VARCHAR(50)
 )
 BEGIN

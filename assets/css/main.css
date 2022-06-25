@@ -106,6 +106,10 @@ form label.required:after {
   min-width: 10rem;
 }
 
+.w-6rem {
+  min-width: 6rem;
+}
+
 input[name=term] {
   max-width: 8rem;
 }

@@ -15,6 +15,9 @@
           <li class='nav-item ms-4 dropdown'>
             <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Resources</a>
             <ul class='dropdown-menu'>
+              <cfif session.user.loggedIn()>
+                <li><a class='dropdown-item' href='/resources/library'>Library</a></li>
+              </cfif>
               <li><a class='dropdown-item' href='/resources/suppliers'>Suppliers</a></li>
               <li><a class='dropdown-item' href='/resources/classes'>Classes</a></li>
               <li><a class='dropdown-item' href='/resources/other'>Other</a></li>

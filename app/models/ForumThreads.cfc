@@ -20,6 +20,22 @@ component extends=BaseModel accessors=true {
   belongs_to(name: 'User',         class: 'Users',         key: 'ft_usid',  relation: 'us_usid');
   has_many(name: 'ForumMessages',  class: 'ForumMessages', key: 'ft_ftid',  relation: 'fm_ftid');
 
+  public numeric function age() {
+    return now().diff('h', ft_added ?: now());
+  }
+
+  public boolean function editable() {
+    return age() <= 2400;
+  }
+
+  public boolean function deleted() {
+    return !isNull(variables.ft_deleted);
+  }
+
+  public User function deleted_by() {
+    return variables._deleted_by = variables._deleted_by ?: new app.models.Users().find(ft_deleted_by);
+  }
+
   public ForumMessages function last_message() {
     if (isNull(variables.ft_last_fmid)) return new app.models.ForumMessages();
     return new app.models.ForumMessages().find(ft_last_fmid);

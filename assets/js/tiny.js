@@ -141,9 +141,13 @@ $(function() {
     tinymce.init({ ...tiny_summary, ...params });
   });
 
-  $('textarea.tiny-forum').each(function() {
-    var high = 160 + this.rows * 20;
-    var params = { height: high, target: this }
+  init_tinyforum = function(txt) {
+    var high = 160 + txt.rows * 20;
+    var params = { height: high, target: txt }
     tinymce.init({ ...tiny_forum, ...params });
+  }
+
+  $('textarea.tiny-forum').each(function() {
+    init_tinyforum(this);
   });
 });

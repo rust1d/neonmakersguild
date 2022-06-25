@@ -7,22 +7,25 @@ component accessors=true {
   property name='children'  type='array';
   property name='parent'    type='BaseModel';
   property name='where'     type='struct';
+  property name='preloaded' type='boolean';
 
   public BaseRelation function init(required struct params) {
     variables.class = params.get('class');
-    variables.name = params.get('name');
-    param variables.name = variables.class;
+    variables.name = params.get('name') ?: variables.class;
+    // param variables.name = variables.class;
     variables.key = params.get('key');
-    variables.relation = params.get('relation');
+    variables.relation = params.get('through') ?: params.get('relation');
     variables.type = params.get('type');
-    variables.where = params.get('where');
-    param variables.where = {};
+    variables.where = params.get('where') ?: {};
+    variables.preloaded = variables.type=='belongs_to' && (params.get('preloaded') ?: false);
+    // param variables.where = {};
 
     return this;
   }
 
   public BaseModel function build(struct params) {
-    if (singlar_exists()) throw('Relation is singlar and does not support `build`.', 'relation_error');
+    if (belongs_to()) throw('Relation type `#type#` does not support `build`.', 'relation_error');
+    if (singlar() && children_exist()) throw('Relation exists and cannot call `build`.', 'relation_error');
 
     if (arguments.keyExists('params')) arguments = arguments.params;
     param variables.children = [];
@@ -34,8 +37,20 @@ component accessors=true {
     return mModel;
   }
 
+  public boolean function destroy() { // DELETES THE CHILD
+    if (belongs_to()) throw('Relation type `#type#` does not support `destroy`.', 'relation_error');
+    if (!children_exist()) return true;
+
+    var mChild = singlar() ? records() : arguments[1];
+
+    if (!isObject(mChild)) return false;
+    if (mChild.persisted() && !mChild.destroy()) return false;
+
+    return variables.children.len() != variables.children.delete(mChild).len();
+  }
+
   public any function detect() { // RETURNS THE FIRST CHILD MATCHING params OR NULL
-    if (singlar()) throw('Relation is singlar and does not support `detect`.', 'relation_error');
+    if (singlar()) throw('Relation type `#type#` does not support `detect`.', 'relation_error');
     try {
       var closer = arguments.get('closure');
       if (isNull(closer)) {
@@ -50,7 +65,7 @@ component accessors=true {
   }
 
   public array function filter() { // RETURNS ARRAY OF CHILDREN MATCHING params
-    if (singlar()) throw('Relation is singlar and does not support `filter`.', 'relation_error');
+    if (singlar()) throw('Relation type `#type#` does not support `filter`.', 'relation_error');
     try {
       var closer = arguments.get('closure');
       if (isNull(closer)) {
@@ -61,6 +76,13 @@ component accessors=true {
     } catch (any err) {
       throw('An error occurred calling `filter`. #err.message#', 'relation_error');
     }
+  }
+
+  public any function find(required numeric pkid) { // RETURNS THE CHILD BY PKEY
+    if (singlar()) throw('Relation type `#type#` does not support `find`.', 'relation_error');
+    var rows = records().filter(mRow => mRow.primary_key() == pkid);
+    if (rows.isEmpty()) throw('Relation was unable to find primary key #pkid#.', 'relation_error');
+    return rows.first();
   }
 
   public BaseModel function find_or_create() {
@@ -85,7 +107,7 @@ component accessors=true {
   }
 
   public array function map() { // RETURNS ARRAY OF VALUES
-    if (singlar()) throw('Relation is singlar and does not support `map`.', 'relation_error');
+    if (singlar()) throw('Relation type `#type#` does not support `map`.', 'relation_error');
     try {
       var closer = arguments.get('closure');
       if (isNull(closer)) {
@@ -113,7 +135,7 @@ component accessors=true {
       }
     }
     if (singlar()) {
-      if (variables.children.len()) return variables.children.first();
+      if (children_exist()) return variables.children.first();
       return;
     }
     return variables.children;
@@ -125,9 +147,9 @@ component accessors=true {
   }
 
   public array function sort() {
-    if (singlar()) throw('Relation is singlar and does not support `sort`.', 'relation_error');
+    if (singlar()) throw('Relation type `#type#` does not support `sort`.', 'relation_error');
 
-    if (variables.children.isEmpty()) return records(); // NOTHING TO SORT
+    if (isNull(variables.children)) return records(); // NOTHING TO SORT
     try {
       if (arguments.keyExists('closure')) return variables.children.sort(arguments.closure);
 
@@ -147,7 +169,30 @@ component accessors=true {
     }
   }
 
+  public numeric function sum() {
+    if (singlar()) throw('Relation type `#type#` does not support `sum`.', 'relation_error');
+
+    try {
+      var field = arguments[1];
+      return records().map(mRow => invoke(mRow, field)).sum();
+    } catch (any err) {
+      throw('An error occurred calling `sum`. #err.message#', 'relation_error');
+    }
+  }
+
+  public string function through() {
+    return variables._through = variables._through ?: new 'app.models.#variables.relation#'().relation_through(variables.class).getName();
+  }
+
   // PRIVATE
+
+  private boolean function belongs_to() {
+    return variables.type == 'belongs_to';
+  }
+
+  private boolean function children_exist() {
+    return !IsNull(variables.children) && variables.children.len();
+  }
 
   private void function clear_children() {
     variables.delete('children');

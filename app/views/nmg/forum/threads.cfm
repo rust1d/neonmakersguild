@@ -1,6 +1,7 @@
 <cfscript>
   try {
     mForum = new app.models.Forums().find(url.foid);
+    if (!session.user.get_admin() && mForum.admin()) router.go('/forums');
   } catch (record_not_found err) {
     router.go('/forums');
   }
@@ -31,7 +32,7 @@
   }
 
   mdl = new app.models.ForumThreads();
-  mThreads = mdl.where(utility.paged_term_params());
+  mThreads = mdl.where(utility.paged_term_params(ft_foid: mForum.foid()));
   pagination = mdl.pagination();
 
   mBlock = mBlog.textblock_by_label('forum-' & mForum.alias());
@@ -113,6 +114,9 @@
                 </form>
               </div>
             </div>
+          </cfif>
+          <cfif mThreads.len()==0>
+            <div class='small'>"There is no heavier burden than an unfulfilled potential." - Charles Schulz</div>
           </cfif>
           <cfloop array='#mThreads#' item='mThread'>
             <div class='row border-top pt-3'>

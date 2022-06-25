@@ -54,11 +54,16 @@
             <input type='email' class='form-control' name='mf_email' id='mf_email' value='#form.get('mf_email')#' maxlength='50' required />
           </div>
           <div class='col-md-6'>
+            <label class='form-label' for='mf_phone'>Cell Phone</label>
+            <input type='tel' class='form-control' name='mf_phone' id='mf_phone' value='#form.get('mf_phone')#' maxlength='12' placeholder='123-456-7890' />
+            <small class='smaller text-secondary'>We may call or text you to confirm membership information.</small>
+          </div>
+          <div class='col-md-6'>
             <label class='form-label required' for='mf_location'>Location</label>
             <input type='text' class='form-control' id='mf_location' name='mf_location' value='#form.get('mf_location')#' maxlength='100' required />
           </div>
           <div class='col-md-12 mb-3'>
-            <label class='form-label' for='mf_history'>Your experience working with neon</label>
+            <label class='form-label' for='mf_history'>Tell us about your experience working with neon</label>
             <textarea class='form-control' rows='6' name='mf_history' id='mf_history'>#form.get('mf_history')#</textarea>
           </div>
           <div class='col-12'>
