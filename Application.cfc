@@ -112,11 +112,9 @@ writedump(arguments);
 
   private void function check_user_logout() {
     if (url.keyExists('ref') && session.site.get_site()!=url.ref) {
-      // this.onSessionStart();
       session.site = new app.services.CurrentSite();
     } else if (url.keyExists('logout') && session.user.loggedIn()) {
       this.onSessionStart();
-      // location(application.urls.root & '/index.cfm', false);
     }
   }
 

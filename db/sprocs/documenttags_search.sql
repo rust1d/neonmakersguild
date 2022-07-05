@@ -19,7 +19,7 @@ BEGIN
    WHERE (_dtid IS NULL OR dt_dtid = _dtid)
      AND (_docid IS NULL OR dt_docid = _docid)
      AND (_tagid IS NULL OR dt_tagid = _tagid)
-   ORDER BY tag_tag
+   ORDER BY tag_tag, tag_tagid
    LIMIT _limit OFFSET _offset;
 
   CALL pagination(FOUND_ROWS(), _limit, _offset, null);

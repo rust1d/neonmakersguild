@@ -19,7 +19,7 @@ $(function () {
     var data = $cat.val().trim();
     $cat.val('');
     if (!data.length) return $cat.focus();
-    var matches = $("#ben_categories").find('option').filter((row,obj) => obj.text.localeCompare(data)==0);
+    var matches = $("#ben_categories").find('option').filter((row,obj) => obj.text.localeCompare(data, undefined, { sensitivity: 'accent' })==0);
     if (matches.length) {
       matches[0].selected = true;
       $cat.val('');

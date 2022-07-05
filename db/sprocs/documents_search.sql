@@ -5,6 +5,7 @@ delimiter ;;
 CREATE PROCEDURE documents_search(
   IN _docid    int(11),
   IN _blog     int(11),
+  IN _bcaid    int(11),
   IN _tag      VARCHAR(25),
   IN _term     VARCHAR(25),
   IN _paging   VARCHAR(50)
@@ -21,6 +22,13 @@ BEGIN
            doc_type REGEXP CONVERT(_term USING utf8) OR
            doc_filename REGEXP CONVERT(_term USING utf8) OR
            doc_description REGEXP CONVERT(_term USING utf8)
+         )
+     AND (_bcaid IS NULL OR
+           doc_docid IN (
+             SELECT dc_docid
+               FROM documentcategories
+              WHERE dc_bcaid=_bcaid
+           )
          )
      AND (_tag IS NULL OR
            doc_docid IN (

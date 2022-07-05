@@ -3,6 +3,7 @@ component accessors=true {
 
   public CurrentSite function init(string site) {
     variables._site = arguments.site ?: url.get('ref') ?: cookie.get('ref') ?: 'nmg';
+    if (!listFindNoCase('nmg,admin', _site)) variables._site = 'nmg';
     if (valid()) set_cookie();
     return this;
   }

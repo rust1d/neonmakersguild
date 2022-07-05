@@ -8,7 +8,6 @@ component extends=BaseModel accessors=true {
 
   belongs_to(name: 'UserBlog',           class: 'Users',                key: 'bca_blog',   relation: 'us_usid');
 
-
   public query function search(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;
     if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
@@ -21,6 +20,26 @@ component extends=BaseModel accessors=true {
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 
     return sproc.execute().getProcResultSets().qry;
+  }
+
+  public array function save_categories(required numeric blog, required string data) { // ACCEPTS CSV OF EXISTING IDS/NEW DATA AND RETURNS LIST OF IDS
+    var bca_ids = [];
+    for (var val in DeserializeJSON('[#data#]')) { // USE DESERIALIZE SINCE THE LIST COULD HAVE QUOTED STRINGS WITH DELIMITERS INSIDE
+      var params = { bca_blog: blog }
+      if (isNumeric(val)) {
+        params.bca_bcaid = val;
+      } else {
+        params.bca_category = val;
+      }
+      var qry = search(params);
+      if (qry.len()) {
+        bca_ids.append(qry.bca_bcaid);
+      } else {
+        var mdl = new app.models.BlogCategories(bca_category: bca, bca_blog: blog);
+        if (mdl.safe_save()) bca_ids.append(mdl.bcaid());
+      }
+    }
+    return bca_ids;
   }
 
   private void function pre_save() {

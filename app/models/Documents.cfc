@@ -5,13 +5,16 @@ component extends=BaseModel accessors=true {
   property name='doc_filename'     type='string'   sqltype='varchar';
   property name='doc_description'  type='string'   sqltype='varchar';
   property name='doc_size'         type='numeric'  sqltype='integer';
-  property name='doc_clicks'       type='numeric'  sqltype='integer'    default='0';
+  property name='doc_views'        type='numeric'  sqltype='integer'    default='0';
+  property name='doc_downloads'    type='numeric'  sqltype='integer'    default='0';
   property name='doc_added'        type='date';
   property name='doc_dla'          type='date';
   property name='doc_rename'       type='string';
 
   has_many(class: 'DocumentTags', key: 'doc_docid', relation: 'dt_docid');
   has_many_through(class: 'Tags', through: 'DocumentTags');
+  has_many(name: 'DocumentCategories',  class: 'DocumentCategories',  key: 'doc_docid',  relation: 'dc_docid');
+  has_many_through(class: 'BlogCategories', through: 'DocumentCategories');
 
   public string function datadash() {
     if (new_record()) return '';
@@ -51,6 +54,7 @@ component extends=BaseModel accessors=true {
     var sproc = new StoredProc(procedure: 'documents_search', datasource: datasource());
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('doc_docid'), null: !arguments.keyExists('doc_docid'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('doc_blog'),  null: !arguments.keyExists('doc_blog'));
+    sproc.addParam(cfsqltype: 'integer', value: arguments.get('bcaid'),     null: !arguments.keyExists('bcaid'));
     sproc.addParam(cfsqltype: 'varchar', value: arguments.get('tag'),       null: !arguments.keyExists('tag'));
     sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),      null: !arguments.keyExists('term'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
@@ -61,6 +65,12 @@ component extends=BaseModel accessors=true {
     if (isNull(variables.doc_size)) return 0;
     var kb = variables.doc_size/1024;
     return kb > 1000 ? numberFormat(kb/1024, '.0') & ' MB' : numberFormat(kb, '.0') & ' KB';
+  }
+
+  public string function seo_link() {
+    if (new_record()) return 'library/404';
+
+    return '/library/#doc_docid#/#doc_filename#';
   }
 
   // PRIVATE

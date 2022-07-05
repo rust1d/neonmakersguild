@@ -80,6 +80,10 @@ component extends=BaseModel accessors=true {
     return variables._social_links = variables._social_links ?: blog().links(bli_type: 'social media').rows;
   }
 
+  public string function temp_pwd() {
+    return variables.password;
+  }
+
   public void function update_last_login() {
     if (new_record()) return;
 

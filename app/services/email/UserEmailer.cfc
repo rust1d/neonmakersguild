@@ -18,4 +18,17 @@ component {
 
     mMailer.send();
   }
+
+  public void function SendWelcome(required Users mUser) {
+    var send_to = application.isDevelopment ? application.email.admin : mUser.email();
+    var mMailer = new app.services.email.Emailer(
+      to: send_to,
+      testmode: true,
+      subject: 'Welcome to NeonMakersGuild.org!',
+      template: 'user_welcome.cfm',
+      mUser: mUser
+    );
+
+    mMailer.send();
+  }
 }

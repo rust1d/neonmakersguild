@@ -13,14 +13,14 @@
     <cfif !locals.footer>
       <cfif locals.pagination.keyExists('tag')>
         <div class='col-auto'>
-          <button onclick='window.location=window.location.href' class='border btn btn-sm btn-nmg border-nmg rounded p-1'>
+          <button id='btnClearTag' onclick='window.location=window.location.href' class='border btn btn-sm btn-nmg border-nmg rounded p-1'>
             #locals.pagination.tag# &nbsp; <i class='fas fa-times'></i>
           </button>
         </div>
       </cfif>
       <cfif locals.pagination.term.len()>
         <div class='col-auto'>
-          <button onclick='window.location=window.location.href' class='border btn btn-sm btn-nmg border-nmg rounded p-1'>
+          <button id='btnClearTerm' onclick='window.location=window.location.href' class='border btn btn-sm btn-nmg border-nmg rounded p-1'>
             #locals.pagination.term# &nbsp; <i class='fas fa-times'></i>
           </button>
         </div>
@@ -29,6 +29,8 @@
         <form method='post'>
           <div class='input-group input-group-sm'>
             <input type='hidden' name='tag' id='filter_tag' value='#locals.pagination.get('tag')#' />
+            <input type='hidden' name='bcaid' id='filter_bcaid' value='#locals.pagination.get('bcaid')#' />
+            <input type='hidden' name='filter_term' id='filter_term' value='#locals.pagination.get('term')#' />
             <input type='text' class='form-control' id='term' name='term' placeholder='search...' maxlength='20' aria-label='Search' required />
             <button class='btn btn-sm btn-nmg' type='submit'><i class='fa fa-search'></i></button>
           </div>

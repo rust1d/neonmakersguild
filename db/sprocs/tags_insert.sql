@@ -11,7 +11,7 @@ BEGIN
   INSERT INTO tags (
     tag_blog, tag_tag
   ) VALUES (
-    _blog, _tag
+    _blog, lcase(_tag)
   );
 
   CALL tags_get_by_ids(LAST_INSERT_ID());

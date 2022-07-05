@@ -5,6 +5,8 @@ component extends=BaseModel accessors=true {
   property name='up_lastname'   type='string'   sqltype='varchar';
   property name='up_bio'        type='string'   sqltype='varchar';
   property name='up_location'   type='string'   sqltype='varchar';
+  property name='up_phone'      type='string'   sqltype='varchar';
+  property name='up_promo'      type='string'   sqltype='varchar';
   property name='up_dla'        type='date';
 
   belongs_to(class: 'Users',  key: 'up_usid', relation: 'us_usid');

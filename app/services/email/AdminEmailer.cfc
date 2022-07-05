@@ -69,7 +69,7 @@ component accessors = true {
           <body>
             <table>'); for (var key in form.fieldnames.listToArray()) writeOutput('
               <tr>
-                <td class="key">#key.replace("_"," ","all")#</td>
+                <td class="key">#key.replace("_"," ","all").listLast(' ')#</td>
                 <td class="user">#encodeForHTML(form.get(key))#</td>
               </tr>'); writeOutput('
               <tr><td class="key"><br /></td><td>&nbsp;</td></tr>

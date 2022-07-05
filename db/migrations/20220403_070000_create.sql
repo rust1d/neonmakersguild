@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS users;
+-- DROP TABLE IF EXISTS users;
 
 -- alter table users drop column us_active;
 -- alter table users drop column us_deleted;
@@ -18,7 +18,7 @@ CREATE TABLE users (
   UNIQUE INDEX (us_email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS userProfile;
+-- DROP TABLE IF EXISTS userProfile;
 
 CREATE TABLE userProfile (
   up_upid        INT(11) NOT NULL AUTO_INCREMENT,
@@ -27,13 +27,18 @@ CREATE TABLE userProfile (
   up_lastname    VARCHAR(50),
   up_bio         TEXT,
   up_location    VARCHAR(100),
+  up_phone       VARCHAR(15),
+  up_promo       VARCHAR(25),
   up_dla         DATETIME DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (up_upid),
   UNIQUE INDEX (up_usid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- alter table userProfile add column up_phone VARCHAR(15) after up_location;
+-- alter table userProfile add column up_promo VARCHAR(25) after up_phone;
 
-DROP TABLE IF EXISTS userImages;
+
+-- DROP TABLE IF EXISTS userImages;
 
 CREATE TABLE userImages (
   ui_uiid        INT(11) NOT NULL AUTO_INCREMENT,
@@ -49,7 +54,7 @@ CREATE TABLE userImages (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS BlogCategories;
+-- DROP TABLE IF EXISTS BlogCategories;
 
 CREATE TABLE BlogCategories (
   bca_bcaid                             INT(11) NOT NULL AUTO_INCREMENT,
@@ -63,7 +68,7 @@ CREATE TABLE BlogCategories (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS BlogComments;
+-- DROP TABLE IF EXISTS BlogComments;
 
 CREATE TABLE BlogComments (
   bco_bcoid                             INT(11) NOT NULL AUTO_INCREMENT,
@@ -81,7 +86,7 @@ CREATE TABLE BlogComments (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS BlogEntries;
+-- DROP TABLE IF EXISTS BlogEntries;
 
 CREATE TABLE BlogEntries (
   ben_benid                             INT(11) NOT NULL AUTO_INCREMENT,
@@ -116,7 +121,7 @@ CREATE TABLE BlogEntries (
 -- ALTER TABLE BlogEntries ADD COLUMN ben_promoted DATETIME after ben_released;
 
 
-DROP TABLE IF EXISTS BlogEntriesCategories;
+-- DROP TABLE IF EXISTS BlogEntriesCategories;
 
 CREATE TABLE BlogEntriesCategories (
   bec_becid                             INT(11) NOT NULL AUTO_INCREMENT,
@@ -128,7 +133,7 @@ CREATE TABLE BlogEntriesCategories (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS BlogLinks;
+-- DROP TABLE IF EXISTS BlogLinks;
 
 CREATE TABLE BlogLinks (
   bli_bliid                             INT(11) NOT NULL AUTO_INCREMENT,
@@ -144,7 +149,7 @@ CREATE TABLE BlogLinks (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS BlogPages;
+-- DROP TABLE IF EXISTS BlogPages;
 
 CREATE TABLE BlogPages (
   bpa_bpaid                             INT(11) NOT NULL AUTO_INCREMENT,
@@ -160,7 +165,7 @@ CREATE TABLE BlogPages (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 
-DROP TABLE IF EXISTS BlogSubscribers;
+-- DROP TABLE IF EXISTS BlogSubscribers;
 
 CREATE TABLE BlogSubscribers (
   bsu_bsuid                             INT(11) NOT NULL AUTO_INCREMENT,
@@ -173,7 +178,7 @@ CREATE TABLE BlogSubscribers (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS BlogTextBlocks;
+-- DROP TABLE IF EXISTS BlogTextBlocks;
 
 CREATE TABLE BlogTextBlocks (
   btb_btbid                             INT(11) NOT NULL AUTO_INCREMENT,
@@ -186,7 +191,7 @@ CREATE TABLE BlogTextBlocks (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 
-DROP TABLE IF EXISTS BlogRoles;
+-- DROP TABLE IF EXISTS BlogRoles;
 
 CREATE TABLE BlogRoles (
   bro_broid                             INT(11) NOT NULL AUTO_INCREMENT,
@@ -197,7 +202,7 @@ CREATE TABLE BlogRoles (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS BlogUserRoles;
+-- DROP TABLE IF EXISTS BlogUserRoles;
 
 CREATE TABLE BlogUserRoles (
   bur_burid                             INT(11) NOT NULL AUTO_INCREMENT,
@@ -211,7 +216,7 @@ CREATE TABLE BlogUserRoles (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS BlogPagesCategories;
+-- DROP TABLE IF EXISTS BlogPagesCategories;
 
 CREATE TABLE BlogPagesCategories  (
   bpc_bpcid                             INT(11) NOT NULL AUTO_INCREMENT,
@@ -223,7 +228,7 @@ CREATE TABLE BlogPagesCategories  (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
 
 
-DROP TABLE IF EXISTS forums;
+-- DROP TABLE IF EXISTS forums;
 
 CREATE TABLE forums (
   fo_foid                    INT(11) NOT NULL AUTO_INCREMENT,
@@ -244,7 +249,7 @@ CREATE TABLE forums (
 alter table forums add column fo_order tinyint after fo_admin; */
 
 
-DROP TABLE IF EXISTS forumThreads;
+-- DROP TABLE IF EXISTS forumThreads;
 
 CREATE TABLE forumThreads (
   ft_ftid                    INT(11) NOT NULL AUTO_INCREMENT,
@@ -267,7 +272,7 @@ CREATE TABLE forumThreads (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS forumMessages;
+-- DROP TABLE IF EXISTS forumMessages;
 
 CREATE TABLE forumMessages (
   fm_fmid                    INT(11) NOT NULL AUTO_INCREMENT,
@@ -290,23 +295,7 @@ CREATE TABLE forumMessages (
 insert into forums (fo_name, fo_alias, fo_description) values ('Bending Forum', 'bending', 'for benderings.'),  ('Pumping Forum', 'Pumping', 'for pumperings.');
 
 
-DROP TABLE IF EXISTS documents;
-
-CREATE TABLE documents (
-  doc_docid        INT(11) NOT NULL AUTO_INCREMENT,
-  doc_blog         INT(11),
-  doc_type         VARCHAR(10),
-  doc_filename     VARCHAR(100),
-  doc_description  VARCHAR(500),
-  doc_size         INT(11),
-  doc_clicks       INT(11) NOT NULL DEFAULT 0,
-  doc_added        DATETIME DEFAULT NULL,
-  doc_dla          DATETIME DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (doc_docid) USING BTREE,
-  KEY (doc_blog)
-) ENGINE = InnoDB;
-
-DROP TABLE IF EXISTS tags;
+-- DROP TABLE IF EXISTS tags;
 
 CREATE TABLE tags (
   tag_tagid  INT(11) NOT NULL AUTO_INCREMENT,
@@ -317,7 +306,29 @@ CREATE TABLE tags (
   UNIQUE INDEX (tag_tag)
 ) ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS documentTags;
+-- DROP TABLE IF EXISTS documents;
+
+CREATE TABLE documents (
+  doc_docid        INT(11) NOT NULL AUTO_INCREMENT,
+  doc_blog         INT(11),
+  doc_type         VARCHAR(10),
+  doc_filename     VARCHAR(100),
+  doc_description  VARCHAR(500),
+  doc_size         INT(11),
+  doc_views        INT(11) NOT NULL DEFAULT 0,
+  doc_downloads    INT(11) NOT NULL DEFAULT 0,
+  doc_added        DATETIME DEFAULT NULL,
+  doc_dla          DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (doc_docid) USING BTREE,
+  KEY (doc_blog)
+) ENGINE = InnoDB;
+
+-- alter table documents drop column doc_clicks;
+-- alter table documents add column doc_views int(11) after doc_size;
+-- alter table documents add column doc_downloads int(11) after doc_views;
+
+
+-- DROP TABLE IF EXISTS documentTags;
 
 CREATE TABLE documentTags (
   dt_dtid   INT(11) NOT NULL AUTO_INCREMENT,
@@ -327,3 +338,38 @@ CREATE TABLE documentTags (
   KEY (dt_docid),
   KEY (dt_tagid)
 ) ENGINE=InnoDB;
+
+-- DROP TABLE IF EXISTS documentCategories;
+
+CREATE TABLE documentCategories (
+  dc_dcid          INT(11) NOT NULL AUTO_INCREMENT,
+  dc_docid         INT(11) NOT NULL,
+  dc_bcaid         INT(11) NOT NULL,
+  PRIMARY KEY (dc_dcid),
+  KEY(dc_docid),
+  KEY(dc_bcaid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- DROP TABLE IF EXISTS memberRequests;
+
+CREATE TABLE memberRequests (
+  mr_mrid          INT(11) NOT NULL AUTO_INCREMENT,
+  mr_firstname     VARCHAR(50),
+  mr_lastname      VARCHAR(50),
+  mr_email         VARCHAR(50),
+  mr_phone         VARCHAR(15),
+  mr_location      VARCHAR(100),
+  mr_website1      VARCHAR(200),
+  mr_website2      VARCHAR(200),
+  mr_history       TEXT,
+  mr_promo         VARCHAR(25),
+  mr_user          VARCHAR(50),
+  mr_usid          INT(11),
+  mr_deleted_by    INT(11),
+  mr_deleted       DATETIME,
+  mr_validated     DATETIME,
+  mr_added         DATETIME DEFAULT CURRENT_TIMESTAMP,
+  mr_dla           DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (mr_mrid),
+  KEY(mr_usid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

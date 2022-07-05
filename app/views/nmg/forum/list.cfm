@@ -31,7 +31,7 @@
                 Messages<br>#mForum.messages()#
               </div>
               <div class='col-8 text-end'>
-                <cfif !isNull(mForum.last_fmid())>
+                <cfif !isNull(mForum.last_fmid() && !mForum.last_message().deleted())>
                   <div class='row'>
                     <div class='col text-end'>
                       <div class='small'>

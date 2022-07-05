@@ -52,4 +52,8 @@
       <a class='btn btn-nmg' href='#router.href('forum/list')#'><i class='fal fa-list'></i></a>
       <a class='btn btn-nmg' href='#router.href('forum/edit')#'><i class='fal fa-plus'></i></a>
     </div>
+    <div class='my-2'>
+      <a class='btn btn-nmg btn-long text-start' href='#router.href('requests/list')#'>Member Requests</a>
+      <a class='btn btn-nmg' href='#router.href('requests/list')#'><i class='fal fa-list'></i></a>
+    </div>
 </cfoutput>

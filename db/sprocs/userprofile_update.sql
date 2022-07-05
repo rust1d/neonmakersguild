@@ -8,7 +8,9 @@ CREATE PROCEDURE userprofile_update(
   IN _firstname   varchar(50),
   IN _lastname    varchar(50),
   IN _bio         text,
-  IN _location    varchar(100)
+  IN _location    varchar(100),
+  IN _phone       varchar(15),
+  IN _promo       varchar(25)
 )
 BEGIN
   UPDATE userprofile
@@ -17,6 +19,8 @@ BEGIN
          up_lastname  = IFNULL(_lastname,  up_lastname),
          up_bio       = IFNULL(_bio,       up_bio),
          up_location  = IFNULL(_location,  up_location),
+         up_phone     = IFNULL(_phone,     up_phone),
+         up_promo     = IFNULL(_promo,     up_promo),
          up_dla       = CURRENT_TIMESTAMP
    WHERE up_upid = _upid;
 

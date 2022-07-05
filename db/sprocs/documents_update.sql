@@ -9,7 +9,8 @@ CREATE PROCEDURE documents_update(
   IN `_filename`     varchar(100),
   IN _description    varchar(500),
   IN _size           int(11),
-  IN _clicks         int(11)
+  IN _views          int(11),
+  IN _downloads      int(11)
 )
 BEGIN
   UPDATE documents
@@ -18,7 +19,8 @@ BEGIN
          doc_filename    = IFNULL(`_filename`,   doc_filename),
          doc_description = IFNULL(_description,  doc_description),
          doc_size        = IFNULL(_size,         doc_size),
-         doc_clicks      = IFNULL(_clicks,       doc_clicks),
+         doc_views       = IFNULL(_views,        doc_views),
+         doc_downloads   = IFNULL(_downloads,    doc_downloads),
          doc_dla         = CURRENT_TIMESTAMP
    WHERE doc_docid = _docid;
 

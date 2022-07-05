@@ -68,9 +68,8 @@ component extends=jsoup accessors=true {
 
   public string function seo_link() {
     if (new_record()) return 'forum/404';
-
     param variables.ft_alias = this.ForumThread().alias();
-    param variables.fo_alias =this.ForumThread().fo_alias();
+    param variables.fo_alias = this.ForumThread().fo_alias();
 
     return '/forum/#fo_alias#/#fm_ftid#/#ft_alias####fm_fmid#';
   }

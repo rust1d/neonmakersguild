@@ -15,6 +15,10 @@
       tag_ids = new app.models.Tags().save_tags(mBlog.id(), form.tagids);
       mDocument.DocumentTags(replace: tag_ids.toList());
 
+      param form.doc_categories = '';
+      bca_ids = new app.models.BlogCategories().save_categories(mBlog.id(), form.doc_categories);
+      mDocument.DocumentCategories(replace: bca_ids.toList());
+
       router.redirect('#dest#/library/list');
     } else if (form.keyExists('doc_mb')) {
       flash.error('An error occurred while uploading. Please try again or contact #session.site.mailto_site()#.');
@@ -26,6 +30,8 @@
     router.redirect('#dest#/library/list');
   }
 
+  param form.doc_categories = mDocument.DocumentCategories().map(row => row.dc_bcaid()).toList();
+  // qryCats = mBlog.categories();
   mode = mDocument.new_record() ? 'Add' : 'Edit';
 </cfscript>
 
@@ -38,6 +44,33 @@
         $('input[name=doc_mb]').val(`${(file.size / 1024).toFixed(1)} KB`);
       }
     });
+
+    select_cat = function() {
+      var $cat = $('#bca_category');
+      var data = $cat.val().trim();
+      $cat.val('');
+      if (!data.length) return $cat.focus();
+      var matches = $("#doc_categories").find('option').filter((row,obj) => obj.text.localeCompare(data, undefined, { sensitivity: 'accent' })==0);
+      if (matches.length) {
+        matches[0].selected = true;
+        $cat[0].setCustomValidity('');
+        return;
+      }
+      $cat[0].setCustomValidity(`Category ${data} not found.`);
+      $cat[0].reportValidity();
+      // $("#doc_categories").prepend(`<option value='${data}' selected>${data}</option>`);
+    }
+
+    $('#bca_category').on('keydown', function(event) {
+      if (event.which==13 || event.which==9) {
+        if (event.which==13) event.preventDefault();
+        select_cat();
+      }
+    });
+
+    $('#btnFindCategory').on('click', function() {
+      select_cat();
+    });
   });
 </script>
 
@@ -46,9 +79,14 @@
 <cfoutput>
   <form role='form' method='post' enctype='multipart/form-data'>
     <div class='card'>
-      <h5 class='card-header bg-nmg'>
-        #mode# <cfif mode is 'add'>document<cfelse>#mDocument.filename()#</cfif>
-      </h5>
+      <div class='card-header bg-nmg'>
+        <div class='row align-items-center'>
+          <div class='col fs-5'>#mode# <cfif mode is 'add'>Document<cfelse>#mDocument.filename()#</cfif></div>
+          <div class='col-auto'>
+            <a class='ms-2 blended-icon' data-bs-toggle='modal' data-bs-target='##helpModal'><i class='fas fa-xl fa-circle-question'></i></a>
+          </div>
+        </div>
+      </div>
       <div class='card-body'>
         <cfif mode is 'add'>
           <form method='post' enctype='multipart/form-data'>
@@ -82,46 +120,48 @@
             </div>
           </form>
         <cfelse>
-          <div class='row g-3'>
-            <div class='col-md-9 col-12'>
-              <label class='form-label required' for='doc_filename'>Filename</label>
-              <input type='text' class='form-control' name='doc_filename' id='doc_filename' value='#htmlEditFormat(mDocument.filename())#' maxlength='100' required />
-            </div>
-            <div class='col-md-3 col-12'>
-              <label class='form-label'>Type</label>
-              <h5>#mDocument.type()#</h5>
-            </div>
-
-            <div class='col-12'>
-              <label class='form-label required' for='tagger'>Tags</label>
-              <div class='taglist border rounded'>
-                <cfloop array='#mDocument.tags()#' item='mTag'>
-                  <span class='badge bg-nmg' data-id='#mTag.tagid()#'><input type=hidden name=tagids value='#mTag.tagid()#' /> #mTag.tag()# <i data-role=remove class='fas fa-times'></i></span>
-                </cfloop>
-                <input type='text' class='form-control' id='tagger' name='tagger' />
+          <div class='row'>
+            <div class='col-12 col-md-9'>
+              <div class='row g-3'>
+                <div class='col-12'>
+                  <label class='form-label required' for='doc_filename'>Title / Filename</label>
+                  <a type='button' name='help_filename' class='ms-2 blended-icon' data-bs-toggle='modal' data-bs-target='##helpModal'><i class='fas fa-circle-question'></i></a>
+                  <input type='text' class='form-control' name='doc_filename' id='doc_filename' value='#htmlEditFormat(mDocument.filename())#' maxlength='100' required />
+                </div>
+                <div class='col-12'>
+                  <label class='form-label required' for='doc_description'>Description</label>
+                  <a type='button' name='help_description' class='ms-2 blended-icon' data-bs-toggle='modal' data-bs-target='##helpModal'><i class='fas fa-circle-question'></i></a>
+                  <textarea class='form-control' maxlength='500' rows='4' name='doc_description' id='doc_description' required>#htmlEditFormat(mDocument.description())#</textarea>
+                </div>
+                <div class='col-12'>
+                  <label class='form-label required' for='tagger'>Tags</label>
+                  <a type='button' name='help_tags' class='ms-2 blended-icon' data-bs-toggle='modal' data-bs-target='##helpModal'><i class='fas fa-circle-question'></i></a>
+                  <div class='taglist border rounded'>
+                    <cfloop array='#mDocument.tags()#' item='mTag'>
+                      <span class='badge bg-nmg' data-id='#mTag.tagid()#'><input type=hidden name=tagids value='#mTag.tagid()#' /> #mTag.tag()# <i data-role=remove class='fas fa-times'></i></span>
+                    </cfloop>
+                    <input type='text' class='form-control' id='tagger' name='tagger' />
+                  </div>
+                  <small class='text-muted' id='taggerHelp'>Start typing to view existing tags or add a new tag.</small>
+                </div>
               </div>
-              <small class='form-text text-muted' id='taggerHelp'>Start typing to view existing tags or add a new tag.</small>
             </div>
-
-            <div class='col-12'>
-              <label class='form-label required' for='doc_description'>Description</label>
-              <textarea class='form-control' maxlength='500' rows='3' name='doc_description' id='doc_description'>#htmlEditFormat(mDocument.description())#</textarea>
-            </div>
-            <div class='col-3'>
-              <label class='form-label'>Size</label>
-              <h5>#mDocument.size()#</h5>
-            </div>
-            <div class='col-3'>
-              <label class='form-label'>Clicks</label>
-              <h5>#mDocument.clicks()#</h5>
-            </div>
-            <div class='col-3'>
-              <label class='form-label'>DLA</label>
-              <h5>#mDocument.dla().format('yyyy-mm-dd')#</h5>
-            </div>
-            <div class='col-3'>
-              <label class='form-label'>Added</label>
-              <h5>#mDocument.added().format('yyyy-mm-dd')#</h5>
+            <div class='col-12 col-md-3'>
+              <div class='row g-3'>
+                <div class='col-12'>
+                  <label class='form-label required' for='doc_categories'>Categories</label>
+                  <a type='button' name='help_categories' class='ms-2 blended-icon' data-bs-toggle='modal' data-bs-target='##helpModal'><i class='fas fa-circle-question'></i></a>
+                  <div class='input-group input-group-sm'>
+                    <input type='text' class='form-control' name='bca_category' id='bca_category' maxlength='50' />
+                    <button type='button' id='btnFindCategory' class='input-group-text btn-nmg' title='Find Category'><i class='fa fa-search'></i></button>
+                  </div>
+                  <select class='form-control form-control-sm mt-1' name='doc_categories' id='doc_categories' multiple='multiple' title='ctrl+click to select multiple' size='12'>
+                    <cfloop array='#mBlog.categories()#' item='mCat'>
+                      <option value='#mCat.bcaid()#' #ifin(listFind(form.doc_categories, mCat.bcaid()), 'selected')#>#mCat.category()#</option>
+                    </cfloop>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
           <div class='row m-5'>
@@ -131,9 +171,34 @@
               <a href='#router.href('#dest#/library/list')#' class='btn btn-nmg-cancel'>Cancel</a>
             </div>
           </div>
+          <div class='row'>
+            <div class='col-2'>
+              <label class='form-label'>Type</label>
+              <h5>#mDocument.type()#</h5>
+            </div>
+            <div class='col-2'>
+              <label class='form-label'>Size</label>
+              <h5>#mDocument.size()#</h5>
+            </div>
+            <div class='col-2'>
+              <label class='form-label'>Views</label>
+              <h5>#mDocument.views()#</h5>
+            </div>
+            <div class='col-2'>
+              <label class='form-label'>Downloads</label>
+              <h5>#mDocument.downloads()#</h5>
+            </div>
+            <div class='col-2'>
+              <label class='form-label'>DLA</label>
+              <h5>#mDocument.dla().format('yyyy-mm-dd')#</h5>
+            </div>
+            <div class='col-2'>
+              <label class='form-label'>Added</label>
+              <h5>#mDocument.added().format('yyyy-mm-dd')#</h5>
+            </div>
+          </div>
           <div class='row g-3'>
             <div class='col-12'>
-              <label class='form-label'>Preview</label>
               <cfif mDocument.type()=='pdf'>
                 <embed src='#mDocument.src()#' class='w-100 form-control' style='aspect-ratio: 1' autostart='0' autoplay='false' />
               <cfelse>
@@ -145,4 +210,20 @@
       </div>
     </div>
   </form>
+
+  <div class='modal fade' id='helpModal' tabindex='-1' aria-labelledby='helpModalLabel' aria-hidden='true'>
+    <div class='modal-dialog border-nmg border rounded modal-lg modal-dialog-scrollable'>
+      <div class='modal-content bg-nmg'>
+        <div class='modal-header'>
+          <h5 class='modal-title' id='helpModalLabel'>Library Document Help</h5>
+          <button type='button' class='btn btn-nmg' data-bs-dismiss='modal' aria-label='Close'><i class='fas fa-times'></i></button>
+        </div>
+        <div class='modal-body'>
+          <div class='container-fluid'>
+            #router.include('shared/help/document')#
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </cfoutput>

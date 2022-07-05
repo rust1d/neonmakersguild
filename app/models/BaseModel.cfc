@@ -203,11 +203,13 @@ component {
       pre_update();
       raise_errors();
       success = update_db();
+      raise_errors();
       post_update(success);
     } else {
       pre_insert();
       raise_errors();
       success = insert_db();
+      raise_errors();
       post_insert(success);
     }
     post_save(success);

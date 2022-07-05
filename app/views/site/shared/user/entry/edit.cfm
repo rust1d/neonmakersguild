@@ -31,7 +31,7 @@
   }
 
   param form.ben_categories = mEntry.BlogEntryCategories().map(row => row.bec_bcaid()).toList();
-  qryCats = mBlog.categories();
+  // qryCats = mBlog.categories();
   mode = mEntry.new_record() ? 'Add' : 'Edit';
 
   mImages = mBlog.images(ratio: 2, maxrows: 12).rows;

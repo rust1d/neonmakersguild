@@ -18,8 +18,7 @@ component extends=BaseModel accessors=true {
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('bec_benid'), null: !arguments.keyExists('bec_benid'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('bec_bcaid'), null: !arguments.keyExists('bec_bcaid'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
-
-    return sproc.execute().getProcResultSets().qry;
+    return paged_search(sproc, arguments);
   }
 
   public string function seo_link() {

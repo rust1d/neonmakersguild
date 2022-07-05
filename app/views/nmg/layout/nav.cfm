@@ -26,7 +26,9 @@
           <li class='nav-item ms-4 dropdown'>
             <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Members</a>
             <ul class='dropdown-menu'>
-              <li><a class='dropdown-item' href='/join'>Join</a></li>
+              <cfif !session.user.loggedIn()>
+                <li><a class='dropdown-item' href='/join'>Join</a></li>
+              </cfif>
               <li><a class='dropdown-item' href='/members'>Member List</a></li>
               <li><a class='dropdown-item' href='/forums'>Forums</a></li>
             </ul>

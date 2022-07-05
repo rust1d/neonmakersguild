@@ -49,12 +49,32 @@
                   <input type='text' class='form-control' name='password' id='password' value='' maxlength='50' />
                 </div>
                 <div class='col-md-6'>
-                  <label class='form-label' for='up_firstname'>First name</label>
-                  <input type='text' class='form-control' name='up_firstname' id='up_firstname' value='#encodeForHTML(mProfile.firstname())#' maxlength='50' />
+                  <label class='form-label required' for='up_firstname'>First name</label>
+                  <input type='text' class='form-control' name='up_firstname' id='up_firstname' value='#encodeForHTML(mProfile.firstname())#' maxlength='50' required />
                 </div>
                 <div class='col-md-6'>
-                  <label class='form-label' for='up_lastname'>Last name</label>
-                  <input type='text' class='form-control' name='up_lastname' id='up_lastname' value='#encodeForHTML(mProfile.lastname())#' maxlength='50' />
+                  <label class='form-label required' for='up_lastname'>Last name</label>
+                  <input type='text' class='form-control' name='up_lastname' id='up_lastname' value='#encodeForHTML(mProfile.lastname())#' maxlength='50' required />
+                </div>
+                <div class='col-md-6'>
+                  <label class='form-label required' for='us_email'>Email Address</label>
+                  <input type='email' class='form-control' name='us_email' id='us_email' value='#encodeForHTML(mUser.email())#' maxlength='50' required />
+                </div>
+                <div class='col-md-6'>
+                  <label class='form-label' for='up_phone'>Phone</label>
+                  <input type='tel' class='form-control' name='up_phone' id='up_phone' value='#mProfile.phone()#' maxlength='15' />
+                </div>
+                <div class='col-md-6'>
+                  <label class='form-label' for='us_permissions'>Admin Level</label>
+                  <select class='form-control' name='us_permissions' id='us_permissions'>
+                    <cfloop list='0,None|1,Admin|2,Super Admin' item='val' delimiters='|'>
+                      <option value='#val.listFirst()#' #ifin(val.listFirst() eq mUser.permissions(), 'selected')#>#val.listLast()#</option>
+                    </cfloop>
+                  </select>
+                </div>
+                <div class='col-md-6'>
+                  <label class='form-label' for='up_promo'>T-Shirt Size</label>
+                  <input type='promo' class='form-control' name='up_promo' id='up_promo' value='#encodeForHTML(mProfile.promo())#' maxlength='50' />
                 </div>
                 <div class='col-12'>
                   <label class='form-label' for='up_location'>Location</label>
@@ -65,18 +85,6 @@
                   <textarea class='tiny-mce form-control' rows='15' name='up_bio' id='up_bio'>#encodeForHTML(mProfile.bio())#</textarea>
                 </div>
               </cfif>
-              <div class='col-md-6'>
-                <label class='form-label required' for='us_email'>Email Address</label>
-                <input type='email' class='form-control' name='us_email' id='us_email' value='#encodeForHTML(mUser.email())#' maxlength='50' required />
-              </div>
-              <div class='col-md-6'>
-                <label class='form-label' for='us_permissions'>Admin Level</label>
-                <select class='form-control' name='us_permissions' id='us_permissions'>
-                  <cfloop list='0,None|1,Admin|2,Super Admin' item='val' delimiters='|'>
-                    <option value='#val.listFirst()#' #ifin(val.listFirst() eq mUser.permissions(), 'selected')#>#val.listLast()#</option>
-                  </cfloop>
-                </select>
-              </div>
             </div>
             <div class='row mt-5'>
               <div class='col text-center'>

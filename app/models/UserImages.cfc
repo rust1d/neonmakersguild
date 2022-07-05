@@ -165,7 +165,7 @@ component extends=BaseModel accessors=true {
     if (result.fileWasSaved) {
       var filename = result.serverDirectory & '\' & result.serverfile;
       if (isImageFile(filename)) {
-        if (!directoryExists(local_path())) directoryCreate(local_path());
+        if (!directoryExists(local_path())) cfdirectory(action: 'create', directory: local_path(), mode: 644);
         variables.ui_filename = utility.slug(variables.ui_rename ?: result.clientfile);
         var info = move_final(filename);
         variables.ui_height = info.height;
