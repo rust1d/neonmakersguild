@@ -14,8 +14,13 @@ component extends=BaseModel accessors=true {
   property name='mr_deleted_by'  type='numeric'  sqltype='integer';
   property name='mr_deleted'     type='date'     sqltype='timestamp';
   property name='mr_validated'   type='date'     sqltype='timestamp';
+  property name='mr_accepted'    type='date'     sqltype='timestamp';
   property name='mr_added'       type='date';
   property name='mr_dla'         type='date';
+
+  public boolean function accept_sent() {
+    return !isNull(variables.mr_accepted);
+  }
 
   public boolean function convert() {
     if (!isNull(variables.mr_usid)) return application.flash.error('Member Request already converted.');
@@ -41,7 +46,7 @@ component extends=BaseModel accessors=true {
         up_promo: mr_promo
       });
       if (mUP.safe_save()) {
-        new app.services.email.UserEmailer().SendWelcome(mUser);
+        new app.services.email.UserEmailer().SendWelcome(mUser, pwd);
         return true;
       }
     }

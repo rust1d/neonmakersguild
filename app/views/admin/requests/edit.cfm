@@ -14,6 +14,10 @@
       flash.success('Member Request deleted.')
       router.redirect('requests/list');
     }
+  } else if (form.keyExists('btnAccept')) {
+    mMR.set({ mr_accepted: now() }).safe_save();
+    new app.services.email.MemberRequestEmailer().SendAccept(mMR);
+    flash.success('Member Acceptance / Payment Request Email sent.');
   } else if (form.keyExists('btnConvert')) {
     mMR.set(form);
     if (mMR.safe_save() && mMR.convert()) {
@@ -48,13 +52,6 @@
               <div class='col-md-6'>
                 <label class='form-label required' for='mr_email'>Email Address</label>
                 <input type='email' class='form-control' name='mr_email' id='mr_email' value='#mMR.email()#' maxlength='50' required />
-                <small class='smaller text-secondary'>
-                  <cfif mMR.email_validated()>
-                    This email was validated on #mMR.validated().format('yyyy-mm-dd HH:nn:ss')#
-                  <cfelse>
-                    This email is unvalidated.
-                  </cfif>
-                </small>
               </div>
               <div class='col-md-6'>
                 <label class='form-label required' for='mr_user'>Desired Username</label>
@@ -89,13 +86,36 @@
                 <label class='form-label' for='mr_history'>Neon experience</label>
                 <textarea class='form-control' rows='6' name='mr_history' id='mr_history'>#mMR.history()#</textarea>
               </div>
+              <div class='col-md-12 mb-3'>
+                <cfif mMR.email_validated()>
+                  This email was validated on <span class='text-success'>#mMR.validated().format('yyyy-mm-dd HH:nn:ss')#</span>
+                <cfelse>
+                  This email is unvalidated.
+                </cfif>
+              </div>
+              <div class='col-md-12 mb-3'>
+                <cfif mMR.accept_sent()>
+                  The acceptance email was sent on <span class='text-success'>#mMR.accepted().format('yyyy-mm-dd HH:nn:ss')#</span>
+                <cfelse>
+                  This member has not been accepted.
+                </cfif>
+              </div>
             </div>
-
             <div class='row mt-5'>
               <div class='col text-center'>
                 <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-nmg'>Save</button>
                 <button type='submit' name='btnDelete' id='btnDelete' class='btn btn-nmg-delete'>Delete</button>
                 <a href='#router.href('requests/list')#' class='btn btn-nmg-cancel'>Cancel</a>
+              </div>
+            </div>
+
+            <div class='row mt-5 justify-content-center'>
+              <div class='col-12 text-center'>
+                <button type='submit' name='btnAccept' id='btnAccept' class='btn btn-nmg'>Send Acceptance Email</button>
+              </div>
+              <div class='col-6 mt-3 smaller text-secondary'>
+                Clicking <code>Send Acceptance Email</code> will let the member know they have been accepted and request
+                initial payment.
               </div>
             </div>
             <div class='row mt-5 justify-content-center'>

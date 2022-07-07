@@ -82,7 +82,7 @@ $(function() {
       'td' : 'width height'
     },
     skin_url: '/assets/css/admin',
-    // content_css: 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css',
+    content_css: 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css',
     image_dimensions: false,
     image_description: true,
     object_resizing: false,

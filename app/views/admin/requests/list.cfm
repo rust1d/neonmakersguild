@@ -18,7 +18,8 @@
             <th scope='col'>&nbsp;</th>
             <th scope='col'>Name</th>
             <th scope='col'>Email</th>
-            <th scope='col'>Location</th>
+            <th scope='col'>Validated</th>
+            <th scope='col'>Accepted</th>
           </tr>
         </thead>
         <tbody>
@@ -31,7 +32,8 @@
               </th>
               <td>#mMR.firstname()# #mMR.lastname()#</td>
               <td>#mMR.email()#</td>
-              <td>#mMR.location()#</td>
+              <td><i class='fa-regular #ifin(mMR.email_validated(), 'fa-circle-dot', 'fa-circle')#'></i></td>
+              <td><i class='fa-regular #ifin(mMR.accept_sent(), 'fa-circle-dot', 'fa-circle')#'></i></td>
             </tr>
           </cfloop>
         </tbody>

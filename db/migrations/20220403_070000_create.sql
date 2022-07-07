@@ -368,8 +368,11 @@ CREATE TABLE memberRequests (
   mr_deleted_by    INT(11),
   mr_deleted       DATETIME,
   mr_validated     DATETIME,
+  mr_accepted      DATETIME,
   mr_added         DATETIME DEFAULT CURRENT_TIMESTAMP,
   mr_dla           DATETIME DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (mr_mrid),
   KEY(mr_usid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- alter table memberRequests add column mr_accepted DATETIME after mr_validated;

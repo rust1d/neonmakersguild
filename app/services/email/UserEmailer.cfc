@@ -19,13 +19,14 @@ component {
     mMailer.send();
   }
 
-  public void function SendWelcome(required Users mUser) {
+  public void function SendWelcome(required Users mUser, required string pwd) {
     var send_to = application.isDevelopment ? application.email.admin : mUser.email();
     var mMailer = new app.services.email.Emailer(
       to: send_to,
       testmode: true,
-      subject: 'Welcome to NeonMakersGuild.org!',
+      subject: 'Welcome to the Neon Makers Guild!',
       template: 'user_welcome.cfm',
+      temp_pwd: pwd,
       mUser: mUser
     );
 

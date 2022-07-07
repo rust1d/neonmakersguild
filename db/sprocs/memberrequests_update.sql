@@ -17,7 +17,8 @@ CREATE PROCEDURE memberrequests_update(
   IN _usid         int(11),
   IN _deleted_by   int(11),
   IN _deleted      datetime,
-  IN _validated    datetime
+  IN _validated    datetime,
+  IN _accepted     datetime
 )
 BEGIN
   UPDATE memberrequests
@@ -35,6 +36,7 @@ BEGIN
          mr_deleted_by = IFNULL(_deleted_by, mr_deleted_by),
          mr_deleted    = IFNULL(_deleted,    mr_deleted),
          mr_validated  = IFNULL(_validated,  mr_validated),
+         mr_accepted   = IFNULL(_accepted,   mr_accepted),
          mr_dla        = CURRENT_TIMESTAMP
    WHERE mr_mrid = _mrid;
 
