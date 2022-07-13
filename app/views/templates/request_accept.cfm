@@ -6,7 +6,7 @@
     membership. Please use the Paypal link below to make your payment.
   </p>
   <p>
-    Paypal link: <a href='https://paypal.me/neonmakersguild/50'>https://paypal.me/neonmakersguild/50</a>
+    Paypal link: <a href='https://paypal.me/eveningneon/50'>https://paypal.me/eveningneon/50</a>
   </p>
   <p>Once your payment is processed you will get an email with your login information.</p>
 </cfoutput>

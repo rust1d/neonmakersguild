@@ -73,7 +73,7 @@ component extends=BaseModel accessors=true {
   }
 
   public string function seo_link() {
-    return lcase('/member/#us_user#');
+    return lcase('/member/#utility.slug(us_user)#');
   }
 
   public array function social_links() {

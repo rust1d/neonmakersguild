@@ -1,4 +1,5 @@
 <cfscript>
+  if (form.keyExists('mr_user')) form.mr_user = form.mr_user.rereplace('[^0-9A-Za-z_-]','','all');
   mMR = new app.models.MemberRequests(form);
 
   if (form.keyExists('G-RECAPTCHA-RESPONSE')) {
@@ -10,7 +11,7 @@
       response = deserializeJSON(result.fileContent);
       if (response.success) {
         subject = 'Membership Form';
-        if (response.score lt 0.5) {
+        if (response.score lt 0.3) {
           subject = 'SPAM LIKELY: ' & subject;
           form['G-RECAPTCHA-RESPONSE'] = 'Spam likely: ' & response.score;
           flash.warning('Thanks Robot! Beep boop to you too.');
@@ -64,10 +65,11 @@
           </div>
           <div class='col-md-6'>
             <label class='form-label required' for='mr_user'>Desired Username</label>
-            <input type='text' class='form-control' id='mr_user' name='mr_user' value='#mMR.user()#' maxlength='50' required />
+            <input type='text' class='form-control' id='mr_user' name='mr_user' value='#mMR.user()#' minlength='4' maxlength='20' required pattern='^[a-zA-Z]+[0-9A-Za-z_-]+$' title='Must start with a letter and can contain numbers, periods, underscores or dashes.' />
+            <small class='smaller text-secondary'>Must start with a letter and can contain numbers, periods, underscores or dashes.</small>
           </div>
           <div class='col-md-12'>
-            <label class='form-label required' for='mr_location'>Location / Mailing Address</label>
+            <label class='form-label required' for='mr_location'>Location (City/Region)</label>
             <input type='text' class='form-control' id='mr_location' name='mr_location' value='#mMR.location()#' maxlength='100' required />
           </div>
           <div class='col-md-6'>

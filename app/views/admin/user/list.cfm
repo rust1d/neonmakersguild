@@ -1,6 +1,6 @@
 <cfscript>
   mdl = new app.models.Users();
-  mUsers = mdl.where(utility.paged_term_params());
+  mUsers = mdl.where(utility.paged_term_params(maxrows: 29));
   pagination = mdl.pagination();
 
   view = session.user.view();
@@ -66,6 +66,11 @@
           </cfloop>
         </div>
       </cfif>
+    </div>
+    <div class='card-footer bg-nmg'>
+      <div class='row align-items-center'>
+        #router.include('shared/partials/filter_and_page', { pagination: pagination, footer: true })#
+      </div>
     </div>
   </div>
 </cfoutput>

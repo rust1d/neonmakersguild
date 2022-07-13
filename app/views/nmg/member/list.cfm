@@ -50,6 +50,11 @@
             </div>
           </cfif>
         </div>
+        <div class='card-footer bg-nmg'>
+          <div class='row align-items-center'>
+            #router.include('shared/partials/filter_and_page', { pagination: pagination, footer: true })#
+          </div>
+        </div>
       </div>
     </div>
   </div>

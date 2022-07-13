@@ -26,7 +26,7 @@ component extends=BaseModel accessors=true {
 
     cfheader(name: 'content-disposition', value: 'attachment; filename=#download_filename()#');
     cfheader(name: 'Expires', value: Now());
-    cfheader(name: 'Content-Length', value: doc_size());
+    cfheader(name: 'Content-Length', value: doc_size);
     cfcontent(file: local_path() & document_name());
   }
 
