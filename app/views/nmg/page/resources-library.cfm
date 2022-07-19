@@ -56,44 +56,53 @@
     </div>
     <div class='card-body'>
       <div class='row'>
-        <cfloop array='#locals.results.rows#' item='locals.mDocument'>
-          <cfscript>
-            locals.tag_links = locals.mDocument.tags().map(tag => '');
-          </cfscript>
-          <div class='col-12 mb-2'>
-            <div class='card'>
-              <div class='card-header'>
-                <a class='fs-6' href='#router.hrefenc(page: 'blog/document', docid: locals.mDocument.docid())#' data-link='#locals.mDocument.datadash()#' target='_blank'>#locals.mDocument.filename()#</a>
-                <span class='float-end badge bg-secondary'>#locals.mDocument.type()#</span>
-              </div>
-              <cfif len(locals.mDocument.description())>
-                <div class='card-body small'>
-                  #locals.mDocument.description()#
+        <cfif session.user.loggedIn()>
+          <cfloop array='#locals.results.rows#' item='locals.mDocument'>
+            <cfscript>
+              locals.tag_links = locals.mDocument.tags().map(tag => '');
+            </cfscript>
+            <div class='col-12 mb-2'>
+              <div class='card'>
+                <div class='card-header'>
+                  <a class='fs-6' href='#router.hrefenc(page: 'blog/document', docid: locals.mDocument.docid())#' data-link='#locals.mDocument.datadash()#' target='_blank'>#locals.mDocument.filename()#</a>
+                  <span class='float-end badge bg-secondary'>#locals.mDocument.type()#</span>
                 </div>
-              </cfif>
-              <div class='card-footer smaller'>
-                <cfif locals.mDocument.blogCategories().len()>
-                  <span>
-                    Categories:
-                    <cfloop array='#locals.mDocument.BlogCategories()#' item='locals.mCat' index='idx'>
-                      <a class='show_category' data-tag='#locals.mCat.bcaid()#'>#locals.mCat.category()#</a><cfif idx!=locals.mDocument.BlogCategories().len()>,&nbsp;</cfif>
-                    </cfloop>
-                  </span>
-                  <cfif locals.mDocument.tags().len()> &bull;</cfif>
+                <cfif len(locals.mDocument.description())>
+                  <div class='card-body small'>
+                    #locals.mDocument.description()#
+                  </div>
                 </cfif>
-                <cfif locals.mDocument.tags().len()>
-                  <span>
-                    Tags:
-                    <cfloop array='#locals.mDocument.tags()#' item='locals.mTag' index='idx'>
-                      <a class='show_tag' data-tag='#locals.mTag.tag()#'>#locals.mTag.tag()#</a><cfif idx!=locals.mDocument.tags().len()>,&nbsp;</cfif>
-                    </cfloop>
-                  </span>
-                </cfif>
-                <span class='float-end'>Size: #locals.mDocument.size_mb()#</span>
+                <div class='card-footer smaller'>
+                  <cfif locals.mDocument.blogCategories().len()>
+                    <span>
+                      Categories:
+                      <cfloop array='#locals.mDocument.BlogCategories()#' item='locals.mCat' index='idx'>
+                        <a class='show_category' data-tag='#locals.mCat.bcaid()#'>#locals.mCat.category()#</a><cfif idx!=locals.mDocument.BlogCategories().len()>,&nbsp;</cfif>
+                      </cfloop>
+                    </span>
+                    <cfif locals.mDocument.tags().len()> &bull;</cfif>
+                  </cfif>
+                  <cfif locals.mDocument.tags().len()>
+                    <span>
+                      Tags:
+                      <cfloop array='#locals.mDocument.tags()#' item='locals.mTag' index='idx'>
+                        <a class='show_tag' data-tag='#locals.mTag.tag()#'>#locals.mTag.tag()#</a><cfif idx!=locals.mDocument.tags().len()>,&nbsp;</cfif>
+                      </cfloop>
+                    </span>
+                  </cfif>
+                  <span class='float-end'>Size: #locals.mDocument.size_mb()#</span>
+                </div>
               </div>
             </div>
+          </cfloop>
+        <cfelse>
+          <div class='col-12'>
+            There are currently #locals.results.pagination.total# documents in the library.
+            <a href='/login' class='btn btn-sm btn-nmg' title='Login'>
+              <i class='fas fa-person-dots-from-line'></i> Login to see them.
+            </a>
           </div>
-        </cfloop>
+        </cfif>
       </div>
     </div>
     <div class='card-footer bg-nmg'>

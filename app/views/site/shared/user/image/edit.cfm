@@ -1,5 +1,5 @@
 <cfscript>
-  dest = (mBlog.id()==1 && session.site.isA('admin')) ? 'blog' : 'user';
+  dest = (mBlog.id()==1 && session.site.admin()) ? 'blog' : 'user';
   uiid = router.decode('uiid');
   mImage = mBlog.image_find_or_create(uiid);
 

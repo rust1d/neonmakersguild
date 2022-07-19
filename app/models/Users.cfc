@@ -36,7 +36,7 @@ component extends=BaseModel accessors=true {
     sproc.addParam(cfsqltype: 'integer', value: us_usid);
     sproc.addProcResult(name: 'qry', resultset: 1);
     var data = sproc.execute().getProcResultSets().qry.getRow(1);
-    data.activity_cnt = data.post_cnt + data.comment_cnt + data.thread_cnt + data.message_cnt;
+    data.activity_cnt = data.recent_post_cnt + data.recent_comment_cnt + data.recent_thread_cnt + data.recent_message_cnt;
     return data;
   }
 

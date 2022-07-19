@@ -8,6 +8,10 @@ component accessors=true {
     return this;
   }
 
+  public boolean function admin() {
+    return isA('admin');
+  }
+
   public boolean function isA(required string data) {
     return get_site() == data;
   }

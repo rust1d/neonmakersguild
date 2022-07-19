@@ -4,7 +4,7 @@
   // router.include('shared/user/library/list', { mBlog: mBlog });
 
   locals.view = session.user.view();
-  locals.dest = (locals.mBlog.id()==1 && session.site.isA('admin')) ? 'blog' : 'user';
+  locals.dest = (locals.mBlog.id()==1 && session.site.admin()) ? 'blog' : 'user';
   locals.results = locals.mBlog.documents(utility.paged_term_params());
 </cfscript>
 

@@ -30,11 +30,11 @@
     <div class='col-12 col-md-10 col-lg-8'>
       <form method='post'>
         <div class='card'>
-          <h5 class='card-header bg-nmg'>Change Password</h5>
+          <h5 class='card-header bg-nmg'>Account Security</h5>
           <div class='card-body'>
             <div class='row g-3'>
               <div class='col-12'>
-                <label class='form-label' for='password'>New Password</label>
+                <label class='form-label' for='password'>Change Password</label>
                 <input type='password' class='form-control' name='password' id='password' placeholder='password' required />
               </div>
               <div class='col-12'>
@@ -54,7 +54,7 @@
         To help protect the security of your account, passwords must be at least 7 characters in length,
         must contain at least one number, one capital letter, one lower case letter, and be created under
         a harvest moon. Special characters such as &ldquo;!,@,$,%,?,*,-,_&rdquo; can also be used to increase
-        your password strength and curry favor with the gods.
+        your password strength and curry favor with the gods. Mmm curry...
       </div>
     </div>
 

@@ -6,14 +6,14 @@
       <div class='col-auto'>
         <div class='position-relative'>
           <img class='img-thumbnail' id='profile_image' src='#mUser.profile_image().src()#' />
-          <button type='button' data-bs-target='##profile_modal' data-bs-toggle='modal' class='profile-upload-btn btn btn-sm btn-nmg btn-floating fal fa-camera'></button>
+          <button type='button' data-bs-target='##profile_modal' data-bs-toggle='modal' class='profile-upload-btn btn btn-sm btn-nmg btn-floating btn-pic fal fa-camera'></button>
         </div>
       </div>
     </div>
   <cfelse>
     <div class='row mb-3'>
       <div class='col-12'>
-        <button type='button' data-bs-target='##profile_modal' data-bs-toggle='modal' class='position-relative profile-upload-btn btn btn-sm btn-nmg btn-floating fal fa-camera'></button>
+        <button type='button' data-bs-target='##profile_modal' data-bs-toggle='modal' class='position-relative profile-upload-btn btn btn-sm btn-nmg btn-floating btn-pic fal fa-camera'></button>
         <small class='text-muted'>Add a profile photo</small>
       </div>
     </div>

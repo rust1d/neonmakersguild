@@ -103,13 +103,13 @@ a:hover {
 }
 
 .thread-thumbnail {
-  width: 96px;
-  height: 96px;
+  width: 128px;
+  height: 128px;
   border-color: #0c4040;
 }
 
 .thread-user {
-  min-width: 128px;
+  min-width: 156px;
   /* min-height: 196px; */
 }
 

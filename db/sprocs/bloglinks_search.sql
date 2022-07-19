@@ -12,6 +12,7 @@ CREATE PROCEDURE bloglinks_search(
 BEGIN
   DECLARE _limit INT(11) DEFAULT get_page_data(_paging, 'limit');
   DECLARE _offset INT(11) DEFAULT get_page_data(_paging, 'offset');
+  SET _term = clean_regexp(_term);
 
   SELECT SQL_CALC_FOUND_ROWS *
     FROM bloglinks
@@ -19,9 +20,9 @@ BEGIN
      AND (_blog IS NULL OR bli_blog = _blog)
      AND (_type IS NULL OR bli_type = CONVERT(_type USING utf8))
      AND (_term IS NULL OR
-           bli_url REGEXP CONVERT(_term USING utf8) OR
-           bli_title REGEXP CONVERT(_term USING utf8) OR
-           bli_description REGEXP CONVERT(_term USING utf8)
+           bli_url REGEXP _term OR
+           bli_title REGEXP _term OR
+           bli_description REGEXP _term
          )
      ORDER BY bli_type, bli_title, bli_bliid
      LIMIT _limit OFFSET _offset;

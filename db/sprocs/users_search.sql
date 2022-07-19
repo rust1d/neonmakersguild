@@ -13,6 +13,7 @@ CREATE PROCEDURE users_search(
 BEGIN
   DECLARE _limit INT(11) DEFAULT get_page_data(_paging, 'limit');
   DECLARE _offset INT(11) DEFAULT get_page_data(_paging, 'offset');
+  SET _term = clean_regexp(_term);
 
   SELECT SQL_CALC_FOUND_ROWS *
     FROM users
@@ -23,11 +24,11 @@ BEGIN
      AND (_deleted IS NULL OR us_deleted = _deleted)
      AND (_deleted IS NULL OR (_deleted = 0 AND us_deleted IS NULL) OR (_deleted!=0 AND us_deleted IS NOT NULL))
      AND (_term IS NULL OR
-           us_user = CONVERT(_term USING utf8) OR
-           up_firstname REGEXP CONVERT(_term USING utf8) OR
-           up_lastname REGEXP CONVERT(_term USING utf8) OR
-           up_location REGEXP CONVERT(_term USING utf8) OR
-           up_bio REGEXP CONVERT(_term USING utf8)
+           us_user = _term OR
+           up_firstname REGEXP _term OR
+           up_lastname REGEXP _term OR
+           up_location REGEXP _term OR
+           up_bio REGEXP _term
          )
    ORDER BY us_usid
      LIMIT _limit OFFSET _offset;

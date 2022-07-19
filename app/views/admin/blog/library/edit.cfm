@@ -1,7 +1,7 @@
 <cfscript>
   mBlog = new app.services.user.Blog(1);
 
-  dest = (mBlog.id()==1 && session.site.isA('admin')) ? 'blog' : 'user';
+  dest = (mBlog.id()==1 && session.site.admin()) ? 'blog' : 'user';
   docid = router.decode('docid');
   mDocument = mBlog.document_find_or_create(docid);
 

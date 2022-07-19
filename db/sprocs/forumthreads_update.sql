@@ -26,7 +26,7 @@ BEGIN
          ft_locked      = IFNULL(_locked,      ft_locked),
          ft_messages    = IFNULL(_messages,    ft_messages),
          ft_views       = IFNULL(_views,       ft_views),
-         ft_last_fmid   = IFNULL(_last_fmid,   ft_last_fmid),
+         ft_last_fmid   = _last_fmid, -- ALLOW NULL
          ft_deleted_by  = IFNULL(_deleted_by,  ft_deleted_by),
          ft_deleted     = IFNULL(_deleted,     ft_deleted),
          ft_dla         = CURRENT_TIMESTAMP

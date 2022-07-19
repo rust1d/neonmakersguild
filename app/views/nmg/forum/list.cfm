@@ -17,7 +17,7 @@
         <div class='card #ifin(mForum.admin(),'card-admin')#'>
           <div class='card-header fs-5'>
             <a href='#mForum.seo_link()#'>#mForum.name()#</a>
-            <cfif mForum.admin()><span class='float-end badge btn-nmg'>Admins Only</span></cfif>
+            <cfif mForum.admin()><span class='float-end badge btn-nmg p-2'>Admins Only</span></cfif>
           </div>
           <div class='card-body'>
             <a href='#mForum.seo_link()#'>#mForum.description()#</a>
@@ -31,7 +31,7 @@
                 Messages<br>#mForum.messages()#
               </div>
               <div class='col-8 text-end'>
-                <cfif !isNull(mForum.last_fmid() && !mForum.last_message().deleted())>
+                <cfif !isNull(mForum.last_fmid()) && !mForum.last_message().deleted()>
                   <div class='row'>
                     <div class='col text-end'>
                       <div class='small'>

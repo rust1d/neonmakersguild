@@ -12,6 +12,7 @@ CREATE PROCEDURE userimages_search(
 BEGIN
   DECLARE _limit INT(11) DEFAULT get_page_data(_paging, 'limit');
   DECLARE _offset INT(11) DEFAULT get_page_data(_paging, 'offset');
+  SET _term = clean_regexp(_term);
 
   SELECT SQL_CALC_FOUND_ROWS *
     FROM userimages
@@ -19,9 +20,9 @@ BEGIN
      AND (_usid IS NULL OR ui_usid = _usid)
      AND (_ratio IS NULL OR round(ui_width/ui_height,2) = _ratio)
      AND (_term IS NULL OR
-           ui_filename REGEXP CONVERT(_term USING utf8) OR
-           (LEFT(_term,1)='x' AND CONCAT('x', ui_height)=CONVERT(_term USING utf8)) OR
-           (RIGHT(_term,1)='x' AND CONCAT(ui_width, 'x')=CONVERT(_term USING utf8)) OR
+           ui_filename REGEXP _term OR
+           (LEFT(_term,1)='x' AND CONCAT('x', ui_height)=_term) OR
+           (RIGHT(_term,1)='x' AND CONCAT(ui_width, 'x')=_term) OR
            round(ui_width/ui_height,2) = CONVERT(_term, DECIMAL)
          )
      ORDER BY ui_dla desc, ui_uiid desc

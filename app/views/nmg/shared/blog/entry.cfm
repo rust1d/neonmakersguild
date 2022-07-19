@@ -1,6 +1,14 @@
+<cfscript>
+  param locals.promote = false;
+</cfscript>
+
 <cfoutput>
   <div class='card border'>
-    <div class='aspect-2-1' style='background-image: url(#locals.mEntry.image()#)'></div>
+    <div class='aspect-2-1 position-relative' style='background-image: url(#locals.mEntry.image()#)'>
+      <cfif locals.promote && locals.mEntry.promotable()>
+        <button name='btnPromote' data-pkid='#locals.mEntry.encoded_key()#' class='btn btn-sm btn-nmg m-1 btn-floating bottom-0 end-0'>#ifin(isNull(locals.mEntry.ben_promoted()), 'Promote to Front Page', 'Promoted')#</button>
+      </cfif>
+    </div>
     <div class='card-body'>
       <div class='row'>
         <div class='col-12 px-4'>
@@ -13,7 +21,8 @@
             </div>
             <div class='col-12 text-center'>
               <a href='#locals.mEntry.User().seo_link()#'>#locals.mEntry.User().user()#</a>
-              &bull; <small>#locals.mEntry.post_date()#</small>
+              <cfif isNull(locals.mEntry.ben_promoted())>&bull; <cfelse><i class='smaller fa-solid fa-star text-warning' title='Front Page #locals.mEntry.promoted()#'></i></cfif>
+              <small>#locals.mEntry.post_date()#</small>
             </div>
             <div class='col-12'>
               <cfif locals.fold>

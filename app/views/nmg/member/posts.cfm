@@ -5,7 +5,7 @@
     return 'col-6'
   }
 
-  results = { rows: new app.models.BlogEntries().where(ben_usid: mUser.usid(), ben_released: true, maxrows: 5) };
+  results = { rows: new app.models.BlogEntries().where(ben_blog: mUser.usid(), ben_released: true, maxrows: 5) };
   results.pagination = request.pagination.last;
 </cfscript>
 

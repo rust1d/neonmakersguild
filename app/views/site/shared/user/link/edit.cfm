@@ -1,5 +1,5 @@
 <cfscript>
-  dest = (mBlog.id()==1 && session.site.isA('admin')) ? 'blog' : 'user';
+  dest = (mBlog.id()==1 && session.site.admin()) ? 'blog' : 'user';
   bliid = router.decode('bliid');
   mLink = mBlog.link_find_or_create(bliid);
 

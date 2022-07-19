@@ -31,12 +31,22 @@
   }
 </cfscript>
 
+<cfif session.user.admin()>
+  <script>
+    $(function() {
+      $('button[name=btnPromote]').on('click', function() {
+        window.location.href = `/index.cfm?p=blog/entry/promote&pkid=${this.dataset.pkid}`;
+      });
+    });
+  </script>
+</cfif>
+
 <script src='/assets/js/blog/comments.js'></script>
 
 <cfoutput>
   <div class='row g-3'>
     <div class='col-12'>
-      #router.include('shared/blog/entry', { mEntry: mEntry, fold: false })#
+      #router.include('shared/blog/entry', { mEntry: mEntry, fold: false, promote: session.user.admin() })#
     </div>
     <div class='col-12'>
       <cfif mEntry.comments()>

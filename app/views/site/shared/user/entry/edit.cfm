@@ -1,5 +1,5 @@
 <cfscript>
-  dest = (mBlog.id()==1 && session.site.isA('admin')) ? 'blog' : 'user';
+  dest = (mBlog.id()==1 && session.site.admin()) ? 'blog' : 'user';
 
   if (form.keyExists('btnSubmit')) {
     param form.ben_categories = '';

@@ -194,7 +194,7 @@ component {
   }
 
   public struct function paged_term_params(struct params) {
-    if (arguments.keyExists('params')) arguments = arguments.params;
+    if (arguments.keyExists('params')) arguments = arguments.append(params);
 
     var term = url.get('term') ?: form.get('term') ?: '';
     var page = url.get('page') ?: 1;

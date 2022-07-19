@@ -30,7 +30,7 @@ BEGIN
          ben_comments = IFNULL(_comments,  ben_comments),
          ben_views    = IFNULL(_views,     ben_views),
          ben_released = IFNULL(_released,  ben_released),
-         ben_promoted = IFNULL(_promoted,  ben_promoted),
+         ben_promoted = _promoted, -- ALLOW NULL
          ben_dla      = CURRENT_TIMESTAMP
    WHERE ben_benid = _benid;
 

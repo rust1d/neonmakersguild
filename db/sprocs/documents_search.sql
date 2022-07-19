@@ -13,15 +13,16 @@ CREATE PROCEDURE documents_search(
 BEGIN
   DECLARE _limit INT(11) DEFAULT get_page_data(_paging, 'limit');
   DECLARE _offset INT(11) DEFAULT get_page_data(_paging, 'offset');
+  SET _term = clean_regexp(_term);
 
   SELECT SQL_CALC_FOUND_ROWS *
     FROM documents
    WHERE (_docid IS NULL OR doc_docid = _docid)
      AND (_blog IS NULL OR doc_blog = _blog)
      AND (_term IS NULL OR
-           doc_type REGEXP CONVERT(_term USING utf8) OR
-           doc_filename REGEXP CONVERT(_term USING utf8) OR
-           doc_description REGEXP CONVERT(_term USING utf8)
+           doc_type REGEXP _term OR
+           doc_filename REGEXP _term OR
+           doc_description REGEXP _term
          )
      AND (_bcaid IS NULL OR
            doc_docid IN (
@@ -34,7 +35,7 @@ BEGIN
            doc_docid IN (
              SELECT dt_docid
                FROM tags
-                    INNER JOIN documentTags ON tag_tagid=dt_tagid AND tag_tag REGEXP CONVERT(_tag USING latin1)
+                    INNER JOIN documentTags ON tag_tagid=dt_tagid AND tag_tag REGEXP clean_regexp(_tag)
               WHERE dt_docid=doc_docid
            )
          )

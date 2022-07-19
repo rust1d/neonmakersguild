@@ -10,49 +10,46 @@
       <div class='collapse navbar-collapse' id='navbarNavDropdown'>
         <ul class='navbar-nav'>
           <li class='nav-item'><a class='nav-link' aria-current='page' href='#router.href()#'>#session.site.title()#</a></li>
-          <!--- <li class='nav-item ms-4'><a class='nav-link' href='/blog'>Blog</a></li> --->
-          <li class='nav-item ms-4'><a class='nav-link' href='/about'>About</a></li>
-          <li class='nav-item ms-4 dropdown'>
-            <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Resources</a>
-            <ul class='dropdown-menu'>
-              <cfif session.user.loggedIn()>
-                <li><a class='dropdown-item' href='/resources/library'>Library</a></li>
-              </cfif>
-              <li><a class='dropdown-item' href='/resources/suppliers'>Suppliers</a></li>
-              <li><a class='dropdown-item' href='/resources/classes'>Classes</a></li>
-              <li><a class='dropdown-item' href='/resources/other'>Other</a></li>
-            </ul>
-          </li>
           <li class='nav-item ms-4 dropdown'>
             <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Members</a>
             <ul class='dropdown-menu'>
               <cfif !session.user.loggedIn()>
                 <li><a class='dropdown-item' href='/join'>Join</a></li>
+              <cfelse>
+                <li><a class='dropdown-item' href='#session.user.seo_link()#'>My Member Page</a></li>
               </cfif>
+              <li><a class='dropdown-item' href='/stream'>Member Stream</a></li>
               <li><a class='dropdown-item' href='/members'>Member List</a></li>
-              <li><a class='dropdown-item' href='/forums'>Forums</a></li>
             </ul>
           </li>
-          <cfif session.user.loggedIn()>
-            <li class='nav-item ms-4 dropdown'>
-              <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Profile</a>
-              <ul class='dropdown-menu'>
-                <li><a class='dropdown-item' href='#session.user.seo_link()#'>Member Page</a></li>
-                <li><a class='dropdown-item' href='#router.href('user/entry/list')#'>Posts</a></li>
-                <li><a class='dropdown-item' href='#router.href('user/image/list')#'>Images</a></li>
-                <li><a class='dropdown-item' href='#router.href('user/link/list')#'>Links</a></li>
-                <li><a class='dropdown-item' href='#router.href('user/edit')#'>Edit Profile</a></li>
-                <li><a class='dropdown-item' href='#router.href('user/settings')#'>Account</a></li>
-              </ul>
-            </li>
-          </cfif>
+          <li class='nav-item ms-4 dropdown'>
+            <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Resources</a>
+            <ul class='dropdown-menu'>
+              <li><a class='dropdown-item' href='/resources/library'>Library</a></li>
+              <li><a class='dropdown-item' href='/resources/suppliers'>Suppliers</a></li>
+              <li><a class='dropdown-item' href='/resources/classes'>Classes</a></li>
+              <li><a class='dropdown-item' href='/resources/other'>Other</a></li>
+            </ul>
+          </li>
+          <li class='nav-item ms-4'><a class='nav-link' href='/forums'>Forums</a></li>
+          <li class='nav-item ms-4'><a class='nav-link' href='/about'>About</a></li>
         </ul>
         <ul class='navbar-nav ms-auto'>
           <cfif session.user.loggedIn()>
             <cfif session.user.get_admin()>
               <li class='nav-item'><a class='nav-link' href='#router.href(page: '', ref: 'admin')#'>Admin</a></li>
             </cfif>
-            <li class='nav-item'><a class='nav-link' href='/login?logout'>Sign Out</a></li>
+            <li class='nav-item ms-4 dropdown'>
+              <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Profile</a>
+              <ul class='dropdown-menu'>
+                <li><a class='dropdown-item' href='#router.href('user/entry/list')#'>Posts</a></li>
+                <li><a class='dropdown-item' href='#router.href('user/image/list')#'>Images</a></li>
+                <li><a class='dropdown-item' href='#router.href('user/link/list')#'>Links</a></li>
+                <li><a class='dropdown-item' href='#router.href('user/edit')#'>User Profile</a></li>
+                <li><a class='dropdown-item' href='#router.href('user/security')#'>Account Security</a></li>
+                <li><a class='dropdown-item' href='/login?logout'>Sign Out</a></li>
+              </ul>
+            </li>
           <cfelse>
             <li class='nav-item'><a class='nav-link' href='/join'>Join</a></li>
             <li class='nav-item'><a class='nav-link' href='/login'>Sign In</a></li>

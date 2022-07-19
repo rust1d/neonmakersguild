@@ -10,6 +10,10 @@ component accessors=true {
     return this;
   }
 
+  public boolean function admin() {
+    return loggedIn() && _admin==true;
+  }
+
   public void function destroy(required string key) {
     variables.delete(key);
   }
@@ -39,6 +43,7 @@ component accessors=true {
   }
 
   public boolean function isA(required string typeof) {
+    if (typeof=='admin') return admin();
     return loggedIn() && arguments.typeof == get_class();
   }
 

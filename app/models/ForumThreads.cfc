@@ -53,6 +53,7 @@ component extends=BaseModel accessors=true {
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('ft_ftid'), null: !arguments.keyExists('ft_ftid'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('ft_foid'), null: !arguments.keyExists('ft_foid'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('ft_usid'), null: !arguments.keyExists('ft_usid'));
+    sproc.addParam(cfsqltype: 'integer', value: arguments.get('deleted'), null: !arguments.keyExists('deleted'));
     sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),    null: !arguments.keyExists('term'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 

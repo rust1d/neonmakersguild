@@ -1,5 +1,5 @@
 <cfscript>
-  locals.dest = (locals.mBlog.id()==1 && session.site.isA('admin')) ? 'blog' : 'user';
+  locals.dest = (locals.mBlog.id()==1 && session.site.admin()) ? 'blog' : 'user';
   locals.results = locals.mBlog.links(utility.paged_term_params());
 </cfscript>
 

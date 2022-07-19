@@ -38,7 +38,7 @@ component {
     var data = detoken(token);
     if (data.success) {
       application.flash.success('Login successful. You should probably change your password.');
-      session.return_to = 'index.cfm?p=user/settings';
+      session.return_to = 'index.cfm?p=user/security';
       new app.services.Login().login(user: data.user, password: '', pkid: data.pkid);
     }
 

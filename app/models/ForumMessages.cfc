@@ -56,6 +56,7 @@ component extends=jsoup accessors=true {
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('fm_foid'), null: !arguments.keyExists('fm_foid'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('fm_ftid'), null: !arguments.keyExists('fm_ftid'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('fm_usid'), null: !arguments.keyExists('fm_usid'));
+    sproc.addParam(cfsqltype: 'integer', value: arguments.get('deleted'), null: !arguments.keyExists('deleted'));
     sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),    null: !arguments.keyExists('term'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 
@@ -68,6 +69,8 @@ component extends=jsoup accessors=true {
 
   public string function seo_link() {
     if (new_record()) return 'forum/404';
+    if (isNull(this.ForumThread())) return 'forum/404';
+    // writedump(this.ForumThread().alias());
     param variables.ft_alias = this.ForumThread().alias();
     param variables.fo_alias = this.ForumThread().fo_alias();
 

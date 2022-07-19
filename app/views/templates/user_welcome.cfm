@@ -1,9 +1,9 @@
 <cfoutput>
-  <h3>Welcome to the Neon Makers Guild!</h3>
-  <p>Hello #mUser.UserProfile().firstname()#!</p>
+  <h3>Welcome to the Neon Makers Guild #mUser.UserProfile().firstname()#!</h3>
   <p>
     Your new account has been set up with a temporary password. Please login to your
-    NeonMakersGuild.org account and change your password as soon as you have a chance.
+    NeonMakersGuild.org account and change your password to secure your account as
+    soon as you have a chance.
   </p>
   <hr>
   <p>Login: <a href='#application.urls.root#/login'>#application.urls.root#/login</a></p>

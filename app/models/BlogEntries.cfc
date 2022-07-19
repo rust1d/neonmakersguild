@@ -22,25 +22,6 @@ component extends=jSoup accessors=true {
   belongs_to(name: 'User',               class: 'Users',                  key: 'ben_usid',   relation: 'us_usid');
   belongs_to(name: 'UserBlog',           class: 'Users',                  key: 'ben_blog',   relation: 'us_usid');
 
-  public query function search(struct params) {
-    if (arguments.keyExists('params')) arguments = arguments.params;
-    if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
-    var sproc = new StoredProc(procedure: 'blogentries_search', datasource: datasource());
-    sproc.addParam(cfsqltype: 'integer',   value: arguments.get('ben_benid'),    null: !arguments.keyExists('ben_benid'));
-    sproc.addParam(cfsqltype: 'integer',   value: arguments.get('ben_blog'),     null: !arguments.keyExists('ben_blog'));
-    sproc.addParam(cfsqltype: 'integer',   value: arguments.get('ben_usid'),     null: !arguments.keyExists('ben_usid'));
-    sproc.addParam(cfsqltype: 'varchar',   value: arguments.get('ben_title'),    null: !arguments.keyExists('ben_title'));
-    sproc.addParam(cfsqltype: 'timestamp', value: arguments.get('ben_posted'),   null: !arguments.keyExists('ben_posted'));
-    sproc.addParam(cfsqltype: 'varchar',   value: arguments.get('ben_alias'),    null: !arguments.keyExists('ben_alias'));
-    sproc.addParam(cfsqltype: 'tinyint',   value: arguments.get('ben_released'), null: !arguments.keyExists('ben_released'));
-    sproc.addParam(cfsqltype: 'tinyint',   value: arguments.get('ben_promoted'), null: !arguments.keyExists('ben_promoted'));
-    sproc.addParam(cfsqltype: 'integer',   value: arguments.get('bca_bcaid'),    null: !arguments.keyExists('bca_bcaid'));
-    sproc.addParam(cfsqltype: 'varchar',   value: arguments.get('term'),         null: !arguments.keyExists('term'));
-    sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
-
-    return paged_search(sproc, arguments);
-  }
-
   public array function category_links() {
     var links = [];
     for (var mCat in this.BlogEntryCategories()) {
@@ -65,6 +46,43 @@ component extends=jSoup accessors=true {
   public string function posted_time() {
     param variables.ben_posted = now();
     return ben_posted.format('HH:nn');
+  }
+
+  public string function promoted() {
+    return isNull(variables.ben_promoted) ? '' : ben_promoted.format('yyyy-mm-dd HH:nn');
+  }
+
+  public boolean function promotable() {
+    return persisted() && ben_blog!=1;
+  }
+
+  public query function search(struct params) {
+    if (arguments.keyExists('params')) arguments = arguments.params;
+    if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
+    var sproc = new StoredProc(procedure: 'blogentries_search', datasource: datasource());
+    sproc.addParam(cfsqltype: 'integer',   value: arguments.get('ben_benid'),    null: !arguments.keyExists('ben_benid'));
+    sproc.addParam(cfsqltype: 'integer',   value: arguments.get('ben_blog'),     null: !arguments.keyExists('ben_blog'));
+    sproc.addParam(cfsqltype: 'integer',   value: arguments.get('ben_usid'),     null: !arguments.keyExists('ben_usid'));
+    sproc.addParam(cfsqltype: 'varchar',   value: arguments.get('ben_title'),    null: !arguments.keyExists('ben_title'));
+    sproc.addParam(cfsqltype: 'timestamp', value: arguments.get('ben_posted'),   null: !arguments.keyExists('ben_posted'));
+    sproc.addParam(cfsqltype: 'varchar',   value: arguments.get('ben_alias'),    null: !arguments.keyExists('ben_alias'));
+    sproc.addParam(cfsqltype: 'tinyint',   value: arguments.get('ben_released'), null: !arguments.keyExists('ben_released'));
+    sproc.addParam(cfsqltype: 'tinyint',   value: arguments.get('ben_promoted'), null: !arguments.keyExists('ben_promoted'));
+    sproc.addParam(cfsqltype: 'integer',   value: arguments.get('bca_bcaid'),    null: !arguments.keyExists('bca_bcaid'));
+    sproc.addParam(cfsqltype: 'varchar',   value: arguments.get('term'),         null: !arguments.keyExists('term'));
+    sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
+    return paged_search(sproc, arguments);
+  }
+
+  public array function stream(struct params) {
+    if (arguments.keyExists('params')) arguments = arguments.params;
+    if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
+    var sproc = new StoredProc(procedure: 'blogentries_stream', datasource: datasource());
+    sproc.addParam(cfsqltype: 'integer',   value: arguments.get('days'),  null: !arguments.keyExists('days'));
+    sproc.addParam(cfsqltype: 'integer',   value: arguments.get('count'), null: !arguments.keyExists('count'));
+    sproc.addParam(cfsqltype: 'varchar',   value: arguments.get('term'),  null: !arguments.keyExists('term'));
+    sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
+    return this.wrap(paged_search(sproc, arguments));
   }
 
   public string function seo_link() {

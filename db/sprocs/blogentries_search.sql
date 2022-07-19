@@ -18,6 +18,7 @@ CREATE PROCEDURE blogentries_search(
 BEGIN
   DECLARE _limit INT(11) DEFAULT get_page_data(_paging, 'limit');
   DECLARE _offset INT(11) DEFAULT get_page_data(_paging, 'offset');
+  SET _term = clean_regexp(_term);
 
   SELECT SQL_CALC_FOUND_ROWS blogentries.*, us_user AS ben_blogname,
          (SELECT COUNT(*) FROM blogcomments WHERE bco_benid=ben_benid) AS ben_comment_cnt
@@ -33,11 +34,11 @@ BEGIN
      AND (_promoted IS NULL OR ben_blog = 1 OR ben_promoted < CURRENT_TIMESTAMP)
      AND (_bcaid IS NULL OR EXISTS (SELECT 1 FROM BlogEntriesCategories WHERE bec_bcaid=_bcaid AND bec_benid=ben_benid))
      AND (_term IS NULL OR
-           us_user = CONVERT(_term USING utf8) OR
-           ben_title REGEXP CONVERT(_term USING utf8) OR
-           ben_alias REGEXP CONVERT(_term USING utf8) OR
-           ben_body REGEXP CONVERT(_term USING utf8) OR
-           ben_morebody REGEXP CONVERT(_term USING utf8)
+           us_user = _term OR
+           ben_title REGEXP _term OR
+           ben_alias REGEXP _term OR
+           ben_body REGEXP _term OR
+           ben_morebody REGEXP _term
          )
      ORDER BY
      CASE WHEN _released IS NULL THEN ben_added ELSE IFNULL(ben_promoted, ben_posted) END DESC, ben_benid DESC

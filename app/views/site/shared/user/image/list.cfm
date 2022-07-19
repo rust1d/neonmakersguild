@@ -1,6 +1,6 @@
 <cfscript>
   locals.view = session.user.view();
-  locals.dest = (locals.mBlog.id()==1 && session.site.isA('admin')) ? 'blog' : 'user';
+  locals.dest = (locals.mBlog.id()==1 && session.site.admin()) ? 'blog' : 'user';
   locals.results = locals.mBlog.images(utility.paged_term_params());
 </cfscript>
 
@@ -57,7 +57,7 @@
               <div class='position-relative'>
                 <a href='#router.hrefenc(page: '#locals.dest#/image/edit', uiid: locals.mImage.uiid())#' title='#locals.mImage.filename()#' class='align-bottom'>
                   <img src='#locals.mImage.thumbnail_src()#' class='w-100 img-thumbnail' />
-                  <i class='fal fa-pencil btn btn-nmg btn-outline-dark btn-floating btn-floating-br'></i>
+                  <i class='fal fa-pencil btn btn-nmg btn-outline-dark btn-floating btn-floating-br btn-pic'></i>
                 </a>
               </div>
             </div>

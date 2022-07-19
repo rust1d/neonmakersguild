@@ -10,6 +10,9 @@ CREATE PROCEDURE user_recentActivity(
 BEGIN
   DECLARE _limit INT(11) DEFAULT get_page_data(_paging, 'limit');
   DECLARE _offset INT(11) DEFAULT get_page_data(_paging, 'offset');
+  DECLARE _past_date DATE DEFAULT DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -30 DAY);
+
+  SET _term = clean_regexp(_term);
 
   SELECT SQL_CALC_FOUND_ROWS *
     FROM (
@@ -19,11 +22,11 @@ BEGIN
             WHERE ben_usid = _usid
               AND ben_released = 1
               AND CASE WHEN _term IS NULL
-                    THEN ben_dla > DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -60 DAY)
-                    ELSE ben_title REGEXP CONVERT(_term USING utf8) OR
-                    ben_alias REGEXP CONVERT(_term USING utf8) OR
-                    ben_body REGEXP CONVERT(_term USING utf8) OR
-                    ben_morebody REGEXP CONVERT(_term USING utf8)
+                    THEN ben_dla > _past_date
+                    ELSE ben_title REGEXP _term OR
+                    ben_alias REGEXP _term OR
+                    ben_body REGEXP _term OR
+                    ben_morebody REGEXP _term
                   END
 
             UNION
@@ -34,20 +37,20 @@ BEGIN
                  INNER JOIN users ON us_usid = ben_blog
             WHERE bco_usid = _usid
               AND CASE WHEN _term IS NULL
-                    THEN bco_dla > DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -60 DAY)
-                    ELSE bco_comment REGEXP CONVERT(_term USING utf8)
+                    THEN bco_dla > _past_date
+                    ELSE bco_comment REGEXP _term
                   END
 
            UNION
 
            SELECT 'thread' AS act_source, CONCAT(fo_alias, '/', ft_ftid, '/', ft_alias) AS act_seolink, ft_ftid AS act_pkid, ft_foid AS act_fkid, fo_name AS act_title, ft_subject AS act_words, ft_dla AS act_dla
              FROM forumthreads
-                 INNER JOIN forums ON fo_foid = ft_foid
+                 INNER JOIN forums ON fo_foid = ft_foid AND fo_admin = 0
            WHERE ft_usid = _usid
              AND ft_deleted IS NULL
              AND CASE WHEN _term IS NULL
-                    THEN ft_dla > DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -60 DAY)
-                    ELSE ft_subject REGEXP CONVERT(_term USING utf8)
+                    THEN ft_dla > _past_date
+                    ELSE ft_subject REGEXP _term
                   END
 
            UNION
@@ -55,13 +58,12 @@ BEGIN
            SELECT 'message' AS act_source, CONCAT(fo_alias, '/', ft_ftid, '/', ft_alias) AS act_seolink, fm_fmid AS act_pkid, fm_ftid AS act_fkid, ft_subject AS act_title, fm_body AS act_words, fm_dla AS act_dla
              FROM forummessages
                  INNER JOIN forumthreads ON ft_ftid = fm_ftid
-                 INNER JOIN forums ON fo_foid = ft_foid
+                 INNER JOIN forums ON fo_foid = ft_foid AND fo_admin = 0
            WHERE fm_usid = _usid
              AND fm_deleted IS NULL
-             AND fm_dla > DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -60 DAY)
              AND CASE WHEN _term IS NULL
-                    THEN ft_dla > DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -60 DAY)
-                    ELSE fm_body REGEXP CONVERT(_term USING utf8)
+                    THEN fm_dla > _past_date
+                    ELSE fm_body REGEXP _term
                   END
          ) AS tmp
   ORDER BY act_dla DESC
