@@ -5,6 +5,12 @@ component extends=BaseModel accessors=true {
   property name='mr_email'       type='string'   sqltype='varchar';
   property name='mr_phone'       type='string'   sqltype='varchar';
   property name='mr_location'    type='string'   sqltype='varchar';
+  property name='mr_address1'    type='string'   sqltype='varchar';
+  property name='mr_address2'    type='string'   sqltype='varchar';
+  property name='mr_city'        type='string'   sqltype='varchar';
+  property name='mr_region'      type='string'   sqltype='varchar';
+  property name='mr_postal'      type='string'   sqltype='varchar';
+  property name='mr_country'     type='string'   sqltype='varchar';
   property name='mr_website1'    type='string'   sqltype='varchar';
   property name='mr_website2'    type='string'   sqltype='varchar';
   property name='mr_history'     type='string'   sqltype='varchar';
@@ -42,6 +48,12 @@ component extends=BaseModel accessors=true {
         up_lastname: mr_lastname,
         up_bio: mr_history,
         up_location: mr_location,
+        up_address1: mr_address1,
+        up_address2: mr_address2,
+        up_city: mr_city,
+        up_region: mr_region,
+        up_postal: mr_postal,
+        up_country: mr_country,
         up_phone: mr_phone,
         up_promo: mr_promo
       });

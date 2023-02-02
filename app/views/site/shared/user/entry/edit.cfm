@@ -1,5 +1,7 @@
 <cfscript>
-  dest = (mBlog.id()==1 && session.site.admin()) ? 'blog' : 'user';
+  param mUserBlog = mBlog;
+
+  dest = (mUserBlog.id()==1 && session.site.admin()) ? 'blog' : 'user';
 
   if (form.keyExists('btnSubmit')) {
     param form.ben_categories = '';
@@ -16,8 +18,8 @@
         if (qry.len()) {
           categories.append(qry.bca_bcaid);
         } else {
-          mCategory = mBlog.category_build({ bca_category: category });
-          if (mBlog.category_save(mCategory)) categories.append(mCategory.bcaid());
+          mCategory = mUserBlog.category_build({ bca_category: category });
+          if (mUserBlog.category_save(mCategory)) categories.append(mCategory.bcaid());
         }
       }
     }
@@ -31,10 +33,10 @@
   }
 
   param form.ben_categories = mEntry.BlogEntryCategories().map(row => row.bec_bcaid()).toList();
-  // qryCats = mBlog.categories();
+  // qryCats = mUserBlog.categories();
   mode = mEntry.new_record() ? 'Add' : 'Edit';
 
-  mImages = mBlog.images(ratio: 2, maxrows: 12).rows;
+  mImages = mUserBlog.images(ratio: 2, maxrows: 12).rows;
 </cfscript>
 
 <script src='/assets/js/admin/blog/entry.js'></script>
@@ -72,7 +74,7 @@
                 <small class='text-muted ps-3'>search and click thumbnail to set header image</small>
                 <div class='input-group input-group-sm'>
                   <span class='input-group-text btn-nmg'><i class='fa fa-search'></i></span>
-                  <input type='text' class='form-control' id='headersearch' name='headersearch' placeholder='type to search images...' maxlength='20' data-usid='#mBlog.encoded_key()#' />
+                  <input type='text' class='form-control' id='headersearch' name='headersearch' placeholder='type to search images...' maxlength='20' data-usid='#mUserBlog.encoded_key()#' />
                 </div>
                 <input type='text' class='form-control form-control-sm text-muted mt-2' name='ben_image' id='ben_image' value='#htmlEditFormat(mEntry.image())#' maxlength='150' readonly required />
                 <div id='headerselect' class='row g-1 mt-1'>
@@ -125,7 +127,7 @@
                       <button type='button' id='btnAddCategory' class='input-group-text btn-nmg' title='Add Category'><i class='fal fa-plus'></i> &nbsp; Add</button>
                     </div>
                     <select class='form-control form-control-sm mt-1' name='ben_categories' id='ben_categories' multiple='multiple' title='ctrl+click to select multiple' size='7'>
-                      <cfloop array='#mBlog.categories()#' item='mCat'>
+                      <cfloop array='#mUserBlog.categories()#' item='mCat'>
                         <option value='#mCat.bcaid()#' #ifin(listFind(form.ben_categories, mCat.bcaid()), 'selected')#>#mCat.category()#</option>
                       </cfloop>
                     </select>
@@ -144,7 +146,7 @@
                 <label class='form-label' for='imagesearch'>Image Search</label> <small class='text-muted ps-3'>click image to insert into post body</small>
                 <div class='input-group input-group-sm'>
                   <span class='input-group-text btn-nmg'><i class='fa fa-search'></i></span>
-                  <input type='text' class='form-control' id='imagesearch' name='imagesearch' placeholder='type to search images...' maxlength='20' data-usid='#mBlog.encoded_key()#' />
+                  <input type='text' class='form-control' id='imagesearch' name='imagesearch' placeholder='type to search images...' maxlength='20' data-usid='#mUserBlog.encoded_key()#' />
                 </div>
                 <div id='imageselect' class='row g-1 mt-1'>
                   <div class='col-3 col-md-2 col-xl-1'><img class='w-100 img-thumbnail' src='/assets/images/profile_placeholder.png' /></div>

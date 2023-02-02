@@ -66,7 +66,7 @@ component accessors=true {
     if (isA(typeof)) return security_check(); // CHECK IF PWD CHANGE OR MFA FLAG SET AND REDIRECT
 
     if (cgi.request_method=='get' && remember_location) {
-      session.return_to = cgi.http_url;
+      session.return_to = '#cgi.script_name#?#cgi.query_string#';
       application.flash.warning('Please login to continue.');
     } else {
       session.return_to = '';

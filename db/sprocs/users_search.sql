@@ -21,7 +21,6 @@ BEGIN
    WHERE (_usid IS NULL OR us_usid = _usid)
      AND (_user IS NULL OR us_user = CONVERT(_user USING latin1))
      AND (_email IS NULL OR us_email = CONVERT(_email USING latin1))
-     AND (_deleted IS NULL OR us_deleted = _deleted)
      AND (_deleted IS NULL OR (_deleted = 0 AND us_deleted IS NULL) OR (_deleted!=0 AND us_deleted IS NOT NULL))
      AND (_term IS NULL OR
            us_user = _term OR

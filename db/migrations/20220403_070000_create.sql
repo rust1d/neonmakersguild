@@ -29,6 +29,12 @@ CREATE TABLE userProfile (
   up_location    VARCHAR(100),
   up_phone       VARCHAR(15),
   up_promo       VARCHAR(25),
+  up_address1    VARCHAR(50),
+  up_address2    VARCHAR(25),
+  up_city        VARCHAR(25),
+  up_region      VARCHAR(25),
+  up_postal      VARCHAR(12),
+  up_country     VARCHAR(2),
   up_dla         DATETIME DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (up_upid),
   UNIQUE INDEX (up_usid)
@@ -36,6 +42,13 @@ CREATE TABLE userProfile (
 
 -- alter table userProfile add column up_phone VARCHAR(15) after up_location;
 -- alter table userProfile add column up_promo VARCHAR(25) after up_phone;
+--  ALTER TABLE userProfile ADD COLUMN up_address1  VARCHAR(50) AFTER up_promo;
+--  ALTER TABLE userProfile ADD COLUMN up_address2  VARCHAR(25) AFTER up_address1;
+--  ALTER TABLE userProfile ADD COLUMN up_city      VARCHAR(25) AFTER up_address2;
+--  ALTER TABLE userProfile ADD COLUMN up_region    VARCHAR(25) AFTER up_city;
+--  ALTER TABLE userProfile ADD COLUMN up_postal    VARCHAR(12) AFTER up_region;
+--  ALTER TABLE userProfile ADD COLUMN up_country   VARCHAR(2)  AFTER up_postal;
+
 
 
 -- DROP TABLE IF EXISTS userImages;

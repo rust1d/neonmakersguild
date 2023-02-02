@@ -1,8 +1,8 @@
 <cfscript>
   mdl = new app.models.Users();
-  mUsers = mdl.where(utility.paged_term_params());
+  params = { isdeleted: 0, maxrows: 24 }
+  mUsers = mdl.where(utility.paged_term_params(params));
   pagination = mdl.pagination();
-
   view = session.user.view();
 </cfscript>
 

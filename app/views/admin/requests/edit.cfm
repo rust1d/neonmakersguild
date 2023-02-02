@@ -71,9 +71,34 @@
                 </select>
               </div>
               <div class='col-md-12'>
-                <label class='form-label required' for='mr_location'>Mailing Address</label>
+                <label class='form-label required' for='mr_location'>Location (displayed)</label>
                 <input type='text' class='form-control' id='mr_location' name='mr_location' value='#mMR.location()#' maxlength='100' required />
               </div>
+              <div class='col-12 col-md-6 mb-3'>
+                <label class='form-label' for='mr_address1'>Address 1</label>
+                <input type='text' class='form-control' name='mr_address1' id='mr_address1' value='#encodeForHTML(mMR.address1())#' maxlength='50' />
+              </div>
+              <div class='col-12 col-md-6 mb-3'>
+                <label class='form-label' for='mr_address2'>Address 2</label>
+                <input type='text' class='form-control' name='mr_address2' id='mr_address2' value='#encodeForHTML(mMR.address2())#' maxlength='25' />
+              </div>
+              <div class='col-12 col-md-6 mb-3'>
+                <label class='form-label' for='mr_city'>City</label>
+                <input type='text' class='form-control' name='mr_city' id='mr_city' value='#encodeForHTML(mMR.city())#' maxlength='25' />
+              </div>
+              <div class='col-12 col-md-3 mb-3'>
+                <label class='form-label' for='mr_region'>State/Region Code</label>
+                <input type='text' class='form-control' name='mr_region' id='mr_region' value='#encodeForHTML(mMR.region())#' maxlength='25' />
+              </div>
+              <div class='col-12 col-md-3 mb-3'>
+                <label class='form-label' for='mr_postal'>ZIP/Postal Code</label>
+                <input type='text' class='form-control' name='mr_postal' id='mr_postal' value='#mMR.postal()#' maxlength='12' />
+              </div>
+              <div class='col-12 col-md-6 mb-3'>
+                <label class='form-label' for='mr_country'>Country Code</label>
+                <input type='text' class='form-control' name='mr_country' id='mr_country' value='#mMR.country()#' maxlength='2' />
+              </div>
+
               <div class='col-md-6'>
                 <label class='form-label' for='mr_website1'>Personal Website Link <cfif isValid('url', mMR.website1())><a href='#mMR.website1()#' target='_blank'><i class='fa-regular fa-globe'></i></a></cfif></label>
                 <input type='text' class='form-control' id='mr_website1' name='mr_website1' value='#mMR.website1()#' maxlength='100' />

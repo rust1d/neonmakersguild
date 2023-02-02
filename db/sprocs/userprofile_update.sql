@@ -10,7 +10,13 @@ CREATE PROCEDURE userprofile_update(
   IN _bio         text,
   IN _location    varchar(100),
   IN _phone       varchar(15),
-  IN _promo       varchar(25)
+  IN _promo       varchar(25),
+  IN _address1    varchar(50),
+  IN _address2    varchar(25),
+  IN _city        varchar(25),
+  IN _region      varchar(25),
+  IN _postal      varchar(12),
+  IN _country     varchar(2)
 )
 BEGIN
   UPDATE userprofile
@@ -21,6 +27,12 @@ BEGIN
          up_location  = IFNULL(_location,  up_location),
          up_phone     = IFNULL(_phone,     up_phone),
          up_promo     = IFNULL(_promo,     up_promo),
+         up_address1  = IFNULL(_address1,  up_address1),
+         up_address2  = IFNULL(_address2,  up_address2),
+         up_city      = IFNULL(_city,      up_city),
+         up_region    = IFNULL(_region,    up_region),
+         up_postal    = IFNULL(_postal,    up_postal),
+         up_country   = IFNULL(_country,   up_country),
          up_dla       = CURRENT_TIMESTAMP
    WHERE up_upid = _upid;
 

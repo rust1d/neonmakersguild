@@ -122,6 +122,19 @@ $(function() {
     toolbar_groups: toolbar_groups,
     font_family_formats: 'Select Font=system-ui;Andale Mono=andale mono,times; Arial Black=arial black,avant garde; Arial=arial,helvetica,sans-serif; Arimo=arimo; Book Antiqua=book antiqua,palatino; Comic Sans MS=comic sans ms,sans-serif; Courier New=courier new,courier; Georgia=georgia,palatino; Helvetica=helvetica; Impact=impact,chicago; Montserrat=montserrat; Permanent Marker=permanent marker; Poppins=poppins; Roboto=roboto; Symbol=symbol; Tahoma=tahoma,arial,helvetica,sans-serif; Terminal=terminal,monaco; Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva; Webdings=webdings; Wingdings=wingdings,zapf dingbats;',
     toolbar_mode: 'floating',
+    image_class_list: [
+      { title: 'Normal Size', value: 'img-fluid my-3' },
+      { title: 'Width', menu: [
+        { title: 'Width 100% no padding', value: 'img-fluid w-100' },
+        { title: 'Width 100%', value: 'img-fluid w-100 my-3' },
+        { title: 'Width 75%', value: 'img-fluid w-75 p-1 m-3' },
+        { title: 'Width 75%, Align Right', value: 'img-fluid w-75 p-1 m-3 float-end' },
+        { title: 'Width 50%', value: 'img-fluid w-50 p-1 m-3 float-start' },
+        { title: 'Width 50%, Align Right', value: 'img-fluid w-50 p-1 m-3 float-end' },
+        { title: 'Width 25%', value: 'img-fluid w-25 p-1 m-3 float-start' },
+        { title: 'Width 25%, Align Right', value: 'img-fluid w-25 p-1 m-3 float-end' }
+      ]}
+    ],
     skin_url: '/assets/css/nmg',
     image_advtab: false,
     relative_urls : false,

@@ -47,7 +47,7 @@ component extends=BaseModel accessors=true {
     param variables.bca_alias = variables.bca_category;
     if (this.alias_changed()) {
       variables.bca_alias = utility.slug(bca_alias);
-      var qry = this.search(bca_alias: bca_alias);
+      var qry = this.search(bca_blog: bca_blog, bca_alias: bca_alias);
       if (qry.len() && qry.bca_bcaid != primary_key()) {
         errors().append('Category alias #bca_alias# is in use.');
       }

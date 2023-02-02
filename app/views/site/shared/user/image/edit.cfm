@@ -101,10 +101,10 @@
             </div>
             <div class='col-md-8 col-12'>
               <hr>
-              <div class='text-muted'>
+              <div class='text-muted small'>
                 <i class='fal fa-copy'></i> <span class='clipable' data-clip='#mImage.image_src()#'>#mImage.image_src()#</span> (#mImage.dimensions()#)
               </div>
-              <div class='text-muted'>
+              <div class='text-muted small'>
                 <i class='fal fa-copy'></i> <span class='clipable' data-clip='#mImage.thumbnail_src()#'>#mImage.thumbnail_src()#</span> (thumbnail)
               </div>
             </div>

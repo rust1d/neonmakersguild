@@ -339,7 +339,7 @@ component {
   public string function slug(string data = 'slug') {
     data = replace(data.lcase(), '&amp;', '-', 'all');
     data = reReplace(data, '&[^;]+;', '-', 'all');
-    data = reReplace(data,'[^0-9a-zA-Z- ]','-','all');
+    data = reReplace(data,'[^_0-9a-zA-Z- ]','-','all');
     data = replace(data,' ','-','all');
     return data.listToArray('-').toList('-');
   }

@@ -7,6 +7,12 @@ component extends=BaseModel accessors=true {
   property name='up_location'   type='string'   sqltype='varchar';
   property name='up_phone'      type='string'   sqltype='varchar';
   property name='up_promo'      type='string'   sqltype='varchar';
+  property name='up_address1'   type='string'   sqltype='varchar';
+  property name='up_address2'   type='string'   sqltype='varchar';
+  property name='up_city'       type='string'   sqltype='varchar';
+  property name='up_region'     type='string'   sqltype='varchar';
+  property name='up_postal'     type='string'   sqltype='varchar';
+  property name='up_country'    type='string'   sqltype='varchar';
   property name='up_dla'        type='date';
 
   belongs_to(class: 'Users',  key: 'up_usid', relation: 'us_usid');

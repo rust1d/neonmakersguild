@@ -25,7 +25,7 @@ component {
   private struct function error_response(required any err) {
     var response = new_response();
     response.success = false;
-    response.errors.append(application.utilityCFC.errorString(err));
+    response.errors.append(application.utility.errorString(err));
     return response;
   }
 

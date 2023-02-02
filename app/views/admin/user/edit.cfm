@@ -80,6 +80,30 @@
                   <label class='form-label' for='up_location'>Location</label>
                   <input type='text' class='form-control' id='up_location' name='up_location' value='#encodeForHTML(mProfile.location())#' maxlength='100' />
                 </div>
+                <div class='col-12 col-md-6 mb-3'>
+                  <label class='form-label' for='up_address1'>Address 1</label>
+                  <input type='text' class='form-control' name='up_address1' id='up_address1' value='#encodeForHTML(mProfile.address1())#' maxlength='50' />
+                </div>
+                <div class='col-12 col-md-6 mb-3'>
+                  <label class='form-label' for='up_address2'>Address 2</label>
+                  <input type='text' class='form-control' name='up_address2' id='up_address2' value='#encodeForHTML(mProfile.address2())#' maxlength='25' />
+                </div>
+                <div class='col-12 col-md-6 mb-3'>
+                  <label class='form-label' for='up_city'>City</label>
+                  <input type='text' class='form-control' name='up_city' id='up_city' value='#encodeForHTML(mProfile.city())#' maxlength='25' />
+                </div>
+                <div class='col-12 col-md-3 mb-3'>
+                  <label class='form-label' for='up_region'>State/Region Code</label>
+                  <input type='text' class='form-control' name='up_region' id='up_region' value='#encodeForHTML(mProfile.region())#' maxlength='25' />
+                </div>
+                <div class='col-12 col-md-3 mb-3'>
+                  <label class='form-label' for='up_postal'>ZIP/Postal Code</label>
+                  <input type='text' class='form-control' name='up_postal' id='up_postal' value='#mProfile.postal()#' maxlength='12' />
+                </div>
+                <div class='col-12 col-md-6 mb-3'>
+                  <label class='form-label' for='up_country'>Country Code</label>
+                  <input type='text' class='form-control' name='up_country' id='up_country' value='#mProfile.country()#' maxlength='2' />
+                </div>
                 <div class='col-12'>
                   <label class='form-label' for='up_bio'>Bio</label>
                   <textarea class='tiny-mce form-control' rows='15' name='up_bio' id='up_bio'>#encodeForHTML(mProfile.bio())#</textarea>
