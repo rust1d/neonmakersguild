@@ -141,7 +141,6 @@ writedump(arguments);
     // application.sentry = new services.sentry(
     //   release: '1.000',
     //   environment: application.env,
-    //   dsn: 'https://74c50251b26c41bd93a6fbf8110f3730:0c2e1136c88d4928ac6d090eac70adf8@sentry.io/5326807'
     // );
   }
 
