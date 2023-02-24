@@ -43,6 +43,10 @@ component extends=BaseModel accessors=true {
     return data.toList(' ') & '&hellip;';
   }
 
+  public boolean function recent() {
+    return doc_added.add('m', 1) > now();
+  }
+
   public string function src() {
     return remote_path() & document_name();
   }

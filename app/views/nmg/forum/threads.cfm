@@ -6,27 +6,42 @@
     router.go('/forums');
   }
 
-  if (session.user.loggedIn() && form.keyExists('btnSubmit')) {
-    if (form.fm_body.len()==0) {
-      flash.error('A message body is required to start a new thread.');
-    } else {
-      form.ft_foid = mForum.foid();
-      form.ft_usid = session.user.usid();
-      mThread = new app.models.ForumThreads(form);
-      if (mThread.safe_save()) {
-        mForum.threads_inc();
-        form.fm_foid = mForum.foid();
-        form.fm_ftid = mThread.ftid();
-        form.fm_usid = session.user.usid();
-        mMessage = new app.models.ForumMessages(form);
-        if (mMessage.safe_save()) {
-          mThread.messages_inc();
-          mThread.last_fmid(mMessage.fmid());
-          mThread.safe_save();
-          mForum.messages_inc();
-          mForum.last_fmid(mMessage.fmid());
+  mSubscription = mForum.subscription(session.user.usid());
+
+  if (session.user.loggedIn()) {
+    if (form.keyExists('btnSubscribe')) {
+      if (form.btnSubscribe==0) {
+        mSubscription.unsubscribe();
+      } else {
+        mSubscription.subscribe();
+      }
+    }
+
+    if (form.keyExists('btnSubmit')) {
+      if (form.fm_body.len()==0) {
+        flash.error('A message body is required to start a new thread.');
+      } else {
+        form.ft_foid = mForum.foid();
+        form.ft_usid = session.user.usid();
+        mThread = new app.models.ForumThreads(form);
+        if (mThread.safe_save()) {
+          mForum.threads_inc();
+          form.fm_foid = mForum.foid();
+          form.fm_ftid = mThread.ftid();
+          form.fm_usid = session.user.usid();
+          mMessage = new app.models.ForumMessages(form);
+          if (mMessage.safe_save()) {
+            mThread.messages_inc();
+            mThread.last_fmid(mMessage.fmid());
+            mThread.safe_save();
+            mForum.messages_inc();
+            mForum.last_fmid(mMessage.fmid());
+          }
+          mForum.safe_save();
+
+          param form.ft_subscribe = 0;
+          if (form.ft_subscribe==1) mThread.subscription(session.user.usid()).subscribe();
         }
-        mForum.safe_save();
       }
     }
   }
@@ -83,13 +98,21 @@
       <div class='card'>
         <div class='card-header'>
           <div class='row align-items-center'>
-            <cfif !session.user.loggedIn()>
-              <div class='col-auto'>
+            <div class='col-auto'>
+              <cfif session.user.loggedIn()>
+                <cfif mSubscription.persisted()>
+                  <button type='button' class='btn btn-sm btn-nmg-cancel' name='btnSubscribe' value='0' onclick='postButton(this)'><i class='fas fa-at'></i> Unsubscribe</button>
+                <cfelse>
+                  <button type='button' class='btn btn-sm btn-nmg' name='btnSubscribe' value='1' onclick='postButton(this)' title='Receive an email when someone posts in this forum.'>
+                    <i class='fas fa-at'></i> Subscribe to this forum
+                  </button>
+                </cfif>
+              <cfelse>
                 <a href='/login' class='btn btn-sm btn-nmg' title='Login'>
                   <i class='fas fa-person-dots-from-line'></i> Login to post
                 </a>
-              </div>
-            </cfif>
+              </cfif>
+            </div>
             #router.include('shared/partials/filter_and_page', { pagination: pagination })#
           </div>
         </div>
@@ -107,6 +130,12 @@
                     </div>
                     <div class='col-12 message-field' style='display:none'>
                       <textarea class='form-control tiny-forum' rows='8' name='fm_body' id='fm_body'></textarea>
+                    </div>
+                    <div class='col-12 message-field' style='display:none'>
+                      <div class='form-check form-switch float-end' title='Receive an email when someone posts in this thread.'>
+                        <input class='form-check-input' type='checkbox' id='ft_subscribe' name='ft_subscribe' value='1' />
+                        <label class='form-check-label' for='ft_subscribe'>Subscribe to this thread</label>
+                      </div>
                     </div>
                     <div class='col-12 message-field text-center' style='display:none'>
                       <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-sm btn-nmg'>Save</button>

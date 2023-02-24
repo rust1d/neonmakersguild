@@ -66,6 +66,7 @@
                 <div class='card-header'>
                   <a class='fs-6' href='#router.hrefenc(page: 'blog/document', docid: locals.mDocument.docid())#' data-link='#locals.mDocument.datadash()#' target='_blank'>#locals.mDocument.filename()#</a>
                   <span class='float-end badge bg-secondary'>#locals.mDocument.type()#</span>
+                  <cfif locals.mDocument.recent()><span class='float-end badge bg-warning me-3'>new!</span></cfif>
                 </div>
                 <cfif len(locals.mDocument.description())>
                   <div class='card-body small'>
@@ -90,7 +91,8 @@
                       </cfloop>
                     </span>
                   </cfif>
-                  <span class='float-end'>Size: #locals.mDocument.size_mb()#</span>
+                  <span class='float-end'>#locals.mDocument.size_mb()#</span>
+                  <span class='float-end me-3'>#locals.mDocument.added().format('mm/dd/yyyy')#</span>
                 </div>
               </div>
             </div>

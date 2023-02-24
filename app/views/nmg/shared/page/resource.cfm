@@ -16,8 +16,9 @@
         <div class='col-12'>
           <ul>
             <cfloop array='#locals.results.rows#' item='locals.mLink'>
-              <li class='mb-2'>
+              <li class='mb-2' title='Added #locals.mLink.dla().format('mm/dd/yyyy')#'>
                 <a class='fs-6' href='#locals.mLink.url()#' data-link='#locals.mLink.datadash()#' target='_blank'>#locals.mLink.title()#</a>
+                <cfif locals.mLink.recent()><span class='float-end badge bg-warning'>new!</span></cfif>
                 <cfif locals.mLink.description().len()>
                   <div class='small'>#locals.mLink.description()#</div>
                 </cfif>

@@ -35,4 +35,37 @@ component extends=BaseModel accessors=true {
 
     return '/forum/#fo_alias#';
   }
+
+  public string function subject() {
+    return variables.fo_name ?: '';
+  }
+
+  public Subscriptions function subscribe(numeric usid=0) {
+    var mdl = subscription(usid);
+    if (mdl.new_record()) mdl.safe_save();
+    return mdl;
+  }
+
+  public Subscriptions function subscription(numeric usid=0) {
+    var params = { ss_usid: usid, ss_fkey: primary_key(), ss_table: class() }
+    var mdl = new app.models.Subscriptions(params);
+    if (new_record() || usid==0) return mdl;
+    var mdls = mdl.where(params);
+    return mdls.len() ? mdls.first() : mdl;
+  }
+
+  public array function subscriptions() {
+    return new app.models.Subscriptions().where(ss_fkey: primary_key(), ss_table: class()).filter(row => row.usid());
+  }
+
+  public boolean function subscription_alert() {
+    return new app.models.Subscriptions().alert(ss_fkey: primary_key(), ss_table: class());
+  }
+
+  public boolean function unsubscribe(numeric usid=0) {
+    if (usid==0) return true;
+    var mdl = subscription(usid);
+    if (mdl.new_record()) return true;
+    return mdl.destroy();
+  }
 }

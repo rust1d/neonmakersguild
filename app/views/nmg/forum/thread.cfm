@@ -10,7 +10,20 @@
     router.go(mForum.seo_link());
   }
 
+  mThreadSubscript = mThread.subscription(session.user.usid());
+  mForumSubscript = mForum.subscription(session.user.usid());
+
   if (session.user.loggedIn()) {
+    if (form.keyExists('btnSubscribe') || form.keyExists('btnSubmit')) {
+      if (form.keyExists('btnSubscribe')) form.ft_subscribe = form.btnSubscribe;
+      param form.ft_subscribe = 0;
+      if (form.ft_subscribe==0) {
+        mThreadSubscript.unsubscribe();
+      } else {
+        mThreadSubscript.subscribe();
+      }
+    }
+
     if (form.keyExists('btnThreadEdit') || form.keyExists('btnThreadDelete')) {
       ftid = utility.decode(form.ftid);
       if (ftid==mThread.ftid() && mThread.editable() && session.user.usid()==mThread.usid()) {
@@ -101,47 +114,58 @@
       </nav>
     </div>
     <div class='col-12'>
-        <div id='thread_subject'>
-          <div class='fs-4 #ifin(mThread.deleted(), 'text-decoration-line-through')#'>
-            <a href='#mThread.seo_link()#'>#mThread.subject()#</a>
-          </div>
-          <div class='smaller'>
-            <a href='#mThread.User().seo_link()#'>#mThread.User().user()#</a>
-            &bull;
-            <a href='#mThread.seo_link()#'>#mThread.posted()#</a>
-            <cfif session.user.loggedIn() && mThread.usid()==session.user.usid() && mThread.editable()>
-              &bull; <a class='thread-edit' data-ftid='#mThread.ftid()#' data-key='#mThread.encoded_key()#' title='editable for 24 hours'><i class='fal fa-pencil'></i></a>
-              &bull; <a class='thread-delete' data-ftid='#mThread.ftid()#' data-key='#mThread.encoded_key()#' title='deletable for 24 hours'><i class='fal fa-trash-can-clock'></i></a>
-            </cfif>
-          </div>
+      <div id='thread_subject'>
+        <div class='fs-4 #ifin(mThread.deleted(), 'text-decoration-line-through')#'>
+          <a href='#mThread.seo_link()#'>#mThread.subject()#</a>
         </div>
-        <cfif session.user.loggedIn() && mThread.usid()==session.user.usid() && mThread.editable()>
-          <div id='edit_subject' class='d-none'>
-            <form method='post'>
-              <div class='mb-2'>
-                <input type='hidden' name='ftid' value='#mThread.encoded_key()#' />
-                <button type='submit' name='btnThreadDelete' id='btnThreadDelete' class='d-none'>Delete</button>
-                <input type='text' class='form-control mt-2' name='ft_subject' id='ft_subject' value='#mThread.subject()#' maxlength='100' required />
-              </div>
-              <div class='text-center'>
-                <button type='submit' name='btnThreadEdit' id='btnThreadEdit' class='btn btn-sm btn-nmg'>Save</button>
-                <a id='thread-revert' class='btn btn-sm btn-nmg-cancel'>Cancel</a>
-              </div>
-            </form>
-          </div>
-        </cfif>
+        <div class='smaller'>
+          <a href='#mThread.User().seo_link()#'>#mThread.User().user()#</a>
+          &bull;
+          <a href='#mThread.seo_link()#'>#mThread.posted()#</a>
+          <cfif session.user.loggedIn() && mThread.usid()==session.user.usid() && mThread.editable()>
+            &bull; <a class='thread-edit' data-ftid='#mThread.ftid()#' data-key='#mThread.encoded_key()#' title='editable for 24 hours'><i class='fal fa-pencil'></i></a>
+            &bull; <a class='thread-delete' data-ftid='#mThread.ftid()#' data-key='#mThread.encoded_key()#' title='deletable for 24 hours'><i class='fal fa-trash-can-clock'></i></a>
+          </cfif>
+        </div>
+      </div>
+      <cfif session.user.loggedIn() && mThread.usid()==session.user.usid() && mThread.editable()>
+        <div id='edit_subject' class='d-none'>
+          <form method='post'>
+            <div class='mb-2'>
+              <input type='hidden' name='ftid' value='#mThread.encoded_key()#' />
+              <button type='submit' name='btnThreadDelete' id='btnThreadDelete' class='d-none'>Delete</button>
+              <input type='text' class='form-control mt-2' name='ft_subject' id='ft_subject' value='#mThread.subject()#' maxlength='100' required />
+            </div>
+            <div class='text-center'>
+              <button type='submit' name='btnThreadEdit' id='btnThreadEdit' class='btn btn-sm btn-nmg'>Save</button>
+              <a id='thread-revert' class='btn btn-sm btn-nmg-cancel'>Cancel</a>
+            </div>
+          </form>
+        </div>
+      </cfif>
     </div>
     <div class='col-12'>
       <div class='card'>
         <div class='card-header'>
           <div class='row align-items-center'>
-            <cfif !session.user.loggedIn()>
-              <div class='col-auto'>
+            <div class='col-auto'>
+              <cfif session.user.loggedIn()>
+                <cfif mForumSubscript.persisted()>
+                  <span class='badge bg-warning'>You are subscribed to this forum.</span>
+                <cfelseif mThreadSubscript.persisted()>
+                  <button type='button' class='btn btn-sm btn-nmg-cancel' name='btnSubscribe' value='0' onclick='postButton(this)'><i class='fas fa-at'></i> Unsubscribe</button>
+                <cfelse>
+                  <button type='button' class='btn btn-sm btn-nmg' name='btnSubscribe' value='1' onclick='postButton(this)' title='Receive an email when someone posts in this thread.'>
+                    <i class='fas fa-at'></i> Subscribe to this thread
+                  </button>
+                </cfif>
+              <cfelse>
                 <a href='/login' class='btn btn-sm btn-nmg' title='Login'>
                   <i class='fas fa-person-dots-from-line'></i> Login to post
                 </a>
-              </div>
-            </cfif>
+              </cfif>
+            </div>
+
             #router.include('shared/partials/filter_and_page', { pagination: pagination })#
           </div>
         </div>
@@ -194,6 +218,14 @@
                     <div class='col-12'>
                       <textarea class='form-control tiny-forum' rows='8' name='fm_body' id='fm_body'></textarea>
                     </div>
+                    <cfif mForumSubscript.new_record()>
+                      <div class='col-12'>
+                        <div class='form-check form-switch float-end' title='Receive an email when someone posts in this thread.'>
+                          <input class='form-check-input' type='checkbox' id='ft_subscribe' name='ft_subscribe' value='1' #ifin(mThreadSubscript.persisted(), 'checked')# />
+                          <label class='form-check-label' for='ft_subscribe'>Subscribe to this thread</label>
+                        </div>
+                      </div>
+                    </cfif>
                     <div class='col-12 text-center'>
                       <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-sm btn-nmg'>Post Reply</button>
                     </div>

@@ -24,6 +24,12 @@ $(function() {
     if (!confirm('Are you sure you want to delete this record?')) event.preventDefault();
   });
 
+  postButton = function(btn) {
+    // ANY input/button WITH onclick=postButton(this) WILL CREATE AND SUBMIT AN EMPTY FORM WITH JUST THE BUTTON NAME/VALUE
+    var $frm = $(`<form method=post><input type=hidden name=${btn.name} value=${btn.value} /></form>`);
+    $frm.appendTo('body').submit();
+  }
+
   uri_to_blob = function(uri) {
     const parts = uri.split(',');
     const mime = parts[0].split(':')[1].split(';')[0];

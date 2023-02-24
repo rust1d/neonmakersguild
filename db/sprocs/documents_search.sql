@@ -39,7 +39,7 @@ BEGIN
               WHERE dt_docid=doc_docid
            )
          )
-   ORDER BY doc_docid
+   ORDER BY doc_filename, doc_docid
    LIMIT _limit OFFSET _offset;
 
   call pagination(FOUND_ROWS(), _limit, _offset, _term);

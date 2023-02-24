@@ -76,4 +76,10 @@ component extends=jsoup accessors=true {
 
     return '/forum/#fo_alias#/#fm_ftid#/#ft_alias####fm_fmid#';
   }
+
+  // PRIVATE
+
+  private void function post_insert(required boolean success) {
+    if (success) new app.models.Subscriptions().alert(ss_fkey: fm_ftid, ss_table: 'ForumThreads');
+  }
 }
