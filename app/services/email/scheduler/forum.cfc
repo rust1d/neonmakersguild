@@ -1,11 +1,10 @@
 component {
-  public boolean function send_alerts(boolean testing=true) {
+  public boolean function send_alerts(boolean testing=false) {
     var msgs = build_messages(testing);
     var mailer = new app.services.email.UserEmailer();
     for (var key in msgs) {
       var row = msgs[key];
       mailer.SendSubscriptions(row);
-      writedump(row);
     }
 
     return true;
@@ -37,7 +36,7 @@ component {
         var data = user_data(msgs, mSubscription.usid());
         data.messages.append('There is new activity in the forum thread <a href="#application.urls.root##mThread.seo_link()#" target=_blank>`#mForum.name()# - #mThread.subject()#`</a>');
       }
-      if (testing==false) mAlerts.destroy();
+      if (testing==false) mAlert.destroy();
     }
     return msgs;
   }

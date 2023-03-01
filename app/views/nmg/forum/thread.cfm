@@ -10,10 +10,13 @@
     router.go(mForum.seo_link());
   }
 
-  mThreadSubscript = mThread.subscription(session.user.usid());
-  mForumSubscript = mForum.subscription(session.user.usid());
+  if (session.user.loggedIn()) {
+  }
 
   if (session.user.loggedIn()) {
+    mThreadSubscript = mThread.subscription(session.user.usid());
+    mForumSubscript = mForum.subscription(session.user.usid());
+
     if (form.keyExists('btnSubscribe') || form.keyExists('btnSubmit')) {
       if (form.keyExists('btnSubscribe')) form.ft_subscribe = form.btnSubscribe;
       param form.ft_subscribe = 0;
@@ -83,6 +86,9 @@
         }
       }
     }
+  } else {
+    mThreadSubscript = mThread.subscription();
+    mForumSubscript = mForum.subscription();
   }
 
   mdl = new app.models.ForumMessages();

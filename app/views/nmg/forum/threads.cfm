@@ -6,9 +6,9 @@
     router.go('/forums');
   }
 
-  mSubscription = mForum.subscription(session.user.usid());
-
   if (session.user.loggedIn()) {
+    mSubscription = mForum.subscription(session.user.usid());
+
     if (form.keyExists('btnSubscribe')) {
       if (form.btnSubscribe==0) {
         mSubscription.unsubscribe();
@@ -44,6 +44,8 @@
         }
       }
     }
+  } else {
+    mSubscription = mForum.subscription();
   }
 
   mdl = new app.models.ForumThreads();
