@@ -62,7 +62,7 @@
                 </div>
               </div>
               <div class='col-md-6 col-12 text-end'>
-                <img id='image_preview' class='w-100 img-thumbnail' src='/assets/images/profile_placeholder.png' alt='pic' />
+                <img id='image_preview' class='w-100 img-thumbnail' src='#application.urls.cdn#/assets/images/profile_placeholder.png' alt='pic' />
               </div>
             </div>
           </form>

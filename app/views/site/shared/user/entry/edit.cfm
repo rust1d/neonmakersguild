@@ -76,9 +76,9 @@
                   <span class='input-group-text btn-nmg'><i class='fa fa-search'></i></span>
                   <input type='text' class='form-control' id='headersearch' name='headersearch' placeholder='type to search images...' maxlength='20' data-usid='#mUserBlog.encoded_key()#' />
                 </div>
-                <input type='text' class='form-control form-control-sm text-muted mt-2' name='ben_image' id='ben_image' value='#htmlEditFormat(mEntry.image())#' maxlength='150' readonly required />
+                <input type='text' class='form-control form-control-sm text-muted mt-2' name='ben_image' id='ben_image' value='#htmlEditFormat(mEntry.image_url())#' maxlength='150' readonly required />
                 <div id='headerselect' class='row g-1 mt-1'>
-                  <cfif mImages.len()==0><div class='col-sm-3 col-md-2 col-lg-1'><img class='w-100 img-thumbnail' src='/assets/images/profile_placeholder.png' /></div></cfif>
+                  <cfif mImages.len()==0><div class='col-sm-3 col-md-2 col-lg-1'><img class='w-100 img-thumbnail' src='#application.urls.cdn#/assets/images/profile_placeholder.png' /></div></cfif>
                   <cfloop array='#mImages#' item='mImage'>
                     <div class='col-3 col-md-2 col-xl-1'>
                       <img class='w-100 img-thumbnail border-success' src='#mImage.thumbnail_src()#' data-clip='#mImage.image_src()#' onclick='image_header(this)' title='#mImage.filename()# -#mImage.dimensions()#' />
@@ -88,7 +88,7 @@
               </div>
               <div class='col-12 col-lg-9'>
                 <label class='form-label text-muted'><small>Images with a 2:1 width/height ratio and dimensions 1200 x 600 are recommended.</small></label>
-                <div id='image_header' class='aspect-2-1 rounded' style='background-image: url(#mEntry.image()#)'></div>
+                <div id='image_header' class='aspect-2-1 rounded' style='background-image: url(#mEntry.image_url()#)'></div>
               </div>
               <div class='col-12 col-lg-3'>
                 <div class='row g-2'>
@@ -149,7 +149,7 @@
                   <input type='text' class='form-control' id='imagesearch' name='imagesearch' placeholder='type to search images...' maxlength='20' data-usid='#mUserBlog.encoded_key()#' />
                 </div>
                 <div id='imageselect' class='row g-1 mt-1'>
-                  <div class='col-3 col-md-2 col-xl-1'><img class='w-100 img-thumbnail' src='/assets/images/profile_placeholder.png' /></div>
+                  <div class='col-3 col-md-2 col-xl-1'><img class='w-100 img-thumbnail' src='#application.urls.cdn#/assets/images/profile_placeholder.png' /></div>
                 </div>
                 <small class='text-muted'>Click image to insert into post.</small>
               </div>
@@ -157,7 +157,7 @@
                 <label class='form-label fs-4 required mb-0' for='ben_morebody'>Post Body</label>
                 <a type='button' name='help_body' class='ms-2 blended-icon' data-bs-toggle='modal' data-bs-target='##helpModal'><i class='fas fa-circle-question'></i></a>
                 <div class='small text-muted mb-1'>Full blog post containing html and images.</div>
-                <textarea class='tiny-mce form-control' name='ben_morebody' rows='20' id='ben_morebody'>#htmlEditFormat(mEntry.morebody())#</textarea>
+                <textarea class='tiny-mce form-control' name='ben_morebody' rows='20' id='ben_morebody'>#htmlEditFormat(mEntry.body_cdn())#</textarea>
               </div>
             </div>
             <div class='row mt-5'>

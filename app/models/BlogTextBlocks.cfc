@@ -6,6 +6,10 @@ component extends=jSoup accessors=true {
 
   belongs_to(name: 'UserBlog', class: 'Users', key: 'btb_blog', relation: 'us_usid');
 
+  public string function body_cdn() {
+    return utility.body_cdn(variables.btb_body ?: '');
+  }
+
   public query function search(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;
     if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
@@ -18,6 +22,12 @@ component extends=jSoup accessors=true {
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 
     return paged_search(sproc, arguments);
+  }
+
+  // PRIVATE
+
+  private void function post_load() {
+    if (!isNull(variables.btb_body)) variables.btb_body = utility.body_nocdn(variables.btb_body);
   }
 
   private void function pre_save() {

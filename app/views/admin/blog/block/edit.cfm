@@ -39,13 +39,13 @@
                   <input type='text' class='form-control' id='imagesearch' name='imagesearch' placeholder='type to search images...' maxlength='20' data-usid='#mBlog.encoded_key()#' />
                 </div>
                 <div id='imageselect' class='row g-1 mt-1'>
-                  <div class='col-3 col-md-2 col-xl-1'><img class='w-100 img-thumbnail' src='/assets/images/profile_placeholder.png' /></div>
+                  <div class='col-3 col-md-2 col-xl-1'><img class='w-100 img-thumbnail' src='#application.urls.cdn#/assets/images/profile_placeholder.png' /></div>
                 </div>
                 <small class='text-muted'>Click image to insert into post.</small>
               </div>
               <div class='col-12'>
                 <label class='form-label required' for='btb_body'>Body</label>
-                <textarea class='tiny-mce form-control' rows='15' name='btb_body' id='btb_body'>#htmlEditFormat(mTextBlock.body())#</textarea>
+                <textarea class='tiny-mce form-control' rows='15' name='btb_body' id='btb_body'>#htmlEditFormat(mTextBlock.body_cdn())#</textarea>
               </div>
             </div>
             <div class='row mt-5'>

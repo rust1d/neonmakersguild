@@ -10,7 +10,7 @@
     <cfif mHero.persisted()>
       <div class='row mt-3'>
         <div class='col-12'>
-          #mHero.body()#
+          #mHero.body_cdn()#
         </div>
       </div>
     </cfif>

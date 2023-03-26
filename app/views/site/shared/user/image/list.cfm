@@ -49,7 +49,7 @@
         <div class='row g-3'>
           <div class='col-2 text-center small'>
             <a href='#router.href('#locals.dest#/image/edit')#'>
-              <img src='/assets/images/image_new.png' class='w-100 img-thumbnail' />
+              <img src='#application.urls.cdn#/assets/images/image_new.png' class='w-100 img-thumbnail' />
             </a>
           </div>
           <cfloop array='#locals.results.rows#' item='locals.mImage' index='idx'>

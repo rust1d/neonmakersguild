@@ -46,7 +46,7 @@
         <div class='row g-4'>
           <div class='col-6 col-md-4 col-lg-3 col-xl-2'>
             <a href='#router.href('user/edit')#'>
-              <img class='img-thumbnail w-100' src='/assets/images/image_new.png' />
+              <img class='img-thumbnail w-100' src='#application.urls.cdn#/assets/images/image_new.png' />
             </a>
             <a href='#router.href('user/edit')#' class='btn btn-sm btn-nmg w-100 mt-1'>
               <i class='fal fa-plus'></i>

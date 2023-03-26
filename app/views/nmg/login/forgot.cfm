@@ -19,7 +19,7 @@
   <div class='row g-3 justify-content-center'>
     <cfif mBlock.persisted()>
       <div class='col-12'>
-        #mBlock.body()#
+        #mBlock.body_cdn()#
       </div>
     </cfif>
     <div class='col-12 col-md-10 col-lg-8'>

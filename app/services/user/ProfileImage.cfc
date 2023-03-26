@@ -9,7 +9,10 @@ component accessors=true {
   }
 
   public void function destroy() {
-    if (fileExists(path_to_file())) FileDelete(path_to_file());
+    if (fileExists(path_to_file())) {
+      FileDelete(path_to_file());
+      fileDelete(remote_src());
+    }
   }
 
   public boolean function exists() {
@@ -42,7 +45,19 @@ component accessors=true {
   private string function image_src() {
     var ts = '';
     if (session.user.loggedIn() && session.user.usid()==usid) ts = '?#now().format('HHnnss')#';
-    return application.urls.root & '/assets/images/profile/' & subfolder() & '/' & image_name() & ts;
+    return application.urls.cdn & '/assets/images/profile/' & subfolder() & '/' & image_name() & ts;
+  }
+
+  private string function local_path() {
+    return application.paths.root & 'assets\images\profile\' & subfolder() & '\';
+  }
+
+  private string function remote_path() {
+    return application.urls.images & '/profile/' & subfolder() & '/';
+  }
+
+  private string function remote_src() {
+    return application.s3.bucket & remote_path() & image_name();
   }
 
   private string function path_to_file() {
@@ -54,7 +69,7 @@ component accessors=true {
   }
 
   public string function placeholder_src() {
-    return application.urls.root & '/assets/images/profile_placeholder.png';
+    return application.urls.cdn & '/assets/images/profile_placeholder.png';
   }
 
   private string function subfolder() {
@@ -71,6 +86,7 @@ component accessors=true {
       if (result.fileWasSaved) {
         ensure_folder();
         FileCopy(result.serverDirectory & '\' & result.serverfile, path_to_file());
+        FileCopy(path_to_file(), remote_src());
         return true;
       }
     } catch (any err) {}

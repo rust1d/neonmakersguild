@@ -19,11 +19,11 @@ component extends=BaseModel accessors=true {
   }
 
   public string function image_src() {
-    return remote_path() & image_name();
+    return application.urls.cdn & remote_path() & image_name();
   }
 
   public string function image_src64() {
-    return utility.imageToBase64(application.urls.root & image_src());
+    return utility.imageToBase64(image_src());
   }
 
   public string function ratio() {
@@ -49,7 +49,7 @@ component extends=BaseModel accessors=true {
   }
 
   public string function thumbnail_src() {
-    return remote_path() & thumbnail_name();
+    return application.urls.cdn & remote_path() & thumbnail_name();
   }
 
   public struct function thumbnail_update() {
@@ -80,8 +80,14 @@ component extends=BaseModel accessors=true {
     if (field.isEmpty()) return;
 
     try {
-      if (fileExists(local_path() & image_name())) fileDelete(local_path() & image_name());
-      if (fileExists(local_path() & thumbnail_name())) fileDelete(local_path() & thumbnail_name());
+      if (fileExists(local_path() & image_name())) {
+        fileDelete(local_path() & image_name());
+        fileDelete(remote_src() & image_name());
+      }
+      if (fileExists(local_path() & thumbnail_name())) {
+        fileDelete(local_path() & thumbnail_name());
+        fileDelete(remote_src() & thumbnail_name());
+      }
       return;
     } catch (any err) { }
     errors().append('Could not delete #image_name()#.');
@@ -101,6 +107,10 @@ component extends=BaseModel accessors=true {
 
   private string function remote_path() {
     return application.urls.images & '/user/'  & ui_usid % 10 & '/';
+  }
+
+  private string function remote_src() {
+    return application.s3.bucket & remote_path();
   }
 
   private void function post_destroy(required boolean success) {
@@ -154,6 +164,9 @@ component extends=BaseModel accessors=true {
     info.append(GetFileInfo(local_path() & image_name()));
     img = make_thumbnail(img);
     cfimage(action: 'write', source: img, destination: local_path() & thumbnail_name(), quality: 1, overwrite: 'true');
+    // COPY TO S3
+    FileCopy(local_path() & image_name(), remote_src() & image_name());
+    FileCopy(local_path() & image_name(), remote_src() & thumbnail_name());
 
     return info;
   }

@@ -19,19 +19,19 @@ component {
     for (var mAlert in mAlerts) {
       var mThread = mAlert.model();
       var mForum = mThread.forum();
-      foids[mThread.foid()] = foids[mThread.foid()] ?: 0;
+      foids[mForum.foid()] = foids[mForum.foid()] ?: 0;
       // CHECK FORUM LEVEL SUBSCRIPTIONS FIRST
       for (var mSubscription in mForum.Subscriptions()) {
-        foids[mThread.foid()]++;
-        if (foids[mThread.foid()]!=1) continue; // ALREADY PROCESSED THIS FORUM;
-        if (mSubscription.owner(mThread.usid())) continue; // SKIP POSTS BY THE USER
+        foids[mForum.foid()]++;
+        if (foids[mForum.foid()]!=1) continue; // ALREADY PROCESSED THIS FORUM;
+        if (mSubscription.owner(mForum.last_message().usid())) continue; // SKIP IF USER LAST POSTER
 
         var data = user_data(msgs, mSubscription.usid());
         data.messages.append('There is new activity in the forum <a href="#application.urls.root##mForum.seo_link()#" target=_blank>`#mForum.name()#`</a>');
       }
 
       for (var mSubscription in mThread.Subscriptions()) {
-        if (mSubscription.owner(mThread.usid())) continue; // SKIP POSTS BY THE USER
+        if (mSubscription.owner(mThread.last_message().usid())) continue; // SKIP IF USER LAST POSTER
 
         var data = user_data(msgs, mSubscription.usid());
         data.messages.append('There is new activity in the forum thread <a href="#application.urls.root##mThread.seo_link()#" target=_blank>`#mForum.name()# - #mThread.subject()#`</a>');

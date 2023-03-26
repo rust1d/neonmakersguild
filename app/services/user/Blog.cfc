@@ -83,7 +83,7 @@ component accessors=true {
       ben_blog: id(),
       ben_released: true,
       ben_comments: true,
-      ben_image: '/assets/images/1200x600.png',
+      ben_image: application.urls.cdn & '/assets/images/1200x600.png',
       ben_posted: now()
     });
 

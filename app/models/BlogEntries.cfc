@@ -30,6 +30,14 @@ component extends=jSoup accessors=true {
     return links;
   }
 
+  public string function image_url() {
+    return application.urls.cdn & ben_image;
+  }
+
+  public string function body_cdn() {
+    return utility.body_cdn(variables.ben_morebody ?: '');
+  }
+
   public string function post_date() {
     return isNull(variables.ben_posted) ? '' : utility.ordinalDate(ben_posted);
   }
@@ -108,6 +116,8 @@ component extends=jSoup accessors=true {
 
   private void function post_load() {
     param variables.ben_posted = now();
+    if (!isNull(variables.ben_morebody)) variables.ben_morebody = utility.body_nocdn(variables.ben_morebody);
+    if (!isNull(variables.ben_image)) variables.ben_image = utility.body_nocdn(variables.ben_image);
   }
 
   private void function pre_save() {

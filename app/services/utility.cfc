@@ -25,6 +25,14 @@ component {
     return (data >= low && data <= high);
   }
 
+  public string function body_cdn(string data='') {
+    return data.replaceNoCase('"/assets/images/', '"#application.urls.cdn#/assets/images/');
+  }
+
+  public string function body_nocdn(string data='') {
+    return data.ReplaceNoCase('#application.urls.cdn#/assets/images', '/assets/images');
+  }
+
   public string function capFirst(string data = '') {
     return data.lcase().ReReplace('\b(\w)', '\u\1', 'ALL');
   }

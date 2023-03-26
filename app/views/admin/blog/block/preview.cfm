@@ -8,7 +8,7 @@
       <div class='col-sm-10 col-md-6'>
         <div class='card'>
           <div class='card-body'>
-              #mTextBlock.body()#
+              #mTextBlock.body_cdn()#
           </div>
         </div>
       </div>

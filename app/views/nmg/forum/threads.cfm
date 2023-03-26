@@ -77,7 +77,7 @@
   <div class='row g-3 pt-3'>
     <cfif mBlock.persisted()>
       <div class='col-12'>
-        #mBlock.body()#
+        #mBlock.body_cdn()#
       </div>
     </cfif>
     <div class='col-12'>

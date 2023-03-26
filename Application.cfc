@@ -18,7 +18,7 @@ component {
   this.javaSettings = {
     LoadPaths: ['/assets/java/'],
     loadColdFusionClassPath: true,
-    reloadOnChange: false
+    reloadOnChange: true
   }
 
   public boolean function onApplicationStart() {
@@ -34,10 +34,13 @@ component {
     application.paths.images = application.paths.root & 'assets\images\';
     application.paths.documents = application.paths.root & 'assets\documents\';
     application.paths.templates = '\app\views\templates\';
-    application.urls.images = '/assets/images';
-    application.urls.documents = '/assets/documents';
     application.settings.title = 'Neon Makers Guild';
     application.settings.tiny = 'g2016x44cjzgv7h689qtbieaowb03dksphmy0umsojeab13b';
+    application.urls.cdn = 'https://neonmg.s3.amazonaws.com';
+    application.urls.images = '/assets/images';
+    application.urls.documents = '/assets/documents';
+    application.s3.root = 's3://' & application.secrets.s3.accessKeyId & ':' & application.secrets.s3.awsSecretKey;
+    application.s3.bucket = application.s3.root & '@neonmg';
 
     return true;
   }

@@ -9,7 +9,7 @@
       <small>#locals.mPage.category_links().toList(' &bull; ')#</small>
     </div>
     <div class='col-12'>
-      #locals.mPage.body()#
+      #locals.mPage.body_cdn()#
     </div>
     <cfif request.router.template_exists('page/#locals.mPage.alias()#')>
       <div class='col-12'>

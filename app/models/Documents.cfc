@@ -22,12 +22,12 @@ component extends=BaseModel accessors=true {
   }
 
   public void function download() {
-    if (new_record() || !fileExists(local_path() & document_name())) return;
+    if (new_record() || !fileExists(local_src())) return;
 
     cfheader(name: 'content-disposition', value: 'attachment; filename=#download_filename()#');
     cfheader(name: 'Expires', value: Now());
     cfheader(name: 'Content-Length', value: doc_size);
-    cfcontent(file: local_path() & document_name());
+    cfcontent(file: local_src());
   }
 
   public string function download_filename() {
@@ -48,7 +48,7 @@ component extends=BaseModel accessors=true {
   }
 
   public string function src() {
-    return remote_path() & document_name();
+    return application.urls.cdn & remote_path() & document_name();
   }
 
   public query function search(struct params) {
@@ -84,7 +84,10 @@ component extends=BaseModel accessors=true {
     if (field.isEmpty()) return;
 
     try {
-      if (fileExists(local_path() & document_name())) fileDelete(local_path() & document_name());
+      if (fileExists(local_src())) {
+        fileDelete(local_src());
+        fileDelete(remote_src());
+      }
       return;
     } catch (any err) { }
     errors().append('Could not delete #document_name()#.');
@@ -99,8 +102,16 @@ component extends=BaseModel accessors=true {
     return application.paths.documents & 'user\'  & doc_blog % 10 & '\';
   }
 
+  private string function local_src() {
+    return local_path() & document_name();
+  }
+
   private string function remote_path() {
-    return application.urls.documents & '/user/'  & doc_blog % 10 & '/';
+    return  application.urls.documents & '/user/'  & doc_blog % 10 & '/';
+  }
+
+  private string function remote_src() {
+    return application.s3.bucket & remote_path() & document_name();
   }
 
   private void function post_destroy(required boolean success) {
@@ -145,7 +156,8 @@ component extends=BaseModel accessors=true {
       }
       if (!isNull(variables.doc_type)) {
         variables.doc_size = result.filesize;
-        fileMove(filename, local_path() & document_name());
+        fileMove(filename, local_src());
+        FileCopy(local_src(), remote_src());
         return true;
       }
 

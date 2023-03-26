@@ -9,7 +9,7 @@
   <div class='row g-3'>
     <cfif mBlock.persisted()>
       <div class='col-12'>
-        #mBlock.body()#
+        #mBlock.body_cdn()#
       </div>
     </cfif>
     <cfloop array='#mForums#' item='mForum'>

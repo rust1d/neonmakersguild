@@ -10,6 +10,10 @@ component extends=jSoup accessors=true {
   has_many(name: 'BlogPagesCategories',  class: 'BlogPagesCategories',  key: 'bpa_bpaid',  relation: 'bpc_bpaid');
   belongs_to(name: 'UserBlog',           class: 'Users',                key: 'bpa_blog',   relation: 'us_usid');
 
+  public string function body_cdn() {
+    return utility.body_cdn(variables.bpa_body ?: '');
+  }
+
   public query function search(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;
     if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
@@ -32,6 +36,19 @@ component extends=jSoup accessors=true {
     return links;
   }
 
+  public string function seo_link() {
+    if (new_record()) return 'page/404';
+
+    param variables.bpa_blogname = this.UserBlog().user();
+    return '/page/#bpa_blogname#/#bpa_alias#';
+  }
+
+  // PRIVATE
+
+  private void function post_load() {
+    if (!isNull(variables.bpa_body)) variables.bpa_body = utility.body_nocdn(variables.bpa_body);
+  }
+
   private void function pre_save() {
     if (len(variables.bpa_alias)==0) variables.delete('bpa_alias'); // defaults next line
     param variables.bpa_alias = variables.bpa_title;
@@ -42,12 +59,5 @@ component extends=jSoup accessors=true {
         errors().append('Page alias #bpa_alias# is in use.');
       }
     }
-  }
-
-  public string function seo_link() {
-    if (new_record()) return 'page/404';
-
-    param variables.bpa_blogname = this.UserBlog().user();
-    return '/page/#bpa_blogname#/#bpa_alias#';
   }
 }

@@ -11,7 +11,7 @@
           #mPage.title()#
         </div>
         <div class='col-12'>
-          #mPage.body()#
+          #mPage.body_cdn()#
         </div>
         <div class='col-12 text-center text-uppercase'>
           <small>Category &bull; Category</small>
