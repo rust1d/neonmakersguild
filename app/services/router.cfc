@@ -110,6 +110,10 @@ component accessors=true {
     if (!condition) redirect(page);
   }
 
+  public void function reload() {
+    router.go(router.url());
+  }
+
   public string function slug() {
     return template().rereplace('[/_]','-','all');
   }

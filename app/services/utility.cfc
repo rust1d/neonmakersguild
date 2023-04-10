@@ -33,6 +33,10 @@ component {
     return data.ReplaceNoCase('#application.urls.cdn#/assets/images', '/assets/images');
   }
 
+  public boolean function bool(boolean data=false) {
+    return data ? true : false;
+  }
+
   public string function capFirst(string data = '') {
     return data.lcase().ReReplace('\b(\w)', '\u\1', 'ALL');
   }
@@ -69,6 +73,33 @@ component {
       }
     }
     return msg.toList(' ').trim();
+  }
+
+  public boolean function fileCopyS3(required string filename, required string remote) {
+    try {
+      var params = {
+        'srcFile' : filename,
+        'key' : remote.replace(application.s3.bucket & '/', '')
+      }
+      var result = request.s3Service.bucket('neonmg').uploadFile(params);
+      return result.get('status')=='success';
+    } catch (any err) {
+      application.flash.error(application.utility.errorString(err));
+      return false;
+    }
+  }
+
+  public boolean function fileDeleteS3(required string remote) {
+    try {
+      var params = {
+        'key' : remote.replace(application.s3.bucket & '/', '')
+      }
+      var result = request.s3Service.bucket('neonmg').delete(params);
+      return result.get('status')=='success';
+    } catch (any err) {
+      application.flash.error(application.utility.errorString(err));
+      return false;
+    }
   }
 
   public string function formatTeaser(required string data, required numeric size, string href) {

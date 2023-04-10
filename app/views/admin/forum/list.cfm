@@ -22,6 +22,7 @@
           <tr>
             <th scope='col'><a href='#router.href('forum/edit')#' class='btn btn-sm btn-nmg'><i class='fal fa-plus'></i></a></th>
             <th scope='col'>Name</th>
+            <th scope='col'>Privacy</th>
             <th scope='col'>Description</th>
             <th scope='col'>Active</th>
             <th scope='col'>Posts</th>
@@ -36,6 +37,7 @@
                 </a>
               </th>
               <td>#mForum.name()#</td>
+              <td class='text-center'>#mForum.audience()#</td>
               <td>#mForum.description()#</td>
               <td class='text-center'><i class='fa-solid #ifin(mForum.active(), 'fa-toggle-on','fa-toggle-off')# fa-xl')></i></td>
               <td>#mForum.messages()#</td>

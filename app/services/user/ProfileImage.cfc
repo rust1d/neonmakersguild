@@ -11,7 +11,7 @@ component accessors=true {
   public void function destroy() {
     if (fileExists(path_to_file())) {
       FileDelete(path_to_file());
-      fileDelete(remote_src());
+      utility.fileDeleteS3(remote_src());
     }
   }
 
@@ -86,7 +86,7 @@ component accessors=true {
       if (result.fileWasSaved) {
         ensure_folder();
         FileCopy(result.serverDirectory & '\' & result.serverfile, path_to_file());
-        FileCopy(path_to_file(), remote_src());
+        utility.fileCopyS3(path_to_file(), remote_src());
         return true;
       }
     } catch (any err) {}

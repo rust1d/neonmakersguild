@@ -39,7 +39,7 @@ component {
     application.urls.cdn = 'https://neonmg.s3.amazonaws.com';
     application.urls.images = '/assets/images';
     application.urls.documents = '/assets/documents';
-    application.s3.root = 's3://' & application.secrets.s3.accessKeyId & ':' & application.secrets.s3.awsSecretKey;
+    application.s3.root = 's3://' & application.secrets.s3.accessKeyId & ':' & application.secrets.s3.secretAccessKey;
     application.s3.bucket = application.s3.root & '@neonmg';
 
     return true;
@@ -60,6 +60,7 @@ component {
     check_user_logout();
     clean_form();
     check_redirects();
+    request.s3Service = get_cloud_service();
     request.router =  new app.services.router('home', session.site.path());
   };
 
@@ -133,14 +134,35 @@ writedump(arguments);
     }
   }
 
+  private any function get_cloud_service() {
+    try {
+      return getCloudService(application.secrets.s3, application.secrets.s3Conf);
+    } catch (any err) {
+      return { // fake service CF 2018
+        bucket: function(val) {
+          return {
+            uploadFile: function(params) {
+              try {
+                fileCopy(params.srcFile, application.s3.bucket & '/' & params.key);
+              } catch (any err) {
+                return { status: application.utility.errorString(err) };
+              }
+              return { status: 'success' };
+            }
+          }
+        }
+      }
+    }
+  }
+
   private void function load_secrets() {
     application.secrets = deserializeJSON(fileRead(ExpandPath('..') & '/nmg.json'));
   }
 
   private void function load_singletons() {
-    application.utility = new services.utility();
-    application.bcrypt = new services.bcrypt();
-    application.flash = new services.flash();
+    application.utility = new app.services.utility();
+    application.bcrypt = new app.services.bcrypt();
+    application.flash = new app.services.flash();
     // application.sentry = new services.sentry(
     //   release: '1.000',
     //   environment: application.env,

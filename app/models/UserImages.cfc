@@ -82,11 +82,11 @@ component extends=BaseModel accessors=true {
     try {
       if (fileExists(local_path() & image_name())) {
         fileDelete(local_path() & image_name());
-        fileDelete(remote_src() & image_name());
+        utility.fileDeleteS3(remote_src() & image_name());
       }
       if (fileExists(local_path() & thumbnail_name())) {
         fileDelete(local_path() & thumbnail_name());
-        fileDelete(remote_src() & thumbnail_name());
+        utility.fileDeleteS3(remote_src() & thumbnail_name());
       }
       return;
     } catch (any err) { }
@@ -165,8 +165,8 @@ component extends=BaseModel accessors=true {
     img = make_thumbnail(img);
     cfimage(action: 'write', source: img, destination: local_path() & thumbnail_name(), quality: 1, overwrite: 'true');
     // COPY TO S3
-    FileCopy(local_path() & image_name(), remote_src() & image_name());
-    FileCopy(local_path() & image_name(), remote_src() & thumbnail_name());
+    utility.fileCopyS3(local_path() & image_name(), remote_src() & image_name());
+    utility.fileCopyS3(local_path() & image_name(), remote_src() & thumbnail_name());
 
     return info;
   }

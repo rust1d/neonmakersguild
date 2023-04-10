@@ -67,6 +67,10 @@ a:hover {
   background-color: #e0eeee;
 }
 
+.card-private .card-header {
+  background-color: bisque;
+}
+
 .card-admin {
   background-color: #203030;
   color: #F0FFFF;

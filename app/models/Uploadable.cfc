@@ -48,7 +48,7 @@ component extends=BaseModel accessors=true {
       var file_ext = listLast(remote_file,'.');
       file_name = file_name & '-' & table_prefix() & primary_key();
       var full_file = file_name & '.' & file_ext;
-      FileCopy(local_file, remote_path & full_file);
+      utility.fileCopyS3(local_file, remote_path & full_file);
       set_field(field, full_file);
       if (field_changed(field) && len(field_was(field))) { // NEW FILE, DELETE THE OLD ONE
         FileDelete(remote_path & field_was(field));
@@ -66,7 +66,7 @@ component extends=BaseModel accessors=true {
 
   private string function remote_public_path(required string fieldname) {
     var field = find_field(fieldname);
-    return application.paths.cloudFrontDefault & field.bucket;
+    return application.urls.images & field.bucket;
   }
 
   private any function image_resize(required any img, required numeric width, required numeric height) {

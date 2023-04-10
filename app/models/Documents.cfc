@@ -86,7 +86,7 @@ component extends=BaseModel accessors=true {
     try {
       if (fileExists(local_src())) {
         fileDelete(local_src());
-        fileDelete(remote_src());
+        utility.fileDeleteS3(remote_src());
       }
       return;
     } catch (any err) { }
@@ -157,7 +157,7 @@ component extends=BaseModel accessors=true {
       if (!isNull(variables.doc_type)) {
         variables.doc_size = result.filesize;
         fileMove(filename, local_src());
-        FileCopy(local_src(), remote_src());
+        utility.fileCopyS3(local_src(), remote_src());
         return true;
       }
 

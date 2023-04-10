@@ -3,14 +3,19 @@ component extends=BaseModel accessors=true {
   property name='fo_name'         type='string'   sqltype='varchar';
   property name='fo_alias'        type='string'   sqltype='varchar';
   property name='fo_description'  type='string'   sqltype='varchar';
-  property name='fo_active'       type='numeric'  sqltype='tinyint'  default='1';
-  property name='fo_admin'        type='numeric'  sqltype='tinyint'  default='0';
+  property name='fo_active'       type='boolean'  sqltype='tinyint'  default='1';
+  property name='fo_admin'        type='boolean'  sqltype='tinyint'  default='0';
+  property name='fo_private'      type='boolean'  sqltype='tinyint'  default='0';
   property name='fo_order'        type='numeric'  sqltype='integer'  default='0';
   property name='fo_threads'      type='numeric'  sqltype='integer'  default='0';
   property name='fo_messages'     type='numeric'  sqltype='integer'  default='0';
   property name='fo_last_fmid'    type='numeric'  sqltype='integer';
 
   has_many(class: 'ForumThreads',     key: 'fo_foid',  relation: 'ft_foid');
+
+  public string function audience() {
+    return fo_admin ? 'Admins' : fo_private ? 'Members' : 'Public';
+  }
 
   public ForumMessages function last_message() {
     if (isNull(variables.fo_last_fmid)) return new app.models.ForumMessages();

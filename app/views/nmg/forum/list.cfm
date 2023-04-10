@@ -14,9 +14,10 @@
     </cfif>
     <cfloop array='#mForums#' item='mForum'>
       <div class='col-12'>
-        <div class='card #ifin(mForum.admin(),'card-admin')#'>
+        <div class='card #ifin(mForum.private(),'card-private')# #ifin(mForum.admin(),'card-admin')#'>
           <div class='card-header fs-5'>
             <a href='#mForum.seo_link()#'>#mForum.name()#</a>
+            <cfif mForum.private()><span class='float-end badge btn-nmg-cancel p-2'>Members Only</span></cfif>
             <cfif mForum.admin()><span class='float-end badge btn-nmg p-2'>Admins Only</span></cfif>
           </div>
           <div class='card-body'>

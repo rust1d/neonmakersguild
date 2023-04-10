@@ -47,10 +47,25 @@ component extends=jsoup accessors=true {
     return utility.slice(data, max(3, max(data.len()-1, 1))).toList(' ') & '&hellip;';
   }
 
+  public string function posted() {
+    return isNull(variables.fm_added) ? '' : utility.ordinalDate(fm_added) & fm_added.format(' @ HH:nn');
+  }
+
+  public boolean function repost() {
+    if (persisted()) return true;
+    var sproc = new StoredProc(procedure: 'forummessages_last_post', datasource: datasource());
+    sproc.addParam(cfsqltype: 'integer', value: variables.fm_foid);
+    sproc.addParam(cfsqltype: 'integer', value: variables.fm_ftid);
+    sproc.addParam(cfsqltype: 'integer', value: variables.fm_usid);
+    sproc.addProcResult(name: 'qry', resultset: 1);
+    var qry = sproc.execute().getProcResultSets().qry;
+    if (qry.len()==0) return false;
+    return now().diff('n', qry.fm_added) < 1 && qry.fm_body == variables.fm_body;
+  }
+
   public query function search(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;
     if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
-
     var sproc = new StoredProc(procedure: 'forummessages_search', datasource: datasource());
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('fm_fmid'), null: !arguments.keyExists('fm_fmid'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('fm_foid'), null: !arguments.keyExists('fm_foid'));
@@ -61,10 +76,6 @@ component extends=jsoup accessors=true {
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 
     return paged_search(sproc, arguments);
-  }
-
-  public string function posted() {
-    return isNull(variables.fm_added) ? '' : utility.ordinalDate(fm_added) & fm_added.format(' @ HH:nn');
   }
 
   public string function seo_link() {

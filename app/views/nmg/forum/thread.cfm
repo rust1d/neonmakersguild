@@ -1,6 +1,7 @@
 <cfscript>
   try {
     mForum = new app.models.Forums().find(url.foid);
+    if (!session.user.loggedIn() && mForum.private()) router.go('/forums');
     if (!session.user.get_admin() && mForum.admin()) router.go('/forums');
 
     mThread = new app.models.ForumThreads().find(url.ftid);
@@ -76,6 +77,10 @@
         form.fm_ftid = mThread.ftid();
         form.fm_usid = session.user.usid();
         mMessage = new app.models.ForumMessages(form);
+        if (mMessage.repost()) {
+          flash.warning('Double post caught. Please try again in a minute.');
+          router.reload();
+        }
         if (mMessage.safe_save()) {
           mThread.messages_inc();
           mThread.last_fmid(mMessage.fmid());
@@ -83,6 +88,7 @@
           mForum.messages_inc();
           mForum.last_fmid(mMessage.fmid());
           mForum.safe_save();
+          router.reload();
         }
       }
     }

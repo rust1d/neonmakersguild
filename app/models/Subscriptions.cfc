@@ -6,6 +6,7 @@ component extends=BaseModel accessors=true {
   property name='ss_added'  type='date';
 
   public boolean function alert(required numeric ss_fkey, required string ss_table, numeric ss_usid=0) {
+    if (count(ss_usid: arguments.ss_usid, ss_fkey: arguments.ss_fkey, ss_table: arguments.ss_table)) return true;
     return new app.models.Subscriptions(arguments).safe_save();
   }
 
@@ -45,6 +46,7 @@ component extends=BaseModel accessors=true {
 
   public boolean function subscribe() {
     if (persisted()) return true;
+    if (count(ss_usid: ss_usid, ss_fkey: ss_fkey, ss_table: ss_table)) return true;
     return safe_save();
   }
 

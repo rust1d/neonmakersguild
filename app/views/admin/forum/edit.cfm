@@ -4,6 +4,8 @@
   if (foid) mForum = mForum.find(foid);
 
   if (form.keyExists('btnSubmit')) {
+    form.fo_private = utility.bool(form.fo_privacy==1);
+    form.fo_admin = utility.bool(form.fo_privacy==2);
     mForum.set(form);
     if (mForum.safe_save()) {
       flash.success('Forum data saved.')
@@ -30,7 +32,7 @@
                 <label class='form-label #ifin(mForum.new_record(), 'required')#' for='fo_name'>Forum Name</label>
                 <input type='text' class='form-control' name='fo_name' id='fo_name' value='#encodeForHTML(mForum.name())#' maxlength='50' #ifin(mForum.new_record(), 'required', 'readonly')# />
               </div>
-              <div class='col-8'>
+              <div class='col-6'>
                 <label class='form-label' for='fo_alias'>SEO Alias</label> <small class='text-muted ps-3'>auto-generated from title if left blank</small>
                 <input type='text' class='form-control' name='fo_alias' id='fo_alias' value='#mForum.alias()#' maxlength='50' />
               </div>
@@ -41,10 +43,12 @@
                 </div>
               </div>
               <div class='col-2'>
-                <label class='form-label mb-0' for='fo_admin'>Admin Only</label>
-                <div class='form-check form-switch form-control-lg'>
-                  <input class='form-check-input mb-2' type='checkbox' id='fo_admin' name='fo_admin' value='yes' #ifin(mForum.admin(), 'checked')# />
-                </div>
+                <label class='form-label mb-0' for='fo_privacy'>Privacy</label>
+                <select name='fo_privacy' id='fo_privacy' class='form-control'>
+                  <option value='0'>Public</option>
+                  <option value='1' #ifin(mForum.private(), 'selected')#>Members Only</option>
+                  <option value='2' #ifin(mForum.admin(), 'selected')#>Admins Only</option>
+                </select>
               </div>
               <div class='col-12'>
                 <label class='form-label' for='fo_description'>Description</label>
