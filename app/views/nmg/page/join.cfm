@@ -138,7 +138,7 @@
             <label class='form-label' for='mr_promo'>T-Shirt Size</label>
             <select name='mr_promo' id='mr_promo' class='form-control'>
               <option>Not Provided</option>
-              <cfloop list='Small,Medium,Large,X-Large,2X-Large,3X-Large' item='size'>
+              <cfloop list='Small (34-36),Medium (38-40),Large (42-44),X-Large (46-48),2X-Large (50-52),3X-Large (54-56)' item='size'>
                 <option value='#size#' #ifin(size==mMR.promo(), 'selected')#>#size#</option>
               </cfloop>
             </select>

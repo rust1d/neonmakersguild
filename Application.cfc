@@ -148,6 +148,14 @@ writedump(arguments);
                 return { status: application.utility.errorString(err) };
               }
               return { status: 'success' };
+            },
+            delete: function(params) {
+              try {
+                fileDelete(application.s3.bucket & '/' & params.key);
+              } catch (any err) {
+                return { status: application.utility.errorString(err) };
+              }
+              return { status: 'success' };
             }
           }
         }

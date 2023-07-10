@@ -22,6 +22,7 @@ component accessors = true {
   public void function send() {
     try {
       send_email();
+      log_email();
     } catch (any err) {
       if (variables.testmode) {
         writedump(err);
@@ -73,7 +74,7 @@ component accessors = true {
   }
 
   private void function log_email() {
-    writeLog(file: 'emailer', text: SerializeJSON(this));
+    new app.services.DailyLogger(type: 'emailer').log(SerializeJSON(this));
   }
 
   private void function send_email() {

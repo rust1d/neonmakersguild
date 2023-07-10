@@ -12,29 +12,21 @@ component {
 
   // PRIVATE
 
-  private struct function build_messages(boolean testing=true) {
+  private struct function build_messages(boolean testing=false) {
     var msgs = {}
-    var mAlerts = new app.models.Subscriptions().alerts(ss_table: 'ForumThreads');
+    var rows = new app.models.Subscriptions().alerts(); // ss_table: 'ForumThreads', ss_usid: 0
     var foids = {};
-    for (var mAlert in mAlerts) {
-      var mThread = mAlert.model();
-      var mForum = mThread.forum();
-      foids[mForum.foid()] = foids[mForum.foid()] ?: 0;
-      // CHECK FORUM LEVEL SUBSCRIPTIONS FIRST
-      for (var mSubscription in mForum.Subscriptions()) {
-        foids[mForum.foid()]++;
-        if (foids[mForum.foid()]!=1) continue; // ALREADY PROCESSED THIS FORUM;
-        if (mSubscription.owner(mForum.last_message().usid())) continue; // SKIP IF USER LAST POSTER
-
-        var data = user_data(msgs, mSubscription.usid());
-        data.messages.append('There is new activity in the forum <a href="#application.urls.root##mForum.seo_link()#" target=_blank>`#mForum.name()#`</a>');
-      }
-
-      for (var mSubscription in mThread.Subscriptions()) {
-        if (mSubscription.owner(mThread.last_message().usid())) continue; // SKIP IF USER LAST POSTER
-
-        var data = user_data(msgs, mSubscription.usid());
-        data.messages.append('There is new activity in the forum thread <a href="#application.urls.root##mThread.seo_link()#" target=_blank>`#mForum.name()# - #mThread.subject()#`</a>');
+    for (var row in rows) {
+      var mAlert = new app.models.Subscriptions(row);
+      var recent_users = row.al_users_posting.listToArray().toList(', ').reReplace(',(?=[^,]+$)', ', and ');
+      var data = user_data(msgs, mAlert.usid());
+      if (mAlert.table()=='Forums') {
+        var mForum = mAlert.model();
+        data.messages.append('There is new activity in the forum <a href="#application.urls.root##mForum.seo_link()#" target=_blank>`#mForum.name()#`</a> by #recent_users#');
+      } else if (mAlert.table()=='ForumThreads') {
+        var mThread = mAlert.model();
+        var mForum = mThread.forum();
+        data.messages.append('There is new activity in the forum thread <a href="#application.urls.root##mThread.seo_link()#" target=_blank>`#mForum.name()# - #mThread.subject()#`</a> by #recent_users#');
       }
       if (testing==false) mAlert.destroy();
     }

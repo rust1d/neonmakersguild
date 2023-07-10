@@ -11,8 +11,9 @@ component extends=BaseModel accessors=true {
   }
 
   public array function alerts() {
-    param arguments.ss_usid = 0;
-    return where(arguments);
+    var sproc = new StoredProc(procedure: 'subscriptions_alerts', datasource: datasource());
+    sproc.addProcResult(name: 'qry', resultset: 1, maxrows: 200);
+    return preserveNulls(sproc.execute().getProcResultSets().qry);
   }
 
   public numeric function delete_by_user(required numeric usid) {

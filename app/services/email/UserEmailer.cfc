@@ -31,7 +31,7 @@ component {
       template: 'subscriptions.cfm',
       messages: data.messages,
       kill_link: kill_link,
-      mUser: mUser.user()
+      firstname: mUser.UserProfile().firstname()
     );
     mMailer.send();
   }

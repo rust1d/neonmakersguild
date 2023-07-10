@@ -1,4 +1,5 @@
 <cfoutput>
+  Hello #variables.firstname#,
   <p>
     There has been activity on one or more of your subscriptions on the Neon Makers Guild:
   </p>
