@@ -15,6 +15,7 @@ component accessors = true {
   public Emailer function init(struct params) {
     variables.mailer_files = {};
     set(argumentcollection = arguments);
+    if (application.isDevelopment) variables.to = application.email.admin;
 
     return this;
   }

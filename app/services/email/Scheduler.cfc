@@ -1,14 +1,14 @@
 component {
   remote struct function perform() returnFormat='json' {
+    var response = new_response();
     try {
-      var response = new_response();
-
-      new scheduler.forum().send_alerts();
-
-      return response;
+      response.data = new scheduler.forum().send_alerts();
     } catch (any err) {
-      return error_response(err);
+      writedump(err);
+      response = error_response(err);
     }
+    logger(response);
+    return response;
   }
 
   // PRIVATE
@@ -20,8 +20,11 @@ component {
     return response;
   }
 
+  private void function logger(struct response) {
+    new app.services.DailyLogger(type: 'subscriptions').log(SerializeJSON(response));
+  }
+
   private struct function new_response() {
     return { 'success': true, 'errors': [], 'data': {} };
   }
-
 }

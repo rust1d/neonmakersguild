@@ -8,6 +8,10 @@ component {
         var cnt = new app.models.Subscriptions().delete_by_user(usid);
         var msg = application.utility.plural_label(cnt, 'subscription');
         response.data.messages = 'Found and deleted #msg#.';
+        repsonse.data.usid = usid;
+
+        var path = ExpandPath('\') & 'tmp\subscriptions.txt';
+        fileAppend(path, { usid: usid, mode: 'bulk unsubscribe', cnt: cnt });
       } else {
         response.data.messages = 'You successfully deleted all requests!';
       }
@@ -15,6 +19,29 @@ component {
     } catch (any err) {
       return error_response(err);
     }
+  }
+
+  public boolean function SendReminder(required Users mUser) {
+    if (SentReminder(mUser)) {
+      var days = application.utility.plural_label(application.settings.renewal_reminder_cooldown, 'day');
+      return application.flash.warning('A reminder was already sent in the past #days#. Please wait before sending again.');
+    }
+
+    new app.services.email.UserEmailer().SendRenewalReminder(mUser);
+    return mUser.Notes(build: {}).system_action('send_reminder', 'Renewal reminder sent').safe_save();
+  }
+
+  public boolean function SentReminder(required Users mUser) {
+    var rows = mUser.Notes().filter(row => row.action()=='send_reminder');
+    return application.utility.bool(rows.len() && rows.first().age_in_days() LTE application.settings.renewal_reminder_cooldown);
+  }
+
+  public boolean function MarkPaid(required Users mUser) {
+    mUser.renewal(now());
+    if (!mUser.safe_save()) return false;
+    new app.services.email.UserEmailer().SendRenewalReminder(mUser);
+    mUser.Notes(build: {}).system_action('mark_paid', 'Membership marked renewed').safe_save();
+    return true;
   }
 
   // PRIVATE

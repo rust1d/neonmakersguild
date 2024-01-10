@@ -6,6 +6,7 @@
       <a class='btn btn-nmg btn-long text-start' href='#router.href('user/list')#'>Users</a>
       <a class='btn btn-nmg' href='#router.href('user/list')#'><i class='fal fa-list'></i></a>
       <a class='btn btn-nmg' href='#router.href('user/edit')#'><i class='fal fa-plus'></i></a>
+      <a class='btn btn-nmg' href='#router.href('user/renew')#'><i class='fal fa-dollar'></i></a>
     </div>
     <div class='my-2'>
       <a class='btn btn-nmg btn-long text-start' href='#router.href('blog/link/list')#'>Links</a>

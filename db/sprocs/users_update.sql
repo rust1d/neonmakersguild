@@ -8,6 +8,7 @@ CREATE PROCEDURE users_update(
   IN _password      varchar(100),
   IN _email         varchar(50),
   IN _permissions   tinyint(4),
+  IN _renewal       date,
   IN _deleted       datetime
 )
 BEGIN
@@ -17,6 +18,7 @@ BEGIN
          us_email       = IFNULL(_email,       us_email),
          us_permissions = IFNULL(_permissions, us_permissions),
          us_deleted     = IFNULL(_deleted,     us_deleted),
+         us_renewal     = IFNULL(_renewal,     us_renewal),
          us_dla         = CURRENT_TIMESTAMP
    WHERE us_usid = _usid;
 

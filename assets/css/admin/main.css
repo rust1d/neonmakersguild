@@ -156,6 +156,15 @@ ul.ui-autocomplete {
 
 ul.ui-autocomplete li.ui-state-focus {
   color: #ffffff;
-  background-color: #444b55
+  background-color: #444b55;
+}
 
+.nav-tabs .nav-link {
+  border-color:  #203030 #203030 #fff;
+}
+
+.nav-tabs .nav-link.active {
+  color: #31C5F2;
+  background-color: #203030;
+  border-color: #dee2e6 #dee2e6 #fff;
 }

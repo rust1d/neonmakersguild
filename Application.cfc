@@ -34,13 +34,16 @@ component {
     application.paths.images = application.paths.root & 'assets\images\';
     application.paths.documents = application.paths.root & 'assets\documents\';
     application.paths.templates = '\app\views\templates\';
-    application.settings.title = 'Neon Makers Guild';
-    application.settings.tiny = 'g2016x44cjzgv7h689qtbieaowb03dksphmy0umsojeab13b';
     application.urls.cdn = 'https://neonmg.s3.amazonaws.com';
     application.urls.images = '/assets/images';
     application.urls.documents = '/assets/documents';
+    application.urls.paypalme = 'https://paypal.me/neonmakersguild/50';
     application.s3.root = 's3://' & application.secrets.s3.accessKeyId & ':' & application.secrets.s3.secretAccessKey;
     application.s3.bucket = application.s3.root & '@neonmg';
+    application.settings.title = 'Neon Makers Guild';
+    application.settings.tiny = 'g2016x44cjzgv7h689qtbieaowb03dksphmy0umsojeab13b';
+    application.settings.renewal_grace_period = 42; // HOW MANY DAYS CAN USER DELAY PAYING
+    application.settings.renewal_reminder_cooldown = 2; // HOW OFTEN CAN AN ADMIN SEND A REMINDER EMAIL
 
     return true;
   }
@@ -55,6 +58,7 @@ component {
   }
 
   public void function onRequestStart(required string requestname)  {
+    application.urls.paypalme = 'https://paypal.me/neonmakersguild/50';
     param request.pageName = '';
     check_reset_app();
     check_user_logout();
@@ -68,7 +72,6 @@ component {
     writelog(file: '404', text: '#arguments.targetpage#?#cgi.query_string#');
     new app.services.email.AdminEmailer(subject: 'onMissingTemplate').send_error(args: arguments);
     // location(application.urls.root & '/index.cfm', false);
-writedump(arguments);
     return true;
   };
 
@@ -96,7 +99,10 @@ writedump(arguments);
   // PRIVATE
 
   private void function check_redirects() {
-    // if (cgi.request_method=='get')
+    if (session.user.expired()) {
+      url.p = 'user/renew';
+      return;
+    }
     new app.services.sites.redirects().perform();
   }
 
@@ -132,6 +138,13 @@ writedump(arguments);
       if (listfindNoCase('up_bio,ben_body,ben_morebody,bpa_body,btb_body,fm_body,edit_message', key)) continue;
       form[key] = form[key].reReplace('<[^>]*>', '', 'all').reReplace('[<>]', '?', 'all');
     }
+  }
+
+  public string function expand_path(required string data) {
+    var path = data.replace('/', '\', 'all'); // SWITCH TO \
+    var trailing = path.right(1)=='\' ? '\' : ''; // PRESERVES TRAILING SLASH
+    path = path.listToArray('\').toList('\'); // REMOVES LEADING AND TRAILING SLASH
+    return application.paths.root & path & trailing;
   }
 
   private any function get_cloud_service() {

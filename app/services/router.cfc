@@ -197,7 +197,7 @@ component accessors=true {
     if (!template_exists(partial)) { // IF NOT ON CURRENT SITE
       shared = template_exists(partial, true); // CHECK THE DEFAULT SITE
       if (!shared) {
-        writeoutput('<hr>#partial#<hr>');
+        writeoutput('<hr>#physical_path(partial, true)#<hr>');
         return; // STILL NOT FOUND JUST BAIL
       }
     }

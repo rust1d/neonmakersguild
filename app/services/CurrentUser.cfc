@@ -14,16 +14,20 @@ component accessors=true {
     return loggedIn() && _admin==true;
   }
 
-  public void function destroy(required string key) {
-    variables.delete(key);
-  }
-
   public struct function dump() {
     return isNull(variables._pkid) ? {} : { id: variables._pkid, class: variables._class }
   }
 
-  public any function gets(required string key) {
-    return has(key) ? variables[key] : javacast('null',0);
+  public void function erase(required string key) {
+    variables.delete(key);
+  }
+
+  public boolean function expired() {
+    return loggedIn() && model().past_due() && !stored('skip_renew');
+  }
+
+  public any function fetch(required string key, any default_value) {
+    return stored(key) ? variables[key] : arguments.get('default_value');
   }
 
   public boolean function has(required string key) {
@@ -76,13 +80,21 @@ component accessors=true {
   }
 
   public void function security_check() {
-    // if (model().passwordupdate_required()) {
-    //   request.router.redirect(get_class() & '/security');
-    // }
+    if (expired()) {
+      request.router.redirect('user/renew');
+    }
   }
 
-  public void function set(required string key, required any val) {
+  public void function store(required string key, required any val) {
     variables[key] = val;
+  }
+
+  public boolean function stored(required string key) {
+    return variables.keyExists(key) ? true : false;
+  }
+
+  public string function user() {
+    return loggedIn() ? model().user() : 'SYSTEM';
   }
 
   public string function view(string data = '') {

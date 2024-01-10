@@ -1,4 +1,8 @@
 component {
+  public numeric function age_in_days(date since = '1899-01-01') {
+    return now().diff('d', since);
+  }
+
   public struct function array_to_hash(required array rows, required string pkid) {
     return rows.reduce((data, row) => data.append({ '#row[pkid]#': row }), {});
   }

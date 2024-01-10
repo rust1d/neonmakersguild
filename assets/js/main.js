@@ -24,6 +24,12 @@ $(function() {
     if (!confirm('Are you sure you want to delete this record?')) event.preventDefault();
   });
 
+  $('button[data-confirm]').on('click', function(event) {
+    var msg = this.dataset.confirm;
+    if (msg.length==0) msg = 'Are you sure?';
+    if (!confirm(msg)) event.preventDefault();
+  });
+
   postButton = function(btn) {
     // ANY input/button WITH onclick=postButton(this) WILL CREATE AND SUBMIT AN EMPTY FORM WITH JUST THE BUTTON NAME/VALUE
     var $frm = $(`<form method=post><input type=hidden name=${btn.name} value=${btn.value} /></form>`);

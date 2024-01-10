@@ -6,17 +6,17 @@ CREATE PROCEDURE subscriptions_alerts()
 BEGIN
   SELECT *
     FROM (
-           SELECT subscriptions.*, al_since,
+           SELECT subscriptions.*, al_since, al_ssids,
                   (SELECT GROUP_CONCAT(DISTINCT us_user)
                      FROM forumMessages
                           INNER JOIN users ON us_usid = fm_usid
                     WHERE fm_foid = al_foid
-                      AND fm_dla >= al_since
+                      AND fm_dla >= DATE_ADD(al_since, INTERVAL -5 SECOND)
                       AND fm_usid <> ss_usid
                   ) AS al_users_posting
              FROM subscriptions
                   INNER JOIN (
-                    SELECT ft_foid AS al_foid, MIN(ss_added) AS al_since
+                    SELECT ft_foid AS al_foid, MIN(ss_added) AS al_since, GROUP_CONCAT(DISTINCT ss_ssid) AS al_ssids
                       FROM subscriptions
                            INNER JOIN forumThreads ON ss_fkey=ft_ftid AND ss_table='ForumThreads'
                        WHERE ss_usid=0
@@ -25,17 +25,17 @@ BEGIN
 
            UNION
 
-           SELECT subscriptions.*, al_since,
+           SELECT subscriptions.*, al_since, al_ssids,
                   (SELECT GROUP_CONCAT(DISTINCT us_user)
                      FROM forumMessages
                           INNER JOIN users ON us_usid = fm_usid
                     WHERE fm_ftid = al_ftid
-                      AND fm_dla >= al_since
+                      AND fm_dla >= DATE_ADD(al_since, INTERVAL -5 SECOND)
                       AND fm_usid <> ss_usid
                   ) AS al_users_posting
              FROM subscriptions
                   INNER JOIN (
-                    SELECT ft_ftid AS al_ftid, MIN(ss_added) AS al_since
+                    SELECT ft_ftid AS al_ftid, MIN(ss_added) AS al_since, GROUP_CONCAT(DISTINCT ss_ssid) AS al_ssids
                       FROM subscriptions
                            INNER JOIN forumThreads ON ft_ftid=ss_fkey AND ss_table='ForumThreads'
                        WHERE ss_usid=0

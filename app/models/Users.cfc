@@ -5,6 +5,7 @@ component extends=BaseModel accessors=true {
   property name='us_email'        type='string'   sqltype='varchar';
   property name='us_permissions'  type='numeric'  sqltype='tinyint'    default='0';
   property name='us_deleted'      type='date'     sqltype='timestamp';
+  property name='us_renewal'      type='date'     sqltype='timestamp';
   property name='us_added'        type='date';
   property name='us_dla'          type='date';
   property name='us_dll'          type='date';
@@ -15,6 +16,7 @@ component extends=BaseModel accessors=true {
   has_many(class: 'BlogComments',   key: 'us_usid',  relation: 'bco_usid');
   has_many(class: 'BlogEntries',    key: 'us_usid',  relation: 'ben_usid');
   has_many(class: 'BlogUserRoles',  key: 'us_usid',  relation: 'bur_usid');
+  has_many(class: 'Notes',          key: 'us_usid',  relation: 'no_usid');
   has_many(class: 'Subscriptions',  key: 'us_usid',  relation: 'ss_usid');
 
   // USERS BLOG
@@ -42,23 +44,26 @@ component extends=BaseModel accessors=true {
     return data;
   }
 
-  public query function search(struct params) {
-    if (arguments.keyExists('params')) arguments = arguments.params;
-    if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
+  public numeric function grace_period_remaining() {
+    var grace_period = 42;
+    return max(0, grace_period-past_due_days());
+  }
 
-    var sproc = new StoredProc(procedure: 'users_search', datasource: datasource());
-    sproc.addParam(cfsqltype: 'integer', value: arguments.get('us_usid'),   null: !arguments.keyExists('us_usid'));
-    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('us_user'),   null: !arguments.keyExists('us_user'));
-    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('us_email'),  null: !arguments.keyExists('us_email'));
-    sproc.addParam(cfsqltype: 'tinyint', value: arguments.get('isdeleted'), null: !arguments.keyExists('isdeleted'));
-    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),      null: !arguments.keyExists('term'));
-    sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
+  public date function next_renewal() {
+    return dateAdd('yyyy', 1, variables.us_renewal).format('yyyy-mm-dd');
+    return variables.us_renewal.add('yyyy', 1);
+  }
 
-    return paged_search(sproc, arguments);
+  public boolean function past_due() {
+    return past_due_days() > 0;
+  }
+
+  public numeric function past_due_days() {
+    return now().diff('d', variables.us_renewal)-365;
   }
 
   public ProfileImage function profile_image() {
-    return variables._profile_image = variables._profile_image ?: new services.user.ProfileImage(us_usid);
+    return variables._profile_image = variables._profile_image ?: new app.services.user.ProfileImage(us_usid);
   }
 
   public array function profile_links() {
@@ -71,6 +76,22 @@ component extends=BaseModel accessors=true {
     sproc.addParam(cfsqltype: 'integer', value: us_usid);
     sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'), null: !arguments.keyExists('term'));
     sproc.addProcResult(name: 'qry', resultset: 1);
+    return paged_search(sproc, arguments);
+  }
+
+  public query function search(struct params) {
+    if (arguments.keyExists('params')) arguments = arguments.params;
+    if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
+
+    var sproc = new StoredProc(procedure: 'users_search', datasource: datasource());
+    sproc.addParam(cfsqltype: 'integer', value: arguments.get('us_usid'),       null: !arguments.keyExists('us_usid'));
+    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('us_user'),       null: !arguments.keyExists('us_user'));
+    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('us_email'),      null: !arguments.keyExists('us_email'));
+    sproc.addParam(cfsqltype: 'tinyint', value: arguments.get('isdeleted'),     null: !arguments.keyExists('isdeleted'));
+    sproc.addParam(cfsqltype: 'integer', value: arguments.get('days_past_due'), null: !arguments.keyExists('days_past_due'));
+    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),          null: !arguments.keyExists('term'));
+    sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
+
     return paged_search(sproc, arguments);
   }
 

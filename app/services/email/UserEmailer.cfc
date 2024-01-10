@@ -6,10 +6,8 @@ component {
   }
 
   public void function SendLoginLink(required Users mUser) {
-    var send_to = application.isDevelopment ? application.email.admin : mUser.email();
     var mMailer = new app.services.email.Emailer(
-      to: send_to,
-      testmode: true,
+      to: mUser.email(),
       subject: 'Your NeonMakersGuild.org Login',
       template: 'forgot_login.cfm',
       login_link: new app.services.user.AuthToken().magic_link(mUser),
@@ -19,14 +17,35 @@ component {
     mMailer.send();
   }
 
+  public void function SendRenewalReminder(required Users mUser) {
+    var mMailer = new app.services.email.Emailer(
+      to: mUser.email(),
+      bcc: 'membership@neonmakersguild.org',
+      subject: 'NeonMakersGuild.org Membership Renewal Notification',
+      template: 'renewal.cfm',
+      mUser: mUser
+    );
+    mMailer.send();
+  }
+
+
+  public void function SendPaymentReceived(required Users mUser) {
+    var mMailer = new app.services.email.Emailer(
+      to: mUser.email(),
+      subject: 'NeonMakersGuild.org Membership Renewed',
+      bcc: 'membership@neonmakersguild.org',
+      template: 'paid.cfm',
+      mUser: mUser
+    );
+    mMailer.send();
+  }
+
   public void function SendSubscriptions(required struct data) {
     var mUser = new app.models.Users().find(data.usid);
-    var send_to = application.isDevelopment ? application.email.admin : mUser.email();
     var kill_link = application.urls.root & '/unsubscribe?usid=' & mUser.encoded_key();
     var mMailer = new app.services.email.Emailer(
       from: 'subscriptions@neonmakersguild.org',
-      to: send_to,
-      testmode: true,
+      to: mUser.email(),
       subject: 'NeonMakersGuild.org Subscription Notification',
       template: 'subscriptions.cfm',
       messages: data.messages,
@@ -37,10 +56,8 @@ component {
   }
 
   public void function SendWelcome(required Users mUser, required string pwd) {
-    var send_to = application.isDevelopment ? application.email.admin : mUser.email();
     var mMailer = new app.services.email.Emailer(
-      to: send_to,
-      testmode: true,
+      to: mUser.email(),
       subject: 'Welcome to the Neon Makers Guild!',
       template: 'user_welcome.cfm',
       temp_pwd: pwd,
@@ -48,5 +65,11 @@ component {
     );
 
     mMailer.send();
+  }
+
+  // PRIVATE
+
+  private string function email_to(required Users mUser) {
+    return application.isDevelopment ? application.email.admin : mUser.email();
   }
 }

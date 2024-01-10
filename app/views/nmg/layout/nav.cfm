@@ -24,6 +24,7 @@
               </cfif>
               <li><a class='dropdown-item' href='/stream'>Member Stream</a></li>
               <li><a class='dropdown-item' href='/members'>Member List</a></li>
+              <li><a class='dropdown-item' href='/page/bylaws'>NMG Bylaws</a></li>
             </ul>
           </li>
           <li class='nav-item ms-4 dropdown'>

@@ -48,13 +48,24 @@ component extends=BaseModel accessors=true {
   public boolean function subscribe() {
     if (persisted()) return true;
     if (count(ss_usid: ss_usid, ss_fkey: ss_fkey, ss_table: ss_table)) return true;
+    logger(GetFunctionCalledName());
     return safe_save();
   }
 
   public boolean function unsubscribe() {
     if (new_record()) return true;
     if (destroy()) variables.delete('ss_ssid');
+    logger(GetFunctionCalledName());
     return new_record();
+  }
+
+  // PRIVATE
+
+  private void function logger(required string mode) {
+    var path = ExpandPath('\') & 'tmp\subscriptions.txt';
+    var data = toStruct();
+    data.mode = arguments.mode;
+    fileAppend(path, SerializeJson(data));
   }
 
   private void function pre_save() {
