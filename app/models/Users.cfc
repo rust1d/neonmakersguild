@@ -4,8 +4,8 @@ component extends=BaseModel accessors=true {
   property name='us_password'     type='string'   sqltype='varchar';
   property name='us_email'        type='string'   sqltype='varchar';
   property name='us_permissions'  type='numeric'  sqltype='tinyint'    default='0';
-  property name='us_deleted'      type='date'     sqltype='timestamp';
   property name='us_renewal'      type='date'     sqltype='timestamp';
+  property name='us_deleted'      type='date'     sqltype='timestamp';
   property name='us_added'        type='date';
   property name='us_dla'          type='date';
   property name='us_dll'          type='date';
@@ -47,6 +47,11 @@ component extends=BaseModel accessors=true {
   public numeric function grace_period_remaining() {
     var grace_period = 42;
     return max(0, grace_period-past_due_days());
+  }
+
+  public date function last_reminder() {
+    var rows = this.Notes().filter(row => row.action()=='send_reminder');
+    return rows.len() ? rows.first().added() : mUser.renewal();
   }
 
   public date function next_renewal() {

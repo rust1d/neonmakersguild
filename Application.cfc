@@ -25,7 +25,6 @@ component {
     set_environment();
     load_secrets();
     load_singletons();
-    set_smtp_server();
 
     application.dsn = 'neonmakersguild';
     application.email.support = 'support@neonmakersguild.org';
@@ -188,24 +187,6 @@ component {
     //   release: '1.000',
     //   environment: application.env,
     // );
-  }
-
-  private void function set_smtp_server() {
-    application.smtp = {
-      hostek: {
-        server: 'mail13.ezhostingserver.com',
-        username: 'mailadmin@neonmakersguild.org',
-        port: 587,
-        useTLS: true
-      },
-      local: {
-        server: 'mail13.ezhostingserver.com',
-        username: 'mailadmin@neonmakersguild.org',
-        port: 587,
-        useTLS: true
-      }
-    }
-    application.smtp.append(application.smtp.local);
   }
 
   private void function set_environment() {

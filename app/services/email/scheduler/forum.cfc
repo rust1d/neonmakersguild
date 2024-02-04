@@ -33,7 +33,7 @@ component {
     }
     spent_ssids = application.utility.array_unique(spent_ssids);
     writedump(spent_ssids);
-    for (ssid in spent_ssids) new app.models.Subscriptions().find(ssid).destroy();
+    for (var ssid in spent_ssids) new app.models.Subscriptions().find(ssid).destroy();
     return msgs;
   }
 

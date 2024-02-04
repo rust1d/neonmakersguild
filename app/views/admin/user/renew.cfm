@@ -9,7 +9,7 @@
 
   options = StructNew('ordered');
   options['-30'] = 'Due in the next 30 days';
-  options['7'] =   '1 week past due';
+  options['1'] =   '1 day past due';
   options['14'] =  '2 weeks past due';
   options['30'] =  '30 days past due';
 
@@ -118,7 +118,7 @@
             #mUser.next_renewal()# (#utility.plural_label(abs(mUser.past_due_days()), 'day')#)
             <cfif sActions.SentReminder(mUser)>
               <div class='form-text text-warning smaller'>
-                Reminder sent #mUser.renewal().format('yyyy-dd-mm')#
+                Reminder sent #mUser.last_reminder().format('yyyy-mm-dd')#
               </div>
             </cfif>
           </div>

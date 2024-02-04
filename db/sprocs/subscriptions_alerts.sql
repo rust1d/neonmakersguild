@@ -9,7 +9,7 @@ BEGIN
            SELECT subscriptions.*, al_since, al_ssids,
                   (SELECT GROUP_CONCAT(DISTINCT us_user)
                      FROM forumMessages
-                          INNER JOIN users ON us_usid = fm_usid
+                          INNER JOIN users ON us_usid = fm_usid AND us_deleted is null
                     WHERE fm_foid = al_foid
                       AND fm_dla >= DATE_ADD(al_since, INTERVAL -5 SECOND)
                       AND fm_usid <> ss_usid
@@ -28,7 +28,7 @@ BEGIN
            SELECT subscriptions.*, al_since, al_ssids,
                   (SELECT GROUP_CONCAT(DISTINCT us_user)
                      FROM forumMessages
-                          INNER JOIN users ON us_usid = fm_usid
+                          INNER JOIN users ON us_usid = fm_usid AND us_deleted is null
                     WHERE fm_ftid = al_ftid
                       AND fm_dla >= DATE_ADD(al_since, INTERVAL -5 SECOND)
                       AND fm_usid <> ss_usid

@@ -21,6 +21,7 @@ component accessors=true {
     var stamp = now().dateTimeFormat('yyyymmdd_HHnnss');
 
     FileWriteLine(get_logger(), stamp & ' ' & msg);
+    close();
   }
 
   public void function open() {

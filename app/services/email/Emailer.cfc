@@ -79,7 +79,7 @@ component accessors = true {
   }
 
   private void function send_email() {
-    variables.mailer = new mail();
+    variables.mailer = new mail(argumentcollection: application.secrets.smtp);
     variables.mailer.setFrom(getFrom());
     variables.mailer.setTo(getTo());
     variables.mailer.setFailTo(getFailTo());

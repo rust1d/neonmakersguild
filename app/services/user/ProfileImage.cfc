@@ -5,6 +5,7 @@ component accessors=true {
 
   public ProfileImage function init(required numeric usid) {
     variables.usid = arguments.usid;
+    variables.utility = application.utility;
     return this;
   }
 
@@ -89,7 +90,9 @@ component accessors=true {
         utility.fileCopyS3(path_to_file(), remote_src());
         return true;
       }
-    } catch (any err) {}
+    } catch (any err) {
+      application.flash.error(utility.errorString(err));
+    }
     return false;
   }
 }

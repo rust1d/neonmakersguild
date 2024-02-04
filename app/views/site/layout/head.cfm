@@ -4,9 +4,11 @@
   <meta name='keywords' content='' />
   <meta name='description' content='' />
 
-  <cfheader name='Content-Security-Policy' value="script-src 'self' 'unsafe-inline' cdn.tiny.cloud cdnjs.cloudflare.com cdn.jsdelivr.net code.jquery.com *.fontawesome.com *.neonmakersguild.org www.gstatic.com *.googletagmanager.com www.google.com www.google-analytics.com ajax.googleapis.com;" />
-  <cfheader name='Content-Security-Policy' value="style-src 'self' 'unsafe-inline' cdn.tiny.cloud cdnjs.cloudflare.com cdn.jsdelivr.net *.fontawesome.com *.neonmakersguild.org neonmakersguild.org *.googleapis.com code.jquery.com;" />
-  <cfheader name='Content-Security-Policy' value="font-src 'self' fonts.googleapis.com fonts.gstatic.com *.fontawesome.com;" />
+  <cfheader name='Content-Security-Policy' value="script-src 'self' 'unsafe-inline' *.tinymce.com *.tiny.cloud cdnjs.cloudflare.com cdn.jsdelivr.net code.jquery.com *.fontawesome.com *.neonmakersguild.org www.gstatic.com *.googletagmanager.com www.google.com www.google-analytics.com ajax.googleapis.com;" />
+  <cfheader name='Content-Security-Policy' value="style-src 'self' 'unsafe-inline' *.tinymce.com *.tiny.cloud cdnjs.cloudflare.com cdn.jsdelivr.net *.fontawesome.com *.neonmakersguild.org neonmakersguild.org *.googleapis.com code.jquery.com;" />
+  <cfheader name='Content-Security-Policy' value="font-src 'self' *.tinymce.com *.tiny.cloud fonts.googleapis.com fonts.gstatic.com *.fontawesome.com;" />
+  <cfheader name='Content-Security-Policy' value="connect-src 'self' *.tinymce.com *.tiny.cloud *.fontawesome.com blob:;" />
+  <cfheader name='Content-Security-Policy' value="img-src 'self' neonmg.s3.amazonaws.com *.tinymce.com *.tiny.cloud data: blob:;" />
 
   <link rel='apple-touch-icon' sizes='180x180' href='/apple-touch-icon.png' />
   <link rel='icon' type='image/png' sizes='32x32' href='/favicon-32x32.png' />

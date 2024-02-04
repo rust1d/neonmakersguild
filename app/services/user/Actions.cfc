@@ -39,7 +39,7 @@ component {
   public boolean function MarkPaid(required Users mUser) {
     mUser.renewal(now());
     if (!mUser.safe_save()) return false;
-    new app.services.email.UserEmailer().SendRenewalReminder(mUser);
+    new app.services.email.UserEmailer().SendPaymentReceived(mUser);
     mUser.Notes(build: {}).system_action('mark_paid', 'Membership marked renewed').safe_save();
     return true;
   }
