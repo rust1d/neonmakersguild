@@ -166,7 +166,7 @@ component extends=BaseModel accessors=true {
     cfimage(action: 'write', source: img, destination: local_path() & thumbnail_name(), quality: 1, overwrite: 'true');
     // COPY TO S3
     utility.fileCopyS3(local_path() & image_name(), remote_src() & image_name());
-    utility.fileCopyS3(local_path() & image_name(), remote_src() & thumbnail_name());
+    utility.fileCopyS3(local_path() & thumbnail_name(), remote_src() & thumbnail_name());
 
     return info;
   }

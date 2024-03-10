@@ -39,7 +39,7 @@ component extends=BaseModel accessors=true {
 
   public ForumMessages function last_message() {
     if (isNull(variables.ft_last_fmid)) return new app.models.ForumMessages();
-    return new app.models.ForumMessages().find(ft_last_fmid);
+    return variables._last_message = variables._last_message ?: new app.models.ForumMessages().find(ft_last_fmid);
   }
 
   public string function posted() {

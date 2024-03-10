@@ -63,7 +63,8 @@ component {
   }
 
   public BaseModel function find(required numeric id) {
-    load_db(get_by_ids(ids: id));
+    var params = { '#primary_key_field()#': id }
+    load_db(search(params));
     if (!persisted()) throw('Record not found.', 'record_not_found');
 
     return this;

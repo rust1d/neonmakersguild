@@ -19,7 +19,21 @@ component extends=BaseModel accessors=true {
 
   public ForumMessages function last_message() {
     if (isNull(variables.fo_last_fmid)) return new app.models.ForumMessages();
-    return new app.models.ForumMessages().find(fo_last_fmid);
+    return variables._last_message = variables._last_message ?: new app.models.ForumMessages().find(fo_last_fmid);
+  }
+
+  public query function list(struct params) {
+    if (arguments.keyExists('params')) arguments = arguments.params;
+    if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
+
+    var sproc = new StoredProc(procedure: 'forums_list', datasource: datasource());
+    sproc.addParam(cfsqltype: 'integer', value: arguments.get('fo_foid'),  null: !arguments.keyExists('fo_foid'));
+    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('fo_alias'), null: !arguments.keyExists('fo_alias'));
+    sproc.addParam(cfsqltype: 'tinyint', value: arguments.get('fo_admin'), null: !arguments.keyExists('fo_admin'));
+    sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
+
+
+    return sproc.execute().getProcResultSets().qry;
   }
 
   public query function search(struct params) {
