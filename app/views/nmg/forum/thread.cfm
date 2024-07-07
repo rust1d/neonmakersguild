@@ -12,9 +12,6 @@
   }
 
   if (session.user.loggedIn()) {
-  }
-
-  if (session.user.loggedIn()) {
     mThreadSubscript = mThread.subscription(session.user.usid());
     mForumSubscript = mForum.subscription(session.user.usid());
 
@@ -100,7 +97,7 @@
   mdl = new app.models.ForumMessages();
   params = { fm_ftid: mThread.ftid() }
   if (!session.user.admin()) params.deleted = 0;
-  mMessages = mdl.where(utility.paged_term_params(params));
+  arrList = mdl.list(utility.paged_term_params(params));
   pagination = mdl.pagination();
   if (pagination.first) mThread.view();
 
@@ -182,15 +179,19 @@
           </div>
         </div>
         <form method='post'>
-          <cfloop array='#mMessages#' item='mMessage' index='idx'>
+          <cfloop array='#arrList#' item='row' index='idx'>
+            <cfset mMessage = new app.models.ForumMessages(row) />
+            <cfset mUser = new app.models.Users(row) />
+            <cfset mUserProfile = new app.models.UserProfile(row) />
+
             <div class='row g-0 bg-nmg border-top border-nmg'>
               <div class='col-auto text-center'>
                 <div class='pt-4 thread-user'>
-                  <a href='#mMessage.User().seo_link()#'>
-                    <img class='thread-thumbnail img-thumbnail rounded' src='#mMessage.User().profile_image().src()#' alt='' />
+                  <a href='#mUser.seo_link()#'>
+                    <img class='thread-thumbnail img-thumbnail rounded' src='#mUser.profile_image().src()#' alt='' />
                   </a>
-                  <div class='smallest'><a href='#mMessage.User().seo_link()#'>#mMessage.User().user()#</a></div>
-                  <div class='smallest'>#mMessage.User().UserProfile().location()#</div>
+                  <div class='smallest'><a href='#mUser.seo_link()#'>#mUser.user()#</a></div>
+                  <div class='smallest'>#mUserProfile.location()#</div>
                 </div>
               </div>
               <div class='col'>

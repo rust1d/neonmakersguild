@@ -8,7 +8,7 @@
   <cfheader name='Content-Security-Policy' value="style-src 'self' 'unsafe-inline' *.tinymce.com *.tiny.cloud cdnjs.cloudflare.com cdn.jsdelivr.net *.fontawesome.com *.neonmakersguild.org neonmakersguild.org *.googleapis.com code.jquery.com;" />
   <cfheader name='Content-Security-Policy' value="font-src 'self' *.tinymce.com *.tiny.cloud fonts.googleapis.com fonts.gstatic.com *.fontawesome.com;" />
   <cfheader name='Content-Security-Policy' value="connect-src 'self' *.tinymce.com *.tiny.cloud *.fontawesome.com blob:;" />
-  <cfheader name='Content-Security-Policy' value="img-src 'self' neonmg.s3.amazonaws.com *.tinymce.com *.tiny.cloud data: blob:;" />
+  <cfheader name='Content-Security-Policy' value="img-src 'self' * neonmg.s3.amazonaws.com *.tinymce.com *.tiny.cloud data: blob:;" />
 
   <link rel='apple-touch-icon' sizes='180x180' href='/apple-touch-icon.png' />
   <link rel='icon' type='image/png' sizes='32x32' href='/favicon-32x32.png' />
@@ -36,7 +36,7 @@
   <script src='https://www.google.com/recaptcha/api.js?render=6LeaIakfAAAAAFfh-JbzqJOJlqyI6JlFIKbkZNjZ'></script>
   <script src='https://cdn.tiny.cloud/1/g2016x44cjzgv7h689qtbieaowb03dksphmy0umsojeab13b/tinymce/6/tinymce.min.js' referrerpolicy='origin'></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js' integrity='sha512-Gs+PsXsGkmr+15rqObPJbenQ2wB3qYvTHuJO6YJzPe/dTLvhy0fmae2BcnaozxDo5iaF8emzmCZWbQ1XXiX2Ig==' crossorigin='anonymous' referrerpolicy='no-referrer'></script>
-  <script src='https://kit.fontawesome.com/46a01629b8.js' crossorigin='anonymous'></script><!--- v6 --->
+  <script src="https://kit.fontawesome.com/e3031fb88c.js" crossorigin="anonymous"></script><!--- v6 --->
   <script src="https://cdn.jsdelivr.net/npm/bs5-lightbox@1.8.0/dist/index.bundle.min.js"></script>
   <script src='/assets/js/jquery/jquery.passtrength.js'></script>
   <script src='/assets/js/bs_needs_validation.js'></script>

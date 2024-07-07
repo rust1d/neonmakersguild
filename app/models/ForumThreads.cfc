@@ -42,6 +42,19 @@ component extends=BaseModel accessors=true {
     return variables._last_message = variables._last_message ?: new app.models.ForumMessages().find(ft_last_fmid);
   }
 
+  public array function list(struct params) {
+    if (arguments.keyExists('params')) arguments = arguments.params;
+    if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
+
+    var sproc = new StoredProc(procedure: 'forumthreads_list', datasource: datasource());
+    sproc.addParam(cfsqltype: 'integer', value: arguments.get('ft_foid'),  null: !arguments.keyExists('ft_foid'));
+    sproc.addParam(cfsqltype: 'integer', value: arguments.get('deleted'), null: !arguments.keyExists('deleted'));
+    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),    null: !arguments.keyExists('term'));
+    sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
+
+    return preserveNulls(paged_search(sproc, arguments));
+  }
+
   public string function posted() {
     return isNull(variables.ft_added) ? '' : utility.ordinalDate(ft_added) & ft_added.format(' @ HH:nn');
   }
@@ -49,8 +62,7 @@ component extends=BaseModel accessors=true {
   public query function search(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;
     if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
-
-    var sproc = new StoredProc(procedure: 'forumthreads_search', datasource: datasource());
+    var sproc = new StoredProc(procedure: 'forumthreads_search', datasource: datasource(), cachedWithin: CreateTimeSpan(0,0,0,1));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('ft_ftid'), null: !arguments.keyExists('ft_ftid'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('ft_foid'), null: !arguments.keyExists('ft_foid'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('ft_usid'), null: !arguments.keyExists('ft_usid'));
@@ -63,8 +75,7 @@ component extends=BaseModel accessors=true {
 
   public string function seo_link() {
     if (new_record()) return 'forum/404';
-
-    param variables.fo_alias = this.Forum().alias();
+    if (isNull(variables.fo_alias)) param variables.fo_alias = this.Forum().alias();
 
     return '/forum/#fo_alias#/#ft_ftid#/#ft_alias#';
   }

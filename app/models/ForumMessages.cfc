@@ -41,6 +41,18 @@ component extends=jsoup accessors=true {
     return isNull(variables.fm_deleted) ? '' : utility.ordinalDate(fm_deleted) & fm_deleted.format(' @ HH:nn');
   }
 
+  public array function list(struct params) {
+    if (arguments.keyExists('params')) arguments = arguments.params;
+    if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
+    var sproc = new StoredProc(procedure: 'forummessages_list', datasource: datasource());
+    sproc.addParam(cfsqltype: 'integer', value: arguments.get('fm_ftid'), null: !arguments.keyExists('fm_ftid'));
+    sproc.addParam(cfsqltype: 'integer', value: arguments.get('deleted'), null: !arguments.keyExists('deleted'));
+    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),    null: !arguments.keyExists('term'));
+    sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
+
+    return preserveNulls(paged_search(sproc, arguments));
+  }
+
   public string function more() {
     if (isNull(variables.fm_body)) return '';
     var data = words().toList().left(30).listToArray();
@@ -80,10 +92,9 @@ component extends=jsoup accessors=true {
 
   public string function seo_link() {
     if (new_record()) return 'forum/404';
-    if (isNull(this.ForumThread())) return 'forum/404';
-    // writedump(this.ForumThread().alias());
-    param variables.ft_alias = this.ForumThread().alias();
-    param variables.fo_alias = this.ForumThread().fo_alias();
+    // if (isNull(this.ForumThread())) return 'forum/404';
+    if (isNull(variables.ft_alias)) variables.ft_alias = this.ForumThread().alias();
+    if (isNull(variables.fo_alias)) variables.fo_alias = this.ForumThread().fo_alias();
 
     return '/forum/#fo_alias#/#fm_ftid#/#ft_alias####fm_fmid#';
   }

@@ -1,7 +1,7 @@
 <cfscript>
   params = { };
   if (!session.user.get_admin()) params.fo_admin = 0;
-  mForums = new app.models.Forums().where(params);
+  arrList = new app.models.Forums().list(params);
   mBlock = mBlog.textblock_by_label('forums');
 </cfscript>
 
@@ -12,7 +12,12 @@
         #mBlock.body_cdn()#
       </div>
     </cfif>
-    <cfloop array='#mForums#' item='mForum'>
+    <cfloop array='#arrList#' item='row'>
+      <cfset mForum = new app.models.Forums(row) />
+      <cfset mThread = new app.models.ForumThreads(row) />
+      <cfset mMessage = new app.models.ForumMessages(row) />
+      <cfset mUser = new app.models.Users(row) />
+
       <div class='col-12'>
         <div class='card #ifin(mForum.private(),'card-private')# #ifin(mForum.admin(),'card-admin')#'>
           <div class='card-header fs-5'>
@@ -32,19 +37,19 @@
                 Messages<br>#mForum.messages()#
               </div>
               <div class='col-8 text-end'>
-                <cfif !isNull(mForum.last_fmid()) && !mForum.last_message().deleted()>
+                <cfif !isNull(mForum.last_fmid()) && !mMessage.deleted()>
                   <div class='row'>
                     <div class='col text-end'>
                       <div class='small'>
-                        <a href='#mForum.last_message().User().seo_link()#'>#mForum.last_message().User().user()#</a>
+                        <a href='#mUser.seo_link()#'>#mUser.user()#</a>
                         &bull;
-                        <a href='#mForum.last_message().seo_link()#' class='small'>#mForum.last_message().posted()#</a>
+                        <a href='#mMessage.seo_link()#' class='small'>#mMessage.posted()#</a>
                       </div>
-                      <a href='#mForum.last_message().seo_link()#'>#mForum.last_message().ForumThread().subject()#</a>
+                      <a href='#mMessage.seo_link()#'>#mThread.subject()#</a>
                     </div>
                     <div class='col-auto'>
-                      <a href='#mForum.last_message().User().seo_link()#'>
-                        <img class='forum-thumbnail' src='#mForum.last_message().User().profile_image().src()#' />
+                      <a href='#mUser.seo_link()#'>
+                        <img class='forum-thumbnail' src='#mUser.profile_image().src()#' />
                       </a>
                     </div>
                   </div>

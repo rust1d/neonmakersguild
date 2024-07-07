@@ -51,7 +51,7 @@
   mdl = new app.models.ForumThreads();
   params = { ft_foid: mForum.foid() }
   if (!session.user.admin() || !url.keyExists('deleted')) params.deleted = 0;
-  mThreads = mdl.where(utility.paged_term_params(params));
+  arrList = mdl.list(utility.paged_term_params(params));
   pagination = mdl.pagination();
 
   mBlock = mBlog.textblock_by_label('forum-' & mForum.alias());
@@ -148,20 +148,25 @@
               </div>
             </div>
           </cfif>
-          <cfif mThreads.len()==0>
+          <cfif arrList.len()==0>
             <div class='small'>"There is no heavier burden than an unfulfilled potential." - Charles Schulz</div>
           </cfif>
-          <cfloop array='#mThreads#' item='mThread'>
+          <cfloop array='#arrList#' item='row'>
+            <cfset mThread = new app.models.ForumThreads(row) />
+            <cfset mMessage = new app.models.ForumMessages(row) />
+            <cfset mUser = new app.models.Users(row) />
+            <cfset mLastUser = new app.models.Users({ us_usid: row.lus_usid, us_user: row.lus_user}) />
+
             <hr class='my-3' />
             <div class='row'>
               <div class='col-auto'>
-                <a href='#mThread.User().seo_link()#'>
-                  <img class='forum-thumbnail' src='#mThread.User().profile_image().src()#' />
+                <a href='#mUser.seo_link()#'>
+                  <img class='forum-thumbnail' src='#mUser.profile_image().src()#' />
                 </a>
               </div>
               <div class='col #ifin(mThread.deleted(), 'text-decoration-line-through')#'>
                 <div class='smaller'>
-                  <a href='#mThread.User().seo_link()#'>#mThread.User().user()#</a>
+                  <a href='#mUser.seo_link()#'>#mUser.user()#</a>
                   &bull;
                   <a href='#mThread.seo_link()#'>#mThread.posted()#</a>
                   &bull;
@@ -171,17 +176,17 @@
                 </div>
                 <a href='#mThread.seo_link()#'>#mThread.subject()#</a>
               </div>
-              <div class='col-4 text-end #ifin(mThread.last_message().deleted(), 'text-decoration-line-through')#'>
+              <div class='col-4 text-end #ifin(mMessage.deleted(), 'text-decoration-line-through')#'>
                 <div class='smaller'>
-                  <a href='#mThread.last_message().User().seo_link()#'>#mThread.last_message().User().user()#</a>
+                  <a href='#mLastUser.seo_link()#'>#mLastUser.user()#</a>
                   &bull;
-                  <a href='#mThread.last_message().seo_link()#' class='small'>#mThread.last_message().posted()#</a>
+                  <a href='#mMessage.seo_link()#' class='small'>#mMessage.posted()#</a>
                 </div>
-                <a href='#mThread.last_message().seo_link()#' class='small'>#mThread.last_message().more()#</a>
+                <a href='#mMessage.seo_link()#' class='small'>#mMessage.more()#</a>
               </div>
               <div class='col-auto'>
-                <a href='#mThread.last_message().User().seo_link()#'>
-                  <img class='forum-thumbnail' src='#mThread.last_message().User().profile_image().src()#' />
+                <a href='#mLastUser.seo_link()#'>
+                  <img class='forum-thumbnail' src='#mLastUser.profile_image().src()#' />
                 </a>
               </div>
             </div>
