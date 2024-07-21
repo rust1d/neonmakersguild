@@ -10,7 +10,7 @@
         <div class='col-auto'>
           <div class='input-group input-group-sm'>
             <a href='#router.href('#locals.dest#/entry/edit')#' class='btn btn-sm btn-nmg' title='Add'>
-              <i class='fal fa-plus'></i>
+              <i class='fa-solid fa-fw fa-plus'></i>
             </a>
           </div>
         </div>
@@ -22,7 +22,7 @@
       <table class='table table-sm table-nmg'>
         <thead>
           <tr>
-            <th scope='col'><a href='#router.href('#locals.dest#/entry/edit')#' class='btn btn-sm btn-nmg'><i class='fal fa-plus'></i></a></th>
+            <th scope='col'><a href='#router.href('#locals.dest#/entry/edit')#' class='btn btn-sm btn-nmg'><i class='fa-solid fa-fw fa-plus'></i></a></th>
             <th scope='col'>Title</th>
             <th scope='col'>Released</th>
             <th scope='col'>Posted</th>
@@ -34,7 +34,7 @@
             <tr>
               <th scope='row'>
                 <a href='#router.hrefenc(page: '#locals.dest#/entry/edit', benid: locals.mEntry.benid())#' class='btn btn-sm btn-nmg'>
-                  <i class='fal fa-pencil'></i>
+                  <i class='fa-solid fa-fw fa-pencil'></i>
                 </a>
               </th>
               <td>#locals.mEntry.title()#</td>

@@ -26,7 +26,7 @@
       <cfif !pagination.one_page>
         <div class='col-4 text-center text-uppercase'>
           <cfif !pagination.first>
-            <a href='#utility.page_url_prev(pagination)#'><i class='fa-solid fa-xl fa-caret-left'></i> Newer Posts</a>
+            <a href='#utility.page_url_prev(pagination)#'><i class='fa-solid fa-fw fa-xl fa-caret-left'></i> Newer Posts</a>
           </cfif>
         </div>
         <div class='col-4 text-center text-uppercase'>
@@ -34,7 +34,7 @@
         </div>
         <div class='col-4 text-center text-uppercase'>
           <cfif !pagination.last>
-            <a href='#utility.page_url_next(pagination)#'>Older posts <i class='fa-solid fa-xl fa-caret-right'></i></a>
+            <a href='#utility.page_url_next(pagination)#'>Older posts <i class='fa-solid fa-fw fa-xl fa-caret-right'></i></a>
           </cfif>
         </div>
       </cfif>

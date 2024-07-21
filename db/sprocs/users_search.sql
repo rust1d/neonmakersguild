@@ -25,8 +25,8 @@ BEGIN
      AND (_email IS NULL OR us_email = CONVERT(_email USING latin1))
      AND (_deleted IS NULL OR (_deleted = 0 AND us_deleted IS NULL) OR (_deleted = 1 AND us_deleted IS NOT NULL))
      AND (_pastdue IS NULL OR
-           (_pastdue > 0 AND DATE_ADD(us_renewal, INTERVAL 1 YEAR) < DATE(NOW()) AND DATEDIFF(NOW(), DATE_ADD(us_renewal, INTERVAL 1 YEAR)) >= _pastdue AND us_usid > 7) OR
-           (_pastdue <= 0 AND DATE_ADD(us_renewal, INTERVAL 1 YEAR) >= DATE(NOW()) AND DATEDIFF(DATE_ADD(us_renewal, INTERVAL 1 YEAR), NOW()) <= -_pastdue AND us_usid > 7)
+           (_pastdue > 0 AND datediff(now(), nextrenewal(us_renewal)) BETWEEN 0 AND _pastdue) OR
+           (_pastdue < 0 AND datediff(nextrenewal(us_renewal), now()) BETWEEN 1 AND -_pastdue)
          )
      AND (_term IS NULL OR
            us_user = _term OR
@@ -35,7 +35,7 @@ BEGIN
            up_location REGEXP _term OR
            up_bio REGEXP _term
          )
-   ORDER BY us_usid
+   ORDER BY CASE WHEN _pastdue IS NULL AND datediff(_last_year, us_renewal) < 0 THEN 0 ELSE datediff(_last_year, us_renewal) END, us_usid
      LIMIT _limit OFFSET _offset;
 
   call pagination(FOUND_ROWS(), _limit, _offset, _term);

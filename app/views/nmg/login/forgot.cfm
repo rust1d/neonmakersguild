@@ -30,7 +30,7 @@
             <div class='row g-3'>
               <div class='col-12'>
                 <div class='input-group'>
-                  <span class='input-group-text btn-nmg'><i class='fas fa-person-dots-from-line'></i><i class='fas fa-slash-forward'></i><i class='fa-solid fa-at'></i></span>
+                  <span class='input-group-text btn-nmg'><i class='fas fa-person-dots-from-line'></i><i class='fas fa-slash-forward'></i><i class='fa-solid fa-fw fa-at'></i></span>
                   <input type='text' class='form-control' name='contact' id='contact' maxlength='50' placeholder='username or email' required />
                 </div>
               </div>

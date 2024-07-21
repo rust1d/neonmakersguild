@@ -21,7 +21,7 @@
             </div>
             <div class='col-12 text-center'>
               <a href='#locals.mEntry.User().seo_link()#'>#locals.mEntry.User().user()#</a>
-              <cfif isNull(locals.mEntry.ben_promoted())>&bull; <cfelse><i class='smaller fa-solid fa-star text-warning' title='Front Page #locals.mEntry.promoted()#'></i></cfif>
+              <cfif isNull(locals.mEntry.ben_promoted())>&bull; <cfelse><i class='smaller fa-solid fa-fw fa-star text-warning' title='Front Page #locals.mEntry.promoted()#'></i></cfif>
               <small>#locals.mEntry.post_date()#</small>
             </div>
             <div class='col-12'>

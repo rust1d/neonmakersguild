@@ -27,7 +27,7 @@
             <tr>
               <th scope='row'>
                 <a href='#router.hrefenc(page: 'requests/edit', mrid: mMR.mrid())#' class='btn btn-sm btn-nmg'>
-                  <i class='fal fa-pencil'></i>
+                  <i class='fa-solid fa-fw fa-pencil'></i>
                 </a>
               </th>
               <td>#mMR.firstname()# #mMR.lastname()#</td>

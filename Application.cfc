@@ -57,7 +57,6 @@ component {
   }
 
   public void function onRequestStart(required string requestname)  {
-    application.urls.paypalme = 'https://paypal.me/neonmakersguild/50';
     param request.pageName = '';
     check_reset_app();
     check_user_logout();

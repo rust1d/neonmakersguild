@@ -4,7 +4,7 @@ component extends=BaseModel accessors=true {
   property name='us_password'     type='string'   sqltype='varchar';
   property name='us_email'        type='string'   sqltype='varchar';
   property name='us_permissions'  type='numeric'  sqltype='tinyint'    default='0';
-  property name='us_renewal'      type='date'     sqltype='timestamp';
+  property name='us_renewal'      type='date'     sqltype='timestamp'; // DATE LAST RENEWAL, NEXT IS +1 YEAR
   property name='us_deleted'      type='date'     sqltype='timestamp';
   property name='us_added'        type='date';
   property name='us_dla'          type='date';
@@ -56,7 +56,6 @@ component extends=BaseModel accessors=true {
 
   public date function next_renewal() {
     return dateAdd('yyyy', 1, variables.us_renewal).format('yyyy-mm-dd');
-    return variables.us_renewal.add('yyyy', 1);
   }
 
   public boolean function past_due() {

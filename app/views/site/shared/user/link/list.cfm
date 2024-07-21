@@ -15,7 +15,7 @@
       <table class='table table-sm table-nmg'>
         <thead>
           <tr class='align-middle'>
-            <th scope='col'><a href='#router.href('#locals.dest#/link/edit')#' class='btn btn-sm btn-nmg'><i class='fal fa-plus'></i></a></th>
+            <th scope='col'><a href='#router.href('#locals.dest#/link/edit')#' class='btn btn-sm btn-nmg'><i class='fa-solid fa-fw fa-plus'></i></a></th>
             <th scope='col'>Type</th>
             <th scope='col'>Title</th>
             <th scope='col' class='d-none d-md-table-cell'>Url</th>
@@ -27,7 +27,7 @@
             <tr>
               <th scope='row' nowrap>
                 <a href='#router.hrefenc(page: '#locals.dest#/link/edit', bliid: locals.mLink.bliid())#' class='btn btn-sm btn-nmg'>
-                  <i class='fal fa-pencil'></i>
+                  <i class='fa-solid fa-fw fa-pencil'></i>
                 </a>
               </th>
               <td nowrap>#locals.mLink.icon('xl')#</td>

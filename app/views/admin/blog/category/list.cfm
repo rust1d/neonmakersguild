@@ -9,7 +9,7 @@
         <div class='col fs-5'>Categories</div>
         <div class='col-auto'>
           <a href='#router.href('blog/category/edit')#' class='btn btn-sm btn-nmg' title='Add'>
-            <i class='fal fa-plus'></i>
+            <i class='fa-solid fa-fw fa-plus'></i>
           </a>
         </div>
         #router.include('shared/partials/filter_and_page')#
@@ -20,7 +20,7 @@
         <thead>
           <tr>
             <th scope='col'>
-              <a href='#router.href('blog/category/edit')#' class='btn btn-sm btn-nmg'><i class='fal fa-plus'></i></a>
+              <a href='#router.href('blog/category/edit')#' class='btn btn-sm btn-nmg'><i class='fa-solid fa-fw fa-plus'></i></a>
             </th>
             <th scope='col'>Category</th>
             <th scope='col'>Entries</th>
@@ -31,7 +31,7 @@
             <tr>
               <th scope='row'>
                 <a href='#router.hrefenc(page: 'blog/category/edit', bcaid: mCategory.bcaid())#' class='btn btn-sm btn-nmg'>
-                  <i class='fal fa-pencil'></i>
+                  <i class='fa-solid fa-fw fa-pencil'></i>
                 </a>
               </th>
               <td>#mCategory.category()#</td>

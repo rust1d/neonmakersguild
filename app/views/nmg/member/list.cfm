@@ -27,7 +27,7 @@
                   </a>
                 </div>
                 <div class='col-10'>
-                  <div class='lead'>
+                  <div class='fs-5'>
                     <a href='#mUser.seo_link()#'>#mUser.user()#</a>
                     <div>#mUser.UserProfile().firstname()# #mUser.UserProfile().lastname()#</div>
                     <div>#mUser.UserProfile().location()#</div>

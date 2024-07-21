@@ -1,0 +1,11 @@
+DROP FUNCTION IF EXISTS nextrenewal;
+
+delimiter ;;
+
+CREATE FUNCTION nextrenewal(_last DATE) RETURNS DATE DETERMINISTIC
+BEGIN
+  RETURN DATE_ADD(_last, INTERVAL 1 YEAR);
+END
+;;
+
+delimiter ;

@@ -1,0 +1,64 @@
+.fs-1 { font-size: calc(1.35rem + .8vw) !important;}
+.fs-2 { font-size: calc(1.3rem + .3vw) !important;}
+.fs-3 { font-size: calc(1.25rem + .2vw) !important;}
+.fs-4 { font-size: calc(1.1rem + .5vw) !important;}
+.fs-5 { font-size: calc(1.1rem + .1vw) !important;}
+.fs-6 { font-size: calc(1.0rem + .1vw) !important;}
+.fs-7 { font-size: calc(.85rem + .3vw) !important;}
+.fs-8 { font-size: calc(.75rem + .3vw) !important;}
+
+
+@media (min-width: 576px) {
+  .fs-sm-1 { font-size: calc(1.375rem + 1vw) !important; }
+  .fs-sm-2 { font-size: calc(1.3rem + .75vw) !important;}
+  .fs-sm-3 { font-size: calc(1.275rem + .5vw) !important;}
+  .fs-sm-4 { font-size: calc(1.175rem + .3vw) !important;}
+  .fs-sm-5 { font-size: calc(1rem + .25vw) !important;}
+  .fs-sm-6 { font-size: calc(.95rem + .2vw) !important;}
+  .fs-sm-7 { font-size: calc(.80rem + .4vw) !important;}
+  .fs-sm-8 { font-size: calc(.70rem + .4vw) !important;}
+}
+
+@media (min-width: 768px) {
+  .fs-md-1 { font-size: calc(1.375rem + 1.25vw) !important; }
+  .fs-md-2 { font-size: calc(1.325rem + .75vw) !important;}
+  .fs-md-3 { font-size: calc(1.3rem + .5vw) !important;}
+  .fs-md-4 { font-size: calc(1.2rem + .3vw) !important;}
+  .fs-md-5 { font-size: calc(1.1rem + .2vw) !important;}
+  .fs-md-6 { font-size: calc(1rem + .1vw) !important;}
+  .fs-md-7 { font-size: calc(.80rem + .3vw) !important;}
+  .fs-md-8 { font-size: calc(.70rem + .3vw) !important;}
+}
+
+@media (min-width: 992px) {
+  .fs-lg-1 { font-size: calc(1.4rem + 1.6vw) !important;}
+  .fs-lg-2 { font-size: calc(1.325rem + 1.2vw) !important;}
+  .fs-lg-3 { font-size: calc(1.3rem + .95vw) !important;}
+  .fs-lg-4 { font-size: calc(1.3rem + .4vw) !important;}
+  .fs-lg-5 { font-size: 1.25rem !important;}
+  .fs-lg-6 { font-size: calc(1rem + .15vw) !important; }
+  .fs-lg-7 { font-size: calc(.85rem + .15vw) !important;}
+  .fs-lg-8 { font-size: calc(.75rem + .15vw) !important;}
+}
+
+@media (min-width: 1200px) {
+  .fs-xl-1 { font-size: calc(1.5rem + 1.6vw) !important;}
+  .fs-xl-2 { font-size: calc(1.4rem + 1.3vw) !important;}
+  .fs-xl-3 { font-size: calc(1.3rem + 1vw) !important;}
+  .fs-xl-4 { font-size: calc(1.25rem + .7vw) !important;}
+  .fs-xl-5 { font-size: calc(1.25rem + .2vw) !important;}
+  .fs-xl-6 { font-size: calc(1.1rem + .2vw) !important;}
+  .fs-xl-7 { font-size: calc(1rem + .1vw) !important;}
+  .fs-xl-8 { font-size: calc(.80rem + .1vw) !important;}
+}
+
+@media (min-width: 1400px) {
+  .fs-xxl-1 { font-size: calc(1.75rem + 1.6vw) !important;}
+  .fs-xxl-2 { font-size: calc(1.6rem + 1.3vw) !important;}
+  .fs-xxl-3 { font-size: calc(1.4rem + 1vw) !important;}
+  .fs-xxl-4 { font-size: calc(1.25rem + .7vw) !important;}
+  .fs-xxl-5 { font-size: calc(1.25rem + .4vw) !important;}
+  .fs-xxl-6 { font-size: calc(1.125rem + .3vw) !important;}
+  .fs-xxl-7 { font-size: calc(1rem + .2vw) !important;}
+  .fs-xxl-8 { font-size: calc(.90rem + .1vw) !important;}
+}

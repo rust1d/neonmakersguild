@@ -132,8 +132,8 @@
           &bull;
           <a href='#mThread.seo_link()#'>#mThread.posted()#</a>
           <cfif session.user.loggedIn() && mThread.usid()==session.user.usid() && mThread.editable()>
-            &bull; <a class='thread-edit' data-ftid='#mThread.ftid()#' data-key='#mThread.encoded_key()#' title='editable for 24 hours'><i class='fal fa-pencil'></i></a>
-            &bull; <a class='thread-delete' data-ftid='#mThread.ftid()#' data-key='#mThread.encoded_key()#' title='deletable for 24 hours'><i class='fal fa-trash-can-clock'></i></a>
+            &bull; <a class='thread-edit' data-ftid='#mThread.ftid()#' data-key='#mThread.encoded_key()#' title='editable for 24 hours'><i class='fa-solid fa-fw fa-pencil'></i></a>
+            &bull; <a class='thread-delete' data-ftid='#mThread.ftid()#' data-key='#mThread.encoded_key()#' title='deletable for 24 hours'><i class='fa-solid fa-fw fa-trash-can-clock'></i></a>
           </cfif>
         </div>
       </div>
@@ -199,8 +199,8 @@
                   <a href='#mMessage.seo_link()#'>#mMessage.posted()#</a>
                   <cfif len(mMessage.history())>&bull; <small class='fst-italic muted' title='#mMessage.edited()#'>edited</small></cfif>
                   <cfif session.user.loggedIn() && mMessage.usid()==session.user.usid() && mMessage.editable()>
-                    &bull; <a class='message-edit' data-fmid='#mMessage.fmid()#' data-key='#mMessage.encoded_key()#' title='editable for 24 hours'><i class='fal fa-pencil'></i></a>
-                    &bull; <a class='message-delete' data-fmid='#mMessage.fmid()#' data-key='#mMessage.encoded_key()#' title='deletable for 24 hours'><i class='fal fa-trash-can-clock'></i></a>
+                    &bull; <a class='message-edit' data-fmid='#mMessage.fmid()#' data-key='#mMessage.encoded_key()#' title='editable for 24 hours'><i class='fa-solid fa-fw fa-pencil'></i></a>
+                    &bull; <a class='message-delete' data-fmid='#mMessage.fmid()#' data-key='#mMessage.encoded_key()#' title='deletable for 24 hours'><i class='fa-solid fa-fw fa-trash-can-clock'></i></a>
                   </cfif>
                   <span class='float-end me-3'>Post ###idx#</span>
                 </div>

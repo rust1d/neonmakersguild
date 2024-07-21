@@ -68,7 +68,7 @@
                     <label class='form-label' for='bpa_categories'>Categories</label>
                     <div class='input-group input-group-sm'>
                       <input type='text' class='form-control' name='bca_category' id='bca_category' maxlength='50' />
-                      <button type='button' id='btnAddCategory' class='input-group-text btn-nmg' title='Add Category'><i class='fal fa-plus'></i> &nbsp; Add</button>
+                      <button type='button' id='btnAddCategory' class='input-group-text btn-nmg' title='Add Category'><i class='fa-solid fa-fw fa-plus'></i> &nbsp; Add</button>
                     </div>
                     <select class='form-control form-control-sm mt-1' name='bpa_categories' id='bpa_categories' multiple='multiple' title='ctrl+click to select multiple' size='5'>
                       <cfloop array='#mBlog.categories()#' item='mCat'>

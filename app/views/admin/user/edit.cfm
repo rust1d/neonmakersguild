@@ -166,10 +166,10 @@
               <div class='tab-pane p-3 #ifin(active_tab=='notes', 'active')#' id='notes' role='tabpanel' aria-labelledby='notes-tab'>
                 <div class='row g-3'>
                   <div class='col-12'>
-                    <table class='table table-sm table-dark table-striped table-hover'>
+                    <table class='table table-sm table-striped table-hover'>
                       <thead>
                         <tr>
-                          <td class='col-auto'><i class='fal fa-pencil me-3'></i> Date</td>
+                          <td class='col-auto'><i class='fa-solid fa-fw fa-pencil me-3'></i> Date</td>
                           <td class='col-auto'>Poster</td>
                           <td class='col-8'>Note</td>
                         </tr>
@@ -179,7 +179,7 @@
                           <tr>
                             <td>
                               <a href='#router.hrefenc(page: 'user/note', noid: mNote.noid())#'>
-                                <i class='fal fa-pencil me-3'></i>
+                                <i class='fa-solid fa-fw fa-pencil me-3'></i>
                                 #mNote.added().format('yyyy-mm-dd HH:nn')#
                               </a>
                             </td>

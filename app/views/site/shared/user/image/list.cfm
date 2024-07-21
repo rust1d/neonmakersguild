@@ -11,7 +11,7 @@
         <div class='col-auto'>
           <div class='input-group input-group-sm'>
             <a href='#router.href('#locals.dest#/image/edit')#' class='btn btn-sm btn-nmg' title='Add Image'>
-              <i class='fal fa-plus'></i>
+              <i class='fa-solid fa-fw fa-plus'></i>
             </a>
           </div>
         </div>
@@ -30,17 +30,17 @@
               </a>
             </div>
             <div class='col-9'>
-              <div class='lead'>
+              <div class='fs-5'>
                 <a href='#router.hrefenc(page: '#locals.dest#/image/edit', uiid: locals.mImage.uiid())#'>
-                  <i class='fal fa-pencil'></i> #locals.mImage.filename()#
+                  <i class='fa-solid fa-fw fa-pencil'></i> #locals.mImage.filename()#
                 </a>
               </div>
               <div>#locals.mImage.dimensions()# &bull; #locals.mImage.size_mb()#</div>
               <div class='text-muted'>
-                <i class='fal fa-copy'></i> <span class='clipable' data-clip='#locals.mImage.image_src()#'>#locals.mImage.image_src()#</span> (#locals.mImage.dimensions()#)
+                <i class='fa-solid fa-fw fa-copy'></i> <span class='clipable' data-clip='#locals.mImage.image_src()#'>#locals.mImage.image_src()#</span> (#locals.mImage.dimensions()#)
               </div>
               <div class='text-muted'>
-                <i class='fal fa-copy'></i> <span class='clipable' data-clip='#locals.mImage.thumbnail_src()#'>#locals.mImage.thumbnail_src()#</span> (thumbnail)
+                <i class='fa-solid fa-fw fa-copy'></i> <span class='clipable' data-clip='#locals.mImage.thumbnail_src()#'>#locals.mImage.thumbnail_src()#</span> (thumbnail)
               </div>
             </div>
           </div>
@@ -57,7 +57,7 @@
               <div class='position-relative'>
                 <a href='#router.hrefenc(page: '#locals.dest#/image/edit', uiid: locals.mImage.uiid())#' title='#locals.mImage.filename()#' class='align-bottom'>
                   <img src='#locals.mImage.thumbnail_src()#' class='w-100 img-thumbnail' />
-                  <i class='fal fa-pencil btn btn-nmg btn-outline-dark btn-floating btn-floating-br btn-pic'></i>
+                  <i class='fa-solid fa-fw fa-pencil btn btn-nmg btn-outline-dark btn-floating btn-floating-br btn-pic'></i>
                 </a>
               </div>
             </div>

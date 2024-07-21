@@ -3,7 +3,7 @@
     <div class='col-4'>
       <div class='aspect-2-1 position-relative overflow-hidden' style='background-image: url(#locals.mEntry.image_url()#);'>
         <cfif !isNull(locals.mEntry.ben_promoted())>
-          <span class='ribbon p-1 pb-0'><i class='fa-solid fa-star' title='Front Page #locals.mEntry.promoted()#'></i></span>
+          <span class='ribbon p-1 pb-0'><i class='fa-solid fa-fw fa-star' title='Front Page #locals.mEntry.promoted()#'></i></span>
         </cfif>
       </div>
     </div>
@@ -20,7 +20,7 @@
             <div class='col-12 fs-6 d-flex justify-content-center align-items-center'>
               <a href='#locals.mEntry.User().seo_link()#'>#locals.mEntry.User().user()#</a>
               &nbsp;
-              <cfif isNull(locals.mEntry.ben_promoted())>&bull;<cfelse><i class='smaller fa-solid fa-star text-warning' title='Front Page #locals.mEntry.promoted()#'></i></cfif>
+              <cfif isNull(locals.mEntry.ben_promoted())>&bull;<cfelse><i class='smaller fa-solid fa-fw fa-star text-warning' title='Front Page #locals.mEntry.promoted()#'></i></cfif>
               &nbsp;
                 <span class='smaller'>#locals.mEntry.post_date()#</span>
             </div>

@@ -3,6 +3,10 @@ component accessors=true {
     return '<a href="mailto:#site_email()#">#site_email()#</a>';
   }
 
+  public string function theme() {
+    return 'light';
+  }
+
   public string function site_email() {
     return application.email.support;
   }

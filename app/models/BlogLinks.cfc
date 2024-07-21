@@ -98,12 +98,12 @@ component extends=BaseModel accessors=true {
 
   private struct function icons() {
     return {
-      'bookmark':            'fa-solid fa-square-arrow-up-right',
+      'bookmark':            'fa-solid fa-fw fa-square-arrow-up-right',
       'social media':        'fa-regular fa-sparkles',
       'website':             'fa-regular fa-globe',
-      'resources-classes':   'fa-solid fa-school',
-      'resources-other':     'fa-solid fa-link',
-      'resources-suppliers': 'fa-solid fa-truck-field'
+      'resources-classes':   'fa-solid fa-fw fa-school',
+      'resources-other':     'fa-solid fa-fw fa-link',
+      'resources-suppliers': 'fa-solid fa-fw fa-truck-field'
     }
   }
 

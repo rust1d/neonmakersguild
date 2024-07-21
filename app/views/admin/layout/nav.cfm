@@ -1,5 +1,5 @@
 <cfoutput>
-  <nav class='navbar navbar-expand-lg navbar-dark navbar-nmg mb-3'>
+  <nav class='navbar navbar-expand-lg navbar-nmg mb-3'>
     <div class='container'>
       <a class='navbar-brand' href='#router.href()#'>
         <img src='#application.urls.cdn#/assets/images/logo-alt-1600.png'  alt='#session.site.title()# Logo' height='48'>

@@ -46,7 +46,7 @@
                   &bull; <small class='fst-italic muted' title='#mComment.edited()#'>edited</small>
                 </cfif>
                 <cfif session.user.loggedIn() && mComment.usid()==session.user.usid()>
-                  &bull; <a class='comment-edit' data-bcoid='#mComment.bcoid()#' data-key='#mComment.encoded_key()#'><i class='fal fa-pencil'></i></a>
+                  &bull; <a class='comment-edit' data-bcoid='#mComment.bcoid()#' data-key='#mComment.encoded_key()#'><i class='fa-solid fa-fw fa-pencil'></i></a>
                 </cfif>
               </div>
               <div id='comment-#mComment.encoded_key()#' class='mb-3'>

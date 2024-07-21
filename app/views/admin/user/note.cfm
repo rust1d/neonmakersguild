@@ -33,7 +33,7 @@
                 <img class='img-thumbnail w-auto' src='#mUser.profile_image().src()#' />
               </div>
               <div class='col-10'>
-                <div class='lead'>
+                <div class='fs-5'>
                   <div>#mUser.user()#</div>
                   <div>#mUser.UserProfile().firstname()# #mUser.UserProfile().lastname()#</div>
                   <div>#mUser.UserProfile().location()#</div>

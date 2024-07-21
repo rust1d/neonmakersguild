@@ -41,9 +41,9 @@
     <div class='col-auto'>
       <div class='input-group input-group-sm'>
         <cfif locals.pagination.first>
-          <button class='btn btn-nmg' disabled><i class='fa-solid fa-xl fa-caret-left'></i></button>
+          <button class='btn btn-nmg' disabled><i class='fa-solid fa-fw fa-xl fa-caret-left'></i></button>
         <cfelse>
-          <a class='btn btn-nmg' href='#utility.page_url_prev(locals.pagination)#'><i class='fa-solid fa-xl fa-caret-left'></i></a>
+          <a class='btn btn-nmg' href='#utility.page_url_prev(locals.pagination)#'><i class='fa-solid fa-fw fa-xl fa-caret-left'></i></a>
         </cfif>
         <cfif locals.pagination.pages lt 3>
           <span class='input-group-text btn-nmg'>Page #locals.pagination.page# of #locals.pagination.pages#</span>
@@ -61,9 +61,9 @@
           </ul>
         </cfif>
         <cfif locals.pagination.last>
-          <button class='btn btn-nmg' disabled><i class='fa-solid fa-xl fa-caret-right'></i></button>
+          <button class='btn btn-nmg' disabled><i class='fa-solid fa-fw fa-xl fa-caret-right'></i></button>
         <cfelse>
-          <a class='btn btn-nmg' href='#utility.page_url_next(locals.pagination)#'><i class='fa-solid fa-xl fa-caret-right'></i></a>
+          <a class='btn btn-nmg' href='#utility.page_url_next(locals.pagination)#'><i class='fa-solid fa-fw fa-xl fa-caret-right'></i></a>
         </cfif>
       </div>
     </div>

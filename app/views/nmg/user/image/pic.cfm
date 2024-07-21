@@ -34,11 +34,11 @@
                   <div class='row mb-3'>
                     <div class='col-12'>
                       <a class='btn btn-nmg mr-3 position-relative'>
-                        <span>Upload Photo <i class='fal fa-upload'></i></span>
+                        <span>Upload Photo <i class='fa-solid fa-fw fa-upload'></i></span>
                         <input class='h-100 w-100 position-absolute' type='file' id='profile_input' value='Choose a file' accept='image/*'>
                       </a>
                       <a class='btn btn-nmg mr-3 position-relative' id='profile_remove' >
-                        <span>Remove Profile Photo <i class='fal fa-trash'></i></span>
+                        <span>Remove Profile Photo <i class='fa-solid fa-fw fa-trash'></i></span>
                       </a>
                     </div>
                   </div>

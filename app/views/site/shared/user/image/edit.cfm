@@ -53,10 +53,10 @@
                   </div>
                   <div class='col-12 text-center'>
                     <a class='btn btn-nmg mr-3 position-relative'>
-                      <span><i class='fal fa-list-radio'></i> Select Image</span>
+                      <span><i class='fa-solid fa-fw fa-list-radio'></i> Select Image</span>
                       <input class='h-100 w-100 position-absolute' type='file' id='hidden_input' name='ui_filename' value='Choose a file' accept='image/*'>
                     </a>
-                    <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-nmg'><i class='fal fa-upload'></i> Save Image</button>
+                    <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-nmg'><i class='fa-solid fa-fw fa-upload'></i> Save Image</button>
                     <a href='#router.href('#dest#/image/list')#' class='btn btn-nmg-cancel'>Cancel</a>
                   </div>
                 </div>
@@ -102,10 +102,10 @@
             <div class='col-md-8 col-12'>
               <hr>
               <div class='text-muted small'>
-                <i class='fal fa-copy'></i> <span class='clipable' data-clip='#mImage.image_src()#'>#mImage.image_src()#</span> (#mImage.dimensions()#)
+                <i class='fa-solid fa-fw fa-copy'></i> <span class='clipable' data-clip='#mImage.image_src()#'>#mImage.image_src()#</span> (#mImage.dimensions()#)
               </div>
               <div class='text-muted small'>
-                <i class='fal fa-copy'></i> <span class='clipable' data-clip='#mImage.thumbnail_src()#'>#mImage.thumbnail_src()#</span> (thumbnail)
+                <i class='fa-solid fa-fw fa-copy'></i> <span class='clipable' data-clip='#mImage.thumbnail_src()#'>#mImage.thumbnail_src()#</span> (thumbnail)
               </div>
             </div>
 

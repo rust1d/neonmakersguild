@@ -15,7 +15,7 @@
         <div class='col-auto'>
           <div class='input-group input-group-sm'>
             <a href='#router.href('#locals.dest#/library/edit')#' class='btn btn-sm btn-nmg' title='Add document'>
-              <i class='fal fa-plus'></i>
+              <i class='fa-solid fa-fw fa-plus'></i>
             </a>
           </div>
         </div>
@@ -28,7 +28,7 @@
       <table class='table table-sm table-nmg'>
         <thead>
           <tr>
-            <th scope='col'><a href='#router.href('#locals.dest#/library/edit')#' class='btn btn-sm btn-nmg'><i class='fal fa-plus'></i></a></th>
+            <th scope='col'><a href='#router.href('#locals.dest#/library/edit')#' class='btn btn-sm btn-nmg'><i class='fa-solid fa-fw fa-plus'></i></a></th>
             <th scope='col'>Filename</th>
             <th scope='col'>Description</th>
             <th scope='col'>Size</th>
@@ -39,7 +39,7 @@
             <tr>
               <th scope='row'>
                 <a href='#router.hrefenc(page: '#locals.dest#/library/edit', docid: locals.mDocument.docid())#' class='btn btn-sm btn-nmg'>
-                  <i class='fal fa-pencil'></i>
+                  <i class='fa-solid fa-fw fa-pencil'></i>
                 </a>
               </th>
               <td>#locals.mDocument.filename()#</td>

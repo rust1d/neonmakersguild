@@ -20,6 +20,15 @@ $(function() {
     }
   });
 
+  $('button[name=btnPage]').on('click', function() {
+    var $pager = $('input[name=set_page]');
+    var page = $pager.val();
+    if (page > $pager.attr('max') ||  page < $pager.attr('min')) page = 1;
+    var searchParams = new URLSearchParams(window.location.search);
+    searchParams.set('page', page);
+    window.location.search = searchParams.toString();
+  });
+
   $('#btnDelete').on('click', function(event) {
     if (!confirm('Are you sure you want to delete this record?')) event.preventDefault();
   });

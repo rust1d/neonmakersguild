@@ -21,6 +21,17 @@ component {
     }
   }
 
+  public Notes function LastReminder(required Users mUser) {
+    var rows = mUser.Notes().filter(row => row.action()=='send_reminder');
+    if (rows.len()) return rows.first();
+    return mUser.Notes(build: {});
+  }
+
+  public boolean function RecentReminder(required Users mUser, numeric days=30) {
+    var mNote = LastReminder(mUser);
+    return application.utility.bool(mNote.persisted() && mNote.age_in_days() LTE arguments.days);
+  }
+
   public boolean function SendReminder(required Users mUser) {
     if (SentReminder(mUser)) {
       var days = application.utility.plural_label(application.settings.renewal_reminder_cooldown, 'day');
@@ -32,8 +43,7 @@ component {
   }
 
   public boolean function SentReminder(required Users mUser) {
-    var rows = mUser.Notes().filter(row => row.action()=='send_reminder');
-    return application.utility.bool(rows.len() && rows.first().age_in_days() LTE application.settings.renewal_reminder_cooldown);
+    return RecentReminder(mUser, application.settings.renewal_reminder_cooldown);
   }
 
   public boolean function MarkPaid(required Users mUser) {

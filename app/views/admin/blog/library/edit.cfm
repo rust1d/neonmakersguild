@@ -109,10 +109,10 @@
                   </div>
                   <div class='col-12 text-center'>
                     <a class='btn btn-nmg mr-3 position-relative'>
-                      <span><i class='fal fa-list-radio'></i> Select document</span>
+                      <span><i class='fa-solid fa-fw fa-list-radio'></i> Select document</span>
                       <input class='h-100 w-100 position-absolute' type='file' id='hidden_input' name='doc_filename' value='Choose a file' accept='image/*,audio/*,video/*,text/*,application/pdf'>
                     </a>
-                    <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-nmg'><i class='fal fa-upload'></i> Save document</button>
+                    <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-nmg'><i class='fa-solid fa-fw fa-upload'></i> Save document</button>
                     <a href='#router.href('#dest#/library/list')#' class='btn btn-nmg-cancel'>Cancel</a>
                   </div>
                 </div>
