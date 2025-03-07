@@ -8,11 +8,13 @@ CREATE PROCEDURE documents_search(
   IN _bcaid    int(11),
   IN _tag      VARCHAR(25),
   IN _term     VARCHAR(25),
+  IN _sort     VARCHAR(25),
   IN _paging   VARCHAR(50)
 )
 BEGIN
   DECLARE _limit INT(11) DEFAULT get_page_data(_paging, 'limit');
   DECLARE _offset INT(11) DEFAULT get_page_data(_paging, 'offset');
+  SET _sort = IFNULL(_sort, 'filename');
   SET _term = clean_regexp(_term);
 
   SELECT SQL_CALC_FOUND_ROWS *
@@ -39,7 +41,11 @@ BEGIN
               WHERE dt_docid=doc_docid
            )
          )
-   ORDER BY doc_filename, doc_docid
+   ORDER BY
+     CASE WHEN _sort='filename' THEN doc_filename
+          WHEN _sort='added' THEN DATEDIFF(NOW(), doc_added)
+          WHEN _sort='views' THEN now()-doc_views
+      END, doc_filename, doc_docid
    LIMIT _limit OFFSET _offset;
 
   call pagination(FOUND_ROWS(), _limit, _offset, _term);

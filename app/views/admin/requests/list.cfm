@@ -32,8 +32,8 @@
               </th>
               <td>#mMR.firstname()# #mMR.lastname()#</td>
               <td>#mMR.email()#</td>
-              <td><i class='fa-regular #ifin(mMR.email_validated(), 'fa-circle-dot', 'fa-circle')#'></i></td>
-              <td><i class='fa-regular #ifin(mMR.accept_sent(), 'fa-circle-dot', 'fa-circle')#'></i></td>
+              <td><i class='fa-solid #ifin(mMR.email_validated(), 'fa-circle-dot', 'fa-circle')#'></i></td>
+              <td><i class='fa-solid #ifin(mMR.accept_sent(), 'fa-circle-dot', 'fa-circle')#'></i></td>
             </tr>
           </cfloop>
         </tbody>

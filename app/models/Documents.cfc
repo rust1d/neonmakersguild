@@ -54,13 +54,14 @@ component extends=BaseModel accessors=true {
   public query function search(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;
     if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
-
+// writedump(arguments);abort;
     var sproc = new StoredProc(procedure: 'documents_search', datasource: datasource());
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('doc_docid'), null: !arguments.keyExists('doc_docid'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('doc_blog'),  null: !arguments.keyExists('doc_blog'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('bcaid'),     null: !arguments.keyExists('bcaid'));
     sproc.addParam(cfsqltype: 'varchar', value: arguments.get('tag'),       null: !arguments.keyExists('tag'));
     sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),      null: !arguments.keyExists('term'));
+    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('sort'),      null: !arguments.keyExists('sort'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
     return paged_search(sproc, arguments);
   }
@@ -95,7 +96,7 @@ component extends=BaseModel accessors=true {
 
   private string function document_name() {
     param variables.doc_type = 'tmp';
-    return hash(doc_docid) & '.' & doc_type;
+    return utility.hashCC(doc_docid) & '.' & doc_type;
   }
 
   private string function local_path() {

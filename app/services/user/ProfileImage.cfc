@@ -30,7 +30,7 @@ component accessors=true {
   }
 
   public string function src64() {
-    return exists() ? application.utility.imageToBase64(image_src()) : '';
+    return exists() ? utility.imageToBase64(image_src()) : '';
   }
 
   // PRIVATE
@@ -40,7 +40,7 @@ component accessors=true {
   }
 
   private string function image_name() {
-    return hash(variables.usid) & '.jpg';
+    return utility.hashCC(variables.usid) & '.jpg';
   }
 
   private string function image_src() {

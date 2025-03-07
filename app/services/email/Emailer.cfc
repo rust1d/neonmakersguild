@@ -82,7 +82,7 @@ component accessors = true {
     variables.mailer = new mail(argumentcollection: application.secrets.smtp);
     variables.mailer.setFrom(getFrom());
     variables.mailer.setTo(getTo());
-    variables.mailer.setFailTo(getFailTo());
+    // variables.mailer.setFailTo(getFailTo());
     variables.mailer.setCc(getCc());
     variables.mailer.setBcc(getBcc());
     variables.mailer.setSubject(getSubject());

@@ -42,7 +42,7 @@
             <label class='form-label required' for='bli_url'>URL</label>
             <div class='input-group mb-3'>
               <input type='text' class='form-control' name='bli_url' id='bli_url' value='#htmlEditFormat(mLink.url())#' maxlength='200' required />
-              <button class='btn btn-nmg' title='test url' type='button' onclick='window.open(this.form.bli_url.value); return false;'><i class='fa-regular fa-up-right-from-square'></i></button>
+              <button class='btn btn-nmg' title='test url' type='button' onclick='window.open(this.form.bli_url.value); return false;'><i class='fa-solid fa-up-right-from-square'></i></button>
             </div>
           </div>
           <div class='col-12'>

@@ -1,6 +1,7 @@
 component accessors = true {
   property name='to'          type='string';
   property name='from'        type='string';
+  property name='cc'          type='string';
   property name='subject'     type='string';
   property name='type'        type='string'  default='html';
   property name='body'        type='string';
@@ -22,9 +23,8 @@ component accessors = true {
   }
 
   public void function send() {
-    if (application.isDevelopment) log_email();
-
     send_email();
+    log_email();
   }
 
   public void function send_dump(required any dump) {
@@ -93,18 +93,18 @@ component accessors = true {
   }
 
   private void function log_email() {
-    writeLog(file: 'adminEmailer', text: SerializeJSON(this));
+    new app.services.DailyLogger(type: 'emailer').log(SerializeJSON(this));
   }
 
   private void function send_email() {
     var env_subject = '#application.applicationname#-#application.env.uCase()# ' & getSubject();
-    var mailer = new mail();
+    var mailer = new mail(argumentcollection: application.secrets.smtp);
     mailer.setTo(getTo());
     mailer.setFrom(getFrom());
     mailer.setSubject(env_subject);
     mailer.setType(getType());
     for (var attachment in attachments) {
-      mailer.addParam(file=attachment.filename, type=attachment.type);
+      mailer.addParam(file: attachment.filename, type: attachment.type);
     }
     try {
       mailer.send(body: getBody());

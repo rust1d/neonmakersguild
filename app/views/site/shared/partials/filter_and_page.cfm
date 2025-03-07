@@ -30,6 +30,7 @@
           <div class='input-group input-group-sm'>
             <input type='hidden' name='tag' id='filter_tag' value='#locals.pagination.get('tag')#' />
             <input type='hidden' name='bcaid' id='filter_bcaid' value='#locals.pagination.get('bcaid')#' />
+            <input type='hidden' name='sort' id='filter_sort' value='#locals.pagination.get('sort')#' />
             <input type='hidden' name='filter_term' id='filter_term' value='#locals.pagination.get('term')#' />
             <input type='text' class='form-control' id='term' name='term' placeholder='search...' maxlength='20' aria-label='Search' required />
             <button class='btn btn-sm btn-nmg' type='submit'><i class='fa fa-search'></i></button>

@@ -100,11 +100,11 @@
               </div>
 
               <div class='col-md-6'>
-                <label class='form-label' for='mr_website1'>Personal Website Link <cfif isValid('url', mMR.website1())><a href='#mMR.website1()#' target='_blank'><i class='fa-regular fa-globe'></i></a></cfif></label>
+                <label class='form-label' for='mr_website1'>Personal Website Link <cfif isValid('url', mMR.website1())><a href='#mMR.website1()#' target='_blank'><i class='fa-solid fa-globe'></i></a></cfif></label>
                 <input type='text' class='form-control' id='mr_website1' name='mr_website1' value='#mMR.website1()#' maxlength='100' />
               </div>
               <div class='col-md-6'>
-                <label class='form-label' for='mr_website2'>Primary Social Media Link <cfif isValid('url', mMR.website2())><a href='#mMR.website2()#' target='_blank'><i class='fa-regular fa-globe'></i></a></cfif></label>
+                <label class='form-label' for='mr_website2'>Primary Social Media Link <cfif isValid('url', mMR.website2())><a href='#mMR.website2()#' target='_blank'><i class='fa-solid fa-globe'></i></a></cfif></label>
                 <input type='text' class='form-control' id='mr_website2' name='mr_website2' value='#mMR.website2()#' maxlength='100' />
               </div>
               <div class='col-md-12 mb-3'>

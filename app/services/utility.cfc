@@ -53,7 +53,7 @@ component {
     if (data.len()==0 || (data.len() MOD 2)!=0) return 0;
     var chrs = len(data) / 2;
     var id = Decrypt(data.left(chrs), application.secrets.phrase, 'CFMX_COMPAT', 'Hex');
-    if (data.right(chrs)==left(hash(id) & data, chrs)) return id;
+    if (data.right(chrs)==left(hashCC(id) & data, chrs)) return id;
     return 0;
   }
 
@@ -62,8 +62,8 @@ component {
   }
 
   public string function encode(required string data) {
-    var enc = Encrypt(data, application.secrets.phrase, 'CFMX_COMPAT','Hex');
-    var hsh = left(hash(data) & enc, len(enc));
+    var enc = Encrypt(data, application.secrets.phrase, 'CFMX_COMPAT', 'Hex');
+    var hsh = left(hashCC(data) & enc, len(enc));
     return lcase('#enc##hsh#');
   }
 
@@ -132,6 +132,10 @@ component {
       if (idx mod size==0 && idx!=arr.len()) groups.append([]);
     }
     return groups;
+  }
+
+  public string function hashCC(required string data) {
+    return hash(arguments.data, 'CFMX_COMPAT', 'Base64');
   }
 
   public string function hexToBase64(required string data) {

@@ -41,7 +41,7 @@ component extends=BaseModel accessors=true {
   public string function icon(string size = '2x') {
     if (isNull(variables.bli_url)) return '';
     var type = social_type();
-    var icon = type.len() ? 'fa-brands fa-#type#' : icons().get(bli_type ?: 'bookmark') ?: 'fa-regular fa-block-question';
+    var icon = type.len() ? 'fa-brands fa-#type#' : icons().get(bli_type ?: 'bookmark') ?: 'fa-solid fa-block-question';
     return "<i class='fa-#size# #icon#'></i>";
   }
 
@@ -85,7 +85,7 @@ component extends=BaseModel accessors=true {
   }
 
   public array function social_types() {
-    return listToArray('facebook,flickr,instagram,linkedin,pinterest,snapchat,tiktok,twitter,vimeo,youtube');
+    return listToArray('bluesky,facebook,flickr,instagram,linkedin,pinterest,snapchat,tiktok,twitter,threads,vimeo,youtube');
   }
 
   public array function types() {
@@ -99,8 +99,8 @@ component extends=BaseModel accessors=true {
   private struct function icons() {
     return {
       'bookmark':            'fa-solid fa-fw fa-square-arrow-up-right',
-      'social media':        'fa-regular fa-sparkles',
-      'website':             'fa-regular fa-globe',
+      'social media':        'fa-solid fa-thumbs-up',
+      'website':             'fa-solid fa-globe',
       'resources-classes':   'fa-solid fa-fw fa-school',
       'resources-other':     'fa-solid fa-fw fa-link',
       'resources-suppliers': 'fa-solid fa-fw fa-truck-field'

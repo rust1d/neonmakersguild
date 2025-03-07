@@ -1,13 +1,13 @@
 <cfcache action='servercache' timeSpan='#createTimeSpan(0,6,0,0)#' id='#router.slug()#' usecache='#!application.isDevelopment#'>
   <cfscript>
     roles = [
-      { id: 2,  title: 'President' },
-      { id: 93, title: 'Vice President' },
-      { id: 43, title: 'Treasurer' },
+      { id: 75,  title: 'President' },
+      { id: 43, title: 'Vice President' },
+      { id: 94, title: 'Treasurer' },
       { id: 14, title: 'Secretary' },
       { id: 3,  title: 'At Large' },
       { id: 7,  title: 'At Large' },
-      { id: 94, title: 'At Large' }
+      { id: 110, title: 'At Large' }
     ]
 
     board_ids = roles.map(role => role.id).toList();
@@ -23,7 +23,7 @@
     <div class='row g-5 justify-content-center my-5'>
       <cfloop array='#roles#' item='role'>
         <cfset mUser = mBoard.filter(row => row.usid()==role.id).first() />
-        <div class='col-4 col-lg-3 text-center'>
+        <div class='col-4 col-lg-4 text-center'>
           <h5>#role.title#</h5>
           <a href='#mUser.seo_link()#'>
             <img class='img-thumbnail w-100' src='#mUser.profile_image().src()#' />

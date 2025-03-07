@@ -11,6 +11,7 @@
           </p>
           <p id='legal' class='small'>
             &copy; #now().year()# Neon Makers Guild&reg;
+            &nbsp;|&nbsp;&nbsp;<a href='/page/privacy' class='smallest'>Privacy Policy</a>
             &nbsp;|&nbsp;&nbsp;<cite class='smallest'>#utility.plural_label(now().Diff('s', GetPageContext().GetFusionContext().GetStartTime()), 'second')#</cite>
           </p>
         </div>

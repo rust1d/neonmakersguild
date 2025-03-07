@@ -15,15 +15,15 @@
           subject = 'SPAM LIKELY: ' & subject;
           form['G-RECAPTCHA-RESPONSE'] = 'Spam likely: ' & response.score;
           flash.warning('Thanks Robot! Beep boop to you too.');
-          sendto = [ application.email.admin, 'membership@neonmakersguild.org' ];
-          new app.services.email.AdminEmailer(to: sendto.toList(), subject: subject).send_form();
+          // sendto = [ application.email.admin, 'membership@neonmakersguild.org' ];
+          new app.services.email.AdminEmailer(to: 'membership@neonmakersguild.org', cc: application.email.admin, subject: subject).send_form();
           router.go('/page/application-submitted');
         } else {
           if (mMR.safe_save()) {
             form['G-RECAPTCHA-RESPONSE'] = 'Success: ' & response.score;
             flash.success('Thanks #form.mr_firstname#! We will be in touch soon. Please add `support@neonmakersguild.org` to your email whitelist while you wait.');
-            sendto = [ application.email.admin, 'membership@neonmakersguild.org' ];
-            new app.services.email.AdminEmailer(to: sendto.toList(), subject: subject).send_form();
+            // sendto = [ application.email.admin, 'membership@neonmakersguild.org' ];
+            new app.services.email.AdminEmailer(to: 'membership@neonmakersguild.org', cc: application.email.admin, subject: subject).send_form();
             new app.services.email.MemberRequestEmailer().SendConfirmation(mMR);
             router.go('/page/application-submitted');
           }

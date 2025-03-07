@@ -66,7 +66,7 @@ component extends=BaseModel accessors=true {
 
     if (isNull(variables._uses)) {
       var sproc = new StoredProc(procedure: 'userimages_uses', datasource: datasource());
-      sproc.addParam(cfsqltype: 'varchar', value: hash(ui_uiid));
+      sproc.addParam(cfsqltype: 'varchar', value: utility.hashCC(ui_uiid));
       sproc.addProcResult(name: 'qry', resultset: 1);
       variables._uses = utility.query_to_array(sproc.execute().getProcResultSets().qry);
     }
@@ -94,11 +94,11 @@ component extends=BaseModel accessors=true {
   }
 
   private string function image_name() {
-    return hash(ui_uiid) & '.jpg';
+    return utility.hashCC(ui_uiid) & '.jpg';
   }
 
   private string function thumbnail_name() {
-    return hash(ui_uiid) & '_tn.jpg';
+    return utility.hashCC(ui_uiid) & '_tn.jpg';
   }
 
   private string function local_path() {

@@ -1,11 +1,14 @@
 <cfscript>
+  param form.sort = 'filename';
   if (len(form.get('term'))==0 && len(form.get('filter_term'))) form.term = form.filter_term;
   locals.params = utility.paged_term_params();
   if (len(form.get('tag'))) locals.params.tag = form.tag;
   if (len(form.get('bcaid'))) locals.params.bcaid = form.bcaid;
+  if (len(form.get('sort'))) locals.params.sort = form.sort;
   locals.results = mBlog.documents(locals.params);
   if (len(form.get('tag'))) locals.results.pagination.tag = locals.params.tag;
   if (len(form.get('bcaid'))) locals.results.pagination.bcaid = locals.params.bcaid;
+  if (len(form.get('sort'))) locals.results.pagination.sort = locals.params.sort;
 </cfscript>
 
 <script>
@@ -19,6 +22,11 @@
     $('#select_bcaid').on('change', function() {
       $('#filter_bcaid').val($(this).val());
       $('#filter_bcaid')[0].form.submit();
+    });
+
+    $('#select_sort').on('change', function() {
+      $('#filter_sort').val($(this).val());
+      $('#filter_sort')[0].form.submit();
     });
 
     $('#btnClearTag').prop('onclick', null);
@@ -44,13 +52,25 @@
           Categories
         </div>
         <div class='col-2'>
-          <select class='form-control form-control-sm mt-1' name='select_bcaid' id='select_bcaid'>
+          <select class='form-select form-select-sm mt-1' name='select_bcaid' id='select_bcaid'>
             <option value=''>-- all --</option>
             <cfloop array='#mBlog.categories()#' item='mCat'>
               <option value='#mCat.bcaid()#' #ifin(form.get('bcaid')==mCat.bcaid(), 'selected')#>#mCat.category()#</option>
             </cfloop>
           </select>
         </div>
+        <cfif session.user.loggedIn()>
+          <div class='col-auto fs-6'>
+            Sort
+          </div>
+          <div class='col-2'>
+            <select class='form-select form-select-sm mt-1' name='select_sort' id='select_sort'>
+              <option value='filename' #ifin(form.sort EQ 'filename')#>Filename</option>
+              <option value='added' #ifin(form.sort EQ 'added')#>Added</option>
+              <option value='views' #ifin(form.sort EQ 'views')#>Views</option>
+            </select>
+          </div>
+        </cfif>
         #router.include('shared/partials/filter_and_page', { pagination: locals.results.pagination })#
       </div>
     </div>
