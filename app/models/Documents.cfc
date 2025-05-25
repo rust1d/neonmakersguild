@@ -22,12 +22,12 @@ component extends=BaseModel accessors=true {
   }
 
   public void function download() {
-    if (new_record() || !fileExists(local_src())) return;
+    if (new_record() || !fileExists(src())) return;
 
     cfheader(name: 'content-disposition', value: 'attachment; filename=#download_filename()#');
     cfheader(name: 'Expires', value: Now());
     cfheader(name: 'Content-Length', value: doc_size);
-    cfcontent(file: local_src());
+    cfcontent(file: src());
   }
 
   public string function download_filename() {

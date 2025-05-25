@@ -2,7 +2,7 @@ component extends=BaseModel accessors=true {
   property name='bsu_bsuid'     type='numeric'  sqltype='integer'  primary_key;
   property name='bsu_blog'      type='numeric'  sqltype='integer';
   property name='bsu_email'     type='string'   sqltype='varchar';
-  property name='bsu_verified'  type='numeric'  sqltype='tinyint';
+  property name='bsu_verified'  type='boolean'  sqltype='tinyint';
 
   public query function search(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;

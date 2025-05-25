@@ -10,6 +10,7 @@
       router.redirect('#dest#/image/list');
     } else {
       flash.error('An error occurred while uploading. Please try again or contact #session.site.mailto_site()#.');
+      router.redirenc('#dest#/image/edit');
     }
   } else if (form.keyExists('btnDelete')) {
     mImage.destroy();

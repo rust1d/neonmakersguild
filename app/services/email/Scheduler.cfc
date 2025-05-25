@@ -1,5 +1,5 @@
 component {
-  remote struct function perform() returnFormat='json' {
+  remote struct function perform(string p) returnFormat='json' {
     var response = new_response();
     try {
       response.data = new scheduler.forum().send_alerts();

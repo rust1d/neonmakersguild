@@ -4,8 +4,8 @@ component extends=BaseModel accessors=true {
   property name='ft_usid'         type='numeric'  sqltype='integer';
   property name='ft_subject'      type='string'   sqltype='varchar';
   property name='ft_alias'        type='string'   sqltype='varchar';
-  property name='ft_sticky'       type='numeric'  sqltype='tinyint'    default='0';
-  property name='ft_locked'       type='numeric'  sqltype='tinyint'    default='0';
+  property name='ft_sticky'       type='boolean'  sqltype='tinyint'    default='0';
+  property name='ft_locked'       type='boolean'  sqltype='tinyint'    default='0';
   property name='ft_messages'     type='numeric'  sqltype='integer';
   property name='ft_views'        type='numeric'  sqltype='integer';
   property name='ft_last_fmid'    type='numeric'  sqltype='integer';

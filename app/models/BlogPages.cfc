@@ -4,7 +4,7 @@ component extends=jSoup accessors=true {
   property name='bpa_title'       type='string'   sqltype='varchar';
   property name='bpa_alias'       type='string'   sqltype='varchar';
   property name='bpa_body'        type='string'   sqltype='varchar'  html;
-  property name='bpa_standalone'  type='numeric'  sqltype='tinyint'  default='0';
+  property name='bpa_standalone'  type='boolean'  sqltype='tinyint'  default='0';
   property name='bpa_blogname'    type='string';
 
   has_many(name: 'BlogPagesCategories',  class: 'BlogPagesCategories',  key: 'bpa_bpaid',  relation: 'bpc_bpaid');
