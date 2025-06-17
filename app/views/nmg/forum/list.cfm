@@ -13,6 +13,8 @@
       </div>
     </cfif>
     <cfloop array='#arrList#' item='row'>
+      <cftry>
+
       <cfset mForum = new app.models.Forums(row) />
       <cfset mThread = new app.models.ForumThreads(row) />
       <cfset mMessage = new app.models.ForumMessages(row) />
@@ -59,6 +61,11 @@
           </div>
         </div>
       </div>
+      <cfcatch any='err'>
+        <!--- <cfdump var='#row#' />
+        <cfdump var="#err#" /> --->
+      </cfcatch>
+    </cftry>
     </cfloop>
   </div>
 </cfoutput>

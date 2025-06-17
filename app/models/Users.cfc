@@ -100,7 +100,7 @@ component extends=BaseModel accessors=true {
   }
 
   public string function seo_link() {
-    return lcase('/member/#utility.slug(us_user)#');
+    return lcase('/member/#utility.slug(variables.us_user)#');
   }
 
   public array function social_links() {
@@ -127,9 +127,9 @@ component extends=BaseModel accessors=true {
       variables.password = '';
     }
     if (this.user_changed()) {
-      var qry = this.search(us_user: us_user);
+      var qry = this.search(us_user: variables.us_user);
       if (qry.len() && qry.us_usid != primary_key()) {
-        errors().append('Username #us_user# is in use.');
+        errors().append('Username #variables.us_user# is in use.');
       }
     }
   }
