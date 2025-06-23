@@ -44,15 +44,26 @@
         }
       }
     } else if (form.keyExists('btnMessageEdit') || form.keyExists('btnMessageDelete')) {
-      fmid = utility.decode(form.fmid);
-      if (fmid) {
-        mMessages = new app.models.ForumMessages().where(fm_fmid: fmid, fm_usid: session.user.usid());
+      variables.fmid = utility.decode(form.fmid);
+      if (variables.fmid) {
+        mMessages = new app.models.ForumMessages().where(fm_fmid: variables.fmid, fm_usid: session.user.usid());
         if (mMessages.len()==1) {
           mMessage = mMessages.first();
           if (mMessage.editable()) {
             if (form.keyExists('btnMessageEdit')) {
               if (mMessage.set(fm_body: form.edit_message).safe_save()) {
                 flash.success('Your message was updated.');
+                save_images(mMessage);
+                for (form.fiid in form.fiids) {
+                  variables.fiid = utility.decode(form.fiid);
+                  if (variables.fiid) {
+                    mFI = mMessage.ForumImages(detect: { fi_fiid: variables.fiid } );
+                    if (!isNull(mFI)) {
+                      mFI.destroy();
+                      flash.success('Your image #mFI.filename()# was deleted.');
+                    }
+                  }
+                }
                 router.go(mThread.seo_link() & '##message-' & mMessage.fmid());
               }
             } else {
@@ -85,6 +96,7 @@
           mForum.messages_inc();
           mForum.last_fmid(mMessage.fmid());
           mForum.safe_save();
+          save_images(mMessage);
           router.reload();
         }
       }
@@ -104,7 +116,9 @@
   mBlock = mBlog.textblock_by_label('forum-' & mForum.alias());
 </cfscript>
 
-<script src='/assets/js/blog/messages.js'></script>
+<cfset include_js('assets/js/forums/thread.js') />
+<cfset include_js('assets/js/forums/images.js') />
+<cfset router.include('forum/_image_dropdown') />
 
 <cfoutput>
   <div class='row g-3 pt-3'>
@@ -133,7 +147,7 @@
           <a href='#mThread.seo_link()#'>#mThread.posted()#</a>
           <cfif session.user.loggedIn() && mThread.usid()==session.user.usid() && mThread.editable()>
             &bull; <a class='thread-edit' data-ftid='#mThread.ftid()#' data-key='#mThread.encoded_key()#' title='editable for 24 hours'><i class='fa-solid fa-fw fa-pencil'></i></a>
-            &bull; <a class='thread-delete' data-ftid='#mThread.ftid()#' data-key='#mThread.encoded_key()#' title='deletable for 24 hours'><i class='fa-solid fa-fw fa-trash-can-clock'></i></a>
+            &bull; <a class='thread-delete' data-ftid='#mThread.ftid()#' data-key='#mThread.encoded_key()#' title='deletable for 24 hours'><i class='fa-solid fa-fw fa-trash'></i></a>
           </cfif>
         </div>
       </div>
@@ -178,7 +192,13 @@
             #router.include('shared/partials/filter_and_page', { pagination: pagination })#
           </div>
         </div>
-        <form method='post'>
+        <form method='post' class='needs-validation' novalidate autocomplete='off' enctype='multipart/form-data'>
+          <input type='hidden' name='fmid' />
+          <input type='hidden' name='fiids' />
+
+          <input type='file' id='filePicker' accept='image/*' multiple class='d-none' />
+          <div id='hidden-inputs'></div>
+
           <cfloop array='#arrList#' item='row' index='idx'>
             <cfset mMessage = new app.models.ForumMessages(row) />
             <cfset mUser = new app.models.Users(row) />
@@ -200,18 +220,31 @@
                   <cfif len(mMessage.history())>&bull; <small class='fst-italic muted' title='#mMessage.edited()#'>edited</small></cfif>
                   <cfif session.user.loggedIn() && mMessage.usid()==session.user.usid() && mMessage.editable()>
                     &bull; <a class='message-edit' data-fmid='#mMessage.fmid()#' data-key='#mMessage.encoded_key()#' title='editable for 24 hours'><i class='fa-solid fa-fw fa-pencil'></i></a>
-                    &bull; <a class='message-delete' data-fmid='#mMessage.fmid()#' data-key='#mMessage.encoded_key()#' title='deletable for 24 hours'><i class='fa-solid fa-fw fa-trash-can-clock'></i></a>
+                    &bull; <a class='message-delete' data-fmid='#mMessage.fmid()#' data-key='#mMessage.encoded_key()#' title='deletable for 24 hours'><i class='fa-solid fa-fw fa-trash'></i></a>
                   </cfif>
                   <span class='float-end me-3'>Post ###idx#</span>
                 </div>
                 <div id='message-#mMessage.encoded_key()#' class='me-2 mb-2'>
                   <div class='message border bg-nmg-light p-3 thread-message #ifin(mMessage.deleted(), 'text-decoration-line-through')#'>
-                    <cfif mMessage.deleted() && !session.user.admin()>
-                      <span class='fst-italic smaller'>#mMessage.deleted_label()#</span>
-                    <cfelse>
-                      #mMessage.body()#
-                    </cfif>
+                    <div class='body'>
+                      <cfif mMessage.deleted() && !session.user.admin()>
+                        <span class='fst-italic smaller'>#mMessage.deleted_label()#</span>
+                      <cfelse>
+                        #mMessage.body()#
+                      </cfif>
+                    </div>
                   </div>
+                  <cfif row.fm_image_cnt GT 0>
+                    <div class='message-roll row g-2 mt-1'>
+                      <cfloop array='#mMessage.ForumImages()#' item='mFI'>
+                        <div class='col-3 col-xl-2 position-relative'>
+                          <a data-lightbox='message-#mMessage.fmid()#' data-title='#mFI.filename()#' href='#mFI.image_src()#' title='#mFI.filename()#'>
+                            <img data-pkid=#mFI.encoded_key()# class='w-100 img-thumbnail' src='#mFI.thumbnail_src()#' />
+                          </a>
+                        </div>
+                      </cfloop>
+                    </div>
+                  </cfif>
                 </div>
               </div>
             </div>
@@ -229,7 +262,10 @@
                 <div class='border bg-nmg-light me-2 my-2 p-3 thread-message'>
                   <div class='row g-3'>
                     <div class='col-12'>
-                      <textarea class='form-control tiny-forum' rows='8' name='fm_body' id='fm_body'></textarea>
+                      <textarea class='form-control tiny-forum' rows='8' name='fm_body' id='fm_body' data-roll='photo_roll'></textarea>
+                    </div>
+                    <div class='col-12'>
+                      <div id='photo_roll' class='row g-1 mb-2'></div>
                     </div>
                     <cfif mForumSubscript.new_record()>
                       <div class='col-12'>
@@ -248,9 +284,11 @@
             </div>
             <div id='edit_popin' class='row g-2 d-none'>
               <div class='col-12'>
-                <input type='hidden' name='fmid' />
                 <button type='submit' name='btnMessageDelete' id='btnMessageDelete' class='d-none'>Delete</button>
-                <textarea class='form-control tiny-forum' rows='4' name='edit_message' id='edit_message'></textarea>
+                <textarea class='form-control tiny-forum' rows='4' name='edit_message' id='edit_message' data-roll='edit_roll'></textarea>
+              </div>
+              <div class='col-12'>
+                <div id='edit_roll' class='row g-1 mb-2'></div>
               </div>
               <div class='col-12 text-center'>
                 <button type='submit' name='btnMessageEdit' id='btnMessageEdit' class='btn btn-sm btn-nmg'>Save</button>

@@ -5,7 +5,7 @@
   }
 </cfscript>
 
-<script src='/assets/js/image/select.js'></script>
+<cfset include_js('assets/js/image/select.js') />
 
 <cfoutput>
   <form method='post'>

@@ -13,7 +13,7 @@ BEGIN
   DECLARE _offset INT(11) DEFAULT get_page_data(_paging, 'offset');
   SET _term = clean_regexp(_term);
 
-  SELECT SQL_CALC_FOUND_ROWS *
+  SELECT SQL_CALC_FOUND_ROWS *, (SELECT COUNT(*) FROM forumImages WHERE fi_fmid=fm_fmid) AS fm_image_cnt
     FROM forummessages
          INNER JOIN forumthreads ON ft_ftid = fm_ftid
          INNER JOIN forums ON fo_foid = ft_foid

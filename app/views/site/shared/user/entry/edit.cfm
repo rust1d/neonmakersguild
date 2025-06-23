@@ -39,8 +39,8 @@
   mImages = mUserBlog.images(ratio: 2, maxrows: 12).rows;
 </cfscript>
 
-<script src='/assets/js/admin/blog/entry.js'></script>
-<script src='/assets/js/image/select.js'></script>
+<cfset include_js('assets/js/admin/blog/entry.js') />
+<cfset include_js('assets/js/image/select.js') />
 
 <cfoutput>
   <div class='row'>

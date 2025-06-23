@@ -1,4 +1,14 @@
 $(function() {
+  SERVER = {};
+
+  $('script[data-json]').each(function() {
+    let key = this.dataset.json;
+    let data = JSON.parse(this.textContent);
+    let def = data.constructor === Array ? [] : {};
+    let obj = (key=='server') ? SERVER : SERVER[key] = SERVER[key] || def;
+    for (let key in data) if (key) obj[key] = data[key];
+  });
+
   $('body').on('click', '.clipable', function() {
     navigator.clipboard.writeText($(this).data('clip'));
     var el = $(this).addClass('clipped');
@@ -58,4 +68,25 @@ $(function() {
     return txt.toLowerCase().replace(/[^\w ]+/g, '').replace(/ +/g, '-');
   }
 
+  debounce = function(func, wait, immediate) {
+    let timeout;
+    return function() {
+      const context = this;
+      const args = arguments;
+      const later = function() {
+        timeout = null;
+        if (!immediate) func.apply(context, args);
+      }
+      const callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+      if (callNow) func.apply(context, args);
+    }
+  }
+
+  get_base64_ext = function(base64) {
+    const match = base64.match(/^data:image\/([a-zA-Z0-9+]+);base64,/);
+    const ext = match ? match[1].toLowerCase() : 'png';
+    return ext === 'jpeg' ? 'jpg' : ext;
+  }
 });

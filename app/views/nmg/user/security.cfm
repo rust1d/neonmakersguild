@@ -23,7 +23,7 @@
   }
 </cfscript>
 
-<script src='/assets/js/user/password.js'></script>
+<cfset include_js('assets/js/user/password.js') />
 
 <cfoutput>
   <div class='row g-3 justify-content-center'>

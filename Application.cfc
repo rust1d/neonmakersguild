@@ -29,6 +29,7 @@ component {
     application.dsn = 'neonmakersguild';
     application.email.support = 'support@neonmakersguild.org';
     application.email.supportplus = 'Neon Makers Guild <#application.email.support#>';
+    application.email.membership = 'membership@neonmakersguild.org';
     application.paths.root = ExpandPath('\');
     application.paths.images = application.paths.root & 'assets\images\';
     application.paths.documents = application.paths.root & 'assets\documents\';
@@ -176,6 +177,7 @@ component {
 
   private void function load_secrets() {
     application.secrets = deserializeJSON(fileRead(ExpandPath('..') & '/nmg.json'));
+    application.cache_key = fileRead(expandPath('\.cache_key')).left(13);
   }
 
   private void function load_singletons() {

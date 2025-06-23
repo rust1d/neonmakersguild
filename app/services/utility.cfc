@@ -232,6 +232,20 @@ component {
     }
   }
 
+  public any function orient_image(required any img) {
+    try {
+      var orientation = ImageGetEXIFTag(img, 'orientation') ?: 0;
+      if (ListFind('2', orientation))     ImageFlip(arguments.img, 'horizontal');
+      if (ListFind('4,5,7', orientation)) ImageFlip(arguments.img, 'vertical');
+      if (ListFind('3', orientation))   ImageRotate(arguments.img, 180);
+      if (ListFind('6,7', orientation)) ImageRotate(arguments.img, 90);
+      if (ListFind('5,8', orientation)) ImageRotate(arguments.img, 270);
+    } catch (any err) {
+      writedump(err);
+    }
+    return arguments.img;
+  }
+
   public struct function original_url(string href) {
     var data = arguments.get('href') ?: getHttpRequestData().headers.get('X-Original-URL') ?: request.router.url();
     return {

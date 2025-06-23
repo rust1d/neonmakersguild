@@ -1,4 +1,6 @@
 $(function() {
+  SERVER.activeEditor = null;
+
   let toolbar_groups = {
     aligning: {
       icon: 'align-center',
@@ -117,29 +119,53 @@ $(function() {
 
   let tiny_forum = {
     menubar: 'edit insert view format table help',
-    plugins: 'autolink autosave code fullscreen help image link lists media preview visualblocks visualchars wordcount',
-    toolbar: 'fullscreen | undo redo | editing | styling | font | aligning | lists | link unlink | image media',
+    plugins: 'autolink autosave code fullscreen help link lists media preview visualblocks visualchars wordcount',
+    toolbar: 'fullscreen | undo redo | editing | styling | font | aligning | lists | link unlink | customImageBtn | media',
     toolbar_groups: toolbar_groups,
     font_family_formats: 'Select Font=system-ui;Andale Mono=andale mono,times; Arial Black=arial black,avant garde; Arial=arial,helvetica,sans-serif; Arimo=arimo; Book Antiqua=book antiqua,palatino; Comic Sans MS=comic sans ms,sans-serif; Courier New=courier new,courier; Georgia=georgia,palatino; Helvetica=helvetica; Impact=impact,chicago; Montserrat=montserrat; Permanent Marker=permanent marker; Poppins=poppins; Roboto=roboto; Symbol=symbol; Tahoma=tahoma,arial,helvetica,sans-serif; Terminal=terminal,monaco; Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva; Webdings=webdings; Wingdings=wingdings,zapf dingbats;',
     toolbar_mode: 'floating',
-    image_class_list: [
-      { title: 'Normal Size', value: 'img-fluid my-3' },
-      { title: 'Width', menu: [
-        { title: 'Width 100% no padding', value: 'img-fluid w-100' },
-        { title: 'Width 100%', value: 'img-fluid w-100 my-3' },
-        { title: 'Width 75%', value: 'img-fluid w-75 p-1 m-3' },
-        { title: 'Width 75%, Align Right', value: 'img-fluid w-75 p-1 m-3 float-end' },
-        { title: 'Width 50%', value: 'img-fluid w-50 p-1 m-3 float-start' },
-        { title: 'Width 50%, Align Right', value: 'img-fluid w-50 p-1 m-3 float-end' },
-        { title: 'Width 25%', value: 'img-fluid w-25 p-1 m-3 float-start' },
-        { title: 'Width 25%, Align Right', value: 'img-fluid w-25 p-1 m-3 float-end' }
-      ]}
-    ],
     skin_url: '/assets/css/nmg',
-    image_advtab: false,
     relative_urls : false,
     remove_script_host : true,
-    visualblocks_default_state: true
+    visualblocks_default_state: true,
+    setup: (editor) => {
+      const $drop =$('#imageDropdown');
+      editor.on('init', function() {
+        const iframeDoc = editor.getDoc();
+        if (iframeDoc) {
+          $(iframeDoc).on('mousedown', function() {
+            bootstrap.Dropdown.getOrCreateInstance($drop[0]).hide();
+          });
+        }
+      });
+      editor.ui.registry.addButton('customImageBtn', {
+        tooltip: 'Attach Image',
+        icon: 'image',
+        onAction: () => {
+          SERVER.activeEditor = editor;
+          $drop.data('roll', editor.targetElm.dataset.roll || 'photo_roll');
+          const $btn = $(editor.getContainer()).find('button[title="Attach Image"]').last();
+          const offset = $btn.offset();
+          $drop.css({ top: offset.top + $btn.outerHeight(), left: offset.left });
+          bootstrap.Dropdown.getOrCreateInstance($drop[0]).show();
+        }
+      });
+      editor.on('drop', function(ev) {
+        const dt = ev.dataTransfer;
+        if (!dt || !dt.files?.length) return;
+        const files = Array.from(dt.files);
+        ev.preventDefault();
+        ev.stopPropagation();
+        process_files(files);
+      });
+      editor.on('paste', function(ev) {
+        const items = (ev.clipboardData || ev.originalEvent?.clipboardData)?.items || [];
+        const files = Array.from(items).filter(item => item.kind==='file').map(item => item.getAsFile());
+        if (!files.length) return;
+        ev.preventDefault();
+        process_files(files);
+      });
+    }
   };
 
   $('textarea.tiny-mce').each(function() {
@@ -162,5 +188,12 @@ $(function() {
 
   $('textarea.tiny-forum').each(function() {
     init_tinyforum(this);
+  });
+
+  $(document).on('mousedown', function(ev) {
+    const $drop = $('#imageDropdown');
+    if (!$drop.is(ev.target) && $drop.has(ev.target).length===0) {
+      bootstrap.Dropdown.getOrCreateInstance($drop[0]).hide();
+    }
   });
 });

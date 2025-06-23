@@ -35,8 +35,8 @@
 
 <cfparam name='form.bca_category' default=''>
 
-<script src='/assets/js/admin/blog/page.js'></script>
-<script src='/assets/js/image/select.js'></script>
+<cfset include_js('assets/js/admin/blog/page.js') />
+<cfset include_js('assets/js/image/select.js') />
 
 <cfoutput>
   <div class='row mb-3'>

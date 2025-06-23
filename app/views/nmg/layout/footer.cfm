@@ -7,7 +7,7 @@
             <cfloop array='#mBlog.owner().profile_links()#' item='mLink'>
               <span class='p-3'>#mLink.icon_link()#</span>
             </cfloop>
-            <span class='p-3'><a href='mailto:#application.email.supportplus#' target='_blank'><i class='fa-2x fa-solid fa-fw fa-at'></i></a></span>
+            <span class='p-3'><a href='mailto:#application.email.membership#' target='_blank'><i class='fa-2x fa-solid fa-fw fa-at'></i></a></span>
           </p>
           <p id='legal' class='small'>
             &copy; #now().year()# Neon Makers Guild&reg;

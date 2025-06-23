@@ -1,4 +1,4 @@
-<script src='/assets/js/image/profile.js'></script>
+<cfset include_js('assets/js/image/profile.js') />
 
 <cfoutput>
   <cfif mUser.profile_image().exists()>

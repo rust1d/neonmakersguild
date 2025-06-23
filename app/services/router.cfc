@@ -41,6 +41,12 @@ component accessors=true {
     return rtn.toList('&');
   }
 
+  public string function generate() {
+    var data = '';
+    savecontent variable='data' { this.include(argumentcollection: arguments) };
+    return data;
+  }
+
   public void function go(required string dest) {
     location(dest, false);
   }
@@ -72,14 +78,15 @@ component accessors=true {
     include_view_scripts(partial);
     var locals_stack = variables.locals ?: {}; // stash current locals, if any
     variables.locals = data; // make data available to current template
-
+    if (is_content && include_layout(partial)) return;
     include_template(partial, runonce);
     variables.locals = locals_stack; // pop locals stack
   }
 
-  public boolean function included(required string partial) {
+  public boolean function included(required string partials) { // IF LIST PASSED, RETURNS TRUE IF ANY MATCH
     if (history.isEmpty()) return false;
-    return history.find(template_path(partial));
+    for (var partial in partials) if (history.find(template_path(partial))) return true;
+    return false;
   }
 
   public struct function last() {
@@ -92,6 +99,21 @@ component accessors=true {
     data.section = data.path.listLast('/');
 
     return data;
+  }
+
+  public void function layout_content() {
+    var partial = template();
+    include_global_scripts();
+    include_view_scripts(partial);
+    include_template(partial,  true);
+  }
+
+  public string function original_url() {
+    return getHttpRequestData().headers.get('X-Original-URL') ?: href();
+  }
+
+  public string function print(required string path) {
+    return path.replace('/?p', '/print.cfm?p');
   }
 
   public void function redirenc(string page='') { // RETURNS TO HOMEPAGE IF NONE PASSED
@@ -119,7 +141,7 @@ component accessors=true {
   }
 
   public string function template() {
-    return variables._template;
+    return variables._template ?: '';
   }
 
   public boolean function template_exists(required string partial, boolean shared = false) {
@@ -178,12 +200,11 @@ component accessors=true {
     var parts = getDirectoryFromPath(partial).listToArray('/').prepend('');
     var path = '';
     var filename = '';
-
     for (var part in parts) {
       path = path.listAppend(part, '/');
-      if (path!='/') path &= '/';
-      if (template_exists(path & '_include')) {
-        filename = template_path(path & '_include');
+      // include_template
+      if (template_exists(path & '/_include')) {
+        filename = template_path(path & '/_include');
         if (not_included(filename)) {
           history.prepend(filename);
           include filename runonce = true;
@@ -194,11 +215,16 @@ component accessors=true {
 
   private void function include_template(required string partial, required boolean once) {
     var shared = false;
-    if (!template_exists(partial)) { // IF NOT ON CURRENT SITE
+    if (!template_exists(partial)) {
       shared = template_exists(partial, true); // CHECK THE DEFAULT SITE
       if (!shared) {
-        writeoutput('<hr>#physical_path(partial, true)#<hr>');
-        return; // STILL NOT FOUND JUST BAIL
+        writeoutput('<marquee class=bg-warning>router 404 - #partial# called from #history?.first()#</marquee>')
+        if (once) {
+          session.user.store('404', partial);
+          go(application.paths.siteroot & '/index.cfm');
+          // go(seo_home('404'));
+        }
+        return;
       }
     }
 

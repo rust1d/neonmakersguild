@@ -74,7 +74,7 @@
   });
 </script>
 
-<script src='/assets/js/tagging.js'></script>
+<cfset include_js('assets/js/tagging.js') />
 
 <cfoutput>
   <form role='form' method='post' enctype='multipart/form-data'>

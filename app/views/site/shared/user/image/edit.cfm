@@ -21,7 +21,7 @@
   mode = mImage.new_record() ? 'Add' : 'Edit';
 </cfscript>
 
-<script src='/assets/js/image/edit.js'></script>
+<cfset include_js('assets/js/image/edit.js') />
 
 <cfoutput>
   <form role='form' method='post' enctype='multipart/form-data'>

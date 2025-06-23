@@ -41,7 +41,7 @@
   </script>
 </cfif>
 
-<script src='/assets/js/blog/comments.js'></script>
+<cfset include_js('assets/js/blog/comments.js') />
 
 <cfoutput>
   <div class='row g-3'>

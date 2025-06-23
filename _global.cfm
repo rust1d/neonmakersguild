@@ -7,6 +7,13 @@
     return false;
   }
 
+  void function include_js(required string data) {
+    if (data.isEmpty()) return;
+    var path = '#application.urls.root#/#data#?ck=#application.cache_key#';
+    if (request.layout_head.findNoCase(path)) return;
+    request.layout_head &= '<script type="text/javascript" src="#path#"></script>' & chr(10);
+  }
+
   variables.router = request.router;
   variables.utility = application.utility;
   variables.between = utility.between;

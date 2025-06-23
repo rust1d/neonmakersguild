@@ -16,6 +16,7 @@ component extends=jsoup accessors=true {
   belongs_to(name: 'Forum',        class: 'Forums',        key: 'fm_foid',  relation: 'fo_foid');
   belongs_to(name: 'ForumThread',  class: 'ForumThreads',  key: 'fm_ftid',  relation: 'ft_ftid');
   belongs_to(name: 'User',         class: 'Users',         key: 'fm_usid',  relation: 'us_usid');
+  has_many  (name: 'ForumImages',  class: 'ForumImages',   key: 'fm_fmid',  relation: 'fi_fmid');
 
   public numeric function age() {
     return now().diff('h', fm_added ?: now());
@@ -45,9 +46,9 @@ component extends=jsoup accessors=true {
     if (arguments.keyExists('params')) arguments = arguments.params;
     if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
     var sproc = new StoredProc(procedure: 'forummessages_list', datasource: datasource());
-    sproc.addParam(cfsqltype: 'integer', value: arguments.get('fm_ftid'), null: !arguments.keyExists('fm_ftid'));
-    sproc.addParam(cfsqltype: 'integer', value: arguments.get('deleted'), null: !arguments.keyExists('deleted'));
-    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),    null: !arguments.keyExists('term'));
+    sproc.addParam(cfsqltype: 'integer', value: arguments.get('fm_ftid'),  null: !arguments.keyExists('fm_ftid'));
+    sproc.addParam(cfsqltype: 'integer', value: arguments.get('deleted'),  null: !arguments.keyExists('deleted'));
+    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),     null: !arguments.keyExists('term'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 
     return preserveNulls(paged_search(sproc, arguments));
@@ -79,12 +80,12 @@ component extends=jsoup accessors=true {
     if (arguments.keyExists('params')) arguments = arguments.params;
     if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
     var sproc = new StoredProc(procedure: 'forummessages_search', datasource: datasource());
-    sproc.addParam(cfsqltype: 'integer', value: arguments.get('fm_fmid'), null: !arguments.keyExists('fm_fmid'));
-    sproc.addParam(cfsqltype: 'integer', value: arguments.get('fm_foid'), null: !arguments.keyExists('fm_foid'));
-    sproc.addParam(cfsqltype: 'integer', value: arguments.get('fm_ftid'), null: !arguments.keyExists('fm_ftid'));
-    sproc.addParam(cfsqltype: 'integer', value: arguments.get('fm_usid'), null: !arguments.keyExists('fm_usid'));
-    sproc.addParam(cfsqltype: 'integer', value: arguments.get('deleted'), null: !arguments.keyExists('deleted'));
-    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),    null: !arguments.keyExists('term'));
+    sproc.addParam(cfsqltype: 'integer', value: arguments.get('fm_fmid'),  null: !arguments.keyExists('fm_fmid'));
+    sproc.addParam(cfsqltype: 'integer', value: arguments.get('fm_foid'),  null: !arguments.keyExists('fm_foid'));
+    sproc.addParam(cfsqltype: 'integer', value: arguments.get('fm_ftid'),  null: !arguments.keyExists('fm_ftid'));
+    sproc.addParam(cfsqltype: 'integer', value: arguments.get('fm_usid'),  null: !arguments.keyExists('fm_usid'));
+    sproc.addParam(cfsqltype: 'integer', value: arguments.get('deleted'),  null: !arguments.keyExists('deleted'));
+    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),     null: !arguments.keyExists('term'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 
     return paged_search(sproc, arguments);

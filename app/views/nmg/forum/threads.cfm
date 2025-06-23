@@ -36,6 +36,7 @@
             mThread.safe_save();
             mForum.messages_inc();
             mForum.last_fmid(mMessage.fmid());
+            save_images(mMessage);
           }
           mForum.safe_save();
 
@@ -57,21 +58,9 @@
   mBlock = mBlog.textblock_by_label('forum-' & mForum.alias());
 </cfscript>
 
-<script>
-  $(function() {
-    $('#ft_subject').on('blur', function() {
-      if (this.value.length==0) {
-        $('div.message-field').slideUp();
-      }
-    });
-
-    $('#ft_subject').on('focus', function() {
-      if (this.value.length==0) {
-        $('div.message-field').slideDown();
-      }
-    });
-  })
-</script>
+<cfset include_js('assets/js/forums/threads.js') />
+<cfset include_js('assets/js/forums/images.js') />
+<cfset router.include('forum/_image_dropdown') />
 
 <cfoutput>
   <div class='row g-3 pt-3'>
@@ -125,23 +114,31 @@
                 <img class='forum-thumbnail' src='#session.user.profile_image().src()#' />
               </div>
               <div class='col'>
-                <form method='post' class='needs-validation' novalidate autocomplete='off'>
+                <form method='post' class='needs-validation' novalidate autocomplete='off' enctype='multipart/form-data'>
+                  <input type='file' id='filePicker' accept='image/*' multiple class='d-none' />
+                  <div id='hidden-inputs'></div>
                   <div class='row g-3'>
                     <div class='12'>
                       <input type='text' class='form-control mt-2' name='ft_subject' id='ft_subject' value='' maxlength='100' placeholder='Start new thread...' required />
                     </div>
                     <div class='col-12 message-field' style='display:none'>
-                      <textarea class='form-control tiny-forum' rows='8' name='fm_body' id='fm_body'></textarea>
+                      <textarea class='form-control tiny-forum' rows='8' name='fm_body' id='fm_body' data-roll='photo_roll'></textarea>
                     </div>
                     <div class='col-12 message-field' style='display:none'>
-                      <div class='form-check form-switch float-end' title='Receive an email when someone posts in this thread.'>
-                        <input class='form-check-input' type='checkbox' id='ft_subscribe' name='ft_subscribe' value='1' />
-                        <label class='form-check-label' for='ft_subscribe'>Subscribe to this thread</label>
-                      </div>
+                      <div id='photo_roll' class='row g-1 mb-2'></div>
+                      <!--- <button type='button' name='btnOpenPicker' id='btnOpenPicker' class='btn btn-sm btn-nmg'>Add Image</button> --->
                     </div>
+                    <cfif mSubscription.new_record()>
+                      <div class='col-12 message-field' style='display:none'>
+                        <div class='form-check form-switch float-end' title='Receive an email when someone posts in this thread.'>
+                          <input class='form-check-input' type='checkbox' id='ft_subscribe' name='ft_subscribe' value='1' />
+                          <label class='form-check-label' for='ft_subscribe'>Subscribe to this thread</label>
+                        </div>
+                      </div>
+                    </cfif>
                     <div class='col-12 message-field text-center' style='display:none'>
                       <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-sm btn-nmg'>Save</button>
-                      <a href='#router.href('user/list')#' class='btn btn-sm btn-nmg-cancel'>Cancel</a>
+                      <a href='#router.url()#' class='btn btn-sm btn-nmg-cancel'>Cancel</a>
                     </div>
                   </div>
                 </form>

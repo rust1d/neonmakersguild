@@ -1,12 +1,27 @@
-<cfinclude template='_global.cfm' runonce='true' />
+<cfscript>
+  include '_global.cfm' runonce = true;
 
-<!DOCTYPE html>
-<html xmlns='http://www.w3.org/1999/xhtml' data-bs-theme='<cfoutput>#session.site.theme()#</cfoutput>'>
-  <head>
-    <cfset router.include('layout/head') />
-  </head>
-  <body>
-    <cfset router.include('layout/body') />
-    <div id='dialog'></div>
-  </body>
-</html>
+  request.layout_title = session.site.title();
+  request.layout_head = '';
+  request.meta_desc = '';
+
+  // GENERATE body BEFORE head TO ASSIGN DATA TO request.layout_head and layout_title
+  // THIS ALLOWS THE BODY TO SET STUFF IN THE HEAD
+  layout_body = router.generate('layout/body');
+</cfscript>
+
+<cfoutput>
+  <!DOCTYPE html>
+  <html xmlns='https://www.w3.org/1999/xhtml' lang='en' data-bs-theme='#session.site.theme()#'>
+    <head>
+      <title>#request.layout_title#</title>
+      <meta name='description' content='#request.meta_desc#' />
+      #router.include('layout/head')#
+      #request.layout_head# <!--- DYNAMIC HEAD CONTENT SET IN INCLUDED TEMPLATES ie og:tags --->
+    </head>
+    <body id='main-body'>
+      #layout_body#
+      <div id='dialog'></div>
+    </body>
+  </html>
+</cfoutput>
