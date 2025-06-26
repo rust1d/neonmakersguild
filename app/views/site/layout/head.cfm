@@ -29,7 +29,8 @@
   <script src='https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js'/></script>
   <script src='https://cdn.jsdelivr.net/npm/exif-js'></script>
   <script src='https://www.google.com/recaptcha/api.js?render=6LeaIakfAAAAAFfh-JbzqJOJlqyI6JlFIKbkZNjZ'></script>
-  <script src='https://cdn.tiny.cloud/1/g2016x44cjzgv7h689qtbieaowb03dksphmy0umsojeab13b/tinymce/6/tinymce.min.js' referrerpolicy='origin'></script>
+  <!--- <script src='https://cdn.tiny.cloud/1/g2016x44cjzgv7h689qtbieaowb03dksphmy0umsojeab13b/tinymce/6/tinymce.min.js' referrerpolicy='origin'></script> --->
+  <script src='https://cdn.jsdelivr.net/npm/tinymce@7.9.1/tinymce.min.js' integrity='sha256-p7g47P/YXCwLEUxcBoAvFHbM0Ae1ZVfAsqFLAXU8j+Q=' crossorigin='anonymous'></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js' integrity='sha512-Gs+PsXsGkmr+15rqObPJbenQ2wB3qYvTHuJO6YJzPe/dTLvhy0fmae2BcnaozxDo5iaF8emzmCZWbQ1XXiX2Ig==' crossorigin='anonymous' referrerpolicy='no-referrer'></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js' integrity='sha512-k2GFCTbp9rQU412BStrcD/rlwv1PYec9SNrkbQlo6RZCf75l6KcC3UwDY8H5n5hl4v77IDtIPwOk9Dqjs/mMBQ==' crossorigin></script>
   <script src="https://kit.fontawesome.com/e3031fb88c.js" crossorigin="anonymous"></script><!--- v6 --->

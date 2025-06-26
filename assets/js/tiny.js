@@ -27,7 +27,7 @@ $(function() {
       tooltip: 'Styling',
       items: 'blocks | bold italic | blockquote | underline strikethrough | subscript superscript'
     }
-  };
+  }
 
   let toolbar_summary = {
     editing: {
@@ -45,9 +45,10 @@ $(function() {
       tooltip: 'Styling',
       items: 'blocks | bold italic | blockquote | underline strikethrough | subscript superscript'
     }
-  };
+  }
 
   let tiny_params = {
+    promotion: false,
     menubar: 'edit insert view format table help',
     plugins: 'autolink autosave code fullscreen help image importcss link lists media preview searchreplace table visualblocks visualchars wordcount',
     toolbar: 'fullscreen | code | undo redo | editing | styling | font | aligning | lists | link unlink | image media',
@@ -101,9 +102,10 @@ $(function() {
     relative_urls : false,
     remove_script_host : true,
     visualblocks_default_state: true
-  };
+  }
 
   let tiny_summary = {
+    promotion: false,
     menubar: 'edit view help',
     plugins: 'autolink autosave code fullscreen help importcss link preview searchreplace visualblocks visualchars wordcount',
     toolbar: 'fullscreen | code | undo redo | editing | styling | font | link unlink',
@@ -115,9 +117,10 @@ $(function() {
     relative_urls : false,
     remove_script_host : true,
     visualblocks_default_state: true
-  };
+  }
 
   let tiny_forum = {
+    promotion: false,
     menubar: 'edit insert view format table help',
     plugins: 'autolink autosave code fullscreen help link lists media preview visualblocks visualchars wordcount',
     toolbar: 'fullscreen | undo redo | editing | styling | font | aligning | lists | link unlink | customImageBtn | media',
@@ -139,12 +142,11 @@ $(function() {
         }
       });
       editor.ui.registry.addButton('customImageBtn', {
-        tooltip: 'Attach Image',
         icon: 'image',
         onAction: () => {
           SERVER.activeEditor = editor;
           $drop.data('roll', editor.targetElm.dataset.roll || 'photo_roll');
-          const $btn = $(editor.getContainer()).find('button[title="Attach Image"]').last();
+          const $btn = $(editor.getContainer()).find('button[data-mce-name=customimagebtn]').last();
           const offset = $btn.offset();
           $drop.css({ top: offset.top + $btn.outerHeight(), left: offset.left });
           bootstrap.Dropdown.getOrCreateInstance($drop[0]).show();
@@ -166,7 +168,7 @@ $(function() {
         process_files(files);
       });
     }
-  };
+  }
 
   $('textarea.tiny-mce').each(function() {
     var high = 160 + this.rows * 20;
