@@ -119,7 +119,7 @@
                   <div id='hidden-inputs'></div>
                   <div class='row g-3'>
                     <div class='12'>
-                      <input type='text' class='form-control mt-2' name='ft_subject' id='ft_subject' value='' maxlength='100' placeholder='Start new thread...' required />
+                      <input type='text' class='form-control form-control-lg mt-2' name='ft_subject' id='ft_subject' value='' maxlength='100' placeholder='Start new thread...' required />
                     </div>
                     <div class='col-12 message-field' style='display:none'>
                       <textarea class='form-control tiny-forum' rows='8' name='fm_body' id='fm_body' data-roll='photo_roll'></textarea>

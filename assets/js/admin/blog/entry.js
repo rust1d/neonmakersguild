@@ -10,7 +10,7 @@ $(function () {
   });
 
   $('#btnCancel').on('click', function() {
-    if (!confirm('Are you sure you want to cancel this entry?')) return;
+    if (!confirm('Are you sure you want to cancel this blog post?')) return;
     window.location = '?p=blog/entry/list';
   });
 
@@ -36,4 +36,13 @@ $(function () {
   $('#helpModal').on('shown.bs.modal', function(ev) {
     $(`#${ev.relatedTarget.name}`)[0].scrollIntoView();
   });
+
+  $('[data-sortable]').each(function() {
+    new Sortable(this, {
+      animation: 150,
+      ghostClass: 'drop-ghost',
+      draggable: '.roll-img'
+    });
+  });
+
 });

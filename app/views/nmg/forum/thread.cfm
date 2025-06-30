@@ -157,7 +157,7 @@
             <div class='mb-2'>
               <input type='hidden' name='ftid' value='#mThread.encoded_key()#' />
               <button type='submit' name='btnThreadDelete' id='btnThreadDelete' class='d-none'>Delete</button>
-              <input type='text' class='form-control mt-2' name='ft_subject' id='ft_subject' value='#mThread.subject()#' maxlength='100' required />
+              <input type='text' class='form-control form-control-lg mt-2' name='ft_subject' id='ft_subject' value='#mThread.subject()#' maxlength='100' required />
             </div>
             <div class='text-center'>
               <button type='submit' name='btnThreadEdit' id='btnThreadEdit' class='btn btn-sm btn-nmg'>Save</button>

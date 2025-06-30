@@ -51,7 +51,7 @@
               <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Profile</a>
               <ul class='dropdown-menu'>
                 <li><a class='dropdown-item' href='#router.href('user/promo')#'>Membership T-Shirts!</a></li>
-                <li><a class='dropdown-item' href='#router.href('user/entry/list')#'>Edit Posts</a></li>
+                <li><a class='dropdown-item' href='#router.href('user/entry/list')#'>Edit Blog Posts</a></li>
                 <li><a class='dropdown-item' href='#router.href('user/image/list')#'>Edit Images</a></li>
                 <li><a class='dropdown-item' href='#router.href('user/link/list')#'>Edit Links</a></li>
                 <li><a class='dropdown-item' href='#router.href('user/edit')#'>Edit Profile</a></li>

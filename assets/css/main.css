@@ -190,3 +190,42 @@ figure.image figcaption {
 .border-dashed { border-style: dashed !important; }
 .z-1000 { z-index: 1000; }
 .h-1rem { height: 1rem; }
+
+.toggle-switch {
+  background-color: var(--bs-warning);
+  border-color: var(--bs-warning);
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.toggle-switch:checked {
+  background-color: var(--bs-success);
+  border-color: var(--bs-success);
+}
+
+.drag-ghost {
+  opacity: 0.4;
+  background-color: #fafafa;
+  border: 2px dashed #0c4040;
+}
+
+.roll-img {
+  position: relative;
+  cursor: grab;
+}
+
+.roll-img:active {
+  cursor: grabbing;
+}
+
+#photo_roll #edit_captions {
+  z-index: 1000;
+  position: absolute;
+  opacity: .9;
+  top: 10px;
+  left: 10px;
+  display: none !important;
+}
+
+#photo_roll:hover #edit_captions.displayed {
+  display: inline-block !important;
+}

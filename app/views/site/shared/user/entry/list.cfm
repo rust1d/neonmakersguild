@@ -14,7 +14,7 @@
             </a>
           </div>
         </div>
-        <div class='col fs-5'>Entries</div>
+        <div class='col fs-5'>Blog Posts</div>
         #router.include('shared/partials/filter_and_page', { pagination: locals.results.pagination })#
       </div>
     </div>

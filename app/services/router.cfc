@@ -221,7 +221,7 @@ component accessors=true {
         writeoutput('<marquee class=bg-warning>router 404 - #partial# called from #history?.first()#</marquee>')
         if (once) {
           session.user.store('404', partial);
-          go(application.paths.siteroot & '/index.cfm');
+          go(application.urls.root & '/index.cfm');
           // go(seo_home('404'));
         }
         return;

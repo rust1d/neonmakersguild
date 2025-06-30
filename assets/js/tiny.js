@@ -48,6 +48,7 @@ $(function() {
   }
 
   let tiny_params = {
+    license_key: 'gpl',
     promotion: false,
     menubar: 'edit insert view format table help',
     plugins: 'autolink autosave code fullscreen help image importcss link lists media preview searchreplace table visualblocks visualchars wordcount',
@@ -105,6 +106,7 @@ $(function() {
   }
 
   let tiny_summary = {
+    license_key: 'gpl',
     promotion: false,
     menubar: 'edit view help',
     plugins: 'autolink autosave code fullscreen help importcss link preview searchreplace visualblocks visualchars wordcount',
@@ -120,6 +122,7 @@ $(function() {
   }
 
   let tiny_forum = {
+    license_key: 'gpl',
     promotion: false,
     menubar: 'edit insert view format table help',
     plugins: 'autolink autosave code fullscreen help link lists media preview visualblocks visualchars wordcount',

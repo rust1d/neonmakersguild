@@ -1,14 +1,17 @@
-function add_to_roll(id, src, filename='') {
-  const $col = $('<div class="col-3 col-xl-2 position-relative"></div>');
-  const $img = $('<img class="w-100 img-thumbnail">').attr('src', src);
+function add_to_roll($input, id, src, filename='') {
+  const $col = $('<div class="col-3 col-xl-2 roll-img"></div>');
+  const $img = $(`<img class='w-100 img-thumbnail' data-id='${id}' />`).attr('src', src);
+  const roll = $('#imageDropdown').data('roll') || 'photo_roll';
+  const $roll = $(`#${roll}`);
   const $removeBtn = $('<button class="btn-delete-img btn-nmg-delete">&times;</button>');
   $removeBtn.on('click', function() {
     $(`#${id}`).remove();
     $col.remove();
+    show_edit_all($roll);
   });
-  $col.append($img).append($removeBtn);
-  const roll = $('#imageDropdown').data('roll') || 'photo_roll';
-  $(`#${roll}`).append($col);
+  $col.append($img).append($removeBtn).append($input);
+  $roll.append($col);
+  show_edit_all($roll);
 }
 
 function b64toBlob(b64Data, contentType='', sliceSize=512) {
@@ -62,11 +65,11 @@ function process_image(file, originalName) {
         dt.items.add(newFile);
         const $input = $(`<input id='${uniqueId}' type='file' name='${uniqueId}' class='d-none' />`);
         $input[0].files = dt.files;
-        $('#hidden-inputs').append($input);
+        // $('#hidden-inputs').append($input);
 
         const reader2 = new FileReader();
         reader2.onload = ev2 => {
-          add_to_roll(uniqueId, ev2.target.result, filename);
+          add_to_roll($input, uniqueId, ev2.target.result, filename);
           resolve(); // Only resolve after image is added to roll
         }
         reader2.onerror = reject;
@@ -108,6 +111,10 @@ function scaled_canvas(img) {
   const ctx = canvas.getContext('2d');
   ctx.drawImage(img, 0, 0, newWidth, newHeight);
   return canvas;
+}
+
+function show_edit_all($roll) {
+  $('#edit_captions').toggleClass('displayed', $roll.find('img').length>1);
 }
 
 function start_progress(cnt) {
@@ -205,5 +212,34 @@ $(function() {
   $('#btnAttach').on('click', function() {
     let fld = $('#imageUrlInput')[0];
     if (is_img_url(fld.value)) fetch_image(fld.value, fld);
+  });
+
+  $('#edit_captions').on('click', function() {
+    const $captions = $('#captions');
+    $captions.empty();
+
+    $('#photo_roll').find('img').each(function(index) {
+      const $img = $(this);
+      const imgId = $img.data('id');
+      const captionValue = $('#' + imgId).val() || '';
+      const captionInputId = 'captionInput-' + imgId;
+
+      const inputGroup = `
+        <div class="col-md-6">
+          <div class="card">
+            <img src="${$img.attr('src')}" class="card-img-top" alt="Photo ${index + 1}">
+            <div class="card-body">
+              <label for="${captionInputId}" class="form-label">Caption ${index + 1}</label>
+              <input type="text" class="form-control"
+                     id="${captionInputId}"
+                     data-hidden-id="${imgId}"
+                     value="${captionValue}">
+            </div>
+          </div>
+        </div>
+      `;
+
+      $captions.append(inputGroup);
+    });
   });
 });
