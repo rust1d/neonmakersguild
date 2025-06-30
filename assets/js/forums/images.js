@@ -1,15 +1,20 @@
+function active_roll() {
+  const roll = $('#imageDropdown').data('roll') || 'photo_roll';
+  return $(`#${roll}`);
+}
+
 function add_to_roll($input, id, src, filename='') {
   const $col = $('<div class="col-3 col-xl-2 roll-img"></div>');
-  const $img = $(`<img class='w-100 img-thumbnail' data-id='${id}' />`).attr('src', src);
-  const roll = $('#imageDropdown').data('roll') || 'photo_roll';
-  const $roll = $(`#${roll}`);
+  const $img = $(`<img class='w-100 img-thumbnail' data-caption='cap_${id}' alt='${filename}' />`).attr('src', src);
+  const $cap = $(`<input type='hidden' id='cap_${id}' name='cap_${id}' />`);
+  const $roll = active_roll();
   const $removeBtn = $('<button class="btn-delete-img btn-nmg-delete">&times;</button>');
   $removeBtn.on('click', function() {
-    $(`#${id}`).remove();
+    // $(`#${id}`).remove(); // file input goes away with the pic/$col
     $col.remove();
-    show_edit_all($roll);
+    show_edit_all($roll); //
   });
-  $col.append($img).append($removeBtn).append($input);
+  $col.append($img).append($removeBtn).append($input).append($cap);
   $roll.append($col);
   show_edit_all($roll);
 }
@@ -26,6 +31,38 @@ function b64toBlob(b64Data, contentType='', sliceSize=512) {
     byteArrays.push(new Uint8Array(byteNums));
   }
   return new Blob(byteArrays, { type: contentType });
+}
+
+function current_images($roll) {
+  $roll = $roll || active_roll();
+  return $roll.find('img');
+}
+
+function fetch_image(src, fld) {
+  start_progress(1);
+  $.ajax({
+    url: '/app/services/Img64.cfc?method=read',
+    type: 'POST',
+    contentType: 'application/json',
+    dataType: 'json',
+    data: JSON.stringify({ src: src }),
+    success: function(response) {
+      fld.value = '';
+      if (response.success && response.data && response.data.img) {
+        const ext = get_base64_ext(response.data.img);
+        const blob = b64toBlob(response.data.img.split(',')[1], `image/${ext}`);
+        const file = new File([blob], response.data.name, { type: blob.type });
+        process_image(file, response.data.name).then(() => { update_progress() });
+      } else {
+        update_progress();
+        alert('Image not returned from server.');
+      }
+    },
+    error: function(xhr, status, error) {
+      update_progress();
+      alert('AJAX Error: ' + error);
+    }
+  });
 }
 
 function is_img_url(src) {
@@ -114,7 +151,7 @@ function scaled_canvas(img) {
 }
 
 function show_edit_all($roll) {
-  $('#edit_captions').toggleClass('displayed', $roll.find('img').length>1);
+  $('#btnEditCaptions').toggleClass('displayed', current_images($roll).length>1);
 }
 
 function start_progress(cnt) {
@@ -133,12 +170,8 @@ function update_progress() {
 }
 
 $(function() {
-  // const $drop = $('#imageDropdown');
   const $dropZone = $('#uploadDropZone');
   const $filePicker = $('#filePicker');
-  // const $('#hidden-inputs') = $('#hidden-inputs');
-  // const $imageUrlInput = $('#imageUrlInput');
-  // const $progress = $('#processingProgress');
 
   $filePicker.on('change', function() {
     process_files(Array.from(this.files));
@@ -178,33 +211,6 @@ $(function() {
     bootstrap.Dropdown.getOrCreateInstance($drop[0]).hide();
   });
 
-  function fetch_image(src, fld) {
-    start_progress(1);
-    $.ajax({
-      url: '/app/services/Img64.cfc?method=read',
-      type: 'POST',
-      contentType: 'application/json',
-      dataType: 'json',
-      data: JSON.stringify({ src: src }),
-      success: function(response) {
-        fld.value = '';
-        if (response.success && response.data && response.data.img) {
-          const ext = get_base64_ext(response.data.img);
-          const blob = b64toBlob(response.data.img.split(',')[1], `image/${ext}`);
-          const file = new File([blob], response.data.name, { type: blob.type });
-          process_image(file, response.data.name).then(() => { update_progress() });
-        } else {
-          update_progress();
-          alert('Image not returned from server.');
-        }
-      },
-      error: function(xhr, status, error) {
-        update_progress();
-        alert('AJAX Error: ' + error);
-      }
-    });
-  }
-
   $('#imageUrlInput').on('paste', function() {
     setTimeout(() => $('#btnAttach').trigger('click'), 10);
   });
@@ -214,32 +220,28 @@ $(function() {
     if (is_img_url(fld.value)) fetch_image(fld.value, fld);
   });
 
-  $('#edit_captions').on('click', function() {
+  $('#btnEditCaptions').on('click', function() {
     const $captions = $('#captions');
     $captions.empty();
-
-    $('#photo_roll').find('img').each(function(index) {
-      const $img = $(this);
-      const imgId = $img.data('id');
-      const captionValue = $('#' + imgId).val() || '';
-      const captionInputId = 'captionInput-' + imgId;
-
+    current_images().each(function() {
+      const id = this.dataset.caption;
+      const caption = $(`#${id}`).val();
       const inputGroup = `
-        <div class="col-md-6">
-          <div class="card">
-            <img src="${$img.attr('src')}" class="card-img-top" alt="Photo ${index + 1}">
-            <div class="card-body">
-              <label for="${captionInputId}" class="form-label">Caption ${index + 1}</label>
-              <input type="text" class="form-control"
-                     id="${captionInputId}"
-                     data-hidden-id="${imgId}"
-                     value="${captionValue}">
-            </div>
+        <div class='col-md-6 col-lg-4'>
+          ${this.outerHTML}
+          <div class='pt-2'>
+            <textarea class='form-control form-control-sm' data-id='${id}' rows='3' placeholder='Caption'>${caption}</textarea>
           </div>
         </div>
       `;
-
       $captions.append(inputGroup);
+    });
+  });
+
+  $('#btnSaveCaptions').on('click', function() {
+    const $captions = $('#captions');
+    $captions.find('textarea').each(function() {
+      $(`#${this.dataset.id}`).val(this.value);
     });
   });
 });

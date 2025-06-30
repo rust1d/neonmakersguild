@@ -190,6 +190,7 @@ figure.image figcaption {
 .border-dashed { border-style: dashed !important; }
 .z-1000 { z-index: 1000; }
 .h-1rem { height: 1rem; }
+.h-3rem { height: 3rem; }
 
 .toggle-switch {
   background-color: var(--bs-warning);
@@ -217,7 +218,7 @@ figure.image figcaption {
   cursor: grabbing;
 }
 
-#photo_roll #edit_captions {
+#photo_roll #btnEditCaptions {
   z-index: 1000;
   position: absolute;
   opacity: .9;
@@ -226,6 +227,6 @@ figure.image figcaption {
   display: none !important;
 }
 
-#photo_roll:hover #edit_captions.displayed {
+#photo_roll:hover #btnEditCaptions.displayed {
   display: inline-block !important;
 }

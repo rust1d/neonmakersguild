@@ -4,6 +4,7 @@
   dest = (mUserBlog.id()==1 && session.site.admin()) ? 'blog' : 'user';
 
   if (form.keyExists('btnSubmit')) {
+    writedump(form);abort;
     param form.ben_categories = '';
     param form.ben_released = false;
     param form.ben_comments = false;
@@ -75,7 +76,7 @@
               </div>
               <div class='col-12'>
                 <div id='photo_roll' class='row g-1 mb-2 position-relative' data-sortable>
-                  <button type='button' id='edit_captions' class='btn btn-sm btn-nmg w-120px' data-bs-toggle='modal' data-bs-target='##editAllModal'>Edit all</button>
+                  <button type='button' id='btnEditCaptions' class='btn btn-sm btn-nmg w-120px' data-bs-toggle='modal' data-bs-target='##editAllModal'>Edit all</button>
                 </div>
               </div>
               <div class='col-12 col-lg-6'>
@@ -142,14 +143,14 @@
       <div class='modal-dialog modal-lg modal-dialog-scrollable'>
         <div class='modal-content'>
           <div class='modal-header'>
-            <h5 class='modal-title' id='editAllModalLabel'>Edit Photo Captions</h5>
+            <h5 class='modal-title' id='editAllModalLabel'>Photos</h5>
             <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
           </div>
           <div class='modal-body'>
-            <div id='captions' class='row g-4'></div>
+            <div id='captions' class='row g-3'></div>
           </div>
           <div class='modal-footer'>
-            <button type='button' id='applyCaptions' class='btn btn-success'>Apply Captions</button>
+            <button type='button' id='btnSaveCaptions' class='btn btn-nmg'>Done</button>
           </div>
         </div>
       </div>
