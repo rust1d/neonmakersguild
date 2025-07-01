@@ -241,7 +241,8 @@ $(function() {
   $('#btnSaveCaptions').on('click', function() {
     const $captions = $('#captions');
     $captions.find('textarea').each(function() {
-      $(`#${this.dataset.id}`).val(this.value);
+      $(`#${this.dataset.id}`).val(this.value.trim());
     });
+    $('#editAllModal').modal('hide');
   });
 });

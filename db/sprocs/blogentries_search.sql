@@ -32,7 +32,7 @@ BEGIN
      AND (_alias IS NULL OR ben_alias = _alias)
      AND (_released IS NULL OR (ben_released = _released AND ben_posted < CURRENT_TIMESTAMP))
      AND (_promoted IS NULL OR ben_blog = 1 OR ben_promoted < CURRENT_TIMESTAMP)
-     AND (_bcaid IS NULL OR EXISTS (SELECT 1 FROM BlogEntriesCategories WHERE bec_bcaid=_bcaid AND bec_benid=ben_benid))
+     AND (_bcaid IS NULL OR EXISTS (SELECT 1 FROM blogentrycategories WHERE bec_bcaid=_bcaid AND bec_benid=ben_benid))
      AND (_term IS NULL OR
            us_user = _term OR
            ben_title REGEXP _term OR

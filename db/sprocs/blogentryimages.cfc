@@ -4,13 +4,10 @@ component extends=BaseModel accessors=true {
   property name='bei_uiid'     type='numeric'  sqltype='integer';
   property name='bei_caption'  type='string'   sqltype='varchar';
 
-  belongs_to(name: 'BlogEntry',  class: 'BlogEntries',     key: 'bei_benid', relation: 'ben_benid');
-  has_one   (name: 'UserImage',  class: 'UserImages',      key: 'bei_uiid',  relation: 'ui_uiid');
-
   public query function search(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;
     if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
-
+  
     var sproc = new StoredProc(procedure: 'blogentryimages_search', datasource: datasource());
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('bei_beiid'),   null: !arguments.keyExists('bei_beiid'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('bei_benid'),   null: !arguments.keyExists('bei_benid'));

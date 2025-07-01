@@ -3,8 +3,26 @@
 
   dest = (mUserBlog.id()==1 && session.site.admin()) ? 'blog' : 'user';
 
+  function save_images(required BlogEntries mBE) {
+    var flds = form.fieldnames.listToArray().filter(fld => fld.left(4)=='img_');
+    if (flds.isEmpty()) return;
+
+    for (var fld in flds) {
+      mUI = mUser.UserImages(build: { filefield: fld });
+      if (mUI.safe_save()) {
+        var params = {
+          bei_benid:  mBE.benid(),
+          bei_uiid:  mUI.uiid()
+        }
+        if (form.keyExists('cap_#fld#')) params.bei_caption = form['cap_#fld#'];
+        mBE.BlogEntryImages(build: params).safe_save();
+      }
+    }
+  }
+
+
   if (form.keyExists('btnSubmit')) {
-    writedump(form);abort;
+    // writedump(form);abort;
     param form.ben_categories = '';
     param form.ben_released = false;
     param form.ben_comments = false;
@@ -27,6 +45,7 @@
 
     mEntry.set(form);
     if (mEntry.safe_save()) {
+      save_images(mEntry);
       mEntry.BlogEntryCategories(replace: categories.toList());
       flash.success('Your entry was saved.');
       router.redirect('#dest#/entry/list');
@@ -46,7 +65,7 @@
 <cfset router.include('forum/_image_dropdown') />
 
 <cfoutput>
-  <form role='form' method='post' id='blogform' class='needs-validation' novalidate>
+  <form role='form' method='post' id='blogform' class='needs-validation' novalidate enctype='multipart/form-data'>
     <input type='hidden' name='ben_alias' id='ben_alias' value='#mEntry.alias()#' data-mode='#mode#' maxlength='100' />
     <input type='file' id='filePicker' accept='image/*' multiple class='d-none' />
     <div id='hidden-inputs'></div>

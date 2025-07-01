@@ -10,7 +10,7 @@ CREATE TABLE forumImages (
   fi_height      INT(11),
   fi_size        INT(11),
   fi_filename    VARCHAR(100),
-  fi_added         DATETIME DEFAULT CURRENT_TIMESTAMP,
+  fi_added       DATETIME DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (fi_fiid),
   INDEX (fi_foid) USING BTREE,
   INDEX (fi_ftid) USING BTREE,

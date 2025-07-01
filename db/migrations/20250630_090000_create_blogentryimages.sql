@@ -1,3 +1,6 @@
+ALTER TABLE BlogEntriesCategories RENAME TO BlogEntryCategories;
+
+
 -- DROP TABLE IF EXISTS BlogEntryImages;
 
 CREATE TABLE BlogEntryImages (
@@ -5,6 +8,8 @@ CREATE TABLE BlogEntryImages (
   bei_benid                             INT(11) NOT NULL,
   bei_uiid                              INT(11) NOT NULL,
   bei_caption                           VARCHAR(2000),
+  bei_added                             DATETIME,
+  bei_dla                               DATETIME DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (bei_beiid),
   KEY(bei_benid),
   KEY(bei_uiid)

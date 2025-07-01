@@ -13,7 +13,7 @@ component extends=BaseModel accessors=true {
     if (arguments.keyExists('params')) arguments = arguments.params;
     if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
 
-    var sproc = new StoredProc(procedure: 'blogentriescategories_search', datasource: datasource());
+    var sproc = new StoredProc(procedure: 'BlogEntryCategories_search', datasource: datasource());
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('bec_becid'), null: !arguments.keyExists('bec_becid'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('bec_benid'), null: !arguments.keyExists('bec_benid'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('bec_bcaid'), null: !arguments.keyExists('bec_bcaid'));

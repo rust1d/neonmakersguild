@@ -1,8 +1,8 @@
-DROP procedure IF EXISTS blogentriescategories_search;
+DROP procedure IF EXISTS blogentrycategories_search;
 
 delimiter ;;
 
-CREATE PROCEDURE blogentriescategories_search(
+CREATE PROCEDURE blogentrycategories_search(
   IN _becid    int(11),
   IN _benid    int(11),
   IN _bcaid    int(11),
@@ -12,8 +12,8 @@ BEGIN
   DECLARE _limit INT(11) DEFAULT get_page_data(_paging, 'limit');
   DECLARE _offset INT(11) DEFAULT get_page_data(_paging, 'offset');
 
-  SELECT SQL_CALC_FOUND_ROWS blogentriescategories.*, blogCategories.*, users.*
-    FROM blogentriescategories
+  SELECT SQL_CALC_FOUND_ROWS blogentrycategories.*, blogCategories.*, users.*
+    FROM blogentrycategories
          INNER JOIN blogCategories ON bca_bcaid = bec_bcaid
          INNER JOIN users ON us_usid = bca_blog
    WHERE (_becid IS NULL OR bec_becid = _becid)

@@ -32,7 +32,7 @@ component extends=BaseModel accessors=true {
   }
 
   public string function ratio() {
-    return variables.fi_height==0 ? 0 : fi_width / fi_height;
+    return variables.fi_height==0 ? 0 : variables.fi_width / variables.fi_height;
   }
 
   public query function search(struct params) {
@@ -61,7 +61,7 @@ component extends=BaseModel accessors=true {
   // PRIVATE
 
   private void function delete_image(required string filefield) {
-    var field = find_field(filefield);
+    var field = find_field(arguments.filefield);
     if (field.isEmpty()) return;
 
     try {
@@ -87,7 +87,7 @@ component extends=BaseModel accessors=true {
   }
 
   private any function make_thumbnail(required any img) {
-    var zoom = 1.25; // trim some edge from thumbnail
+    var zoom = 1.05; // trim some edge from thumbnail
     var max = thumbnail_size * zoom;
     var info = ImageInfo(img);
     if (info.height > info.width) {
@@ -170,7 +170,7 @@ component extends=BaseModel accessors=true {
       if (variables.upload_result.fileWasSaved) {
         var filename = variables.upload_result.serverDirectory & '\' & variables.upload_result.serverfile;
         if (!directoryExists(local_path())) cfdirectory(action: 'create', directory: local_path(), mode: 644);
-        variables.fi_filename = utility.slug(variables.fi_rename ?: variables.upload_result.clientfile);
+        variables.fi_filename = utility.slug(variables.upload_result.clientfile);
         var info = move_final(filename);
         variables.fi_height = info.height;
         variables.fi_width = info.width;
