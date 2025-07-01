@@ -20,9 +20,7 @@
     }
   }
 
-
   if (form.keyExists('btnSubmit')) {
-    // writedump(form);abort;
     param form.ben_categories = '';
     param form.ben_released = false;
     param form.ben_comments = false;
@@ -53,22 +51,17 @@
   }
 
   param form.ben_categories = mEntry.BlogEntryCategories().map(row => row.bec_bcaid()).toList();
-  // qryCats = mUserBlog.categories();
   mode = mEntry.new_record() ? 'Add' : 'Edit';
-
-  mImages = mUserBlog.images(ratio: 2, maxrows: 12).rows;
 </cfscript>
 
 <cfset include_js('assets/js/admin/blog/entry.js') />
 <cfset include_js('assets/js/forums/images.js') />
-
 <cfset router.include('forum/_image_dropdown') />
 
 <cfoutput>
   <form role='form' method='post' id='blogform' class='needs-validation' novalidate enctype='multipart/form-data'>
     <input type='hidden' name='ben_alias' id='ben_alias' value='#mEntry.alias()#' data-mode='#mode#' maxlength='100' />
     <input type='file' id='filePicker' accept='image/*' multiple class='d-none' />
-    <div id='hidden-inputs'></div>
 
     <div class='row'>
       <div class='col'>
@@ -91,11 +84,19 @@
               <div class='col-12'>
                 <label class='form-label fs-5 required mb-0' for='ben_body'>Post Body</label>
                 <a name='help_body' class='ms-2 blended-icon' data-bs-toggle='modal' data-bs-target='##helpModal'><i class='fas fa-circle-question'></i></a>
-                <textarea class='tiny-forum form-control' name='ben_body' rows='20' id='ben_body'>#htmlEditFormat(mEntry.body())#</textarea>
+                <textarea class='tiny-forum form-control' name='ben_body' rows='15' id='ben_body'>#htmlEditFormat(mEntry.body())#</textarea>
               </div>
               <div class='col-12'>
                 <div id='photo_roll' class='row g-1 mb-2 position-relative' data-sortable>
-                  <button type='button' id='btnEditCaptions' class='btn btn-sm btn-nmg w-120px' data-bs-toggle='modal' data-bs-target='##editAllModal'>Edit all</button>
+                  <button type='button' id='btnEditCaptions' class='btn btn-sm btn-nmg w-120px #ifin(mEntry.UserImages().len() GT 1, 'displayed')#' data-bs-toggle='modal' data-bs-target='##editAllModal'>Edit all</button>
+                  <cfloop array='#mEntry.BlogEntryImages()#' item='mBEI'>
+                    <cfset mUI = mBEI.UserImage() />
+                    <div class='col-3 col-xl-2 position-relative'>
+                      <img data-pkid='#mUI.encoded_key()#' class='w-100 img-thumbnail' data-caption='cap_#mUI.encoded_key()#' alt='#mUI.filename()#' src='#mUI.thumbnail_src()#' />
+                      <button type='button' class='btn-delete-img btn-nmg-delete'>&times;</button>
+                      <input type='hidden' id='cap_#mUI.encoded_key()#' name='cap_#mUI.encoded_key()#' value='#mBEI.caption()#' />
+                    </div>
+                  </cfloop>
                 </div>
               </div>
               <div class='col-12 col-lg-6'>
@@ -158,7 +159,7 @@
       </div>
     </div>
 
-    <div class='modal fade' id='editAllModal' tabindex='-1' aria-labelledby='editAllModalLabel' aria-hidden='true'>
+    <div class='modal fade' id='editAllModal' data-bs-backdrop='static' tabindex='-1' aria-labelledby='editAllModalLabel' aria-hidden='true'>
       <div class='modal-dialog modal-lg modal-dialog-scrollable'>
         <div class='modal-content'>
           <div class='modal-header'>

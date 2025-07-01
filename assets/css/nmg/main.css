@@ -1,168 +1,171 @@
 body {
-  color: #0c1a19;
-  background-color: #ffffff;
+  color: var(--nmg-black);
+  background-color: var(--nmg-bg-light);
 }
 
 a {
-  color: #0c1a19;
+  color: var(--nmg-black);
 }
 
 a:hover {
-  color: #909999;
+  color: var(--nmg-link-hover);
 }
 
 .bg-nmg {
-  background-color: #e0eeee;
+  background-color: var(--nmg-bg-alt);
 }
 
 .bg-nmg-light {
-  background-color: #fafafa;
+  background-color: var(--nmg-bg-light);
 }
 
 .border-nmg {
-  border-color: #0c4040!important;
+  border-color: var(--nmg-border) !important;
 }
 
 .btn-nmg {
-  color: #0c1a19;
-  background-color: #e0eeee;
-  border-color: #0c4040;
+  color: var(--nmg-black);
+  background-color: var(--nmg-bg-alt);
+  border-color: var(--nmg-border);
 }
 
 .btn-nmg:hover {
-  color: #e0eeee;
-  background-color: #0c4040;
+  color: var(--nmg-bg-alt);
+  background-color: var(--nmg-border);
 }
 
 .btn-nmg-cancel {
-  background-color: #ffc107;
-  color: #0c1a19;
-  border-color: #0c4040;
+  background-color: var(--nmg-warning);
+  color: var(--nmg-black);
+  border-color: var(--nmg-border);
 }
 
 .btn-nmg-cancel:hover {
-  background-color: #0c4040;
-  border-color: #ffc107;
-  color: #ffc107;
+  background-color: var(--nmg-border);
+  border-color: var(--nmg-warning);
+  color: var(--nmg-warning);
 }
 
 .btn-nmg-delete {
-  background-color: #c04551;
-  color: #0c1a19;
-  border-color: #0c4040;
+  background-color: var(--nmg-danger);
+  color: var(--nmg-black);
+  border-color: var(--nmg-border);
 }
 
 .btn-nmg-delete:hover {
-  background-color: #0c4040;
-  border-color: #c04551;
-  color: #c04551;
-  opacity: 1!important;
+  background-color: var(--nmg-border);
+  border-color: var(--nmg-danger);
+  color: var(--nmg-danger);
+  opacity: 1 !important;
 }
 
 .card {
-  background-color: #fafafa;
-  border-color: #0c4040 !important;
+  background-color: var(--nmg-bg-light);
+  border-color: var(--nmg-border) !important;
 }
 
 .card .card-header {
-  background-color: #e0eeee;
+  background-color: var(--nmg-bg-alt);
 }
 
 .card-private .card-header {
-  background-color: bisque;
+  background-color: var(----nmg-private);
 }
 
 .card-admin {
-  background-color: #203030;
-  color: #F0FFFF;
-  border-color: #31C5F2 !important;
+  background-color: var(--nmg-admin-bg);
+  color: var(--nmg-admin-text);
+  border-color: var(--nmg-color-alt) !important;
 }
 
 .card-admin .card-header {
-  background-color: #0c1a19;
+  background-color: var(--nmg-admin-header);
 }
 
 .card-admin a {
-  color: #F0FFFF;
+  color: var(--nmg-admin-text);
 }
 
 .card-admin a:hover {
-  color: #31C5F2;
+  color: var(--nmg-color-alt);
 }
 
 .form-control {
-  background-color: #fff;
-  color: #0c1a19;
-  border-color: #0c4040;
+  background-color: var(--nmg-bg-light);
+  color: var(--nmg-black);
+  border-color: var(--nmg-border);
 }
 
 .img-thumbnail {
-  border-color: #0c4040;
-  background-color: #e0eeee;
+  border-color: var(--nmg-border);
+  background-color: var(--nmg-bg-alt);
 }
 
 .forum-thumbnail {
   width: 48px;
   height: 48px;
-  border-color: #0c4040;
+  border-color: var(--nmg-border);
 }
 
 .thread-thumbnail {
   width: 128px;
   height: 128px;
-  border-color: #0c4040;
+  border-color: var(--nmg-border);
 }
 
 .thread-user {
   min-width: 156px;
-  /* min-height: 196px; */
 }
 
 .thread-message {
   min-height: 156px;
-  border-radius: 1rem!important;
+  border-radius: var(--bs-border-radius) !important;
 }
 
 .clipped {
-  background-color: cornflowerblue;
-  border-color: cornflowerblue;
-  color: #0c1a19;
+  background-color: var(--nmg-blue);
+  border-color: var(--nmg-blue);
+  color: var(--nmg-black);
 }
 
 .navbar-nmg {
-  background-color: #e0eeee;
+  background-color: var(--nmg-bg-alt);
 }
 
 .navbar-nmg .navbar-nav > li > ul {
-  color: #0c1a19;
-  background-color: #e0eeee;
+  color: var(--nmg-black);
+  background-color: var(--nmg-bg-alt);
 }
 
 .navbar-nmg .navbar-nav .navbar-link {
-  color: #0c1a19;
+  color: var(--nmg-black);
 }
 
 .navbar-nmg .navbar-nav .nav-link {
-  color: #0c1a19;
+  color: var(--nmg-black);
 }
 
 .navbar-nmg .navbar-nav .nav-link:hover {
-  color: #0c3030;
+  color: var(--nmg-nav-hover);
 }
 
 .navbar-nmg a.dropdown-item {
-  color: #0c1a19;
+  color: var(--nmg-black);
 }
 
 .navbar-nmg a.dropdown-item:focus, .navbar-nmg a.dropdown-item:hover {
-  background-color: #fafafa;
-  color: #0c3030;
+  background-color: var(--nmg-bg-light);
+  color: var(--nmg-nav-hover);
 }
 
 .table-nmg {
-  color: #0c1a19;
+  color: var(--nmg-black);
 }
 
 .min-h-450px {
   min-height: 450px;
+}
+
+.modal-content {
+  background-color: var(--nmg-bg-alt);
 }

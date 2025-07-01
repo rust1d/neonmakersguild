@@ -197,7 +197,7 @@
           <input type='hidden' name='fiids' />
 
           <input type='file' id='filePicker' accept='image/*' multiple class='d-none' />
-          <div id='hidden-inputs'></div>
+          <!--- <div id='hidden-inputs'></div> --->
 
           <cfloop array='#arrList#' item='row' index='idx'>
             <cfset mMessage = new app.models.ForumMessages(row) />

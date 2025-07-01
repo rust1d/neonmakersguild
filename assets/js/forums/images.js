@@ -10,9 +10,8 @@ function add_to_roll($input, id, src, filename='') {
   const $roll = active_roll();
   const $removeBtn = $('<button class="btn-delete-img btn-nmg-delete">&times;</button>');
   $removeBtn.on('click', function() {
-    // $(`#${id}`).remove(); // file input goes away with the pic/$col
     $col.remove();
-    show_edit_all($roll); //
+    show_edit_all($roll);
   });
   $col.append($img).append($removeBtn).append($input).append($cap);
   $roll.append($col);
@@ -96,18 +95,17 @@ function process_image(file, originalName) {
       let finalName = `${baseName}.${ext}`;
       let finalType = file.type;
 
-      const processAndAppend = (blob, filename, mime) => {
+      const processAndAppend = function(blob, filename, mime) {
         const newFile = new File([blob], filename, { type: mime });
         const dt = new DataTransfer();
         dt.items.add(newFile);
         const $input = $(`<input id='${uniqueId}' type='file' name='${uniqueId}' class='d-none' />`);
         $input[0].files = dt.files;
-        // $('#hidden-inputs').append($input);
 
         const reader2 = new FileReader();
-        reader2.onload = ev2 => {
-          add_to_roll($input, uniqueId, ev2.target.result, filename);
-          resolve(); // Only resolve after image is added to roll
+        reader2.onload = function(eve) {
+          add_to_roll($input, uniqueId, eve.target.result, filename);
+          resolve(); // resolve after image is added to roll
         }
         reader2.onerror = reject;
         reader2.readAsDataURL(newFile);
@@ -223,18 +221,29 @@ $(function() {
   $('#btnEditCaptions').on('click', function() {
     const $captions = $('#captions');
     $captions.empty();
-    current_images().each(function() {
+    const imgs = current_images();
+
+    imgs.each(function() {
       const id = this.dataset.caption;
       const caption = $(`#${id}`).val();
+      const img = $(this.outerHTML).removeClass('img-thumbnail w-100')[0];
       const inputGroup = `
-        <div class='col-md-6 col-lg-4'>
-          ${this.outerHTML}
-          <div class='pt-2'>
-            <textarea class='form-control form-control-sm' data-id='${id}' rows='3' placeholder='Caption'>${caption}</textarea>
+        <div class='col-md-6'>
+          <div class='photo-card'>
+            <div class='photo-frame'>
+              ${img.outerHTML}
+            </div>
+            <div class='p-2'>
+              <textarea class='form-control form-control-sm border-secondary-subtle' data-id='${id}' rows='3' placeholder='Caption'>${caption}</textarea>
+            </div>
           </div>
         </div>
       `;
       $captions.append(inputGroup);
+    });
+    $captions.find('.photo-frame').each(function() {
+      const src = $(this).find('img').attr('src');
+      $(this).css('background-image', `url(${src})`);
     });
   });
 

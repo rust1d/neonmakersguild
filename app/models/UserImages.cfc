@@ -10,7 +10,8 @@ component extends=BaseModel accessors=true {
   property name='ui_rename'    type='string';
   property name='filefield'    type='string'                        default='ui_filename';
 
-  belongs_to(class: 'Users',  key: 'ui_usid', relation: 'us_usid');
+  belongs_to(class: 'Users',          key: 'ui_usid', relation: 'us_usid');
+  has_many(class: 'BlogEntryImages',  key: 'ui_uiid', relation: 'bei_uiid');
 
   variables.image_longest_side = 1200; // ALL IMAGES WILL BE RESIZED BEFORE UPLOAD TO CDN
   variables.thumbnail_size = 256; // ALL IMAGES WILL BE RESIZED BEFORE UPLOAD TO CDN
