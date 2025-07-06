@@ -16,8 +16,9 @@ component extends=jSoup accessors=true {
   property name='ben_dla'           type='date';
   property name='ben_blogname'      type='string';
   property name='ben_comment_cnt'   type='numeric';
+  property name='ben_image_cnt'     type='numeric';
 
-  has_many(name: 'BlogComments',         class: 'BlogComments',         key: 'ben_benid',  relation: 'bco_benid');
+  has_many(name: 'BlogComments',         class: 'BlogComments',         key: 'ben_benid',  relation: 'bco_benid', where: { bco_beiid: 0 });
   has_many(name: 'BlogEntryImages',      class: 'BlogEntryImages',      key: 'ben_benid',  relation: 'bei_benid');
   has_many_through(class: 'UserImages',  through: 'BlogEntryImages');
   has_many(name: 'BlogEntryCategories',  class: 'BlogEntryCategories',  key: 'ben_benid',  relation: 'bec_benid');
@@ -37,7 +38,7 @@ component extends=jSoup accessors=true {
   }
 
   public string function body_cdn() {
-    return utility.body_cdn(variables.ben_morebody ?: '');
+    return utility.body_cdn(variables.ben_body ?: '');
   }
 
   public string function post_date() {

@@ -4,7 +4,7 @@ $(document).ready(() => {
     if (file) {
       img = new Image();
       img.onload = function () {
-        $('input[name=ui_rename]').val(file.name);
+        $('input[name=file_rename]').val(file.name);
         $('input[name=ui_mb]').val(`${(file.size / 1024).toFixed(1)} KB`);
         $('input[name=ui_dimensions]').val(`${this.width} x ${this.height}`);
         URL.revokeObjectURL(this.src);

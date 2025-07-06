@@ -14,7 +14,7 @@ BEGIN
   SET _term = clean_regexp(_term);
 
   SELECT SQL_CALC_FOUND_ROWS blogstream.*,
-         (SELECT COUNT(*) FROM blogcomments WHERE bco_benid=ben_benid) AS ben_comment_cnt
+         (SELECT COUNT(*) FROM blogcomments WHERE bco_benid=ben_benid AND bco_beiid=0) AS ben_comment_cnt
      FROM (SELECT @lastUser:=0, @lastSeq:=0) AS vars,
           (
             SELECT blogentries.*, us_user AS ben_blogname,

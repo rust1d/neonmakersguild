@@ -1,24 +1,22 @@
 component accessors=true {
-  property name='name'      type='string';
-  property name='class'     type='string';
-  property name='key'       type='string';
-  property name='relation'  type='string';
-  property name='type'      type='string';
-  property name='children'  type='array';
-  property name='parent'    type='BaseModel';
-  property name='where'     type='struct';
-  property name='preloaded' type='boolean';
+  property name='name'       type='string';
+  property name='class'      type='string';
+  property name='key'        type='string';
+  property name='relation'   type='string';
+  property name='type'       type='string';
+  property name='children'   type='array';
+  property name='parent'     type='BaseModel';
+  property name='where'      type='struct';
+  property name='preloaded'  type='boolean';
 
   public BaseRelation function init(required struct params) {
     variables.class = params.get('class');
     variables.name = params.get('name') ?: variables.class;
-    // param variables.name = variables.class;
     variables.key = params.get('key');
     variables.relation = params.get('through') ?: params.get('relation');
     variables.type = params.get('type');
     variables.where = params.get('where') ?: {};
     variables.preloaded = variables.type=='belongs_to' && (params.get('preloaded') ?: false);
-    // param variables.where = {};
 
     return this;
   }
@@ -46,7 +44,9 @@ component accessors=true {
     if (!isObject(mChild)) return false;
     if (mChild.persisted() && !mChild.destroy()) return false;
 
-    return variables.children.len() != variables.children.delete(mChild).len();
+    var cnt = variables.children.len();
+    variables.children = variables.children.filter(row => row.primary_key()!=mChild.primary_key());
+    return variables.children.len() != cnt;
   }
 
   public any function detect() { // RETURNS THE FIRST CHILD MATCHING params OR NULL
@@ -83,10 +83,6 @@ component accessors=true {
     var rows = records().filter(mRow => mRow.primary_key() == pkid);
     if (rows.isEmpty()) throw('Relation was unable to find primary key #pkid#.', 'relation_error');
     return rows.first();
-  }
-
-  public BaseModel function find_or_create() {
-    return detect(argumentcollection: arguments) ?: build({});
   }
 
   public any function load(required BaseModel parent, BaseModel child) {
@@ -228,6 +224,10 @@ component accessors=true {
     var params = variables.where.duplicate();
     params[variables.relation] = fkey();
     variables.children = mModel.where(params, this);
+  }
+
+  private string function datasource() {
+    return application.dsn;
   }
 
   private any function fkey() {

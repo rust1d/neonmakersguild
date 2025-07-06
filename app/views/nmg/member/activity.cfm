@@ -14,35 +14,80 @@
 </cfscript>
 
 <cfoutput>
-  <div class='card-body border-top-0 py-2'>
-    <div class='row'>
-      #router.include('shared/partials/filter_and_page', { pagination: pagination })#
-    </div>
-  </div>
-  <div class='card-body pt-0'>
-    <div class='row g-3'>
-      <cfloop query='#qryActivity#'>
-        <div class='col-12'>
-          <cfif act_source=='post'>
-            #mUser.user()# added a new blog post "<a href='/post/#act_seolink#'>#act_title#</a>".
-            <div class='smaller'>#preview(act_words)#</div>
-          <cfelseif act_source=='comment'>
-            #mUser.user()# commented on blog post "#act_title#".
-            <div class='smaller'>#preview(act_words)#</div>
-          <cfelseif act_source=='thread'>
-            #mUser.user()# started a new thread "<a href='/forum/#act_seolink#'>#act_words#</a>" in "<a href='/forum/#act_seolink.listFirst('/')#'>#act_title#</a>".
-          <cfelseif act_source=='message'>
-            #mUser.user()# posted a message in thread "<a href='/forum/#act_seolink####act_pkid#'>#act_title#</a>".
-            <div class='smaller'>#preview(act_words)#</div>
-          </cfif>
-          <div class='smaller text-muted'>#utility.ordinalDate(act_dla)#</div>
+  <div class='col-12 content-card'>
+    <cfif !pagination.one_page>
+      <div class='row border-top-0 pt-2 pb-0'>
+        #router.include('shared/partials/filter_and_page', { pagination: pagination })#
+      </div>
+    </cfif>
+
+    <table class='table table-borderless bg-nmg-light'>
+      <thead>
+        <tr>
+          <td class='w-120px'></td>
+          <td class='w-50'></td>
+          <td></td>
+        </tr>
+      </thead>
+      <tbody>
+        <cfloop query='#qryActivity#'>
+          <tr class='position-relative align-middle'>
+            <td class='smaller w-120px'>
+              #act_dla.format('yyyy-mm-dd')#
+            </td>
+            <cfif act_source=='post'>
+              <td>
+                #mUser.user()# added a new post "<a class='stretched-link' href='/post/#act_seolink#'>#act_title#</a>".
+              </td>
+              <td class='small'>#preview(act_words)#</td>
+            <cfelseif act_source=='comment'>
+              <td>
+                #mUser.user()# commented on post "#act_title#".
+              </td>
+              <td class='small'>#preview(act_words)#</td>
+            <cfelseif act_source=='thread'>
+              <td >
+                #mUser.user()# started a thread in "<a class='stretched-link' href='/forum/#act_seolink.listFirst('/')#'>#act_title#</a>".
+              </td>
+              <td class='small'><a href='/forum/#act_seolink#'>#act_words#</a></td>
+            <cfelseif act_source=='message'>
+              <td>
+                #mUser.user()# replied in thread "<a class='stretched-link' href='/forum/#act_seolink####act_pkid#'>#act_title#</a>".
+              </td>
+              <td class='small'>#preview(act_words)#</td>
+            </cfif>
+          </tr>
+        </cfloop>
+      </tbody>
+    </table>
+
+
+    <!--- <div class='card'>
+      <cfif !pagination.one_page>
+        <div class='card-body border-top-0 pt-2 pb-0'>
+          <div class='row'>
+            #router.include('shared/partials/filter_and_page', { pagination: pagination })#
+          </div>
         </div>
-      </cfloop>
-    </div>
-  </div>
-  <div class='card-footer bg-nmg-light'>
-    <div class='row align-items-center'>
-      #router.include('shared/partials/filter_and_page', { pagination: pagination, footer: true })#
+      </cfif>
+      <div class='card-body'>
+
+      </div>
+      <div class='card-footer bg-nmg-light'>
+        <cfif pagination.one_page>
+          #utility.plural_label(pagination.total, 'record')#
+        <cfelse>
+          <div class='row align-items-center'>
+            #router.include('shared/partials/filter_and_page', { pagination: pagination, footer: true })#
+          </div>
+        </cfif>
+      </div>
+    </div> --->
+
+    <div class='border-top pt-3'>
+      <div class='row align-items-center'>
+        #router.include('shared/partials/filter_and_page', { pagination: pagination, footer: true })#
+      </div>
     </div>
   </div>
 </cfoutput>

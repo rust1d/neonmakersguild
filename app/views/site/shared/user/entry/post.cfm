@@ -56,7 +56,8 @@
 
 <cfset include_js('assets/js/admin/blog/entry.js') />
 <cfset include_js('assets/js/forums/images.js') />
-<cfset router.include('forum/_image_dropdown') />
+<cfset router.include('shared/partials/image_dropdown') />
+<cfset router.include('shared/partials/process_overlay') />
 
 <cfoutput>
   <form role='form' method='post' id='blogform' class='needs-validation' novalidate enctype='multipart/form-data'>

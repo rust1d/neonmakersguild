@@ -1,6 +1,6 @@
 body {
   color: var(--nmg-black);
-  background-color: var(--nmg-bg-light);
+  background-color: var(--nmg-bg-alt);
 }
 
 a {
@@ -12,11 +12,11 @@ a:hover {
 }
 
 .bg-nmg {
-  background-color: var(--nmg-bg-alt);
+  background-color: var(--nmg-bg-alt)!important;
 }
 
 .bg-nmg-light {
-  background-color: var(--nmg-bg-light);
+  background-color: var(--nmg-bg-light)!important;
 }
 
 .border-nmg {
@@ -61,12 +61,12 @@ a:hover {
 
 .card {
   background-color: var(--nmg-bg-light);
-  border-color: var(--nmg-border) !important;
+  border-color: var(--nmg-border);
 }
 
-.card .card-header {
-  background-color: var(--nmg-bg-alt);
-}
+/* .card .card-header {
+  background-color: var(--nmg-admin-text);
+} */
 
 .card-private .card-header {
   background-color: var(----nmg-private);
@@ -168,4 +168,21 @@ a:hover {
 
 .modal-content {
   background-color: var(--nmg-bg-alt);
+}
+
+.image-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  cursor: pointer;
+}
+
+.centered-logo-line {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 2rem;
+  color: var(--nmg-color);
 }

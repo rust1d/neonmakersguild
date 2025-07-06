@@ -118,7 +118,8 @@
 
 <cfset include_js('assets/js/forums/thread.js') />
 <cfset include_js('assets/js/forums/images.js') />
-<cfset router.include('forum/_image_dropdown') />
+<cfset router.include('shared/partials/image_dropdown') />
+<cfset router.include('shared/partials/process_overlay') />
 
 <cfoutput>
   <div class='row g-3 pt-3'>

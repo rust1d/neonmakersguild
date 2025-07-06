@@ -21,7 +21,8 @@ BEGIN
   SET _term = clean_regexp(_term);
 
   SELECT SQL_CALC_FOUND_ROWS blogentries.*, us_user AS ben_blogname,
-         (SELECT COUNT(*) FROM blogcomments WHERE bco_benid=ben_benid) AS ben_comment_cnt
+         (SELECT COUNT(*) FROM blogcomments WHERE bco_benid=ben_benid AND bco_beiid=0) AS ben_comment_cnt,
+         (SELECT COUNT(*) FROM blogentryimages WHERE bei_benid=ben_benid) AS ben_image_cnt
     FROM blogentries
          INNER JOIN users ON us_usid = ben_blog
    WHERE (_benid IS NULL OR ben_benid = _benid)

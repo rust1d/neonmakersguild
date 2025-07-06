@@ -65,6 +65,7 @@ component {
     check_redirects();
     request.s3Service = get_cloud_service();
     request.router =  new app.services.router('home', session.site.path());
+    request.utility = application.utility;
   };
 
   public boolean function onMissingTemplate(string targetpage) {

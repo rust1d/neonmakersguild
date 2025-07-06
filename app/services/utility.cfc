@@ -1,6 +1,27 @@
 component {
+  public string function age_format(required date since) {
+    var span = '<span alt="#arguments.since.format('yyyy-mm-dd HH:nn:ss')#">';
+    var diff = now().diff('d', arguments.since);
+    if (diff > 60) return span & arguments.since.format('MMM, dd') & '</span>';
+    diff = now().diff('h', arguments.since);
+    if (diff > 1) return span & diff & 'h</span>';
+    diff = now().diff('n', arguments.since);
+    return span & diff & 'm</span>';
+  }
+
   public numeric function age_in_days(date since = '1899-01-01') {
     return now().diff('d', since);
+  }
+
+  public struct function api_response(any error) {
+    var data = { 'success': true, 'errors': [], 'data': {} }
+    if (!isNull(arguments.error)) {
+      data.success = false;
+      data.errors.append(errorString(error));
+    }
+    arguments.delete('error');
+    data.data = arguments;
+    return data;
   }
 
   public struct function array_to_hash(required array rows, required string pkid) {
@@ -47,6 +68,16 @@ component {
 
   public string function clean_tag(required string data) {
     return encodeForHTML(data.lcase().rereplace('[^a-z0-9]',' ','all').trim());
+  }
+
+  public numeric function compression(required numeric height, required numeric width, required numeric size) {
+    var ratio = arguments.size / (arguments.height * arguments.width * 3);
+    if (ratio > 0.8) return .70;
+    if (ratio > 0.6) return .75;
+    if (ratio > 0.5) return .80;
+    if (ratio > 0.4) return .85;
+    if (ratio > 0.3) return .90;
+    return .95;
   }
 
   public string function decode(string data = '') {
@@ -421,6 +452,14 @@ component {
     var qry = [];
     for (var key in data.keyList()) qry.append('#key#=#data[key]#');
     return qry.toList('&');
+  }
+
+  public string function updatable_counter(required numeric cnt, required string id, string label='comment') {
+    return '
+    <span title="Comments">
+      <span data-id="#arguments.id#" data-cnt="#arguments.cnt#">#arguments.cnt#</span>
+      #arguments.label#
+    </span>';
   }
 
   public string function url_add_protocol(string data = '') {

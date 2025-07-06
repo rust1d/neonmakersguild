@@ -13,7 +13,7 @@
     </div>
     <cfloop array='#results.rows#' item='mEntry' index='idx'>
       <div class='col-12'>
-        #router.include('shared/blog/entry', { mEntry: mEntry, fold: true })#
+        #router.include('shared/blog/post', { mEntry: mEntry, fold: true })#
       </div>
     </cfloop>
   </div>

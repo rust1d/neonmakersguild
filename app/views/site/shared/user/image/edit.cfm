@@ -4,6 +4,7 @@
   mImage = mBlog.image_find_or_create(uiid);
 
   if (form.keyExists('btnSubmit')) {
+    writedump(form);
     mImage.set(form);
     if (mImage.safe_save()) {
       flash.success('Your image was saved.');
@@ -36,12 +37,12 @@
               <div class='col-md-6 col-12'>
                 <div class='row g-3'>
                   <div class='col-12'>
-                    Images will be resized to a max height/width of 1200 and a 300x300 thumbnail will be cropped from the center for previews.
+                    Images will be resized to a max height/width of #mImage.size_image()#px and a thumbnail will be created for previews.
                   </div>
                   <div class='col-12' id='file_info'>
                     <div class='input-group input-group-sm mb-1'>
                       <span class='input-group-text w-25 btn-nmg required'>Name</span>
-                      <input type='text' class='form-control' name='ui_rename' required maxlength='100' />
+                      <input type='text' class='form-control' name='file_rename' required maxlength='100' />
                     </div>
                     <div class='input-group input-group-sm mb-1'>
                       <span class='input-group-text w-25 btn-nmg'>Bytes</span>
@@ -54,7 +55,7 @@
                   </div>
                   <div class='col-12 text-center'>
                     <a class='btn btn-nmg mr-3 position-relative'>
-                      <span><i class='fa-solid fa-fw fa-list-radio'></i> Select Image</span>
+                      <span><i class='fa-solid fa-fw fa-images'></i> Select Image</span>
                       <input class='h-100 w-100 position-absolute' type='file' id='hidden_input' name='ui_filename' value='Choose a file' accept='image/*'>
                     </a>
                     <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-nmg'><i class='fa-solid fa-fw fa-upload'></i> Save Image</button>
@@ -73,7 +74,7 @@
               <div id='thumbnail_view'>
                 <div class='position-relative'>
                   <img id='thumbnail_src' src='#mImage.thumbnail_src()#' class='profile-crop-wrapper img-thumbnail' />
-                  <button type='button' id='btnOpen' data-uiid='#mImage.encoded_key()#' title='change thumbnail' class='image-crop-btn rounded-circle btn btn-nmg btn-outline-dark fa-thin fa-photo-film'></button>
+                  <button type='button' id='btnOpen' data-uiid='#mImage.encoded_key()#' title='change thumbnail' class='image-crop-btn rounded-circle btn btn-nmg btn-outline-dark fa-solid fa-photo-film'></button>
                 </div>
                 <div class='input-group input-group-sm mt-1'>
                   <input type='text' class='form-control' name='ui_filename' value='#mImage.filename()#' />

@@ -1,6 +1,6 @@
 component {
   public BaseModel function init(struct params, boolean db = false) {
-    variables.utility = application.utility;
+    variables.utility = new app.services.utility();
     variables._db = {};
     pre_init(argumentcollection: arguments);
     if (arguments.keyExists('params')) {
@@ -56,6 +56,11 @@ component {
     return utility.encode(primary_key());
   }
 
+  public struct function encoded_keyid() {
+    var pkid = primary_key_field().replace(table_prefix(), '');
+    return { '#pkid#': encoded_key() };
+  }
+
   public array function errors() {
     param variables._errors=[];
 
@@ -70,15 +75,23 @@ component {
     return this;
   }
 
-  public BaseModel function find_or_create(string id) {
+  public BaseModel function find_or_create(string id, struct defaults={}) {
     if (!isNumeric(arguments.get('id'))) id = 0;
-    if (arguments.id) load_db(get_by_ids(ids: id));
+    if (arguments.id) {
+      load_db(get_by_ids(ids: id));
+    } else {
+      set(defaults);
+    }
 
     return this;
   }
 
   public boolean function has_errors() {
     return errors().len() != 0;
+  }
+
+  public BaseModel function instantiate(struct data) {
+    return new '#getMetaData().fullname#'(data);
   }
 
   public query function get_by_ids(required string ids) {
@@ -90,7 +103,10 @@ component {
   }
 
   public boolean function matches(required struct params) {
-    for (var key in params) if (variables.get(key) != params[key]) return false;
+    for (var key in params) {
+      if (find_field(key).isEmpty()) continue;
+      if (variables.get(key) != params[key]) return false;
+    }
     return true;
   }
 
@@ -103,10 +119,10 @@ component {
     if (relation_exists(missingMethodName)) return relation_load(missingMethodName, missingMethodArguments);
 
     // TRY TO FIND A MATCHING FIELD W/NAME OF METHOD CALLED
-    var field = find_field(missingMethodName); // FULL NAME PASSED? ie us_usid()
-    if (field.isEmpty()) field = find_field(table_prefix() & missingMethodName); // UNPREFIXED NAME PASSED? ie usid()
+    var field = find_field(missingMethodName); // FULL NAME PASSED? ie st_stid()
+    if (field.isEmpty()) field = find_field(table_prefix() & missingMethodName); // UNPREFIXED NAME PASSED? ie stid()
     if (!field.isEmpty()) { // FIELD FOUND, SET OR GET IT
-      if (missingMethodArguments.isEmpty()) return variables.get(field.name); // NO VALUE PASSED, GET AND RETURN
+      if (missingMethodArguments.isEmpty()) return get_field(field); // NO VALUE PASSED, GET AND RETURN
 
       if (isNull(missingMethodArguments[1])) {
         variables[field.name] = javacast('null',0);
@@ -184,13 +200,20 @@ component {
     this.find(primary_key());
   }
 
-  public boolean function safe_save() {
+  public boolean function responds_to(required string method) {
+    return utility.responds_to(this, method);
+  }
+
+  public boolean function safe_save(boolean report=true) { // BY DEFAULT safe_save PUTS ERRORS INTO FLASH
     try {
+      if (!changed()) return true;
       save();
     } catch (any err) {
-      if (err.type != 'record_not_valid') application.flash.error(utility.errorString(err));
+      if (err.type!='record_not_valid') errors().append(utility.errorString(err));
     }
-    for (var err in errors()) application.flash.error(err);
+    if (report) {
+      for (var err in errors()) application.flash.error(err);
+    }
     return errors().len() ? false : true;
   }
 
@@ -227,9 +250,17 @@ component {
     return this;
   }
 
-  public struct function toStruct() {
+  public string function table_prefix() {
+    var parts = primary_key_field().listToArray('_');
+    if (parts.len()==1) return '';
+    return parts[1] & '_';
+  }
+
+  public struct function toStruct(boolean nulls = true) {
     var data = {}
-    for (var field in GetMetaData(this).properties) data[field.name] = variables.get(field.name);
+    for (var field in GetMetaData(this).properties) {
+      if (nulls || !isNull(variables.get(field.name))) data[field.name] = variables.get(field.name);
+    }
     return data;
   }
 
@@ -260,6 +291,23 @@ component {
     return models;
   }
 
+  // METHODS TO STORE/FETCH/ERASE DATA ON MODEL
+  public void function erase(required string key) {
+    variables.delete(key);
+  }
+
+  public any function fetch(required string key, any default_value) {
+    return stored(key) ? variables[key] : default_value ?: javacast('null',0);
+  }
+
+  public void function store(required string key, required any val) {
+    variables[key] = val;
+  }
+
+  public boolean function stored(required string key) {
+    return variables.keyExists(key) ? true : false;
+  }
+
   // PRIVATE
 
   private any function cast(any value, required struct field) {
@@ -271,7 +319,7 @@ component {
       if (field.type == 'string') return format(toString(value), field);
       errors().append('Field #field.name# could not be cast to #field.type# for value `#value#`.');
     } catch (any err) {
-      trap_error(err, class() & '.' & GetFunctionCalledName());
+      trap_error(err, class() & '.' & GetFunctionCalledName() & '.' & field.name);
     }
   }
 
@@ -326,8 +374,7 @@ component {
   }
 
   private string function format_digits(required string data) {
-    if (data.len()) data = data.reReplaceNoCase('[^[:digit:]]', '', 'all');
-    return data;
+    return utility.digits(data);
   }
 
   private void function load(required struct data, boolean db = false) {
@@ -336,10 +383,14 @@ component {
       if (!data.keyArray().findNoCase(field.name)) continue;
       try {
         if (isNull(data[field.name])) {
-          variables[field.name] = javacast('null', 0);
+          if (field.keyExists('default')) {
+            variables[field.name] = field.default;
+          } else {
+            variables[field.name] = javacast('null', 0);
+          }
         } else {
           var value = cast(data[field.name], field);
-          if (isNull(value)) continue; // ERROR OCCURED
+          if (isNull(value)) continue; // ERROR OCCURRED
           set_field(field, value);
           if (db) variables._db[field.name] = value;
         }
@@ -347,6 +398,10 @@ component {
         errors().append('#err.message# for field #field.name#');
       }
     }
+  }
+
+  private any function get_field(required struct field) {
+    return invoke(this, 'get' & field.name);
   }
 
   private void function load_db(required query qry) {
@@ -365,8 +420,7 @@ component {
     try {
       return deserializeJSON(serializeJSON(qry, 'struct'));
     } catch (any err) {
-      writedump(err);
-      writedump(arguments);
+      trap_error(err, class() & '.' & GetFunctionCalledName());
     }
   }
 
@@ -408,7 +462,7 @@ component {
     clear_errors();
     pre_load(data);
     load(argumentcollection: arguments);
-    post_load();
+    post_load(data);
     relation_link(data); // CHECKS IF ANOTHER MODEL IS AUTO-GENERATING THIS ONE SO IT CAN SET CHILD-PARENT RELATION
     validate();
   }
@@ -419,15 +473,8 @@ component {
     return args;
   }
 
-  private string function table_prefix() {
-    var parts = primary_key_field().listToArray('_');
-    if (parts.len()==1) return '';
-    return parts[1] & '_';
-  }
-
   private void function trap_error(required any err, string method = '') {
-    //application.sentry.captureException(exception: arguments.err);
-    var data = application.utility.errorString(err);
+    var data = utility.errorString(err);
     if (method.len()) data &= ' in #method#';
     errors().append(data);
   }
@@ -594,7 +641,7 @@ component {
   private void function pre_insert() {}
   private void function post_insert(required boolean success) {}
   private void function pre_load(required struct data) {}
-  private void function post_load() {}
+  private void function post_load(struct data) {}
   private void function pre_save() {}
   private void function post_save(required boolean success) {}
   private void function pre_update() {}

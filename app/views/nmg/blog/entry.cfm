@@ -11,7 +11,7 @@
         if (mComments.len()==1) {
           mComment = mComments.first();
           if (mComment.set(bco_comment: form.edit_comment).safe_save()) {
-            flash.success('Your comment was updated.');
+            // flash.success('Your comment was updated.');
             router.go(mEntry.seo_link() & '##comment-' & mComment.bcoid());
           }
         }
@@ -24,12 +24,16 @@
       mComment = new app.models.BlogComments(form);
       if (mComment.safe_save()) {
         mEntry.comment_cnt_inc();
-        flash.success('Thank you for your participation.');
+        // flash.success('Thank you for your participation.');
         router.go(mEntry.seo_link() & '##comment');
       }
     }
   }
 </cfscript>
+
+<cfset include_js('assets/js/blog/entry.js') />
+<cfset include_js('assets/js/blog/images.js') />
+<cfset include_js('assets/js/blog/comments.js') />
 
 <cfif session.user.admin()>
   <script>
@@ -41,14 +45,12 @@
   </script>
 </cfif>
 
-<cfset include_js('assets/js/blog/comments.js') />
-
 <cfoutput>
   <div class='row g-3'>
-    <div class='col-12'>
-      #router.include('shared/blog/entry', { mEntry: mEntry, fold: false, promote: session.user.admin() })#
+    <div class='col-12 content-card'>
+      #router.include('shared/blog/post', { mEntry: mEntry, fold: false })#
     </div>
-    <div class='col-12'>
+    <div class='col-12 content-card'>
       <cfif mEntry.comments()>
         #router.include('shared/blog/comments', { mEntry: mEntry })#
       <cfelse>

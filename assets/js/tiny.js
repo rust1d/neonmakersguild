@@ -161,14 +161,14 @@ $(function() {
         const files = Array.from(dt.files);
         ev.preventDefault();
         ev.stopPropagation();
-        process_files(files);
+        process_images(files, add_to_roll);
       });
       editor.on('paste', function(ev) {
         const items = (ev.clipboardData || ev.originalEvent?.clipboardData)?.items || [];
         const files = Array.from(items).filter(item => item.kind==='file').map(item => item.getAsFile());
         if (!files.length) return;
         ev.preventDefault();
-        process_files(files);
+        process_images(files, add_to_roll);
       });
     }
   }
@@ -197,6 +197,7 @@ $(function() {
 
   $(document).on('mousedown', function(ev) {
     const $drop = $('#imageDropdown');
+    if ($drop.length==0) return;
     if (!$drop.is(ev.target) && $drop.has(ev.target).length===0) {
       bootstrap.Dropdown.getOrCreateInstance($drop[0]).hide();
     }

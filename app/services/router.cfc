@@ -218,7 +218,7 @@ component accessors=true {
     if (!template_exists(partial)) {
       shared = template_exists(partial, true); // CHECK THE DEFAULT SITE
       if (!shared) {
-        writeoutput('<marquee class=bg-warning>router 404 - #partial# called from #history?.first()#</marquee>')
+        writeoutput('<marquee class=bg-warning>router 404 - #physical_path(partial)# called from #history?.first()#</marquee>')
         if (once) {
           session.user.store('404', partial);
           go(application.urls.root & '/index.cfm');

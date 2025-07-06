@@ -16,8 +16,8 @@ component extends=BaseModel accessors=true {
   belongs_to(name: 'ForumMessage', class: 'ForumMessages',  key: 'fi_fmid',  relation: 'fm_fmid');
   belongs_to(name: 'User',         class: 'Users',          key: 'fi_usid',  relation: 'us_usid');
 
-  variables.image_longest_side = 1000; // ALL IMAGES WILL BE RESIZED BEFORE UPLOAD TO CDN
-  variables.thumbnail_size = 256;      // ALL IMAGES WILL BE RESIZED BEFORE UPLOAD TO CDN
+  variables.image_size = 1000;
+  variables.thumb_size = 196;
 
   public string function dimensions() {
     return isNull(variables.fi_width) ? '' : '#variables.fi_width# x #variables.fi_height#';
@@ -88,7 +88,7 @@ component extends=BaseModel accessors=true {
 
   private any function make_thumbnail(required any img) {
     var zoom = 1.05; // trim some edge from thumbnail
-    var max = thumbnail_size * zoom;
+    var max = thumb_size * zoom;
     var info = ImageInfo(img);
     if (info.height > info.width) {
       img.resize(max, '');
@@ -96,17 +96,17 @@ component extends=BaseModel accessors=true {
       img.resize('', max);
     }
     info = ImageInfo(img);
-    var pos_x = (info.width - thumbnail_size) / 2;
-    var pos_y = (info.height - thumbnail_size) / 2;
-    img.crop(pos_x, pos_y, thumbnail_size, thumbnail_size);
+    var pos_x = (info.width - thumb_size) / 2;
+    var pos_y = (info.height - thumb_size) / 2;
+    img.crop(pos_x, pos_y, thumb_size, thumb_size);
     return img;
   }
 
   private struct function move_final(required string filename) {
     var img = utility.orient_image(ImageRead(filename));
     var info = ImageInfo(img);
-    if (info.height > image_longest_side || info.width > image_longest_side) { // ENFORCE MAX DIMENSION
-      img.scaleTofit(image_longest_side, image_longest_side);
+    if (info.height > image_size || info.width > image_size) { // ENFORCE MAX DIMENSION
+      img.scaleTofit(image_size, image_size);
       info = ImageInfo(img);
     }
     cfimage(action: 'write', source: img, destination: local_path() & image_name(), quality: 1, overwrite: 'true');

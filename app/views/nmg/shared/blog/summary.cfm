@@ -1,19 +1,19 @@
 <cfoutput>
   <div class='row border border-rounded g-0'>
     <div class='col-4'>
-      <div class='aspect-2-1 position-relative overflow-hidden' style='background-image: url(#locals.mEntry.image_url()#);'>
+      <!--- <div class='aspect-2-1 position-relative overflow-hidden' style='background-image: url(#locals.mEntry.image_url()#);'>
         <cfif !isNull(locals.mEntry.ben_promoted())>
           <span class='ribbon p-1 pb-0'><i class='fa-solid fa-fw fa-star' title='Front Page #locals.mEntry.promoted()#'></i></span>
         </cfif>
-      </div>
+      </div> --->
     </div>
     <div class='col-8'>
       <div class='card border-0 h-100'>
         <div class='card-body pt-1 pb-0'>
           <div class='row g-0'>
-            <div class='col-12 text-center text-uppercase fs-6'>
+            <!--- <div class='col-12 text-center text-uppercase fs-6'>
               #locals.mEntry.category_links().toList(' &bull; ')#
-            </div>
+            </div> --->
             <div class='col-12 text-center fs-4'>
               <a href='#locals.mEntry.seo_link()#'>#locals.mEntry.title()#</a>
             </div>

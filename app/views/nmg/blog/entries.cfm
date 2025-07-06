@@ -5,5 +5,7 @@
 </cfscript>
 
 <cfoutput>
-  #router.include('shared/blog/entries', { results: results })#
+  <div class='row g-2'>
+    #router.include('shared/blog/entries', { results: results })#
+  </div>
 </cfoutput>
