@@ -5,13 +5,12 @@
       locals.direction = ifin(locals.nav=='next', 1, 0);
     }
     mBEI = new app.models.BlogEntryImages().find_nav(argumentcollection: locals);
-    mBE = mBEI.BlogEntry();
   }
 </cfscript>
 
 <cfoutput>
   <cfif locals.keyExists('bei_beiid')>
-    #router.include('shared/blog/_modal_image_content')#
+    #router.include('shared/blog/_modal_image_content', { mBEI: mBEI })#
   <cfelse>
     <div class='modal fade h-100' id='beiModal' tabindex='-1' aria-hidden='true'>
       <div class='modal-dialog modal-fullscreen'>

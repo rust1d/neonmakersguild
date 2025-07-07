@@ -16,7 +16,7 @@ component extends=BaseModel accessors=true {
   }
 
   public string function size_mb() {
-    var size = _getval('size', 0) ?: 0;
+    var size = _getval('size', 0);
     return numberFormat(size/1024/1024, '.0') & ' MB';
   }
 
@@ -122,7 +122,8 @@ component extends=BaseModel accessors=true {
         return;
       }
 
-      if (isSimpleValue(form[variables.filefield])) { // XHR FORMDATA WILL HAVE ALREADY UPLOADED IMAGES
+      // if (isSimpleValue(form[variables.filefield])) { // XHR FORMDATA WILL HAVE ALREADY UPLOADED IMAGES
+      if (utility.isAjax()) { // XHR FORMDATA WILL HAVE ALREADY UPLOADED IMAGES - FORCE $.post headers: { 'X-Requested-With': 'XMLHttpRequest' } IF NOT SET
         var path = form[variables.filefield];
         if (!fileExists(path)) {
           return errors().append('Could not find upload #path#.');
@@ -168,7 +169,8 @@ component extends=BaseModel accessors=true {
       if (variables.upload_result.fileWasSaved) {
         var filename = variables.upload_result.serverDirectory & '\' & variables.upload_result.serverfile;
         if (!directoryExists(local_path())) cfdirectory(action: 'create', directory: local_path(), mode: 644);
-        _setval('filename', variables.file_rename ?: variables.upload_result.clientfile)
+        _setval('filename', variables.file_rename ?: variables.upload_result.clientfile);
+        // application.flash.error(_getval('filename'));//
         var info = move_final(filename);
         _setval('height', info.height);
         _setval('width', info.width);

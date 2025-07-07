@@ -1,4 +1,7 @@
 $(function () {
+  const frm = $('#blogform')[0];
+  let remove_beiids = [];
+
   $('#btnPreview').on('click', function() {
     var $frm = $('#blogform').clone();
     $frm[0].target = '_blank';
@@ -11,7 +14,14 @@ $(function () {
 
   $('#btnCancel').on('click', function() {
     if (!confirm('Are you sure you want to cancel this blog post?')) return;
-    window.location = '?p=blog/entry/list';
+    const rtn = this.dataset.list || 'blog/entry/list';
+    window.location = `?p=${rtn}`;
+  });
+
+  $('button[name=btnImgDelete]').on('click', function() {
+    remove_beiids.push(this.dataset.pkid);
+    frm.beiids.value = remove_beiids.join(',');
+    $(this).parent().find('img').animate({ height: 0, opacity: 0 }, 400, ()=>{ $(this).parent().remove() });
   });
 
   $('#btnAddCategory').on('click', function() {

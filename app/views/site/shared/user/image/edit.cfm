@@ -90,8 +90,8 @@
                 <br clear='all'>
               </div>
             </div>
-            <div class='col-md'>
-              <img src='#mImage.image_src()#' class='w-100 img-thumbnail clipable' data-clip='#mImage.image_src()#' />
+            <div class='col-md text-center'>
+              <img src='#mImage.image_src()#' class='img-fluid clipable' data-clip='#mImage.image_src()#' />
             </div>
           </div>
 

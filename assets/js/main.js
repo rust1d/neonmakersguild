@@ -221,6 +221,16 @@ const uri_to_blob = function(uri) {
   return new Blob([new Uint8Array(data)], { type: mime });
 }
 
+const valid_range = function(fld) {
+  let min = parseFloat(fld.min) || 0;
+  let max = parseFloat(fld.max) || min;
+  let val = parseFloat(fld.value);
+  if (isNaN(val)) val = max;
+  if (val < min) val = min;
+  if (max > min && val > max) val = max;
+  return fld.value = val;
+}
+
 $(function() {
   $('script[data-json]').each(function() {
     let key = this.dataset.json;
@@ -251,13 +261,18 @@ $(function() {
     }
   });
 
-  $('button[name=btnPage]').on('click', function() {
-    var $pager = $('input[name=set_page]');
-    var page = $pager.val();
-    if (page > $pager.attr('max') ||  page < $pager.attr('min')) page = 1;
+  $('div.pager button[name=btnPage]').on('click', function() {
+    var input = $('div.pager input[name=set_page]')[0];
     var searchParams = new URLSearchParams(window.location.search);
-    searchParams.set('page', page);
+    searchParams.set('page', valid_range(input));
     window.location.search = searchParams.toString();
+  });
+
+  $('div.pager input[name=set_page]').on('keydown', function(ev) {
+    if (ev.key === 'Enter' && !ev.shiftKey) {
+      ev.preventDefault();
+      $('div.pager button[name=btnPage]').click();
+    }
   });
 
   $('#btnDelete').on('click', function(event) {

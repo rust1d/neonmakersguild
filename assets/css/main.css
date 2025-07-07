@@ -1,4 +1,4 @@
-@import url('_font-sizes.css');
+/* @import url('_font-sizes.css'); */
 @import url('_fixed-widths.css');
 
 :root {
@@ -32,7 +32,7 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   min-height: 100vh;
-  font-size: calc(16px + 1.15 * ((100vw - 320px) / 680));
+  font-size: clamp(16px, calc(16px + 1.15 * ((100vw - 320px) / 680)), 18px);
 }
 
 a {
@@ -198,18 +198,6 @@ figure.image figcaption {
   left: 100%;
 }
 
-.btn-delete-img {
-  position: absolute;
-  right: 7px;
-  top: 5px;
-  opacity: .7;
-  border: var(--bs-border-width) solid var(--nmg-border);
-  width: 25px;
-  height: 25px;
-  cursor: pointer;
-  font-size: 17px;
-}
-
 .border-dashed { border-style: dashed !important; }
 .z-1000 { z-index: 1000; }
 .h-1rem { height: 1rem; }
@@ -254,11 +242,8 @@ figure.image figcaption {
   display: inline-block !important;
 }
 
-.content-card {
-  padding: 1rem;
-  border-radius: var(--bs-border-radius) !important;
-  background-color: var(--nmg-bg-light);
-  border: var(--bs-border-width) var(--bs-border-style) var(--nmg-border) !important;
+.summary-frame {
+  background-color: var(--nmg-black);
 }
 
 .blur-frame {
@@ -409,6 +394,22 @@ figure.image figcaption {
 .min-h-0 {
   min-height: 0 !important;
 }
+
+.content-card {
+  padding: 1rem;
+  border-radius: var(--bs-border-radius);
+  background-color: var(--nmg-bg-light);
+  border: var(--bs-border-width) var(--bs-border-style) var(--nmg-border);
+}
+
+.breadcrumb-card {
+  /* padding: .5rem 1rem; */
+  font-size: .8rem;
+  /* border-radius: var(--bs-border-radius); */
+  /* background-color: var(--nmg-bg-alt); */
+  /* border: var(--bs-border-width) var(--bs-border-style) var(--nmg-border); */
+}
+
 .scroll-card {
   display: flex;
   flex-direction: column;
@@ -419,9 +420,6 @@ figure.image figcaption {
   flex: 1 1 auto;
   overflow-y: auto;
   min-height: 0;
-}
-.scroll-card .body-post {
-  font-size: 15px;
 }
 .scroll-card .card-footer {
   position: sticky;
@@ -468,7 +466,20 @@ figure.image figcaption {
   max-width: 100%;
 }
 
+.post-title {
+  font-size: 1.25rem;
+}
+
+.post-body {
+  font-size: 1rem;
+}
+
 .post-body img {
-  max-height: 50vh;
+  max-height: 25vh;
   border-radius: var(--bs-border-radius) !important;
+}
+
+.post-comment-bar {
+  font-size: 1rem;
+  font-family: "Segoe UI Historic";
 }

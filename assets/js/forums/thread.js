@@ -20,7 +20,7 @@ $(function() {
     $roll.addClass('d-none').find('img').each(function() { // CLONE EDITED MSG IMAGES INTO EDIT ROLL
       const $col = $('<div class="col-3 col-xl-2 position-relative">').prependTo($editroll);
       $(this).clone().appendTo($col);
-      const $btn = $('<button type="button" class="btn-delete-img btn-nmg-delete">&times;</button>');
+      const $btn = $("<button name='btnImgDelete' class='btn-close position-absolute end-0 mt-1 me-1 btn-nmg-delete'></button>");
       $btn.attr('data-pkid', this.dataset.pkid).appendTo($col);
     });
     remove_fiids = [];
@@ -68,7 +68,7 @@ $(function() {
     $('#btnThreadDelete').click();
   });
 
-  $('#edit_roll').on('click', '.btn-delete-img', function() {
+  $('#edit_roll').on('click', 'button[name=btnImgDelete]', function() {
     remove_fiids.push(this.dataset.pkid);
     frm.fiids.value = remove_fiids.join(',');
     $(this).parent().find('img').animate({ height: 0, opacity: 0 }, 400, ()=>{ $(this).parent().remove() });

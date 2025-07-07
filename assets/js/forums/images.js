@@ -4,11 +4,11 @@ function active_roll() {
 }
 
 function add_to_roll($input, id, src, filename='') {
-  const $col = $('<div class="col-3 col-xl-2 roll-img"></div>');
-  const $img = $(`<img class='w-100 img-thumbnail' data-caption='cap_${id}' alt='${filename}' />`).attr('src', src);
+  const $col = $('<div class="col-3 col-xl-2 roll-img text-center"></div>');
+  const $img = $(`<img class='img-fluid' data-caption='cap_${id}' alt='${filename}' />`).attr('src', src);
   const $cap = $(`<input type='hidden' id='cap_${id}' name='cap_${id}' />`);
   const $roll = active_roll();
-  const $removeBtn = $('<button class="btn-delete-img btn-nmg-delete">&times;</button>');
+  const $removeBtn = $("<button class='btn-close position-absolute end-0 mt-1 me-1 btn-nmg-delete'></button>");
   $removeBtn.on('click', function() {
     $col.remove();
     show_edit_all($roll);

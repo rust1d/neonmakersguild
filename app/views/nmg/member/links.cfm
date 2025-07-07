@@ -6,7 +6,7 @@
 <cfoutput>
   <div class='col-12 content-card'>
     <cfif !results.pagination.one_page>
-      <div class='row border-top-0 pt-2 pb-0'>
+      <div class='row mb-3'>
         #router.include('shared/partials/filter_and_page', { pagination: results.pagination })#
       </div>
     </cfif>

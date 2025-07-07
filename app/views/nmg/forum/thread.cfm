@@ -129,7 +129,7 @@
       </div>
     </cfif>
     <div class='col-12'>
-      <nav aria-label='breadcrumb'>
+      <nav aria-label='breadcrumb' class='breadcrumb-card'>
         <ol class='breadcrumb small m-0'>
           <li class='breadcrumb-item'><a href='/forums'>Forums</a></li>
           <li class='breadcrumb-item'><a href='#mForum.seo_link()#'>#mForum.name()#</a></li>
@@ -138,7 +138,7 @@
       </nav>
     </div>
     <div class='col-12'>
-      <div id='thread_subject'>
+      <div id='thread_subject' class='content-card'>
         <div class='fs-4 #ifin(mThread.deleted(), 'text-decoration-line-through')#'>
           <a href='#mThread.seo_link()#'>#mThread.subject()#</a>
         </div>

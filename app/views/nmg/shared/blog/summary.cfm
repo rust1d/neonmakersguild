@@ -1,41 +1,53 @@
 <cfoutput>
-  <div class='row border border-rounded g-0'>
-    <div class='col-4'>
-      <!--- <div class='aspect-2-1 position-relative overflow-hidden' style='background-image: url(#locals.mEntry.image_url()#);'>
-        <cfif !isNull(locals.mEntry.ben_promoted())>
-          <span class='ribbon p-1 pb-0'><i class='fa-solid fa-fw fa-star' title='Front Page #locals.mEntry.promoted()#'></i></span>
-        </cfif>
-      </div> --->
-    </div>
+  <div class='row g-0 border rounded border-nmg'>
     <div class='col-8'>
-      <div class='card border-0 h-100'>
-        <div class='card-body pt-1 pb-0'>
-          <div class='row g-0'>
-            <!--- <div class='col-12 text-center text-uppercase fs-6'>
-              #locals.mEntry.category_links().toList(' &bull; ')#
-            </div> --->
-            <div class='col-12 text-center fs-4'>
-              <a href='#locals.mEntry.seo_link()#'>#locals.mEntry.title()#</a>
+      <div class='content-card border-0 h-100 d-flex flex-column'>
+        <div class='row g-2'>
+          <div class='col-1'>
+            <a href='#locals.mBE.User().seo_link()#'>
+              <img class='profile-thumbnail img-fluid rounded' src='#locals.mBE.User().profile_image().src()#' />
+            </a>
+          </div>
+          <div class='col-10 text-center post-title'>
+            <div class='post-title'>
+              <a class='post' data-benid='#locals.mBE.encoded_key()#' href='#locals.mBE.seo_link()#'>
+                #locals.mBE.title()#
+              </a>
+              <cfif isDate(locals.mBE.ben_promoted())>
+                <i class='fa-solid fa-fw fa-star text-warning' title='Front Page #locals.mBE.promoted()#'></i>
+              </cfif>
             </div>
-            <div class='col-12 fs-6 d-flex justify-content-center align-items-center'>
-              <a href='#locals.mEntry.User().seo_link()#'>#locals.mEntry.User().user()#</a>
-              &nbsp;
-              <cfif isNull(locals.mEntry.ben_promoted())>&bull;<cfelse><i class='smaller fa-solid fa-fw fa-star text-warning' title='Front Page #locals.mEntry.promoted()#'></i></cfif>
-              &nbsp;
-                <span class='smaller'>#locals.mEntry.post_date()#</span>
-            </div>
-            <div class='col-12 fs-6 pt-1'>
-              #locals.mEntry.body()#
+            <div class='smaller mt-2'>
+              <a href='#locals.mBE.User().seo_link()#'>#locals.mBE.User().user()#</a>
+              &bull;
+              <a class='post' data-benid='#locals.mBE.encoded_key()#' href='#locals.mBE.seo_link()#'>#locals.mBE.post_date()#</a>
             </div>
           </div>
+          <div class='col-1'></div>
+
+          <div class='col-12 post-body'>
+            #locals.mBE.summary()#
+          </div>
         </div>
-        <div class='card-footer bg-nmg-light border-0 text-uppercase smaller text-center pt-0 pb-1'>
-          <a href='#locals.mEntry.seo_link()#'>Read more</a>
-          <cfif locals.mEntry.comments()>
-            &bull; <small><a href='#locals.mEntry.seo_link()###comments'>#utility.plural_label(locals.mEntry.comment_cnt(), 'comment')#</a></small>
-          </cfif>
+        <div class='row mt-auto post-comment-bar border-top pt-2'>
+          <div class='col-4'>
+            <a class='post' data-benid='#locals.mBE.encoded_key()#' href='#locals.mBE.seo_link()#'>Read more</a>
+          </div>
+          <div class='col-4 text-center'>
+            <a class='post' data-benid='#locals.mBE.encoded_key()#' href='#locals.mBE.seo_link()###comments'>
+              <i class='fa-regular fa-comment flip-x'></i> Comment
+            </a>
+          </div>
+          <div class='col-4 text-end'>
+            <a class='post' data-benid='#locals.mBE.encoded_key()#' href='#locals.mBE.seo_link()###comments'>
+              #request.utility.updatable_counter(locals.mBE.comment_cnt(), locals.mBE.encoded_key(), request.utility.plural(locals.mBE.comment_cnt(), 'comment'))#
+            </a>
+          </div>
         </div>
       </div>
+    </div>
+    <div class='col-4 summary-frame'>
+      #new app.services.ImageGrid({ row_class: 'fix-height' }).layout(locals.mBE.UserImages(), 3)#
     </div>
   </div>
 </cfoutput>

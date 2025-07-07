@@ -22,7 +22,7 @@ component extends=BaseModel accessors=true {
     if (text().len() < chars) return text();
     var data = text().left(chars).listToArray(' ');
     data.pop(); // REMOVES LAST WORD, WHICH IS LIKELY CUT OFF
-    return data.toList(' ');
+    return data.toList(' ') & '&hellip;';
   }
 
   public string function text() {

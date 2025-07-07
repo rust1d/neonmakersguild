@@ -1,8 +1,10 @@
 <cfscript>
-  mEntries = new app.models.BlogEntries().stream(utility.paged_term_params(days: 30, count: 3, maxrows: 10));
+  mBEs = new app.models.BlogEntries().stream(utility.paged_term_params(days: 30, count: 3, maxrows: 10));
   pagination = request.pagination.last;
   mHero = mBlog.textblock_by_label('stream-hero');
 </cfscript>
+
+<cfset include_js('assets/js/blog/modals.js') />
 
 <cfoutput>
   <cfif pagination.page lt 2>
@@ -16,11 +18,11 @@
     </cfif>
   </cfif>
 
-  <cfif mEntries.len()>
+  <cfif mBEs.len()>
     <div class='row g-3'>
-      <cfloop array='#mEntries#' item='mEntry' index='idx'>
+      <cfloop array='#mBEs#' item='mBE' index='idx'>
         <div class='col-12'>
-          #router.include('shared/blog/summary', { mEntry: mEntry })#
+          #router.include('shared/blog/summary', { mBE: mBE })#
         </div>
       </cfloop>
       <cfif !pagination.one_page>

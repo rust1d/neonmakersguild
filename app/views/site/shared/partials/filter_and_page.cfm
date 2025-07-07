@@ -55,8 +55,9 @@
               <li>
                 <div class='dropdown-item'>
                   <div class='input-group input-group-sm pager'>
-                    <button class='btn btn-nmg' type='button' name='btnPage'>Go to page</button>
+                    <div class='input-group-text'>Page</div>
                     <input type='number' class='form-control' name='set_page' min='1' max='#locals.pagination.pages#' value='#locals.pagination.page#' />
+                    <button class='btn btn-nmg' type='button' name='btnPage'>Go</button>
                   </div>
                 </div>
               </li>

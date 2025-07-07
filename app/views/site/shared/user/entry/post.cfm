@@ -44,9 +44,20 @@
     mEntry.set(form);
     if (mEntry.safe_save()) {
       save_images(mEntry);
+      for (form.beiid in form.beiids) {
+        variables.beiid = utility.decode(form.beiid);
+        if (variables.beiid) {
+          mBEI = mEntry.BlogEntryImages(detect: { bei_beiid: variables.beiid } );
+          if (!isNull(mBEI)) {
+            mBEI.destroy();
+            flash.success('Your image #mBEI.UserImage().filename()# was deleted.');
+          }
+        }
+      }
+      mBEI = mEntry.BlogEntryImages(reset: true);
       mEntry.BlogEntryCategories(replace: categories.toList());
       flash.success('Your entry was saved.');
-      router.redirect('#dest#/entry/list');
+      // router.redirect('#dest#/entry/list');
     }
   }
 
@@ -62,6 +73,7 @@
 <cfoutput>
   <form role='form' method='post' id='blogform' class='needs-validation' novalidate enctype='multipart/form-data'>
     <input type='hidden' name='ben_alias' id='ben_alias' value='#mEntry.alias()#' data-mode='#mode#' maxlength='100' />
+    <input type='hidden' name='beiids' />
     <input type='file' id='filePicker' accept='image/*' multiple class='d-none' />
 
     <div class='row'>
@@ -92,9 +104,9 @@
                   <button type='button' id='btnEditCaptions' class='btn btn-sm btn-nmg w-120px #ifin(mEntry.UserImages().len() GT 1, 'displayed')#' data-bs-toggle='modal' data-bs-target='##editAllModal'>Edit all</button>
                   <cfloop array='#mEntry.BlogEntryImages()#' item='mBEI'>
                     <cfset mUI = mBEI.UserImage() />
-                    <div class='col-3 col-xl-2 position-relative'>
-                      <img data-pkid='#mUI.encoded_key()#' class='w-100 img-thumbnail' data-caption='cap_#mUI.encoded_key()#' alt='#mUI.filename()#' src='#mUI.thumbnail_src()#' />
-                      <button type='button' class='btn-delete-img btn-nmg-delete'>&times;</button>
+                    <div class='col-3 col-xl-2 position-relative text-center'>
+                      <img data-pkid='#mUI.encoded_key()#' class='img-fluid' data-caption='cap_#mUI.encoded_key()#' alt='#mUI.filename()#' src='#mUI.thumbnail_src()#' />
+                      <button type='button' name='btnImgDelete' data-pkid='#mBEI.encoded_key()#' class='btn-close position-absolute end-0 mt-1 me-1 btn-nmg-delete'></button>
                       <input type='hidden' id='cap_#mUI.encoded_key()#' name='cap_#mUI.encoded_key()#' value='#mBEI.caption()#' />
                     </div>
                   </cfloop>
@@ -152,7 +164,7 @@
               <div class='col text-center'>
                 <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-nmg'>Save</button>
                 <button type='button' name='btnPreview' id='btnPreview' class='btn btn-nmg'>Preview</button>
-                <button type='submit' name='btnCancel' id='btnCancel' class='btn btn-nmg-cancel'>Cancel</button>
+                <button type='button' name='btnCancel' id='btnCancel' data-list='user/entry/list' class='btn btn-nmg-cancel'>Cancel</button>
               </div>
             </div>
           </div>

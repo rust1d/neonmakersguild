@@ -1,9 +1,10 @@
 <cfscript>
-  mBE = mBEI.BlogEntry();
+  locals.mBE = locals.mBEI.BlogEntry();
+  locals.mCommentOn = locals.mBE.image_cnt()==1 ? locals.mBE : locals.mBEI;
 </cfscript>
 
 <cfoutput>
-  <div class='modal-body h-100 p-0' data-benid='#mBE.encoded_key()#' data-beiid='#mBEI.encoded_key()#'>
+  <div class='modal-body h-100 p-0' data-benid='#locals.mBE.encoded_key()#' data-beiid='#locals.mBEI.encoded_key()#'>
     <div class='row g-0 h-100'>
       <div class='col-9 h-100'>
         <div class='black-frame'>
@@ -16,61 +17,61 @@
             </a>
           </div>
           <div class='frame-nav'>
-            <button class='btn-circle btn-prev' data-nav='prev' data-beiid='#mBEI.encoded_key()#' aria-label='Previous'>
+            <button class='btn-circle btn-prev' data-nav='prev' data-beiid='#locals.mBEI.encoded_key()#' aria-label='Previous'>
               <i class='fas fa-chevron-left' aria-hidden='true'></i>
             </button>
-            <button class='btn-circle btn-next' data-nav='next' data-beiid='#mBEI.encoded_key()#' aria-label='Next'>
+            <button class='btn-circle btn-next' data-nav='next' data-beiid='#locals.mBEI.encoded_key()#' aria-label='Next'>
               <i class='fas fa-chevron-right' aria-hidden='true'></i>
             </button>
           </div>
-          <img src='#mBEI.UserImage().image_src()#' />
+          <img src='#locals.mBEI.UserImage().image_src()#' />
         </div>
       </div>
       <div class='col-3 bg-nmg-light d-flex flex-column h-100 min-h-0'>
-        <div class='card scroll-card rounded-0 border-light'>
+        <div class='card scroll-card rounded-0 border-light scrollable'>
           <div class='card-header bg-nmg-light'>
             <div class='row g-2'>
-              <div class='col-auto'>
-                <a href='#mBE.User().seo_link()#'>
-                  <img class='forum-thumbnail rounded' src='#mBE.User().profile_image().src()#' />
+              <div class='col-2'>
+                <a href='#locals.mBE.User().seo_link()#'>
+                  <img class='profile-thumbnail img-fluid rounded' src='#locals.mBE.User().profile_image().src()#' />
                 </a>
               </div>
               <div class='col-10'>
                 <div class=''>
-                  <a href='#mBE.User().seo_link()#'>#mBE.User().user()#</a>
+                  <a href='#locals.mBE.User().seo_link()#'>#locals.mBE.User().user()#</a>
                 </div>
                 <div class='smaller'>
-                  <a href='#mBE.seo_link()#'>#mBE.post_date()#</a>
+                  <a class='post fw-semibold' data-benid='#locals.mBE.encoded_key()#' href='#locals.mBE.seo_link()#'>#locals.mBE.post_date()#</a>
                 </div>
               </div>
               <div class='col-12 text-end mt-0'>
-                #request.utility.updatable_counter(mBEI.comment_cnt(), mBEI.encoded_key(), '<sup><i class="fa-regular fa-comment"></i></sup>')#
+                #request.utility.updatable_counter(locals.mCommentOn.comment_cnt(), locals.mCommentOn.encoded_key(), '<sup><i class="fa-regular fa-comment"></i></sup>')#
               </div>
             </div>
           </div>
           <div class='card-body'>
-            <cfif mBE.image_cnt() GT 1>
+            <cfif locals.mBE.image_cnt() GT 1>
               <div class='d-flex justify-content-between align-items-center smaller text-muted'>
                 <span><i class='fas fa-images fa-lg me-2'></i> This photo is from a post.</span>
-                <a class='fw-semibold' href='#mBE.seo_link()#'>View Post</a>
+                <a class='post fw-semibold' data-benid='#locals.mBE.encoded_key()#' href='#locals.mBE.seo_link()#'>View Post</a>
               </div>
               <hr class='mt-2'>
             </cfif>
-            <div class='body-title fs-3 text-center'>
-              #mBE.title()#
+            <div class='post-title fs-3 text-center'>
+              #locals.mBE.title()#
               <hr>
             </div>
-            <div class='body-post'>
-              <cfif mBE.image_cnt() GT 1>
-                #mBEI.caption()#
+            <div class='post-body'>
+              <cfif locals.mBE.image_cnt() GT 1>
+                #locals.mBEI.caption()#
               <cfelse>
-                #mBE.body_cdn()#
+                #locals.mBE.body()#
               </cfif>
               <hr>
             </div>
-            <div class='body-comments'>
-              <cfif mBEI.comment_cnt()>
-                <cfloop array='#mBEI.BlogComments()#' item='mComment'>
+            <div class='post-comments'>
+              <cfif locals.mCommentOn.comment_cnt()>
+                <cfloop array='#locals.mCommentOn.BlogComments()#' item='mComment'>
                   #router.include('shared/blog/_comment', { mComment: mComment })#
                 </cfloop>
               <cfelse>

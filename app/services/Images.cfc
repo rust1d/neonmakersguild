@@ -90,24 +90,26 @@ component {
     var benid = request.router.decode('benid', data);
     if (benid==0) return;
 
-    if (data.keyExists('beiid')) {
-      var beiid = request.router.decode('beiid', data);
-      if (beiid==0) return;
+    var beiid = 0;
 
+    if (data.keyExists('beiid')) {
+      beiid = request.router.decode('beiid', data);
+      if (beiid==0) return; // IF PASSED IT BETTER EXIST
       var mBEI = new app.models.BlogEntryImages().find(beiid);
-      if (mBEI.benid()!=benid) return;
-      var blog = mBEI.BlogEntry().blog();
+      if (mBEI.benid()!=benid) return; // AND IT BETTER BELONG TO THE BE
+      var mBE = mBEI.BlogEntry();
+      if (mBE.image_cnt()==1) beiid = 0; // SINGLE IMAGE POST COMMENT IS ON ENTRY NOT IMAGE
     } else {
-      var beiid = 0;
       var mBE = new app.models.BlogEntries().find(benid);
-      var blog = mBE.blog();
     }
+
+    response.data['counter'] = beiid ? data.beiid : data.benid; // COUNTER ID IS ENCODED KEY OF PARENT
 
     var mComment = new app.models.BlogComments({
       bco_benid:   benid,
       bco_beiid:   beiid,
       bco_comment: data.comment,
-      bco_blog:    blog,
+      bco_blog:    mBE.blog(),
       bco_usid:    session.user.usid()
     });
 
@@ -124,10 +126,6 @@ component {
     if (!form.keyExists('images')) return;
 
     response.data['images'] = form.images;
-
-    // cfloop(list: form.images, item: img, index: idx) {
-
-    // }
 
     var params = {
       ci_bcoid:   mComment.bcoid(),

@@ -1,5 +1,5 @@
 <cfoutput>
-  <div id='comments'>
+  <div id='comments' class='post-comments'>
     <form method='post'>
       <cfif session.user.loggedIn()>
         #router.include('shared/blog/_comment_field')#
@@ -19,8 +19,8 @@
           <a class='stretched-link' href='/login'>Login</a> to leave a comment...
         </div>
       </cfif>
-      <cfloop array='#locals.mEntry.BlogComments()#' item='mComment'>
-        #router.include('shared/blog/_comment', { mComment: mComment })#
+      <cfloop array='#locals.mBE.BlogComments()#' item='locals.mComment'>
+        #router.include('shared/blog/_comment', { mComment: locals.mComment })#
       </cfloop>
     </form>
   </div>

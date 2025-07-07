@@ -8,7 +8,7 @@
 
 <cfoutput>
   <cfif locals.keyExists('ben_benid')>
-    #router.include('shared/blog/_modal_post_content')#
+    #router.include('shared/blog/_modal_post_content', { mBE: mBE } )#
   <cfelse>
     <div class='modal fade h-100' id='benModal' tabindex='-1' aria-hidden='true'>
       <div class='modal-dialog modal-dialog-scrollable modal-lg'>

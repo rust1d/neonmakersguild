@@ -3,7 +3,7 @@ component extends=BaseModel accessors=true {
   property name='bei_benid'        type='numeric'  sqltype='integer';
   property name='bei_uiid'         type='numeric'  sqltype='integer';
   property name='bei_caption'      type='string'   sqltype='varchar';
-  property name='bei_comment_cnt'  type='string'   sqltype='varchar';
+  property name='bei_comment_cnt'  type='numeric';
 
   belongs_to(name: 'BlogEntry',    class: 'BlogEntries',     key: 'bei_benid', relation: 'ben_benid', preloaded: true);
   belongs_to(name: 'UserImage',    class: 'UserImages',      key: 'bei_uiid',  relation: 'ui_uiid',   preloaded: true);

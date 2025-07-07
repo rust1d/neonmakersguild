@@ -1,7 +1,7 @@
 <cfscript>
   results = mUserBlog.entries(ben_benid: router.decode('benid'));
-  mEntry = results.rows.first();
-  mEntry.view(); // inc views
+  mBE = results.rows.first();
+  mBE.view(); // inc views
 
   if (session.user.loggedIn()) {
     if (form.keyExists('btnCommentEdit')) {
@@ -12,27 +12,26 @@
           mComment = mComments.first();
           if (mComment.set(bco_comment: form.edit_comment).safe_save()) {
             // flash.success('Your comment was updated.');
-            router.go(mEntry.seo_link() & '##comment-' & mComment.bcoid());
+            router.go(mBE.seo_link() & '##comment-' & mComment.bcoid());
           }
         }
       }
     } else if (form.keyExists('btnComment')) {
       form.bco_usid = session.user.usid();
-      form.bco_blog = mEntry.blog();
-      form.bco_benid = mEntry.benid();
+      form.bco_blog = mBE.blog();
+      form.bco_benid = mBE.benid();
 
       mComment = new app.models.BlogComments(form);
       if (mComment.safe_save()) {
-        mEntry.comment_cnt_inc();
+        mBE.comment_cnt_inc();
         // flash.success('Thank you for your participation.');
-        router.go(mEntry.seo_link() & '##comment');
+        router.go(mBE.seo_link() & '##comment');
       }
     }
   }
 </cfscript>
 
-<cfset include_js('assets/js/blog/entry.js') />
-<cfset include_js('assets/js/blog/images.js') />
+<cfset include_js('assets/js/blog/modals.js') />
 <cfset include_js('assets/js/blog/comments.js') />
 
 <cfif session.user.admin()>
@@ -48,11 +47,11 @@
 <cfoutput>
   <div class='row g-3'>
     <div class='col-12 content-card'>
-      #router.include('shared/blog/post', { mEntry: mEntry, fold: false })#
+      #router.include('shared/blog/post', { mBE: mBE, fold: false })#
     </div>
     <div class='col-12 content-card'>
-      <cfif mEntry.comments()>
-        #router.include('shared/blog/comments', { mEntry: mEntry })#
+      <cfif mBE.comments()>
+        #router.include('shared/blog/comments', { mBE: mBE })#
       <cfelse>
         <small class='text-muted'>Comments have been disabled for this post.</small>
       </cfif>

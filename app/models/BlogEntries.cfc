@@ -37,8 +37,8 @@ component extends=jSoup accessors=true {
     return application.urls.cdn & ben_image;
   }
 
-  public string function body_cdn() {
-    return utility.body_cdn(variables.ben_body ?: '');
+  public boolean function is_promoted() {
+    return isDate(variables.ben_promoted ?: '');
   }
 
   public string function post_date() {
@@ -101,6 +101,11 @@ component extends=jSoup accessors=true {
 
     param variables.ben_blogname = this.UserBlog().user();
     return '/post/#ben_blogname#/#ben_alias#';
+  }
+
+  public string function summary() {
+    if (!isNull(variables.ben_morebody) && variables.ben_morebody.len()>10) return variables.ben_morebody;
+    return preview(500);
   }
 
   public void function view() {

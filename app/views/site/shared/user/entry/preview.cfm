@@ -7,7 +7,6 @@
   <div class='row g-3 justify-content-center'>
     <div class='col-md-10'>
       <div class='card border'>
-        <div class='aspect-2-1' style='background-image: url(#mEntry.image_url()#)'></div>
         <div class='card-body'>
           <div class='row g-2'>
             <div class='col-12 text-center text-uppercase'>
@@ -20,7 +19,7 @@
               by #session.user.user()# | #mEntry.posted()#
             </div>
             <div class='col-12'>
-              #mEntry.body_cdn()#
+              #mEntry.body()#
             </div>
           </div>
         </div>

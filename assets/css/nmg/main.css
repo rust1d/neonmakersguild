@@ -48,14 +48,16 @@ a:hover {
 
 .btn-nmg-delete {
   background-color: var(--nmg-danger);
-  color: var(--nmg-black);
-  border-color: var(--nmg-border);
+  opacity: .7 !important;
+  /* color: var(--nmg-black); */
+  /* border-color: var(--nmg-border); */
+  border-radius: var(--bs-border-radius) !important;
 }
 
 .btn-nmg-delete:hover {
-  background-color: var(--nmg-border);
+  /* background-color: var(--nmg-border);
   border-color: var(--nmg-danger);
-  color: var(--nmg-danger);
+  color: var(--nmg-danger); */
   opacity: 1 !important;
 }
 
@@ -99,6 +101,13 @@ a:hover {
 .img-thumbnail {
   border-color: var(--nmg-border);
   background-color: var(--nmg-bg-alt);
+}
+
+.profile-thumbnail {
+  max-width: 64px;
+  max-height: 64px;
+  width: 100%;
+  height: auto;
 }
 
 .forum-thumbnail {
@@ -170,13 +179,62 @@ a:hover {
   background-color: var(--nmg-bg-alt);
 }
 
+.image-grid.fix-height {
+  max-height: 400px;
+  overflow: hidden;
+  margin-inline: auto;
+  width: fit-content;
+  margin-right: auto !important;
+  margin-left: auto !important;
+}
+
 .image-grid img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
   cursor: pointer;
+  max-height: 85vh;
 }
+
+.image-grid.fix-height img {
+  max-height: 400px;
+}
+
+.image-grid span.remaining {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 3.5rem;
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+  z-index: 1;
+  text-align: center;
+}
+
+.image-grid span.remaining::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 4px;
+  width: 100%;
+  height: 100%;
+  background-image: url('/assets/images/logo-256.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+  opacity: 0.5;
+  z-index: -1;
+}
+
 
 .centered-logo-line {
   display: flex;

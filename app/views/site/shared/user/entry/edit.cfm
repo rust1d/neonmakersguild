@@ -1,4 +1,4 @@
-<cfscript>
+<!--- <cfscript>
   param mUserBlog = mBlog;
 
   dest = (mUserBlog.id()==1 && session.site.admin()) ? 'blog' : 'user';
@@ -191,4 +191,4 @@
       </div>
     </div>
   </div>
-</cfoutput>
+</cfoutput> --->

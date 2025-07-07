@@ -1,10 +1,9 @@
-<cfset include_js('assets/js/blog/images.js') />
-<cfset include_js('assets/js/blog/entry.js') />
+<cfset include_js('assets/js/blog/modals.js') />
 
 <cfoutput>
-  <cfloop array='#locals.results.rows#' item='locals.mEntry' index='locals.idx'>
+  <cfloop array='#locals.results.rows#' item='locals.mBE' index='locals.idx'>
     <div class='col-12 content-card'>
-      #router.include('shared/blog/post', { mEntry: locals.mEntry, fold: !locals.results.pagination.first || locals.idx gt 2 })#
+      #router.include('shared/blog/post', { mBE: locals.mBE, fold: !locals.results.pagination.first || locals.idx gt 2 })#
     </div>
     <cfif locals.idx!=locals.results.rows.len()>
       <div class='col-12'>
