@@ -32,7 +32,7 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   min-height: 100vh;
-  font-size: clamp(16px, calc(16px + 1.15 * ((100vw - 320px) / 680)), 18px);
+  font-size: clamp(1rem, 0.875rem + 0.5vw, 1.25rem);
 }
 
 a {
@@ -47,6 +47,7 @@ h1, h2, h3, h4, h5, h6 {
 .text-page-head { font-family: 'Poppins' }
 .text-marker { font-family: 'Permanent Marker' }
 .text-smallcaps { font-variant: small-caps; }
+.text-nmg { color: var(--nmg-color) }
 
 .content {
   min-height: 60vh;
@@ -54,7 +55,6 @@ h1, h2, h3, h4, h5, h6 {
 
 .smaller { font-size: .75em }
 .smallest { font-size: .70em }
-.icon-large { font-size:400% !important; }
 
 .border-expired {
   filter: invert(1);
@@ -352,7 +352,6 @@ figure.image figcaption {
   transform: translateX(2px);
 }
 
-/* Close section layout */
 .black-frame .close {
   display: flex;
   position: absolute;
@@ -372,7 +371,6 @@ figure.image figcaption {
   filter: none;
 }
 
-/* Nav buttons positioning */
 .black-frame .frame-nav {
   position: absolute;
   top: 50%;
@@ -386,7 +384,6 @@ figure.image figcaption {
   pointer-events: none;
 }
 
-/* Only enable pointer events on buttons */
 .black-frame .frame-nav .btn-circle {
   pointer-events: auto;
 }
@@ -403,11 +400,7 @@ figure.image figcaption {
 }
 
 .breadcrumb-card {
-  /* padding: .5rem 1rem; */
   font-size: .8rem;
-  /* border-radius: var(--bs-border-radius); */
-  /* background-color: var(--nmg-bg-alt); */
-  /* border: var(--bs-border-width) var(--bs-border-style) var(--nmg-border); */
 }
 
 .scroll-card {
@@ -428,11 +421,27 @@ figure.image figcaption {
   z-index: 1;
 }
 
-.comment-group {
+.comment-card {
+}
+
+.comment-bubble {
+  background-color: #f0f2f5;
+}
+
+.comment-user {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.comment-body {
+  font-size: 1rem;
+}
+
+.comment-input-group {
   background-color: var(--nmg-bg-light);
   border: var(--bs-border-width) var(--bs-border-style) var(--nmg-border) !important;
   border-radius: 16px;
-  font-size: 14px;
+  font-size: .875rem;
 }
 
 .comment-input {
@@ -455,19 +464,22 @@ figure.image figcaption {
   align-items: center;
 }
 
-.bg-comment {
-  background-color: #f0f2f5;
-}
-
 .comment-thumbnail {
   padding: .1rem;
   height: auto;
   max-height: 196px;
   max-width: 100%;
 }
+.comment-viewbar {
+  font-size: 0.8rem;
+}
 
 .post-title {
   font-size: 1.25rem;
+}
+
+.post-byline {
+  font-size: 0.9rem;
 }
 
 .post-body {

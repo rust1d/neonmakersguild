@@ -112,6 +112,10 @@
                 <textarea class='form-control' rows='6' name='mr_history' id='mr_history'>#mMR.history()#</textarea>
               </div>
               <div class='col-md-12 mb-3'>
+                <label class='form-label' for='mr_hearabout'>Heard about NMG from</label>
+                <input type='text' class='form-control' name='mr_hearabout' id='mr_hearabout' value='#encodeForHTML(mMR.hearabout())#' maxlength='200' />
+              </div>
+              <div class='col-md-12 mb-3'>
                 <cfif mMR.email_validated()>
                   This email was validated on <span class='text-success'>#mMR.validated().format('yyyy-mm-dd HH:nn:ss')#</span>
                 <cfelse>

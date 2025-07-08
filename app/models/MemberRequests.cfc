@@ -15,6 +15,7 @@ component extends=BaseModel accessors=true {
   property name='mr_website2'    type='string'   sqltype='varchar';
   property name='mr_history'     type='string'   sqltype='varchar';
   property name='mr_promo'       type='string'   sqltype='varchar';
+  property name='mr_hearabout'   type='string'   sqltype='varchar';
   property name='mr_user'        type='string'   sqltype='varchar';
   property name='mr_usid'        type='numeric'  sqltype='integer';
   property name='mr_deleted_by'  type='numeric'  sqltype='integer';

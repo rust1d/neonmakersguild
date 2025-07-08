@@ -25,7 +25,7 @@ component {
   }
 
   public struct function array_to_hash(required array rows, required string pkid) {
-    return rows.reduce((data, row) => data.append({ '#row[pkid]#': row }), {});
+    return rows.reduce((data, row) => data.append({ '#row[pkid]#': row }), StructNew('ordered'));
   }
 
   public array function array_unique(required array arr) {

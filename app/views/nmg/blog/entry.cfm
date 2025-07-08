@@ -11,7 +11,6 @@
         if (mComments.len()==1) {
           mComment = mComments.first();
           if (mComment.set(bco_comment: form.edit_comment).safe_save()) {
-            // flash.success('Your comment was updated.');
             router.go(mBE.seo_link() & '##comment-' & mComment.bcoid());
           }
         }
@@ -24,7 +23,6 @@
       mComment = new app.models.BlogComments(form);
       if (mComment.safe_save()) {
         mBE.comment_cnt_inc();
-        // flash.success('Thank you for your participation.');
         router.go(mBE.seo_link() & '##comment');
       }
     }

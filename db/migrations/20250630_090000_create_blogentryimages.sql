@@ -1,4 +1,13 @@
--- DROP TABLE IF EXISTS BlogEntryImages;
+DROP TABLE IF EXISTS BlogEntryCategories; -- IF STARTING OVER THIS WILL NOT BE OVERWRITTEN
+
+ALTER TABLE BlogComments ADD COLUMN bco_beiid INT(11) AFTER bco_benid;
+UPDATE BlogComments set bco_beiid=0;
+
+ALTER TABLE MemberRequests ADD COLUMN mr_hearabout VARCHAR(200) AFTER mr_promo;
+
+ALTER TABLE BlogEntriesCategories RENAME TO BlogEntryCategories;
+
+DROP TABLE IF EXISTS BlogEntryImages;
 
 CREATE TABLE BlogEntryImages (
   bei_beiid                             INT(11) NOT NULL AUTO_INCREMENT,
@@ -110,7 +119,6 @@ INSERT INTO userImages values
 (283, 2, 0,0,0,'blacklight-eye-jpg',null,'2022-10-02 20:57:38'),
 (285, 2, 0,0,0,'blacklight-eye-zoom-jpg',null,'2022-10-02 20:57:38');
 
-
 INSERT INTO BlogEntryImages(bei_benid,bei_uiid) VALUES
   (17, 249), (17, 250), (17, 251), (17, 252), (17, 254), (17, 255),
   (18, 283), (18, 285);
@@ -159,30 +167,10 @@ update blogentries set ben_image=null where ben_image like '%F899139DF5E10593964
 update blogentries set ben_image=null where ben_image like '%C81E728D9D4C2F636F067F89CC14862C%'; -- 1 row(s) affected
 update blogentries set ben_image=null where ben_image like '%0E01938FC48A2CFB5F2217FBFB00722D%'; -- 1 row(s) affected
 update blogentries set ben_image=null where ben_image like '%FE131D7F5A6B38B23CC967316C13DAE2%'; -- 1 row(s) affected
-
-
-update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<img class="', ben_body) - 1), SUBSTRING(ben_body, LOCATE('>', ben_body, LOCATE('<img class="', ben_body)) + 1)) WHERE ben_body LIKE '%<img class="%';
-update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<img class="', ben_body) - 1), SUBSTRING(ben_body, LOCATE('>', ben_body, LOCATE('<img class="', ben_body)) + 1)) WHERE ben_body LIKE '%<img class="%';
-update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<img class="', ben_body) - 1), SUBSTRING(ben_body, LOCATE('>', ben_body, LOCATE('<img class="', ben_body)) + 1)) WHERE ben_body LIKE '%<img class="%';
-update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<img class="', ben_body) - 1), SUBSTRING(ben_body, LOCATE('>', ben_body, LOCATE('<img class="', ben_body)) + 1)) WHERE ben_body LIKE '%<img class="%';
-update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<img class="', ben_body) - 1), SUBSTRING(ben_body, LOCATE('>', ben_body, LOCATE('<img class="', ben_body)) + 1)) WHERE ben_body LIKE '%<img class="%';
-update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<img class="', ben_body) - 1), SUBSTRING(ben_body, LOCATE('>', ben_body, LOCATE('<img class="', ben_body)) + 1)) WHERE ben_body LIKE '%<img class="%';
-update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<img class="', ben_body) - 1), SUBSTRING(ben_body, LOCATE('>', ben_body, LOCATE('<img class="', ben_body)) + 1)) WHERE ben_body LIKE '%<img class="%';
-
-update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<figure', ben_body) - 1), SUBSTRING(ben_body, LOCATE('figure>', ben_body, LOCATE('<figure', ben_body)) + 7)) WHERE ben_body LIKE '%<figure%';
-update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<figure', ben_body) - 1), SUBSTRING(ben_body, LOCATE('figure>', ben_body, LOCATE('<figure', ben_body)) + 7)) WHERE ben_body LIKE '%<figure%';
-update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<figure', ben_body) - 1), SUBSTRING(ben_body, LOCATE('figure>', ben_body, LOCATE('<figure', ben_body)) + 7)) WHERE ben_body LIKE '%<figure%';
-update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<figure', ben_body) - 1), SUBSTRING(ben_body, LOCATE('figure>', ben_body, LOCATE('<figure', ben_body)) + 7)) WHERE ben_body LIKE '%<figure%';
-
-
-ALTER TABLE BlogComments ADD COLUMN bco_beiid INT(11) AFTER bco_benid;
-
-UPDATE BlogComments set bco_beiid=0;
-
-ALTER TABLE BlogEntriesCategories RENAME TO BlogEntryCategories;
-
 UPDATE BlogEntries set ben_image=null where ben_image='/assets/images/1200x600.png';
-UPDATE BlogEntries set ben_morebody = ben_body where length(ben_morebody)=0;
+
+UPDATE BlogEntries set ben_morebody = ben_body where length(ben_morebody)=0; -- EMPTY
+
 UPDATE BlogEntries b
        INNER JOIN (
          SELECT ben_benid AS old_benid, ben_body AS old_body, ben_morebody AS old_morebody
@@ -192,3 +180,18 @@ UPDATE BlogEntries b
        ben_morebody = old_body;
 
 UPDATE BlogEntries set ben_morebody='' where ben_body = ben_morebody;
+
+update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<img class="', ben_body) - 1), SUBSTRING(ben_body, LOCATE('>', ben_body, LOCATE('<img class="', ben_body)) + 1)) WHERE ben_body LIKE '%<img class="%';
+update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<img class="', ben_body) - 1), SUBSTRING(ben_body, LOCATE('>', ben_body, LOCATE('<img class="', ben_body)) + 1)) WHERE ben_body LIKE '%<img class="%';
+update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<img class="', ben_body) - 1), SUBSTRING(ben_body, LOCATE('>', ben_body, LOCATE('<img class="', ben_body)) + 1)) WHERE ben_body LIKE '%<img class="%';
+update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<img class="', ben_body) - 1), SUBSTRING(ben_body, LOCATE('>', ben_body, LOCATE('<img class="', ben_body)) + 1)) WHERE ben_body LIKE '%<img class="%';
+update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<img class="', ben_body) - 1), SUBSTRING(ben_body, LOCATE('>', ben_body, LOCATE('<img class="', ben_body)) + 1)) WHERE ben_body LIKE '%<img class="%';
+update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<img class="', ben_body) - 1), SUBSTRING(ben_body, LOCATE('>', ben_body, LOCATE('<img class="', ben_body)) + 1)) WHERE ben_body LIKE '%<img class="%';
+update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<img class="', ben_body) - 1), SUBSTRING(ben_body, LOCATE('>', ben_body, LOCATE('<img class="', ben_body)) + 1)) WHERE ben_body LIKE '%<img class="%';
+update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<img class="', ben_body) - 1), SUBSTRING(ben_body, LOCATE('>', ben_body, LOCATE('<img class="', ben_body)) + 1)) WHERE ben_body LIKE '%<img class="%';
+
+update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<figure', ben_body) - 1), SUBSTRING(ben_body, LOCATE('figure>', ben_body, LOCATE('<figure', ben_body)) + 7)) WHERE ben_body LIKE '%<figure%';
+update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<figure', ben_body) - 1), SUBSTRING(ben_body, LOCATE('figure>', ben_body, LOCATE('<figure', ben_body)) + 7)) WHERE ben_body LIKE '%<figure%';
+update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<figure', ben_body) - 1), SUBSTRING(ben_body, LOCATE('figure>', ben_body, LOCATE('<figure', ben_body)) + 7)) WHERE ben_body LIKE '%<figure%';
+update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<figure', ben_body) - 1), SUBSTRING(ben_body, LOCATE('figure>', ben_body, LOCATE('<figure', ben_body)) + 7)) WHERE ben_body LIKE '%<figure%';
+update blogentries SET ben_body = CONCAT(LEFT(ben_body, LOCATE('<figure', ben_body) - 1), SUBSTRING(ben_body, LOCATE('figure>', ben_body, LOCATE('<figure', ben_body)) + 7)) WHERE ben_body LIKE '%<figure%';

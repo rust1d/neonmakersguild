@@ -195,6 +195,10 @@ a:hover {
   display: block;
   cursor: pointer;
   max-height: 85vh;
+  border: var(--bs-border-width) outset var(--nmg-bg-light);
+}
+.image-grid img:hover {
+  border-color: var(--nmg-color);
 }
 
 .image-grid.fix-height img {

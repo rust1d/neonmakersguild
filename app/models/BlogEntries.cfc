@@ -17,6 +17,7 @@ component extends=jSoup accessors=true {
   property name='ben_blogname'      type='string';
   property name='ben_comment_cnt'   type='numeric';
   property name='ben_image_cnt'     type='numeric';
+  property name='ben_beiids'        type='array';
 
   has_many(name: 'BlogComments',         class: 'BlogComments',         key: 'ben_benid',  relation: 'bco_benid', where: { bco_beiid: 0 });
   has_many(name: 'BlogEntryImages',      class: 'BlogEntryImages',      key: 'ben_benid',  relation: 'bei_benid');
@@ -126,6 +127,15 @@ component extends=jSoup accessors=true {
     param variables.ben_posted = now();
     if (!isNull(variables.ben_morebody)) variables.ben_morebody = utility.body_nocdn(variables.ben_morebody);
     if (!isNull(variables.ben_image)) variables.ben_image = utility.body_nocdn(variables.ben_image);
+  }
+
+  private void function pre_load(required struct data) {
+    variables.ben_beiids = [];
+    if (data.keyExists('ben_beiids')) {
+      variables.ben_beiids = data.ben_beiids.listToArray();
+      variables.ben_image_cnt = variables.ben_beiids.len();
+      data.delete('ben_beiids');
+    }
   }
 
   private void function pre_save() {

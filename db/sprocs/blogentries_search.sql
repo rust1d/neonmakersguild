@@ -22,6 +22,7 @@ BEGIN
 
   SELECT SQL_CALC_FOUND_ROWS blogentries.*, us_user AS ben_blogname,
          (SELECT COUNT(*) FROM blogcomments WHERE bco_benid=ben_benid AND bco_beiid=0) AS ben_comment_cnt,
+         (SELECT GROUP_CONCAT(bei_beiid ORDER BY bei_beiid) FROM blogentryimages WHERE bei_benid=ben_benid) AS ben_beiids,
          (SELECT COUNT(*) FROM blogentryimages WHERE bei_benid=ben_benid) AS ben_image_cnt
     FROM blogentries
          INNER JOIN users ON us_usid = ben_blog

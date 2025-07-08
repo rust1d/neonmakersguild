@@ -60,7 +60,7 @@
 //     $content.html(results.data.content);
 //     $modal.modal('show');
 //     $comments = $content.find('.post-comments');
-//     $comment = $content.find('.comment-group');
+//     $comment = $content.find('.comment-input-group');
 //     $input = $comment.find('.comment-input');
 //     $submit = $comment.find('.btnComment');
 //     $upload = $comment.find('.btnUpload');

@@ -29,24 +29,10 @@
       </div>
       <div class='col-3 bg-nmg-light d-flex flex-column h-100 min-h-0'>
         <div class='card scroll-card rounded-0 border-light scrollable'>
-          <div class='card-header bg-nmg-light'>
-            <div class='row g-2'>
-              <div class='col-2'>
-                <a href='#locals.mBE.User().seo_link()#'>
-                  <img class='profile-thumbnail img-fluid rounded' src='#locals.mBE.User().profile_image().src()#' />
-                </a>
-              </div>
-              <div class='col-10'>
-                <div class=''>
-                  <a href='#locals.mBE.User().seo_link()#'>#locals.mBE.User().user()#</a>
-                </div>
-                <div class='smaller'>
-                  <a class='post fw-semibold' data-benid='#locals.mBE.encoded_key()#' href='#locals.mBE.seo_link()#'>#locals.mBE.post_date()#</a>
-                </div>
-              </div>
-              <div class='col-12 text-end mt-0'>
-                #request.utility.updatable_counter(locals.mCommentOn.comment_cnt(), locals.mCommentOn.encoded_key(), '<sup><i class="fa-regular fa-comment"></i></sup>')#
-              </div>
+          <div class='card-header bg-nmg-light p-0'>
+            #router.include('shared/blog/_post_byline', { mBE: locals.mBE })#
+            <div class='comment-counter text-end px-3 mt-0'>
+              #request.utility.updatable_counter(locals.mCommentOn.comment_cnt(), locals.mCommentOn.encoded_key(), '<sup><i class="fa-regular fa-comment"></i></sup>')#
             </div>
           </div>
           <div class='card-body'>
@@ -75,11 +61,7 @@
                   #router.include('shared/blog/_comment', { mComment: mComment })#
                 </cfloop>
               <cfelse>
-                <div class='text-center mt-5 text-muted empty-comment'>
-                  <i class='icon-large fa-regular fa-file'></i>
-                  <div class='fs-3 mt-3'>No comments yet</div>
-                  <div class='fs-6 mt-3'>Be the first to comment</div>
-                </div>
+                #router.include('shared/blog/_no_comments')#
               </cfif>
             </div>
           </div>

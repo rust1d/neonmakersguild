@@ -1,5 +1,5 @@
 <cfoutput>
-  <div class='row g-3'>
+  <div class='row g-3 justify-content-center'>
     <div class='col-1'>
       <a href='#locals.mBE.User().seo_link()#'>
         <img class='profile-thumbnail img-fluid rounded' src='#locals.mBE.User().profile_image().src()#' />
@@ -15,23 +15,23 @@
         </cfif>
       </div>
 
-      <div class='smaller mt-3'>
+      <div class='mt-1 post-byline'>
         <a href='#locals.mBE.User().seo_link()#'>#locals.mBE.User().user()#</a>
         &bull;
         <a class='post' data-benid='#locals.mBE.encoded_key()#' href='#locals.mBE.seo_link()#'>#locals.mBE.post_date()#</a>
       </div>
     </div>
-    <div class='col-1'></div>
+    <div class='col-1'>#locals.mbe.beiids().toList()#</div>
 
-    <div class='col-12 post-body'>
-      #locals.mBE.body()#
+    <div class='col-12'>
+      <div class='post-body'>
+        #locals.mBE.body()#
+      </div>
     </div>
 
     <cfif locals.mBE.image_cnt()>
-      <div class='col-12'>
-        <div class='w-75 mt-1 mx-auto'>
-          #new app.services.ImageGrid({ row_class: 'border border-nmg'}).layout(locals.mBE.UserImages())#
-        </div>
+      <div class='col-8'>
+        #new app.services.ImageGrid({ row_class: 'border border-nmg'}).layout(locals.mBE.UserImages())#
       </div>
     </cfif>
   </div>
@@ -49,9 +49,11 @@
       </a>
     </div>
     <div class='col-4 text-end'>
-      <a class='post' data-benid='#locals.mBE.encoded_key()#' href='#locals.mBE.seo_link()###comments'>
-        #request.utility.updatable_counter(locals.mBE.comment_cnt(), locals.mBE.encoded_key(), request.utility.plural(locals.mBE.comment_cnt(), 'comment'))#
-      </a>
+      <div class='comment-counter'>
+        <a class='post' data-benid='#locals.mBE.encoded_key()#' href='#locals.mBE.seo_link()###comments'>
+          #request.utility.updatable_counter(locals.mBE.comment_cnt(), locals.mBE.encoded_key(), request.utility.plural(locals.mBE.comment_cnt(), 'comment'))#
+        </a>
+      </div>
     </div>
   </div>
 </cfoutput>

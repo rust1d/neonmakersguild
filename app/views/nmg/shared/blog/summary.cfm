@@ -8,7 +8,7 @@
               <img class='profile-thumbnail img-fluid rounded' src='#locals.mBE.User().profile_image().src()#' />
             </a>
           </div>
-          <div class='col-10 text-center post-title'>
+          <div class='col-10 text-center'>
             <div class='post-title'>
               <a class='post' data-benid='#locals.mBE.encoded_key()#' href='#locals.mBE.seo_link()#'>
                 #locals.mBE.title()#
@@ -17,18 +17,18 @@
                 <i class='fa-solid fa-fw fa-star text-warning' title='Front Page #locals.mBE.promoted()#'></i>
               </cfif>
             </div>
-            <div class='smaller mt-2'>
+            <div class='mt-1 post-byline'>
               <a href='#locals.mBE.User().seo_link()#'>#locals.mBE.User().user()#</a>
               &bull;
               <a class='post' data-benid='#locals.mBE.encoded_key()#' href='#locals.mBE.seo_link()#'>#locals.mBE.post_date()#</a>
             </div>
           </div>
           <div class='col-1'></div>
-
-          <div class='col-12 post-body'>
-            #locals.mBE.summary()#
-          </div>
         </div>
+        <div class='post-body mt-2'>
+          #locals.mBE.summary()#
+        </div>
+
         <div class='row mt-auto post-comment-bar border-top pt-2'>
           <div class='col-4'>
             <a class='post' data-benid='#locals.mBE.encoded_key()#' href='#locals.mBE.seo_link()#'>Read more</a>
@@ -39,9 +39,11 @@
             </a>
           </div>
           <div class='col-4 text-end'>
-            <a class='post' data-benid='#locals.mBE.encoded_key()#' href='#locals.mBE.seo_link()###comments'>
-              #request.utility.updatable_counter(locals.mBE.comment_cnt(), locals.mBE.encoded_key(), request.utility.plural(locals.mBE.comment_cnt(), 'comment'))#
-            </a>
+            <div class='comment-counter'>
+              <a class='post' data-benid='#locals.mBE.encoded_key()#' href='#locals.mBE.seo_link()###comments'>
+                #request.utility.updatable_counter(locals.mBE.comment_cnt(), locals.mBE.encoded_key(), request.utility.plural(locals.mBE.comment_cnt(), 'comment'))#
+              </a>
+            </div>
           </div>
         </div>
       </div>

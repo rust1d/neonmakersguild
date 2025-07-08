@@ -60,7 +60,7 @@ function create_post_modal(config = {}) {
   const load_content_modal = function(results) {
     $content.html(results.data.content);
     $comments = $content.find('.post-comments');
-    $comment = $content.find('.comment-group');
+    $comment = $content.find('.comment-input-group');
     $input = $comment.find('.comment-input');
     $submit = $comment.find('.btnComment');
     $upload = $comment.find('.btnUpload');

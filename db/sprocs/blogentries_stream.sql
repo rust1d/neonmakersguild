@@ -12,6 +12,8 @@ BEGIN
   DECLARE _limit INT(11) DEFAULT get_page_data(_paging, 'limit');
   DECLARE _offset INT(11) DEFAULT get_page_data(_paging, 'offset');
   SET _term = clean_regexp(_term);
+  SET _days = IFNULL(_days, 90);
+  SET _count = IFNULL(_days, 5);
 
   SELECT SQL_CALC_FOUND_ROWS blogstream.*,
          (SELECT COUNT(*) FROM blogcomments WHERE bco_benid=ben_benid AND bco_beiid=0) AS ben_comment_cnt
@@ -22,17 +24,19 @@ BEGIN
               FROM blogentries
                    INNER JOIN users ON us_usid = ben_usid
              WHERE ben_blog > 1 -- EXCLUDE SITE BLOG
-               AND ben_posted < CURRENT_TIMESTAMP AND ben_posted >= DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -IFNULL(_days, 30) DAY)
-               AND (_term IS NULL OR
-                     us_user = _term OR
-                     ben_title REGEXP _term OR
-                     ben_alias REGEXP _term OR
-                     ben_body REGEXP _term OR
-                     ben_morebody REGEXP _term
+               AND ben_released = 1
+               AND ben_posted < CURRENT_TIMESTAMP AND ben_posted >= DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -_days DAY)
+               AND (
+                      _term IS NULL OR
+                      us_user = _term OR
+                      ben_title REGEXP _term OR
+                      ben_alias REGEXP _term OR
+                      ben_body REGEXP _term OR
+                      ben_morebody REGEXP _term
                    )
              ORDER BY ben_blog, ben_posted DESC
           ) AS blogstream
-          WHERE seq <= IFNULL(_count, 3)
+          WHERE seq <= _count
    ORDER BY IFNULL(ben_promoted, ben_posted) DESC, ben_benid DESC
      LIMIT _limit OFFSET _offset;
 

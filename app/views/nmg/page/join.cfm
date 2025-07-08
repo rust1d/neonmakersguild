@@ -89,6 +89,10 @@
             <label class='form-label' for='mr_history'>Tell us about your experience working with neon</label>
             <textarea class='form-control' rows='6' name='mr_history' id='mr_history'>#mMR.history()#</textarea>
           </div>
+          <div class='col-md-12 mb-3'>
+            <label class='form-label' for='mr_hearabout'>How did you hear about us?</label>
+            <input type='text' class='form-control' name='mr_hearabout' id='mr_hearabout' value='#encodeForHTML(mMR.hearabout())#' maxlength='200' />
+          </div>
         </div>
       </div>
       <h5 class='card-header bg-nmg'>Membership T-Shirt</h5>

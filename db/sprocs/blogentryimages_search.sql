@@ -10,7 +10,7 @@ CREATE PROCEDURE blogentryimages_search(
 )
 BEGIN
   IF _nav IS NOT NULL THEN -- PASS 1 TO GO NEXT, 0 TO GO PREV
-    SET _beiid = bei_navigate(_beiid, _nav);
+    SET _beiid = bei_navigate(_beiid, _uiid, _nav);
   END IF;
 
   SELECT blogentryimages.*, userimages.*, blogentries.*,

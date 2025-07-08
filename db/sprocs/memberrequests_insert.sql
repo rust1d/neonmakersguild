@@ -18,6 +18,7 @@ CREATE PROCEDURE memberrequests_insert(
   IN _website2     varchar(200),
   IN _history      text,
   IN _promo        varchar(25),
+  IN _hearabout    varchar(200),
   IN _user         varchar(50),
   IN _usid         int(11),
   IN _deleted_by   int(11),
@@ -27,14 +28,14 @@ CREATE PROCEDURE memberrequests_insert(
 )
 BEGIN
   INSERT INTO memberrequests (
-    mr_firstname, mr_lastname, mr_email, mr_phone, mr_location, mr_address1, mr_address2,
-    mr_city, mr_region, mr_postal, mr_country, mr_website1, mr_website2, mr_history,
-    mr_promo, mr_user, mr_usid, mr_deleted_by, mr_deleted, mr_validated, mr_accepted,
+    mr_firstname, mr_lastname, mr_email, mr_phone, mr_location, mr_address1, mr_address2, mr_city,
+    mr_region, mr_postal, mr_country, mr_website1, mr_website2, mr_history, mr_promo, mr_hearabout,
+    mr_user, mr_usid, mr_deleted_by, mr_deleted, mr_validated, mr_accepted,
     mr_added, mr_dla
   ) VALUES (
-    _firstname, _lastname, _email, _phone, _location, _address1, _address2,
-    _city, _region, _postal, _country, _website1, _website2, _history,
-    _promo, _user, _usid, _deleted_by, _deleted, _validated, _accepted,
+    _firstname, _lastname, _email, _phone, _location, _address1, _address2, _city,
+    _region, _postal, _country, _website1, _website2, _history, _promo, _hearabout,
+    _user, _usid, _deleted_by, _deleted, _validated, _accepted,
     CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
   );
 
