@@ -92,6 +92,7 @@ function create_post_modal(config = {}) {
 
   const open = function(data) {
     config.context = data; // SAVE THE STARTING CLICK
+    config.context.section = SERVER.context.section;
     load_modal(data, 1);
   }
 

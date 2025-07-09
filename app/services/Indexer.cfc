@@ -21,7 +21,7 @@ component {
   }
 
   public string function get_type(required numeric bei_beiid) {
-    var cur_ben = data.images.beiid[bei_beiid]; // BEN FOR CURRENT BEI
+    var cur_ben = data.images[bei_beiid]; // BEN FOR CURRENT BEI
     return cur_ben.images.cnt==1 ? 'images' : 'post';
   }
 
@@ -30,15 +30,16 @@ component {
     if (!listFindNoCase('post,images', arguments.type)) throw('indexer type invalid');
     if (!listFindNoCase('prev,next', arguments.direction)) throw('indexer direction invalid');
     var data = index();
-    var cur_ben = data.images.beiid[bei_beiid]; // BEN FOR CURRENT BEI
+    var cur_ben = data.images[bei_beiid]; // BEN FOR CURRENT BEI
     if (type=='images') {
       // front.image
+      // find the right list, and nav
     }
     if (cur_ben.images.cnt==1) { // SINGLE IMAGE BEN? FIND NEXT BEN, RETURN FIRST IMAGE
       nav_ben = data.entries[direction=='prev' ? cur_ben.nav.first() : cur_ben.nav.last()];
       return nav_ben.images.ids.first();
     }
-    var nav_img = cur_ben.images.beiid[bei_beiid];
+    var nav_img = cur_ben.images[bei_beiid];
     return direction=='prev' ? nav_img.first() : nav_img.last();
   }
 
@@ -79,13 +80,20 @@ component {
     var rows = utility.query_to_array(records());
     var benids = rows.map(row=>row.ben_benid);
     var data = {
-      entries:      structNew('ordered'),
-      images.beiid: structNew('ordered')
+      entries:  structNew('ordered'), // ALL ENTRIES benid->ben
+      images:   structNew('ordered'), // ALL IMAGES  beiid->ben
+      front:    structNew('ordered'), // FRONTPAGE   beiid->image.nav
+      stream:   structNew('ordered'), // STREAM      beiid->image.nav
+      user:     structNew('ordered')
     }
     var nav = {}
     for (var idx=1; idx<=benids.len(); idx++) {
       set_nav(benids, nav, idx);
     }
+    var front_ids = [];
+    var stream_ids = [];
+    var user_ids = [];
+    var users = structNew('ordered');
 
     for (var row in rows) {
       data.entries[row.ben_benid] = row;
@@ -98,20 +106,42 @@ component {
 
       for (var idx=1; idx<=row.images.cnt; idx++) {
         var beiid = row.images.ids[idx];
-        data.images.beiid[beiid] = row;
+        data.images[beiid] = row;
         set_nav(row.images.ids, row.images.beiid, idx)
       }
+
+      if (row.ben_frontpage) {
+        front_ids.append(row.images.ids, true);
+      }
+      if (row.ben_usid!=1) {
+        stream_ids.append(row.images.ids, true);
+      }
+
+      if (!users.keyExists(row.ben_usid)) {
+        user_ids.append(row.ben_usid)
+        users[row.ben_usid] = [];
+      }
+      users[row.ben_usid].append(row.images.ids, true);
     }
-    // var arr = rows.map(row=>row.ben_benid);
-    // for (var idx=1; idx<=arr.cnt; idx++) {
-    //   var prv = idx==1 ? arr.len() : idx-1;
-    //   var nxt = idx==arr.len() ? 1 : idx+1;
-    //   hash[cur] = [ arr[prv], arr[nxt] ];
-    // }
+
+    for (var idx=1; idx<=front_ids.len(); idx++) {
+      set_nav(front_ids, data.front, idx);
+    }
+    for (var idx=1; idx<=stream_ids.len(); idx++) {
+      set_nav(stream_ids, data.stream, idx);
+    }
+    for (var usid in user_ids) {
+      var img_ids = users[usid];
+      for (var idx=1; idx<=img_ids.len(); idx++) {
+        var val = img_ids[idx];
+        data.user[usid][val] = [];
+        set_nav(img_ids, data.user[usid], idx);
+      }
+    }
     return data;
   }
 
-  private struct function build_index() {
+  public struct function build_index() {
     // BUILDS A LIGHTWEIGHT INDEX WITH BLOGENTRY PRIMARY KEYS FOR NAVIGATION LOOK
     var data = {
       entries:             structNew('ordered'),
