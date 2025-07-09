@@ -185,6 +185,7 @@ component {
     application.utility = new app.services.utility();
     application.bcrypt = new app.services.bcrypt();
     application.flash = new app.services.flash();
+    application.indexer = new app.services.Indexer();
     // application.sentry = new services.sentry(
     //   release: '1.000',
     //   environment: application.env,

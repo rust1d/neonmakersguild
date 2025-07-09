@@ -1,3 +1,8 @@
+// SERVER.context TELLS:
+//   WHAT SECTION OF THE SITE OPENED THE MODAL - frontpage, member stream or member page (user)
+//   WHAT TYPE OF MODAL WAS OPENED - post or images
+//   USID IF ON THE MEMBER POST PAGE
+
 function create_post_modal(config = {}) {
   if (!config.type) throw new Error('create_post_modal: Missing parameters');
 
@@ -5,6 +10,8 @@ function create_post_modal(config = {}) {
   const commentId = config.commentId || `#${config.type}Comment`;
   const $content = $modal.find('.modal-content');
   let $comments, $comment, $input, $submit, $upload;
+
+  // config.context = { "section": "front", "type": "images", "usid": 0 }
 
   const add_comment_image = function($input, id, src, filename = '') {
     const $col = $(`<div class="col-6 ${comment_image_class()} position-relative"></div>`);
@@ -33,7 +40,7 @@ function create_post_modal(config = {}) {
     }
   }
 
-  const hide_modal = function() {
+  const hide = function() {
     $modal.modal('hide');
   }
 
@@ -67,15 +74,25 @@ function create_post_modal(config = {}) {
     show_modal();
   }
 
-  const load_modal = function(data) {
+  const load_modal = function(data, nav) {
+    let params = { beiid: data.beiid }
+    if (nav) {
+      params.direction = data.direction;
+      params.type = config.context.type; // PASS ORIGINAL CLICK CONTEXT
+    }
     $.post({
       url: `/app/services/Images.cfc?method=${config.type}`,
       contentType: 'application/json',
       dataType: 'json',
-      data: JSON.stringify(data),
+      data: JSON.stringify(params),
       error: handle_error,
       success: load_content
     });
+  }
+
+  const open = function(data) {
+    config.context = data; // SAVE THE STARTING CLICK
+    load_modal(data, 1);
   }
 
   const post_comment = function(formData) {
@@ -95,7 +112,7 @@ function create_post_modal(config = {}) {
 
   const show_modal = function() {
     for (const key in SERVER.handlers) {
-      if (key!=config.type) SERVER.handlers[key].hide_modal();
+      if (key!=config.type) SERVER.handlers[key].hide();
     }
     $modal.modal('show');
     $modal.one('shown.bs.modal', function() {
@@ -112,8 +129,8 @@ function create_post_modal(config = {}) {
     SERVER.handlers.ben.load_modal(this.dataset);
   });
 
-  $content.on('click', '.frame-nav button[data-nav]', function(ev) {
-    load_modal(this.dataset);
+  $content.on('click', '.frame-nav button[data-direction]', function(ev) { // ONLY ON IMAGES
+    load_modal(this.dataset, 1);
   });
 
   $content.on('click', `${commentId} .btnComment`, function(ev) {
@@ -174,7 +191,7 @@ function create_post_modal(config = {}) {
     process_images(files, add_comment_image);
   });
 
-  return SERVER.handlers[config.type] = { load_modal, hide_modal } // MAKES THESE METHODS PUBLIC
+  return SERVER.handlers[config.type] = { open, hide } // MAKES THESE METHODS PUBLIC
 }
 
 SERVER.handlers = {}
@@ -186,10 +203,10 @@ $(function() {
   // Hook triggers
   $('a.post').on('click', function(ev) {
     ev.preventDefault();
-    SERVER.handlers.ben.load_modal(this.dataset);
+    SERVER.handlers.ben.open(this.dataset);
   });
 
   $('.image-grid img').on('click', function(ev) {
-    SERVER.handlers.bei.load_modal(this.dataset);
+    SERVER.handlers.bei.open(this.dataset);
   });
 });
