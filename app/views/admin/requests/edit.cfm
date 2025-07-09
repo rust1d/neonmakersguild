@@ -63,7 +63,7 @@
               </div>
               <div class='col-md-6'>
                 <label class='form-label' for='mr_promo'>Tee Shirt Size (US)</label>
-                <select name='mr_promo' id='mr_promo' class='form-control'>
+                <select name='mr_promo' id='mr_promo' class='form-select'>
                   <option>Not Provided</option>
                   <cfloop list='Small (34-36),Medium (38-40),Large (42-44),X-Large (46-48),2X-Large (50-52),3X-Large (54-56)' item='size'>
                     <option value='#size#' #ifin(size==mMR.promo(), 'selected')#>#size#</option>

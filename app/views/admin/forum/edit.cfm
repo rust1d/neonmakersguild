@@ -44,7 +44,7 @@
               </div>
               <div class='col-2'>
                 <label class='form-label mb-0' for='fo_privacy'>Privacy</label>
-                <select name='fo_privacy' id='fo_privacy' class='form-control'>
+                <select name='fo_privacy' id='fo_privacy' class='form-select'>
                   <option value='0'>Public</option>
                   <option value='1' #ifin(mForum.private(), 'selected')#>Members Only</option>
                   <option value='2' #ifin(mForum.admin(), 'selected')#>Admins Only</option>

@@ -79,17 +79,6 @@
             <label class='form-label' for='up_phone'>Phone</label>
             <input type='tel' class='form-control' name='up_phone' id='up_phone' value='#mProfile.phone()#' maxlength='15' />
           </div>
-
-          <!--- <div class='col-md-6'>
-            <label class='form-label' for='up_promo'>T-Shirt Size</label>
-            <select name='up_promo' id='up_promo' class='form-control'>
-              <option>Not Provided</option>
-              <cfloop list='Small (34-36),Medium (38-40),Large (42-44),X-Large (46-48),2X-Large (50-52),3X-Large (54-56)' item='size'>
-                <option value='#size#' #ifin(size==mProfile.promo(), 'selected')#>#size#</option>
-              </cfloop>
-            </select>
-            <small class='smaller text-secondary'>US sizing.</small>
-          </div> --->
         </div>
 
         <div class='row my-3'>

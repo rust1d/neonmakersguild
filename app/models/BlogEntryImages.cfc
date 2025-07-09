@@ -9,8 +9,12 @@ component extends=BaseModel accessors=true {
   belongs_to(name: 'UserImage',    class: 'UserImages',      key: 'bei_uiid',  relation: 'ui_uiid',   preloaded: true);
   has_many  (name: 'BlogComments', class: 'BlogComments',    key: 'bei_beiid', relation: 'bco_beiid');
 
-  public BaseModel function find_nav(required numeric bei_beiid, numeric direction) {
-    load_db(search(arguments));
+  public BaseModel function find_nav(required numeric bei_beiid, string section='front', string type='images', numeric usid=0, string direction) {
+    if (!isNull(arguments.direction)) { // IF DIRECTION GIVEN FIND NEXT ID
+      arguments.bei_beiid = application.indexer.go(argumentcollection: arguments);
+    }
+
+    load_db(search(bei_beiid: arguments.bei_beiid));
     if (!persisted()) throw('Record not found.', 'record_not_found');
 
     return this;

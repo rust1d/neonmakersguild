@@ -114,7 +114,7 @@
                     </div>
                     <div class='col-md-6'>
                       <label class='form-label' for='us_permissions'>Admin Level</label>
-                      <select class='form-control' name='us_permissions' id='us_permissions'>
+                      <select class='form-select' name='us_permissions' id='us_permissions'>
                         <cfloop list='0,None|1,Admin|2,Super Admin' item='val' delimiters='|'>
                           <option value='#val.listFirst()#' #ifin(val.listFirst() eq mUser.permissions(), 'selected')#>#val.listLast()#</option>
                         </cfloop>

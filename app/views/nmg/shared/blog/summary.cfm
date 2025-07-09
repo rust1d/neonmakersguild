@@ -49,7 +49,7 @@
       </div>
     </div>
     <div class='col-4 summary-frame'>
-      #new app.services.ImageGrid({ row_class: 'fix-height' }).layout(locals.mBE.UserImages(), 3)#
+      #new app.services.ImageGrid(locals.mBE.UserImages(), { row_class: 'fix-height' }).layout(3)#
     </div>
   </div>
 </cfoutput>

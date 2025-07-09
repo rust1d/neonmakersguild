@@ -91,7 +91,7 @@ component accessors=true {
         return true;
       }
     } catch (any err) {
-      application.flash.error(utility.errorString(err));
+      application.flash.cferror(err);
     }
     return false;
   }

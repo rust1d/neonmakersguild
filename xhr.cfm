@@ -9,12 +9,12 @@
     try {
       savecontent variable='content' { router.include() }
     } catch (any err) {
-      flash.error(utility.errorString(err));
+      flash.cferror(err);
     }
     try {
       savecontent variable='messages' { router.include('shared/flash') }
     } catch (any err) {
-      flash.error(utility.errorString(err));
+      flash.cferror(err);
     }
     param content = '';
     param messages = '';

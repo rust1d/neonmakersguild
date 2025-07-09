@@ -31,7 +31,7 @@
 
     <cfif locals.mBE.image_cnt()>
       <div class='col-8'>
-        #new app.services.ImageGrid({ row_class: 'border border-nmg'}).layout(locals.mBE.UserImages())#
+        #new app.services.ImageGrid(locals.mBE.UserImages(), { row_class: 'border border-nmg'}).layout()#
       </div>
     </cfif>
   </div>

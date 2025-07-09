@@ -1,104 +1,190 @@
 component {
   public Indexer function init() {
-    variables.utility = request.utility;
-    variables.index = {
-      front.post.array:    [],
-      stream.post.array:   [],
-      user.post.array:     structNew('ordered'),
-
-      front.post.hash:    structNew('ordered'),
-      stream.post.hash:   structNew('ordered'),
-      user.post.hash:     structNew('ordered'),
-
-      front.images.array:  [],
-      stream.images.array: [],
-      user.images.array:   structNew('ordered'),
-
-      front.images.hash:  structNew('ordered'),
-      stream.images.hash: structNew('ordered'),
-      user.images.hash:   structNew('ordered')
-    }
-
-    load();
+    variables.utility = application.utility;
+    variables.cache_id = 'idx-benid';
+    variables.refresh_rate = 10; // minutes
 
     return this;
   }
 
-  public struct function _index() {
-    return variables.index;
+  public void function flush_cache() {
+    CacheRemove(variables.cache_id);
   }
 
-  public numeric function go(required numeric current_benid, string type='front', string style='post', numeric usid=0, string direction='next') {
-    try {
-      if (type=='user') {
-        var data = index[type][style][user].hash[current_benid];
-      } else {
-        var data = index[type][style].hash[current_benid];
-      }
-      if (direction=='prev') return data.first();
-      return data.last();
-    } catch (any err) {}
-    return current_benid;
+  public struct function index() {
+    var data = cacheGet(variables.cache_id);
+    if (!isNull(data)) return data;
+
+    data = build_images();
+    cachePut(variables.cache_id, data, createTimeSpan(0, 0, variables.refresh_rate, 0));
+    return data;
   }
+
+  public string function get_type(required numeric bei_beiid) {
+    var cur_ben = data.images.beiid[bei_beiid]; // BEN FOR CURRENT BEI
+    return cur_ben.images.cnt==1 ? 'images' : 'post';
+  }
+
+  public numeric function go(required numeric bei_beiid, string section='front', string type='images', numeric usid=0, string direction='next') {
+    if (!listFindNoCase('front,stream,user', arguments.section)) throw('indexer section invalid');
+    if (!listFindNoCase('post,images', arguments.type)) throw('indexer type invalid');
+    if (!listFindNoCase('prev,next', arguments.direction)) throw('indexer direction invalid');
+    var data = index();
+    var cur_ben = data.images.beiid[bei_beiid]; // BEN FOR CURRENT BEI
+    if (type=='images') {
+      // front.image
+    }
+    if (cur_ben.images.cnt==1) { // SINGLE IMAGE BEN? FIND NEXT BEN, RETURN FIRST IMAGE
+      nav_ben = data.entries[direction=='prev' ? cur_ben.nav.first() : cur_ben.nav.last()];
+      return nav_ben.images.ids.first();
+    }
+    var nav_img = cur_ben.images.beiid[bei_beiid];
+    return direction=='prev' ? nav_img.first() : nav_img.last();
+  }
+
+  public numeric function go2(required numeric current_id, string section='front', string type='images', numeric usid=0, string direction='next') {
+    if (!listFindNoCase('front,stream,user', arguments.section)) throw('indexer section invalid');
+    if (!listFindNoCase('post,images', arguments.type)) throw('indexer type invalid');
+    if (!listFindNoCase('prev,next', arguments.direction)) throw('indexer direction invalid');
+
+    var data = index();
+    if (type=='post') { // IF POST HAS 1 IMAGE, SWITCH TO IMAGES; NEXT/PREV IS NOW IMAGE ROLL SCROLL
+      var entry = data.entries[current_id];
+      if (entry.images.len()==1) {
+        type=='images';
+      } else {
+
+      }
+    }
+    var entry = data.entries[current_id];
+    try {
+      if (section=='user') {
+        var curr = data[section][type][user].hash[current_id];
+      } else {
+        var curr = data[section][type].hash[current_id];
+      }
+      return direction=='prev' ? curr.first() : curr.last();
+    } catch (any err) {
+      var data = serializeJSON(arguments);
+      application.flash.cferror(err);
+      application.flash.error(data);
+    }
+    return current_id;
+  }
+
 
   // PRIVATE
 
-  private void function load() {
+  public struct function build_images() {
     var rows = utility.query_to_array(records());
-    // index.arrayll = rows.map(row=>row.ben_benid);
+    var benids = rows.map(row=>row.ben_benid);
+    var data = {
+      entries:      structNew('ordered'),
+      images.beiid: structNew('ordered')
+    }
+    var nav = {}
+    for (var idx=1; idx<=benids.len(); idx++) {
+      set_nav(benids, nav, idx);
+    }
 
     for (var row in rows) {
-      row.images = row.ben_beiids.listToArray();
-      // index.arrayll.post.hash[row.ben_benid] = row;
+      data.entries[row.ben_benid] = row;
 
+      row.nav = nav[row.ben_benid];
+      row.images = {}
+      row.images.ids = row.ben_beiids.listToArray();
+      row.images.cnt = row.images.ids.len();
+      row.images.beiid = structNew('ordered');
+
+      for (var idx=1; idx<=row.images.cnt; idx++) {
+        var beiid = row.images.ids[idx];
+        data.images.beiid[beiid] = row;
+        set_nav(row.images.ids, row.images.beiid, idx)
+      }
+    }
+    // var arr = rows.map(row=>row.ben_benid);
+    // for (var idx=1; idx<=arr.cnt; idx++) {
+    //   var prv = idx==1 ? arr.len() : idx-1;
+    //   var nxt = idx==arr.len() ? 1 : idx+1;
+    //   hash[cur] = [ arr[prv], arr[nxt] ];
+    // }
+    return data;
+  }
+
+  private struct function build_index() {
+    // BUILDS A LIGHTWEIGHT INDEX WITH BLOGENTRY PRIMARY KEYS FOR NAVIGATION LOOK
+    var data = {
+      entries:             structNew('ordered'),
+      front.images.array:  [],
+      front.images.hash:   structNew('ordered'),
+      front.post.array:    [],
+      front.post.hash:     structNew('ordered'),
+      stream.images.array: [],
+      stream.images.hash:  structNew('ordered'),
+      stream.post.array:   [],
+      stream.post.hash:    structNew('ordered'),
+      user.images.array:   structNew('ordered'), // user key hash holds array
+      user.images.hash:    structNew('ordered'),
+      user.post.array:     structNew('ordered'), // user key hash holds array
+      user.post.hash:      structNew('ordered')
+    }
+
+    var rows = utility.query_to_array(records());
+
+    // BUILD ARRAYS THAT CONTAIN THE IDS IN THE SORT ORDER
+    for (var row in rows) {
+      data.entries[row.ben_benid] = row;
+      row.images = row.ben_beiids.listToArray();
       // FRONT PAGE INDEX
       if (row.ben_frontpage) {
-        index.front.post.array.append(row.ben_benid);
-        index.front.images.array.append(row.images, true);
+        data.front.post.array.append(row.ben_benid);
+        data.front.images.array.append(row.images, true);
       }
       // MEMBER STREAM
       if (row.ben_usid!=1) {
-        index.stream.post.array.append(row.ben_benid);
-        index.stream.images.array.append(row.images, true);
+        data.stream.post.array.append(row.ben_benid);
+        data.stream.images.array.append(row.images, true);
       }
       // USER - USID HOLDS ARRAY OF BENIDS
-      if (!index.user.post.array.keyExists(row.ben_usid)) index.user.post.array[row.ben_usid] = [];
-      index.user.post.array[row.ben_usid].append(row.ben_benid);
-
-      if (!index.user.images.array.keyExists(row.ben_usid)) index.user.images.array[row.ben_usid] = [];
-      index.user.images.array[row.ben_usid].append(row.images, true);
+      if (!data.user.post.array.keyExists(row.ben_usid)) data.user.post.array[row.ben_usid] = [];
+      data.user.post.array[row.ben_usid].append(row.ben_benid);
+      if (!data.user.images.array.keyExists(row.ben_usid)) data.user.images.array[row.ben_usid] = [];
+      data.user.images.array[row.ben_usid].append(row.images, true);
     }
-
-    for (key in index.user.post.array) {
-      for (var idx=1; idx<=index.user.post.array[key].len(); idx++) {
-        var val = index.user.post.array[key][idx];
-        index.user.post.hash[key][val] = [];
-        set_nav(index.user.post.array[key], index.user.post.hash[key], idx);
+    // NOW WE KNOW THE LIST OF IDS IN EACH SECTION AND THE ORDER THEY SHOULD NAVIGATE
+    // NOW LOOP OVER THE ARRAY AND BUILD A HASH WITH THE KEY AND STORE AN ARRAY PREV/NEXT IN THAT HASH
+    // set_nav WILL BUILD THE ARRAY AND STORE IT IN THE HASH WITH benid OR beiid
+    for (key in data.user.post.array) {
+      for (var idx=1; idx<=data.user.post.array[key].len(); idx++) {
+        var val = data.user.post.array[key][idx];
+        data.user.post.hash[key][val] = [];
+        set_nav(data.user.post.array[key], data.user.post.hash[key], idx);
       }
     }
 
-    for (key in index.user.images.array) {
-      for (var idx=1; idx<=index.user.images.array[key].len(); idx++) {
-        var val = index.user.images.array[key][idx];
-        index.user.images.hash[key][val] = [];
-        set_nav(index.user.images.array[key], index.user.images.hash[key], idx);
+    for (key in data.user.images.array) {
+      for (var idx=1; idx<=data.user.images.array[key].len(); idx++) {
+        var val = data.user.images.array[key][idx];
+        data.user.images.hash[key][val] = [];
+        set_nav(data.user.images.array[key], data.user.images.hash[key], idx);
       }
     }
 
-    for (var idx=1; idx<=index.front.post.array.len(); idx++) {
-      set_nav(index.front.post.array, index.front.post.hash, idx);
+    for (var idx=1; idx<=data.front.post.array.len(); idx++) {
+      set_nav(data.front.post.array, data.front.post.hash, idx);
     }
-    for (var idx=1; idx<=index.front.images.array.len(); idx++) {
-      set_nav(index.front.images.array, index.front.images.hash, idx);
-    }
-
-    for (var idx=1; idx<=index.stream.post.array.len(); idx++) {
-      set_nav(index.stream.post.array, index.stream.post.hash, idx);
-    }
-    for (var idx=1; idx<=index.stream.images.array.len(); idx++) {
-      set_nav(index.stream.images.array, index.stream.images.hash, idx);
+    for (var idx=1; idx<=data.front.images.array.len(); idx++) {
+      set_nav(data.front.images.array, data.front.images.hash, idx);
     }
 
+    for (var idx=1; idx<=data.stream.post.array.len(); idx++) {
+      set_nav(data.stream.post.array, data.stream.post.hash, idx);
+    }
+    for (var idx=1; idx<=data.stream.images.array.len(); idx++) {
+      set_nav(data.stream.images.array, data.stream.images.hash, idx);
+    }
+
+    return data;
   }
 
   private void function set_nav(arr, hash, idx) {
@@ -109,6 +195,7 @@ component {
   }
 
   private query function records() {
+    // FETCHES ALL benids/usids, A LIST OF THEIR beiids AND FRONTPAGE FLAG
     var sproc = new StoredProc(procedure: 'blogentries_index', datasource: application.dsn);
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: 500);
     return sproc.execute().getProcResultSets().qry;

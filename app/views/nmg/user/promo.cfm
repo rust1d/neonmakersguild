@@ -59,7 +59,7 @@
               Please enter the size you would like below.
             </p>
             <label class='form-label' for='up_promo'>T-Shirt Size</label>
-            <select name='up_promo' id='up_promo' class='form-control'>
+            <select name='up_promo' id='up_promo' class='form-select'>
               <option>Not Provided</option>
               <cfloop list='Small,Medium,Large,X-Large,2X-Large,3X-Large' item='size'>
                 <option value='#size#' #ifin(size==mProfile.promo(), 'selected')#>#size#</option>

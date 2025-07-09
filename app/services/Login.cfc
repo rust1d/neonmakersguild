@@ -17,7 +17,7 @@ component accessors=true {
       if (err.extendedInfo.len()) application.flash.error(err.extendedInfo);
     } catch (any err) {
       writedump(err);
-      application.flash.error(utility.errorString(err));
+      application.flash.cferror(err);
     }
     application.flash.error('Login failure.');
   }

@@ -11,6 +11,10 @@ component {
     session.flash.append(arguments);
   }
 
+  public boolean function cferror(required any err, boolean closeable=true) {
+    return error(request.utility.errorString(err), closeable);
+  }
+
   public void function clear() {
     session.flash = [];
   }

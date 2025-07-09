@@ -17,10 +17,10 @@
             </a>
           </div>
           <div class='frame-nav'>
-            <button class='btn-circle btn-prev' data-nav='prev' data-beiid='#locals.mBEI.encoded_key()#' aria-label='Previous'>
+            <button class='btn-circle btn-prev' data-direction='prev' data-beiid='#locals.mBEI.encoded_key()#' aria-label='Previous'>
               <i class='fas fa-chevron-left' aria-hidden='true'></i>
             </button>
-            <button class='btn-circle btn-next' data-nav='next' data-beiid='#locals.mBEI.encoded_key()#' aria-label='Next'>
+            <button class='btn-circle btn-next' data-direction='next' data-beiid='#locals.mBEI.encoded_key()#' aria-label='Next'>
               <i class='fas fa-chevron-right' aria-hidden='true'></i>
             </button>
           </div>

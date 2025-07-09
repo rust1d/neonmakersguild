@@ -4,6 +4,14 @@
   results.pagination.prev_href = '';
 </cfscript>
 
+<script data-json='context' type='application/json'>
+  {
+    "section": "front",
+    "type": "post",
+    "usid": 0
+  }
+</script>
+
 <cfoutput>
   <cfif results.pagination.first>
     <cfset mHero = mBlog.textblock_by_label('home-hero') />

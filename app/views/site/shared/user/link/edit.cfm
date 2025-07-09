@@ -27,7 +27,7 @@
         <div class='row g-3'>
           <div class='col-md-3'>
             <label class='form-label' for='bli_type'>Type</label>
-            <select class='form-control' name='bli_type' id='bli_type'>
+            <select class='form-select' name='bli_type' id='bli_type'>
               <cfloop array='#mLink.types()#' item='type'>
                 <option value='#type#' #ifin(mLink.type()==type, 'selected')#>#type#</option>
               </cfloop>

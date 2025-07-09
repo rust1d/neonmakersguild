@@ -65,7 +65,7 @@ component extends=jSoup accessors=true {
         data.prepend({ 'comment': this.comment_was(), 'time': now().format('yyyy-mm-dd HH:nn:ss') });
         variables.bco_history = serializeJSON(data);
       } catch (any err) {
-        application.flash.error(utility.errorString(err));
+        application.flash.cferror(err);
       }
     }
   }

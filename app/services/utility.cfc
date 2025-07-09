@@ -119,7 +119,7 @@ component {
       var result = request.s3Service.bucket('neonmg').uploadFile(params);
       return result.get('status')=='success';
     } catch (any err) {
-      application.flash.error(application.utility.errorString(err));
+      application.flash.cferror(err);
       return false;
     }
   }
@@ -132,7 +132,7 @@ component {
       var result = request.s3Service.bucket('neonmg').delete(params);
       return result.get('status')=='success';
     } catch (any err) {
-      application.flash.error(application.utility.errorString(err));
+      application.flash.cferror(err);
       return false;
     }
   }
@@ -372,7 +372,7 @@ component {
     } catch (any err) {
       valid = false;
       if (err.type != 'record_not_valid') {
-        application.flash.error(application.utility.errorString(err));
+        application.flash.cferror(err);
       }
     }
     for (var err in mModel.errors()) application.flash.error(err);

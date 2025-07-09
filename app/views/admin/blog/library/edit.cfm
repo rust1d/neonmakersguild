@@ -155,7 +155,7 @@
                     <input type='text' class='form-control' name='bca_category' id='bca_category' maxlength='50' />
                     <button type='button' id='btnFindCategory' class='input-group-text btn-nmg' title='Find Category'><i class='fa fa-search'></i></button>
                   </div>
-                  <select class='form-control form-control-sm mt-1' name='doc_categories' id='doc_categories' multiple='multiple' title='ctrl+click to select multiple' size='12'>
+                  <select class='form-select form-select-sm mt-1' name='doc_categories' id='doc_categories' multiple='multiple' title='ctrl+click to select multiple' size='12'>
                     <cfloop array='#mBlog.categories()#' item='mCat'>
                       <option value='#mCat.bcaid()#' #ifin(listFind(form.doc_categories, mCat.bcaid()), 'selected')#>#mCat.category()#</option>
                     </cfloop>

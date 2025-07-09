@@ -16,7 +16,7 @@
     </div>
 
     <cfif locals.mBE.image_cnt()>
-      #new app.services.ImageGrid({ row_class: 'border border-nmg'}).layout(locals.mBE.UserImages())#
+      #new app.services.ImageGrid(locals.mBE.UserImages(), { row_class: 'border border-nmg'}).layout()#
     </cfif>
 
     <div class='row mx-0 mt-2 post-comment-bar'>
