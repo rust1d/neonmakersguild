@@ -7,7 +7,6 @@
 
 <cfoutput>
   <cfif locals.keyExists('bei_beiid')>
-    <!--- #writeoutput(serializejson(locals))# --->
     #router.include('shared/blog/_modal_image_content', { mBEI: locals.mBEI, section: locals.section })#
   <cfelse>
     <div class='modal fade h-100' id='beiModal' tabindex='-1' aria-hidden='true'>

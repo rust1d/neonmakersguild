@@ -4,32 +4,32 @@
 </cfscript>
 
 <cfoutput>
-  <div class='modal-body h-100 p-0'>
-    <div class='row g-0 h-100'>
-      <div class='col-12 col-lg-8 col-xxl-9 h-lg-100'>
-        <div class='black-frame'>
-          <div class='close align-items-center'>
-            <button type='button' class='btn-circle' data-bs-dismiss='modal' aria-label='Close'>
-              <i class='fas fa-times' aria-hidden='true'></i>
-            </button>
-            <a href='#application.urls.root#'>
-              <img class='ms-3' src='#application.urls.cdn#/assets/images/logo-256.png' />
-            </a>
-          </div>
-          <div class='frame-nav'>
-            <button class='btn-circle btn-prev' data-direction='prev' data-section='#locals.section#' data-beiid='#locals.mBEI.encoded_key()#' aria-label='Previous'>
-              <i class='fas fa-chevron-left' aria-hidden='true'></i>
-            </button>
-            <button class='btn-circle btn-next' data-direction='next' data-section='#locals.section#' data-beiid='#locals.mBEI.encoded_key()#' aria-label='Next'>
-              <i class='fas fa-chevron-right' aria-hidden='true'></i>
-            </button>
-          </div>
-          <img class='img-framed' src='#locals.mBEI.UserImage().image_src()#' />
+  <div class='modal-body p-0'>
+    <div class='image-modal-layout'>
+      <div class='image-modal-image'>
+        <div class='position-absolute top-0 start-0 p-3 d-flex align-items-center close'>
+          <button type='button' class='btn btn-icon btn-nmg btn-outline-dark fs-4' data-bs-dismiss='modal' aria-label='Close'>
+            <i class='fas fa-times'></i>
+          </button>
+          <a href='#application.urls.root#'>
+            <img src='#application.urls.cdn#/assets/images/logo-256.png' height='32' class='ms-3' />
+          </a>
         </div>
+        <div class='frame-nav position-absolute top-50 start-0 translate-middle-y ps-2'>
+          <button class='btn btn-icon btn-prev btn-nmg btn-outline-dark fs-4' data-direction='prev' data-section='#locals.section#' data-beiid='#locals.mBEI.encoded_key()#'>
+            <i class='fas fa-chevron-left'></i>
+          </button>
+        </div>
+        <div class='frame-nav position-absolute top-50 end-0 translate-middle-y pe-2'>
+          <button class='btn btn-icon btn-next btn-nmg btn-outline-dark fs-4' data-direction='next' data-section='#locals.section#' data-beiid='#locals.mBEI.encoded_key()#'>
+            <i class='fas fa-chevron-right'></i>
+          </button>
+        </div>
+        <img class='img-fluid image-modal-img' src='#locals.mBEI.UserImage().image_src()#' alt='Selected Image' />
       </div>
-      <div class='col-12 col-lg-4 col-xxl-3 bg-nmg-light d-flex flex-column h-lg-100 min-h-0'>
-        <div class='card scroll-card rounded-0 border-light scrollable'>
-          <div class='card-header bg-nmg-light p-0'>
+      <aside class='image-modal-sidebar bg-nmg-light d-flex flex-column'>
+        <div class='card border-light rounded-0 scroll-card h-100'>
+          <div class='card-header bg-nmg-light p-2'>
             #router.include('shared/blog/_modal_byline', { mBE: locals.mBE })#
             <div class='comment-counter text-end px-3 mt-0'>
               #request.utility.updatable_counter(locals.mCommentOn.comment_cnt(), locals.mCommentOn.encoded_key(), '<sup><i class="fa-regular fa-comment"></i></sup>')#
@@ -38,15 +38,12 @@
           <div class='card-body'>
             <cfif locals.mBE.image_cnt() GT 1>
               <div class='d-flex justify-content-between align-items-center smaller text-muted'>
-                <span><i class='fas fa-images fa-lg me-2'></i> This photo is from a post.</span>
+                <span><i class='fas fa-images me-2'></i> This photo is from a post.</span>
                 <a class='post fw-semibold' data-benid='#locals.mBE.encoded_key()#' href='#locals.mBE.seo_link()#'>View Post</a>
               </div>
-              <hr class='mt-2'>
-            </cfif>
-            <div class='post-title fs-5 text-center'>
-              #locals.mBE.title()#
               <hr>
-            </div>
+            </cfif>
+            <div class='text-center mb-2 post-title fs-5'>#locals.mBE.title()#</div>
             <div class='post-body' data-benid='#locals.mBE.encoded_key()#' data-beiid='#locals.mBEI.encoded_key()#'>
               <cfif locals.mBE.image_cnt() GT 1>
                 #locals.mBEI.caption()#
@@ -69,7 +66,7 @@
             #router.include('shared/blog/_comment_field', { id: 'beiComment' })#
           </div>
         </div>
-      </div>
+      </aside>
     </div>
   </div>
 </cfoutput>
