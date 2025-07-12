@@ -2,6 +2,7 @@
   results = mUserBlog.entries(ben_benid: router.decode('benid'));
   mBE = results.rows.first();
   mBE.view(); // inc views
+  section = 'user';
 
   if (session.user.loggedIn()) {
     if (form.keyExists('btnCommentEdit')) {
@@ -31,6 +32,7 @@
 
 <cfset include_js('assets/js/blog/modals.js') />
 <cfset include_js('assets/js/blog/comments.js') />
+<cfset include_js('assets/js/blog/entry.js') />
 
 <cfif session.user.admin()>
   <script>
@@ -43,13 +45,13 @@
 </cfif>
 
 <cfoutput>
-  <div class='row g-3'>
+  <div id='entryPage' class='row g-3'>
     <div class='col-12 content-card'>
-      #router.include('shared/blog/post', { mBE: mBE, fold: false })#
+      #router.include('shared/blog/post', { mBE: mBE, section: section, comment_target: 'focus' })#
     </div>
     <div class='col-12 content-card'>
       <cfif mBE.comments()>
-        #router.include('shared/blog/comments', { mBE: mBE })#
+        #router.include('shared/blog/comments', { mBE: mBE})#
       <cfelse>
         <small class='text-muted'>Comments have been disabled for this post.</small>
       </cfif>

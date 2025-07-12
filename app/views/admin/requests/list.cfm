@@ -46,7 +46,7 @@
       <div class='modal-content bg-nmg'>
         <div class='modal-header'>
           <h5 class='modal-title' id='helpModalLabel'>Member Request Help</h5>
-          <button type='button' class='btn btn-nmg' data-bs-dismiss='modal' aria-label='Close'><i class='fas fa-times'></i></button>
+          <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
         </div>
         <div class='modal-body'>
           <div class='container-fluid'>

@@ -27,6 +27,7 @@ component {
       response.data['request'] = data;
 
       data.ben_benid = request.router.decode('benid', data);
+
       if (data.ben_benid) {
         response.data['content'] = request.router.generate('shared/blog/_modal_post', data);
       } else {

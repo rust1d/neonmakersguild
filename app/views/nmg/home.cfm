@@ -2,15 +2,16 @@
   results = mBlog.entries(utility.paged_term_params(ben_released: true, ben_promoted: true, maxrows: 10));
   results.pagination.next_href = '/blog';
   results.pagination.prev_href = '';
+  section = 'front';
 </cfscript>
 
-<script data-json='context' type='application/json'>
+<!--- <script data-json='context' type='application/json'>
   {
     "section": "front",
     "type": "post",
     "usid": 0
   }
-</script>
+</script> --->
 
 <cfoutput>
   <cfif results.pagination.first>
@@ -25,6 +26,6 @@
   </cfif>
 
   <div class='row g-2'>
-    #router.include('shared/blog/entries', { results: results })#
+    #router.include('shared/blog/entries', { results: results, section: section })#
   </div>
 </cfoutput>

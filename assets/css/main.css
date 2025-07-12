@@ -62,6 +62,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .flip-x { transform: scaleX(-1); }
 
+.btn-wide {
+  min-width: 6rem;
+}
+
 .btn-pic {
   width: 30px;
   height: 30px;
@@ -85,14 +89,23 @@ h1, h2, h3, h4, h5, h6 {
   right: 8px;
 }
 
+.btn-close-delete {
+  position: absolute;
+  right: 4px;
+  top: 1px;
+  background-color: var(--nmg-danger);
+  opacity: .7 !important;
+  border-radius: var(--bs-border-radius) !important;
+  filter: none!important;
+}
+
+.btn-close-delete:hover {
+  opacity: 1 !important;
+}
+
 form label.required:after {
   content: ' *';
   color: var(--nmg-danger);
-}
-
-.image-menu-btn {
-  top: -10px;
-  right: 10px;
 }
 
 .thumbnail-sm img {
@@ -306,7 +319,7 @@ figure.image figcaption {
   background-color: var(--nmg-black);
 }
 
-.black-frame img {
+.black-frame img.img-framed {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -388,6 +401,49 @@ figure.image figcaption {
   pointer-events: auto;
 }
 
+@media (min-width: 768px) {
+  .h-md-100 {
+    height: 100% !important;
+  }
+}
+@media (min-width: 992px) {
+  .h-lg-100 {
+    height: 100% !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .black-frame {
+    height: auto !important;
+    padding: 0 !important;
+    align-items: stretch !important;
+  }
+
+  .black-frame img.img-framed {
+    max-height: 50vh;
+    width: 100% !important;
+    height: auto !important;
+    object-fit: scale-down !important;
+    display: block !important;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .modal-body,
+  .modal-body>.row,
+  .modal-body>.row>[class*='col-'] {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+  .scroll-card {
+    height: auto !important;
+  }
+  .scroll-card .card-body {
+    overflow: visible !important;
+    min-height: auto !important;
+  }
+}
+
 .min-h-0 {
   min-height: 0 !important;
 }
@@ -443,27 +499,26 @@ figure.image figcaption {
   border-radius: 16px;
   font-size: .875rem;
 }
-
+.comment-input-group .comment-image img:hover {
+  border: var(--bs-border-width) var(--bs-border-style) var(--nmg-border) !important;
+}
 .comment-input {
   padding: 8px 12px;
   min-height: 1rem;
   overflow-y: auto;
   outline: none;
 }
-
 .comment-input:empty:before {
   content: attr(placeholder);
   color: #999;
   pointer-events: none;
   display: block;
 }
-
 .comment-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-
 .comment-thumbnail {
   padding: .1rem;
   height: auto;
@@ -474,9 +529,9 @@ figure.image figcaption {
   font-size: 0.8rem;
 }
 
-.post-title {
+/* .post-title {
   font-size: 1.25rem;
-}
+} */
 
 .post-byline {
   font-size: 0.9rem;
@@ -494,4 +549,77 @@ figure.image figcaption {
 .post-comment-bar {
   font-size: 1rem;
   font-family: "Segoe UI Historic";
+}
+
+.btn-outline-nmg {
+  color: var(--nmg-color);
+  border-color: var(--nmg-color);
+  background-color: transparent;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.btn-outline-nmg:hover,
+.btn-outline-nmg:focus,
+.btn-outline-nmg.active,
+.btn-outline-nmg:active,
+.show>.btn-outline-nmg.dropdown-toggle {
+  color: #fff;
+  background-color: var(--nmg-color-alt);
+  border-color: var(--nmg-color-alt);
+}
+
+.btn-icon {
+  opacity: 0.7 !important;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 1.25rem;
+  font-size: 1.25rem;
+  border-radius: 50% !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon-md {
+  width: 1rem;
+  height: 1rem;
+  padding: 1rem;
+  font-size: 1rem;
+}
+
+.btn-icon-sm {
+  width: .75rem;
+  height: .75rem;
+  padding: .75rem;
+  font-size: .75rem;
+}
+
+.btn-icon:hover {
+  opacity: 1 !important;
+}
+
+.btn-icon.active {
+  border-color: var(--bs-warning);
+  color: var(--bs-warning);
+}
+
+.btn-icon.bottom-right {
+  position: absolute;
+  bottom: .45rem;
+  right: .45rem;
+}
+
+.btn-icon.top-right {
+  position: absolute;
+  bottom: .45rem;
+  right: .45rem;
+}
+
+.btn-icon-link {
+  color: var(--nmg-black);
+}
+
+.btn-icon-link:hover {
+  border: var(--bs-border-width) var(--bs-border-style) var(--nmg-color-alt) !important;
+  color: var(--nmg-color-alt);
 }

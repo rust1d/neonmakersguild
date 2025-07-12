@@ -94,6 +94,16 @@ const is_img_url = function(src) {
   return isValidUrl && isImageExt;
 }
 
+const open_image_picker = function(add_image_callback, multiple='') {
+  const $fileInput = $(`<input type='file' class='d-none' accept='image/*' ${multiple} />`);
+  $fileInput.on('change', function(ev) {
+    process_images(Array.from(this.files), add_image_callback); // ev.target.files
+    $fileInput.remove();
+  });
+  $('body').append($fileInput);
+  $fileInput.trigger('click');
+}
+
 const plural = function(cnt, data, add) {
   if (!add) add = 's';
   return (cnt==1) ? data : data + add;

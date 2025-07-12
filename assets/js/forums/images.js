@@ -8,7 +8,7 @@ function add_to_roll($input, id, src, filename='') {
   const $img = $(`<img class='img-fluid' data-caption='cap_${id}' alt='${filename}' />`).attr('src', src);
   const $cap = $(`<input type='hidden' id='cap_${id}' name='cap_${id}' />`);
   const $roll = active_roll();
-  const $removeBtn = $("<button class='btn-close position-absolute end-0 mt-1 me-1 btn-nmg-delete'></button>");
+  const $removeBtn = $("<button class='btn-close btn-close-delete'></button>");
   $removeBtn.on('click', function() {
     $col.remove();
     show_edit_all($roll);

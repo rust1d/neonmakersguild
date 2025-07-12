@@ -7,7 +7,7 @@ component extends=jSoup accessors=true {
   property name='ben_alias'         type='string'   sqltype='varchar';
   property name='ben_image'         type='string'   sqltype='varchar';
   property name='ben_body'          type='string'   sqltype='varchar'    html;
-  property name='ben_morebody'      type='string'   sqltype='varchar'    html;
+  property name='ben_morebody'      type='string'   sqltype='varchar'    default='';
   property name='ben_comments'      type='boolean'  sqltype='tinyint'    default='false';
   property name='ben_views'         type='numeric'  sqltype='integer'    default='0';
   property name='ben_released'      type='boolean'  sqltype='tinyint'    default='false';
@@ -40,6 +40,10 @@ component extends=jSoup accessors=true {
 
   public boolean function is_promoted() {
     return isDate(variables.ben_promoted ?: '');
+  }
+
+  public boolean function owned_by(required BaseModel obj) {
+    return variables.ben_blog>1 && obj.usid()==variables.ben_usid;
   }
 
   public string function post_date() {
@@ -105,8 +109,8 @@ component extends=jSoup accessors=true {
   }
 
   public string function summary() {
-    if (!isNull(variables.ben_morebody) && variables.ben_morebody.len()>10) return variables.ben_morebody;
-    return preview(500);
+    if (variables.ben_morebody.len()) return variables.ben_morebody;
+    return preview(words: 50);
   }
 
   public void function view() {
@@ -144,10 +148,7 @@ component extends=jSoup accessors=true {
     param variables.ben_alias = variables.ben_title;
     if (this.alias_changed()) {
       variables.ben_alias = utility.slug(ben_alias);
-      // var qry = this.search(ben_alias: ben_alias);
-      // if (qry.len() && qry.ben_benid != primary_key()) {
-      //   errors().append('Entry alias #ben_alias# is in use.');
-      // }
     }
+    variables.ben_morebody = summary();
   }
 }

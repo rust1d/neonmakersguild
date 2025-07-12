@@ -41,4 +41,13 @@ component extends=BaseImage accessors=true {
   }
 
   // PRIVATE
+
+  private string function local_path() {
+    return application.paths.images & 'forum\'  & fi_fmid % 10 & '\';
+  }
+
+  private string function remote_path() {
+    return application.urls.images & '/forum/'  & fi_fmid % 10 & '/';
+  }
+
 }

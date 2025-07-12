@@ -1,4 +1,4 @@
-// SERVER.context TELLS:
+// .context TELLS:
 //   WHAT SECTION OF THE SITE OPENED THE MODAL - frontpage, member stream or member page (user)
 //   WHAT TYPE OF MODAL WAS OPENED - post or images
 //   USID IF ON THE MEMBER POST PAGE
@@ -11,13 +11,11 @@ function create_post_modal(config = {}) {
   const $content = $modal.find('.modal-content');
   let $comments, $comment, $input, $submit, $upload;
 
-  // config.context = { "section": "front", "type": "images", "usid": 0 }
-
   const add_comment_image = function($input, id, src, filename = '') {
     const $col = $(`<div class="col-6 ${comment_image_class()} position-relative"></div>`);
     const $img = $(`<img class='img-fluid' alt='${filename}' />`).attr('src', src);
-    const $removeBtn = $("<button class='btn-close position-absolute end-0 mt-1 me-1 btn-nmg-delete'></button>");
-    $removeBtn.on('click', () => $col.remove());
+    const $removeBtn = $("<button class='btn-close btn-close-delete'></button>");
+    $removeBtn.on('click', function() { $col.remove(); enable_upload(); });
     $col.append($img).append($input).append($removeBtn);
     $comment.find('.comment-image').append($col);
   }
@@ -27,8 +25,16 @@ function create_post_modal(config = {}) {
     return width < 400 ? 'col-md-4' : 'col-md-2';
   }
 
+  const enable = function($btn, state) {
+    $btn.toggleClass('text-nmg', state).toggleClass('text-secondary', !state).prop('disabled', !state);
+  }
+
   const enable_submit = function(state=false) {
-    $submit.prop('disabled', state);
+    enable($submit, state);
+  }
+
+  const enable_upload = function() {
+    enable($upload, $comment.find('.comment-image').length===0);
   }
 
   const handle_error = function(err) {
@@ -46,7 +52,7 @@ function create_post_modal(config = {}) {
 
   const input_valid = function() {
     const val = $input.text().trim();
-    $submit.toggleClass('text-secondary', val.length === 0);
+    enable_submit(val.length>0);
     if (!val.length) $input.empty();
   }
 
@@ -69,16 +75,17 @@ function create_post_modal(config = {}) {
     $comments = $content.find('.post-comments');
     $comment = $content.find('.comment-input-group');
     $input = $comment.find('.comment-input');
-    $submit = $comment.find('.btnComment');
-    $upload = $comment.find('.btnUpload');
+    $submit = $comment.find('button[name=btnComment]');
+    $upload = $comment.find('button[name=btnUpload]');
     show_modal();
   }
 
   const load_modal = function(data, nav) {
-    let params = { beiid: data.beiid }
+    let params = { ...data }
     if (nav) {
-      params.direction = data.direction;
+      params.section = data.section;
       params.type = config.context.type; // PASS ORIGINAL CLICK CONTEXT
+      params.direction = data.direction;
     }
     $.post({
       url: `/app/services/Images.cfc?method=${config.type}`,
@@ -92,7 +99,6 @@ function create_post_modal(config = {}) {
 
   const open = function(data) {
     config.context = data; // SAVE THE STARTING CLICK
-    config.context.section = SERVER.context.section;
     load_modal(data, 1);
   }
 
@@ -116,28 +122,47 @@ function create_post_modal(config = {}) {
       if (key!=config.type) SERVER.handlers[key].hide();
     }
     $modal.modal('show');
-    $modal.one('shown.bs.modal', function() {
+    $modal.one('shown.bs.modal', function() { // .one FIRES ONLY FIRST TIME SHOWN
       $input.trigger('focus');
     });
   }
 
   $content.on('click', '.image-grid img', function(ev) {
-    SERVER.handlers.bei.load_modal(this.dataset);
+    SERVER.handlers.bei.open(this.dataset);
   });
 
   $content.on('click', 'a.post', function(ev) {
     ev.preventDefault();
-    SERVER.handlers.ben.load_modal(this.dataset);
+    SERVER.handlers.ben.open(this.dataset);
   });
+
+  $(document).on('keydown', function(ev) {
+    if (!$modal.is(':visible')) return;
+    const isTyping = (
+      ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName) || document.activeElement.isContentEditable
+    );
+    if (isTyping) return;
+
+    if (ev.key === 'ArrowLeft') {
+      $content.find('.frame-nav button[data-direction="prev"]').trigger('click');
+    } else if (ev.key === 'ArrowRight') {
+      $content.find('.frame-nav button[data-direction="next"]').trigger('click');
+    }
+  });
+
 
   $content.on('click', '.frame-nav button[data-direction]', function(ev) { // ONLY ON IMAGES
     load_modal(this.dataset, 1);
   });
 
-  $content.on('click', `${commentId} .btnComment`, function(ev) {
+  $content.on('click', `${commentId} button[name=btnUpload]`, function(ev) {
+    open_image_picker(add_comment_image, 'multiple');
+  });
+
+  $content.on('click', `${commentId} button[name=btnComment]`, function(ev) {
     const val = $input.text().trim();
     if (val.length) {
-      const data = $content.find('.modal-body').data();
+      const data = $content.find('.post-body').data();
       const params = {
         beiid: data.beiid,
         benid: data.benid,
@@ -203,6 +228,13 @@ $(function() {
 
   // Hook triggers
   $('a.post').on('click', function(ev) {
+    if (this.dataset.target=='focus') {
+      setTimeout(()=>{ $('.comment-input').focus() }, 200);
+      $inp = $('.comment-input')
+      $inp.get(0).scrollIntoView({ behavior: 'smooth', block: 'center' });
+      $inp.focus();
+      return;
+    }
     ev.preventDefault();
     SERVER.handlers.ben.open(this.dataset);
   });

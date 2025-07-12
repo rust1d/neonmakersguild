@@ -11,10 +11,10 @@
       <div class='flex-grow-1'>
         <div class='comment-input-group border rounded bg-nmg-light w-100' id='#locals.id#'>
           <div class='comment-input' contenteditable='true' role='textbox' aria-label='Write a comment...' placeholder='Write a comment...'></div>
-          <div class='comment-image row g-1 mx-0'></div>
+          <div class='comment-image row g-1 mx-0 px-2 py-1'></div>
           <div class='comment-toolbar'>
-            <button class='btn btn-light py-0 btnUpload text-secondary'><i class='fas fa-camera'></i></button>
-            <button class='btn btn-light py-0 btnComment text-secondary'><i class='fas fa-share'></i></button>
+            <button name='btnUpload' type='button' class='btn btn-light py-0 text-nmg' title='Upload Image'><i class='fas fa-camera'></i></button>
+            <button name='btnComment' type='button' class='btn btn-light py-0 text-secondary' title='Post'><i class='fas fa-share'></i></button>
           </div>
         </div>
       </div>

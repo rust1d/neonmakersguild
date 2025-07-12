@@ -13,7 +13,7 @@ $(function() {
     const $roll = $row.find('.message-roll');
 
     tinymce.get('edit_message').destroy(); // CLEAR EXISTING EDIT
-    frm.edit_message.value =$body.text(); // SET EDIT MSG
+    frm.edit_message.value = $body.html(); // SET EDIT MSG
     init_tinyforum(frm.edit_message);
 
     $editroll.empty(); // EMPTY EDIT IMAGE ROLL

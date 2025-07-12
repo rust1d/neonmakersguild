@@ -1,4 +1,4 @@
-<cfscript>
+<!--- <cfscript>
   bcaid = router.decode('bcaid');
 
   mCategory = mBlog.category_find_or_create(bcaid);
@@ -17,4 +17,4 @@
       </div>
     </cfloop>
   </div>
-</cfoutput>
+</cfoutput> --->

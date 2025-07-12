@@ -117,7 +117,6 @@
               <div class='col'>
                 <form method='post' class='needs-validation' novalidate autocomplete='off' enctype='multipart/form-data'>
                   <input type='file' id='filePicker' accept='image/*' multiple class='d-none' />
-                  <!--- <div id='hidden-inputs'></div> --->
                   <div class='row g-3'>
                     <div class='12'>
                       <input type='text' class='form-control form-control-lg mt-2' name='ft_subject' id='ft_subject' value='' maxlength='100' placeholder='Start new thread...' required />
@@ -127,7 +126,6 @@
                     </div>
                     <div class='col-12 message-field' style='display:none'>
                       <div id='photo_roll' class='row g-1 mb-2'></div>
-                      <!--- <button type='button' name='btnOpenPicker' id='btnOpenPicker' class='btn btn-sm btn-nmg'>Add Image</button> --->
                     </div>
                     <cfif mSubscription.new_record()>
                       <div class='col-12 message-field' style='display:none'>

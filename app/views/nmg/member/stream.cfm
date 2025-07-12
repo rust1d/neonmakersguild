@@ -1,5 +1,6 @@
 <cfscript>
-  mBEs = new app.models.BlogEntries().stream(utility.paged_term_params(days: 30, count: 3, maxrows: 10));
+  mBEs = new app.models.BlogEntries().stream(utility.paged_term_params(days: 5000, count: 50, maxrows: 15)); // NO LIMITS FOR NOW
+  section = 'stream';
   pagination = request.pagination.last;
   mHero = mBlog.textblock_by_label('stream-hero');
 </cfscript>
@@ -10,7 +11,7 @@
   <cfif pagination.page lt 2>
     <cfset mHero = mBlog.textblock_by_label('stream-hero') />
     <cfif mHero.persisted()>
-      <div class='row mt-3'>
+      <div class='row g-3 mb-3'>
         <div class='col-12'>
           #mHero.body_cdn()#
         </div>
@@ -21,8 +22,8 @@
   <cfif mBEs.len()>
     <div class='row g-3'>
       <cfloop array='#mBEs#' item='mBE' index='idx'>
-        <div class='col-12'>
-          #router.include('shared/blog/summary', { mBE: mBE })#
+        <div class='col-12 content-card p-0'>
+          #router.include('shared/blog/summary', { mBE: mBE, section: section })#
         </div>
       </cfloop>
       <cfif !pagination.one_page>

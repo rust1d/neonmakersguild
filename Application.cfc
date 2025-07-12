@@ -135,7 +135,7 @@ component {
       request.unclean[key] = form[key].reReplace('[^\x00-\x7F]', '-', 'all').trim();
       form[key] = request.unclean[key];
       // TEXTAREAS THAT WE EXPECT HTML IN MUST BE WHITELISTED
-      if (listfindNoCase('up_bio,ben_body,ben_morebody,bpa_body,btb_body,fm_body,edit_message', key)) continue;
+      if (listfindNoCase('up_bio,ben_body,bpa_body,btb_body,fm_body,edit_message', key)) continue;
       form[key] = form[key].reReplace('<[^>]*>', '', 'all').reReplace('[<>]', '?', 'all');
     }
   }

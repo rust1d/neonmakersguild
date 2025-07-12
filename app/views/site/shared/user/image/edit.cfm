@@ -4,7 +4,6 @@
   mImage = mBlog.image_find_or_create(uiid);
 
   if (form.keyExists('btnSubmit')) {
-    writedump(form);
     mImage.set(form);
     if (mImage.safe_save()) {
       flash.success('Your image was saved.');
@@ -25,10 +24,17 @@
 <cfset include_js('assets/js/image/edit.js') />
 
 <cfoutput>
+  #router.include('shared/user/image/_crop_modal')#
+
   <form role='form' method='post' enctype='multipart/form-data'>
     <div class='card'>
-      <h5 class='card-header bg-nmg'>
-        #mode# <cfif mode is 'add'>image<cfelse>#mImage.filename()#</cfif>
+      <h5 class='card-header bg-nmg align-items-center'>
+        #mode#
+        <cfif mode is 'add'>
+          Image
+        <cfelse>
+          #mImage.filename()#
+        </cfif>
       </h5>
       <div class='card-body'>
         <cfif mode is 'add'>
@@ -54,12 +60,12 @@
                     </div>
                   </div>
                   <div class='col-12 text-center'>
-                    <a class='btn btn-nmg mr-3 position-relative'>
-                      <span><i class='fa-solid fa-fw fa-images'></i> Select Image</span>
+                    <a class='btn btn-nmg btn-wide mr-3 position-relative'>
+                      <span><i class='fa-solid fa-fw fa-camera'></i> Select Image</span>
                       <input class='h-100 w-100 position-absolute' type='file' id='hidden_input' name='ui_filename' value='Choose a file' accept='image/*'>
                     </a>
-                    <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-nmg'><i class='fa-solid fa-fw fa-upload'></i> Save Image</button>
-                    <a href='#router.href('#dest#/image/list')#' class='btn btn-nmg-cancel'>Cancel</a>
+                    <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-wide btn-nmg'><i class='fa-solid fa-fw fa-upload'></i> Save Image</button>
+                    <a href='#router.href('#dest#/image/list')#' class='btn btn-wide btn-nmg-cancel'>Cancel</a>
                   </div>
                 </div>
               </div>
@@ -70,55 +76,51 @@
           </form>
         <cfelse>
           <div class='row g-3'>
-            <div class='col-auto'>
-              <div id='thumbnail_view'>
-                <div class='position-relative'>
-                  <img id='thumbnail_src' src='#mImage.thumbnail_src()#' class='profile-crop-wrapper img-thumbnail' />
-                  <button type='button' id='btnOpen' data-uiid='#mImage.encoded_key()#' title='change thumbnail' class='image-crop-btn rounded-circle btn btn-nmg btn-outline-dark fa-solid fa-photo-film'></button>
+            <div class='col-md-auto'>
+              <div class='position-relative d-inline-block'>
+                <img id='thumbnail_src' src='#mImage.thumbnail_src()#' class='img-thumbnail' />
+                <button type='button' id='btnOpen' data-uiid='#mImage.encoded_key()#' title='change thumbnail' class='btn btn-icon bottom-right btn-nmg btn-outline-dark'>
+                  <i class='fa-solid fa-photo-film'></i>
+                </button>
+              </div>
+              <div class='bg-nmg mt-3 fs-6'>
+                <div class='border-bottom py-1 px-2'>
+                  #mImage.dimensions()#
                 </div>
-                <div class='input-group input-group-sm mt-1'>
+                <div class='border-bottom py-1 px-2'>
+                  #mImage.size_mb()#
+                </div>
+                <div class='border-bottom py-1 px-2'>
+                  <span class='clipable' data-clip='#mImage.image_src()#'>
+                    <i class='fa-solid fa-fw fa-copy'></i> Image Link (#mImage.dimensions()#)
+                  </span>
+                </div>
+                <div class='py-1 px-2'>
+                  <span class='clipable' data-clip='#mImage.thumbnail_src()#'>
+                    <i class='fa-solid fa-fw fa-copy'></i>  Thumbnail Link
+                  </span>
+                </div>
+              </div>
+              <div class='mt-3'>
+                <label class='form-label form-text' for='ui_filename'>Rename</label>
+                <div class='input-group input-group-sm'>
                   <input type='text' class='form-control' name='ui_filename' value='#mImage.filename()#' />
-                  <button type='submit' name='btnSubmit' class='btn btn-sm btn-nmg'>rename</button>
+                  <button type='submit' name='btnSubmit' class='btn btn-sm btn-nmg'>go</button>
                 </div>
               </div>
-              <div class='image-crop-wrapper d-none'>
-                <div id='thumbnail_crop' class='profile-crop-wrapper img-thumbnail'></div>
-                <div class='text-center my-3'>
-                  <button type='button' class='btn btn-sm btn-nmg' id='btnCrop'>Save thumbnail</button>
-                  <button type='button' class='btn btn-sm btn-nmg' id='btnCancel'>Cancel</button>
-                </div>
-                <br clear='all'>
+              <div class='mt-3 text-center'>
+                <hr>
+                <a href='#router.href('#dest#/image/list')#' class='btn btn-wide btn-nmg'>Done</a>
               </div>
             </div>
-            <div class='col-md text-center'>
-              <img src='#mImage.image_src()#' class='img-fluid clipable' data-clip='#mImage.image_src()#' />
-            </div>
-          </div>
-
-          <div class='row g-3'>
-            <div class='col-md-3 col-12 text-center'>
-              <hr>
-              <button type='submit' name='btnDelete' id='btnDelete' class='btn btn-nmg-delete'>Delete</button>
-              <a href='#router.href('#dest#/image/list')#' class='btn btn-nmg-cancel'>Cancel</a>
-            </div>
-            <div class='col-md-8 col-12'>
-              <hr>
-              <div class='text-muted small'>
-                <i class='fa-solid fa-fw fa-copy'></i> <span class='clipable' data-clip='#mImage.image_src()#'>#mImage.image_src()#</span> (#mImage.dimensions()#)
-              </div>
-              <div class='text-muted small'>
-                <i class='fa-solid fa-fw fa-copy'></i> <span class='clipable' data-clip='#mImage.thumbnail_src()#'>#mImage.thumbnail_src()#</span> (thumbnail)
+            <div class='col-md'>
+              <div class='position-relative d-inline-block'>
+                <img src='#mImage.image_src()#' class='img-thumbnail img-fluid clipable' data-clip='#mImage.image_src()#' />
+                <button type='submit' name='btnDelete' id='btnDelete' class='btn btn-icon bottom-right btn-nmg btn-outline-dark'>
+                  <i class='fa-solid fa-trash'></i>
+                </button>
               </div>
             </div>
-
-            <cfif mImage.uses().len()>
-              <div class='col-12 text-danger small mt-3 border border-danger p-3'>
-                <p>This image is used in posted content. Deleting the image now will only remove it from the library.
-                A copy of the image remain in the tubes to support the posted content. To completely delete an image
-                from the server, remove it from all posted content first.</p>
-                Used in: #mImage.uses().map(row => '#row.src_table#: #row.src_pkid#').toList(', ')#
-              </div>
-            </cfif>
           </div>
         </cfif>
       </div>

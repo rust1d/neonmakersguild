@@ -189,9 +189,7 @@ component {
         img = ImageNew('ram:///temp.jpg');
         return toB64(img);
       }
-    } catch (any err) {
-      writedump(err);abort;
-     } // STILL ERRORS, RETURN BROKEN IMAGE
+    } catch (any err) { } // STILL ERRORS, RETURN BROKEN IMAGE
     return toB64(ImageNew(application.paths.root & '\assets\images\image_new.png'));
   }
 
@@ -271,9 +269,7 @@ component {
       if (ListFind('3', orientation))   ImageRotate(arguments.img, 180);
       if (ListFind('6,7', orientation)) ImageRotate(arguments.img, 90);
       if (ListFind('5,8', orientation)) ImageRotate(arguments.img, 270);
-    } catch (any err) {
-      writedump(err);
-    }
+    } catch (any err) { }
     return arguments.img;
   }
 

@@ -33,16 +33,16 @@ component extends=BaseModel accessors=true {
     return isNull(variables.bli_url) ? '' : utility.getDomain(bli_url);
   }
 
-  public string function icon_link(string size = '2x') {
+  public string function icon_link(string size='fa-2x') {
     if (isNull(variables.bli_url)) return '';
-    return "<a href='#bli_url#' title='#bli_title#' data-link='#datadash()#' target='_blank'>#icon(size)#</a>";
+    return "<a href='#bli_url#' class='btn btn-icon btn-icon-link' title='#bli_title#' data-link='#datadash()#' target='_blank'>#icon(size)#</a>";
   }
 
-  public string function icon(string size = '2x') {
+  public string function icon(string size = 'fa-2x') {
     if (isNull(variables.bli_url)) return '';
     var type = social_type();
     var icon = type.len() ? 'fa-brands fa-#type#' : icons().get(bli_type ?: 'bookmark') ?: 'fa-solid fa-block-question';
-    return "<i class='fa-#size# #icon#'></i>";
+    return "<i class='#size# #icon#'></i>";
   }
 
   public boolean function isBookmark() {

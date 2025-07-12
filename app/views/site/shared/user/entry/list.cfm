@@ -7,13 +7,6 @@
   <div class='card'>
     <div class='card-header bg-nmg'>
       <div class='row'>
-        <!--- <div class='col-auto'>
-          <div class='input-group input-group-sm'>
-            <a href='#router.href('#locals.dest#/entry/edit')#' class='btn btn-sm btn-nmg' title='Add'>
-              <i class='fa-solid fa-fw fa-plus'></i>
-            </a>
-          </div>
-        </div> --->
         <div class='col fs-5'>Blog Posts</div>
         #router.include('shared/partials/filter_and_page', { pagination: locals.results.pagination })#
       </div>

@@ -10,7 +10,7 @@ CREATE PROCEDURE commentimages_insert(
   IN _width         INT(11),
   IN _height        INT(11),
   IN _size          INT(11),
-  IN _filename      VARCHAR(100)
+  IN `_filename`    VARCHAR(100)
 )
 BEGIN
 
@@ -18,7 +18,7 @@ BEGIN
     ci_bcoid, ci_benid, ci_beiid, ci_usid, ci_width, ci_height, ci_size, ci_filename,
     ci_added
   ) VALUES (
-    _bcoid, _benid, _beiid, _usid, _width, _height, _size, _filename,
+    _bcoid, _benid, _beiid, _usid, _width, _height, _size, `_filename`,
     CURRENT_TIMESTAMP
   );
 

@@ -145,7 +145,8 @@ $(function() {
         }
       });
       editor.ui.registry.addButton('customImageBtn', {
-        icon: 'image',
+        icon: 'camera',
+        tooltip: 'Upload Image',
         onAction: () => {
           SERVER.activeEditor = editor;
           $drop.data('roll', editor.targetElm.dataset.roll || 'photo_roll');

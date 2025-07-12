@@ -19,7 +19,7 @@
       </div>
     </cfif>
 
-    <div class='row g-3 mb-3'>
+    <div class='row g-1 mb-3'>
       <cfloop array='#results.rows#' item='mImage' index='idx'>
         <a href='#mImage.image_src()#' class='col-2 text-center' data-toggle='lightbox' data-gallery='#mUser.user()#' data-caption='#mImage.filename()# #mImage.dimensions()# &bull; #mImage.size_mb()#'>
           <img src='#mImage.thumbnail_src()#' class='w-100 img-thumbnail' />

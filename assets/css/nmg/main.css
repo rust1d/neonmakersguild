@@ -49,15 +49,10 @@ a:hover {
 .btn-nmg-delete {
   background-color: var(--nmg-danger);
   opacity: .7 !important;
-  /* color: var(--nmg-black); */
-  /* border-color: var(--nmg-border); */
   border-radius: var(--bs-border-radius) !important;
 }
 
 .btn-nmg-delete:hover {
-  /* background-color: var(--nmg-border);
-  border-color: var(--nmg-danger);
-  color: var(--nmg-danger); */
   opacity: 1 !important;
 }
 
@@ -65,10 +60,6 @@ a:hover {
   background-color: var(--nmg-bg-light);
   border-color: var(--nmg-border);
 }
-
-/* .card .card-header {
-  background-color: var(--nmg-admin-text);
-} */
 
 .card-private .card-header {
   background-color: var(----nmg-private);
@@ -105,9 +96,14 @@ a:hover {
 
 .profile-thumbnail {
   max-width: 64px;
-  max-height: 64px;
+  min-width: 48px;
   width: 100%;
   height: auto;
+}
+
+.profile-view-img {
+  min-width: 128px;
+  min-height: 128px;
 }
 
 .forum-thumbnail {
@@ -239,7 +235,6 @@ a:hover {
   z-index: -1;
 }
 
-
 .centered-logo-line {
   display: flex;
   justify-content: center;
@@ -247,4 +242,14 @@ a:hover {
   gap: 0.5rem;
   font-size: 2rem;
   color: var(--nmg-color);
+}
+
+#profile_image {
+  width: 168px;
+  height: 168px;
+}
+
+.profile-crop-wrapper {
+  width: 300px;
+  height: 300px;
 }

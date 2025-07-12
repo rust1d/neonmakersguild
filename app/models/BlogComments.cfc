@@ -61,7 +61,6 @@ component extends=jSoup accessors=true {
       try {
         param variables.bco_history = '[]';
         var data = deserializeJSON(bco_history);
-        writedump(data);
         data.prepend({ 'comment': this.comment_was(), 'time': now().format('yyyy-mm-dd HH:nn:ss') });
         variables.bco_history = serializeJSON(data);
       } catch (any err) {

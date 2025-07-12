@@ -11,7 +11,7 @@ CREATE PROCEDURE commentimages_update(
   IN _width         INT(11),
   IN _height        INT(11),
   IN _size          INT(11),
-  IN _filename      VARCHAR(100)
+  IN `_filename`    VARCHAR(100)
 )
 BEGIN
   UPDATE commentimages
@@ -22,7 +22,7 @@ BEGIN
          ci_width       = IFNULL(_width,       ci_width),
          ci_height      = IFNULL(_height,      ci_height),
          ci_size        = IFNULL(_size,        ci_size),
-         ci_filename    = IFNULL(_filename,    ci_filename)
+         ci_filename    = IFNULL(`_filename`,  ci_filename)
    WHERE ci_ciid = _ciid;
 
   CALL commentimages_get_by_ids(_ciid);

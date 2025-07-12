@@ -1,4 +1,12 @@
 component {
+  // handles navigation inside the image modal
+  // next/previous depends upon your entry point to the modal
+  // opening the modal from a post w/multiple images
+  // -- navigation locked to the images on that post in a circular fashion
+  // opening modal from single image post
+  // -- navigation is now across the underlying section: front page, members stream or member page
+  // -- when next is clicked on the last image the first image of the next post should display
+
   public Indexer function init() {
     variables.utility = application.utility;
     variables.cache_id = 'idx-benid';
@@ -15,7 +23,7 @@ component {
     var data = cacheGet(variables.cache_id);
     if (!isNull(data)) return data;
 
-    data = build_images();
+    data = build_index();
     cachePut(variables.cache_id, data, createTimeSpan(0, 0, variables.refresh_rate, 0));
     return data;
   }
@@ -31,52 +39,17 @@ component {
     if (!listFindNoCase('prev,next', arguments.direction)) throw('indexer direction invalid');
     var data = index();
     var cur_ben = data.images[bei_beiid]; // BEN FOR CURRENT BEI
-    if (type=='images') {
-      // front.image
-      // find the right list, and nav
+    if (type=='images') { // SINGLE IMAGE ENTRY POINT: ROTATE WITHIN THE SECTION
+      var nav = data[section][bei_beiid]; // FIND THE SECTION/CURRENT IMAGE
+    } else { // MULTI-IMAGE POST: ROTATE WITHIN THE POST
+      var nav = cur_ben.images[bei_beiid]; // FIND THE CURRENT IMAGE
     }
-    if (cur_ben.images.cnt==1) { // SINGLE IMAGE BEN? FIND NEXT BEN, RETURN FIRST IMAGE
-      nav_ben = data.entries[direction=='prev' ? cur_ben.nav.first() : cur_ben.nav.last()];
-      return nav_ben.images.ids.first();
-    }
-    var nav_img = cur_ben.images[bei_beiid];
-    return direction=='prev' ? nav_img.first() : nav_img.last();
+    return direction=='prev' ? nav.first() : nav.last();
   }
-
-  public numeric function go2(required numeric current_id, string section='front', string type='images', numeric usid=0, string direction='next') {
-    if (!listFindNoCase('front,stream,user', arguments.section)) throw('indexer section invalid');
-    if (!listFindNoCase('post,images', arguments.type)) throw('indexer type invalid');
-    if (!listFindNoCase('prev,next', arguments.direction)) throw('indexer direction invalid');
-
-    var data = index();
-    if (type=='post') { // IF POST HAS 1 IMAGE, SWITCH TO IMAGES; NEXT/PREV IS NOW IMAGE ROLL SCROLL
-      var entry = data.entries[current_id];
-      if (entry.images.len()==1) {
-        type=='images';
-      } else {
-
-      }
-    }
-    var entry = data.entries[current_id];
-    try {
-      if (section=='user') {
-        var curr = data[section][type][user].hash[current_id];
-      } else {
-        var curr = data[section][type].hash[current_id];
-      }
-      return direction=='prev' ? curr.first() : curr.last();
-    } catch (any err) {
-      var data = serializeJSON(arguments);
-      application.flash.cferror(err);
-      application.flash.error(data);
-    }
-    return current_id;
-  }
-
 
   // PRIVATE
 
-  public struct function build_images() {
+  public struct function build_index() {
     var rows = utility.query_to_array(records());
     var benids = rows.map(row=>row.ben_benid);
     var data = {
@@ -99,29 +72,29 @@ component {
       data.entries[row.ben_benid] = row;
 
       row.nav = nav[row.ben_benid];
-      row.images = {}
-      row.images.ids = row.ben_beiids.listToArray();
-      row.images.cnt = row.images.ids.len();
-      row.images.beiid = structNew('ordered');
+      row.images = structNew('ordered');
+      row.beiids = row.ben_beiids.listToArray();
+      row.image_cnt = row.beiids.len();
+      row.images = structNew('ordered');
 
-      for (var idx=1; idx<=row.images.cnt; idx++) {
-        var beiid = row.images.ids[idx];
+      for (var idx=1; idx<=row.image_cnt; idx++) {
+        var beiid = row.beiids[idx];
         data.images[beiid] = row;
-        set_nav(row.images.ids, row.images.beiid, idx)
+        set_nav(row.beiids, row.images, idx)
       }
 
       if (row.ben_frontpage) {
-        front_ids.append(row.images.ids, true);
+        front_ids.append(row.beiids, true);
       }
-      if (row.ben_usid!=1) {
-        stream_ids.append(row.images.ids, true);
+      if (row.ben_stream) {
+        stream_ids.append(row.beiids, true);
       }
 
       if (!users.keyExists(row.ben_usid)) {
         user_ids.append(row.ben_usid)
         users[row.ben_usid] = [];
       }
-      users[row.ben_usid].append(row.images.ids, true);
+      users[row.ben_usid].append(row.beiids, true);
     }
 
     for (var idx=1; idx<=front_ids.len(); idx++) {
@@ -138,82 +111,6 @@ component {
         set_nav(img_ids, data.user[usid], idx);
       }
     }
-    return data;
-  }
-
-  public struct function build_index() {
-    // BUILDS A LIGHTWEIGHT INDEX WITH BLOGENTRY PRIMARY KEYS FOR NAVIGATION LOOK
-    var data = {
-      entries:             structNew('ordered'),
-      front.images.array:  [],
-      front.images.hash:   structNew('ordered'),
-      front.post.array:    [],
-      front.post.hash:     structNew('ordered'),
-      stream.images.array: [],
-      stream.images.hash:  structNew('ordered'),
-      stream.post.array:   [],
-      stream.post.hash:    structNew('ordered'),
-      user.images.array:   structNew('ordered'), // user key hash holds array
-      user.images.hash:    structNew('ordered'),
-      user.post.array:     structNew('ordered'), // user key hash holds array
-      user.post.hash:      structNew('ordered')
-    }
-
-    var rows = utility.query_to_array(records());
-
-    // BUILD ARRAYS THAT CONTAIN THE IDS IN THE SORT ORDER
-    for (var row in rows) {
-      data.entries[row.ben_benid] = row;
-      row.images = row.ben_beiids.listToArray();
-      // FRONT PAGE INDEX
-      if (row.ben_frontpage) {
-        data.front.post.array.append(row.ben_benid);
-        data.front.images.array.append(row.images, true);
-      }
-      // MEMBER STREAM
-      if (row.ben_usid!=1) {
-        data.stream.post.array.append(row.ben_benid);
-        data.stream.images.array.append(row.images, true);
-      }
-      // USER - USID HOLDS ARRAY OF BENIDS
-      if (!data.user.post.array.keyExists(row.ben_usid)) data.user.post.array[row.ben_usid] = [];
-      data.user.post.array[row.ben_usid].append(row.ben_benid);
-      if (!data.user.images.array.keyExists(row.ben_usid)) data.user.images.array[row.ben_usid] = [];
-      data.user.images.array[row.ben_usid].append(row.images, true);
-    }
-    // NOW WE KNOW THE LIST OF IDS IN EACH SECTION AND THE ORDER THEY SHOULD NAVIGATE
-    // NOW LOOP OVER THE ARRAY AND BUILD A HASH WITH THE KEY AND STORE AN ARRAY PREV/NEXT IN THAT HASH
-    // set_nav WILL BUILD THE ARRAY AND STORE IT IN THE HASH WITH benid OR beiid
-    for (key in data.user.post.array) {
-      for (var idx=1; idx<=data.user.post.array[key].len(); idx++) {
-        var val = data.user.post.array[key][idx];
-        data.user.post.hash[key][val] = [];
-        set_nav(data.user.post.array[key], data.user.post.hash[key], idx);
-      }
-    }
-
-    for (key in data.user.images.array) {
-      for (var idx=1; idx<=data.user.images.array[key].len(); idx++) {
-        var val = data.user.images.array[key][idx];
-        data.user.images.hash[key][val] = [];
-        set_nav(data.user.images.array[key], data.user.images.hash[key], idx);
-      }
-    }
-
-    for (var idx=1; idx<=data.front.post.array.len(); idx++) {
-      set_nav(data.front.post.array, data.front.post.hash, idx);
-    }
-    for (var idx=1; idx<=data.front.images.array.len(); idx++) {
-      set_nav(data.front.images.array, data.front.images.hash, idx);
-    }
-
-    for (var idx=1; idx<=data.stream.post.array.len(); idx++) {
-      set_nav(data.stream.post.array, data.stream.post.hash, idx);
-    }
-    for (var idx=1; idx<=data.stream.images.array.len(); idx++) {
-      set_nav(data.stream.images.array, data.stream.images.hash, idx);
-    }
-
     return data;
   }
 

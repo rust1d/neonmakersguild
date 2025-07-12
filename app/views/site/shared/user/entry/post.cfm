@@ -1,19 +1,47 @@
 <cfscript>
   param mUserBlog = mBlog;
 
-  dest = (mUserBlog.id()==1 && session.site.admin()) ? 'blog' : 'user';
+  variables.dest = (mUserBlog.id()==1 && session.site.admin()) ? 'blog' : 'user';
+
+  function field_filter(required string pre) {
+    var match = arguments.pre;
+    return form.fieldnames.listToArray().filter(fld => fld.left(match.len())==match);
+  }
+
+  function save_captions(required BlogEntries mBE) {
+    for (var fld in field_filter('bei_caption_')) {
+      var enc = fld.listToArray('_').pop();
+      var beiid = utility.decode(enc); // pop off last el, should be id
+      if (beiid) {
+        var mBEI = mBE.BlogEntryImages(detect: { bei_beiid: beiid });
+        if (!isNull(mBEI)) {
+          mBEI.set(bei_caption: form[fld]).safe_save();
+        }
+      }
+    }
+  }
 
   function save_images(required BlogEntries mBE) {
-    var flds = form.fieldnames.listToArray().filter(fld => fld.left(4)=='img_');
-    if (flds.isEmpty()) return;
-
-    for (var fld in flds) {
+    // PROCESS DELETIONS
+    for (var enc in form.beiids) {
+      var beiid = utility.decode(enc);
+      if (beiid) {
+        var mBEI = mBE.BlogEntryImages(detect: { bei_beiid: beiid });
+        if (!isNull(mBEI)) {
+          mBEI.destroy();
+          flash.success('#mBEI.UserImage().filename()# removed from post.');
+        }
+      }
+    }
+    // PROCESS INSERTS
+    for (var fld in field_filter('img_')) {
       mUI = mUser.UserImages(build: { filefield: fld });
       if (mUI.safe_save()) {
         var params = {
           bei_benid:  mBE.benid(),
           bei_uiid:  mUI.uiid()
         }
+        // SAVE CAPTION
         if (form.keyExists('cap_#fld#')) params.bei_caption = form['cap_#fld#'];
         mBE.BlogEntryImages(build: params).safe_save();
       }
@@ -44,20 +72,12 @@
     mEntry.set(form);
     if (mEntry.safe_save()) {
       save_images(mEntry);
-      for (form.beiid in form.beiids) {
-        variables.beiid = utility.decode(form.beiid);
-        if (variables.beiid) {
-          mBEI = mEntry.BlogEntryImages(detect: { bei_beiid: variables.beiid } );
-          if (!isNull(mBEI)) {
-            mBEI.destroy();
-            flash.success('Your image #mBEI.UserImage().filename()# was deleted.');
-          }
-        }
-      }
+      save_captions(mEntry);
       mBEI = mEntry.BlogEntryImages(reset: true);
       mEntry.BlogEntryCategories(replace: categories.toList());
       flash.success('Your entry was saved.');
-      // router.redirect('#dest#/entry/list');
+      if (variables.dest=='blog') router.redirect('blog/entry/list'); // ADMIN
+      router.go(mEntry.seo_link());
     }
   }
 
@@ -105,22 +125,22 @@
                   <cfloop array='#mEntry.BlogEntryImages()#' item='mBEI'>
                     <cfset mUI = mBEI.UserImage() />
                     <div class='col-3 col-xl-2 position-relative text-center'>
-                      <img data-pkid='#mUI.encoded_key()#' class='img-fluid' data-caption='cap_#mUI.encoded_key()#' alt='#mUI.filename()#' src='#mUI.thumbnail_src()#' />
-                      <button type='button' name='btnImgDelete' data-pkid='#mBEI.encoded_key()#' class='btn-close position-absolute end-0 mt-1 me-1 btn-nmg-delete'></button>
-                      <input type='hidden' id='cap_#mUI.encoded_key()#' name='cap_#mUI.encoded_key()#' value='#mBEI.caption()#' />
+                      <img data-pkid='#mUI.encoded_key()#' class='img-fluid' data-caption='bei_caption_#mBEI.encoded_key()#' alt='#mUI.filename()#' src='#mUI.thumbnail_src()#' />
+                      <button type='button' name='btnImgDelete' data-pkid='#mBEI.encoded_key()#' class='btn-close btn-close-delete'></button>
+                      <input type='hidden' id='bei_caption_#mBEI.encoded_key()#' name='bei_caption_#mBEI.encoded_key()#' value='#mBEI.caption()#' />
                     </div>
                   </cfloop>
                 </div>
               </div>
-              <div class='col-12 col-lg-6'>
+              <div class='col-12 col-lg-9'>
                 <label class='form-label fs-5 mb-0' for='ben_morebody'>Post Summary</label>
                 <a name='help_summary' class='ms-2 blended-icon' data-bs-toggle='modal' data-bs-target='##helpModal'><i class='fas fa-circle-question'></i></a>
                 <textarea class='form-control' name='ben_morebody' rows='3' id='ben_morebody'>#htmlEditFormat(mEntry.morebody())#</textarea>
-                <div class='form-text text-small'>
-                  Optional. Enter a short paragraph (~50 words) summarizing your blog post. This is displayed in compact layouts. If you do not enter one, it will be generated from the start of your post.
+                <div class='form-text smaller'>
+                  A short paragraph summarizing your blog post. This is displayed in the member stream. If you do not enter one, it will be generated.
                 </div>
               </div>
-              <div class='col-12 col-md-6 col-lg-3'>
+              <div class='col-12 col-lg-3'>
                 <div class='row g-3'>
                   <div class='col-12'>
                     <label class='form-label required' for='ben_date'>Post Date/Time</label>
@@ -128,36 +148,23 @@
                       <input type='date' class='form-control' name='ben_date' id='ben_date' value='#mEntry.posted_date()#' maxlength='10' placeholder='YYYY-MM-DD' pattern='\d{4}-\d{2}-\d{2}' required />
                       <input type='time' class='form-control' name='ben_time' id='ben_time' value='#mEntry.posted_time()#' maxlength='5' placeholder='HH24:MI' pattern='[0-9]{2}:[0-9]{2}' required />
                     </div>
-                    <div class='form-text text-small'>Post is not public until after this date</div>
+                    <div class='form-text smaller'>Post is not be displayed until this date</div>
                   </div>
                   <div class='col-12'>
-                    <div class='form-check form-switch'>
-                      <input class='form-check-input toggle-switch' type='checkbox' role='switch' id='ben_released' name='ben_released' value='yes' #ifin(mEntry.released(), 'checked')#>
+                    <div class='form-check form-switch form-check-sm'>
+                      <input class='form-check-input toggle-switch' type='checkbox' role='switch' id='ben_released' name='ben_released' value='yes' #ifin(mEntry.released(), 'checked')# switch />
                       <label class='form-check-label' for='ben_released'>Post Released</label>
                     </div>
-                    <div class='form-text text-small'>Post is not public unless selected</div>
+                    <div class='form-text smaller'>Post is not displayed unless selected</div>
                   </div>
                   <div class='col-12'>
                     <div class='form-check form-switch'>
-                      <input class='form-check-input toggle-switch' type='checkbox' role='switch' id='ben_comments' name='ben_comments' value='yes' #ifin(mEntry.comments(), 'checked')#>
+                      <input class='form-check-input toggle-switch' type='checkbox' role='switch' id='ben_comments' name='ben_comments' value='yes' #ifin(mEntry.comments(), 'checked')# switch />
                       <label class='form-check-label' for='ben_comments'>Allow Comments</label>
                     </div>
-                    <div class='form-text text-small'>Comments are not allowed unless selected</div>
+                    <div class='form-text smaller'>Comments are not allowed unless selected</div>
                   </div>
                 </div>
-              </div>
-              <div class='col-12 col-md-6 col-lg-3'>
-                <label class='form-label required' for='ben_categories'>Categories</label>
-                <a name='help_categories' class='ms-2 blended-icon' data-bs-toggle='modal' data-bs-target='##helpModal'><i class='fas fa-circle-question'></i></a>
-                <div class='input-group input-group-sm'>
-                  <input type='text' class='form-control' name='bca_category' id='bca_category' maxlength='50' />
-                  <button type='button' id='btnAddCategory' class='input-group-text btn-nmg' title='Add Category'><i class='fa-solid fa-fw fa-plus'></i> &nbsp; Add</button>
-                </div>
-                <select class='form-select form-select-sm mt-1' name='ben_categories' id='ben_categories' multiple='multiple' title='ctrl+click to select multiple' size='7'>
-                  <cfloop array='#mUserBlog.categories()#' item='mCat'>
-                    <option value='#mCat.bcaid()#' #ifin(listFind(form.ben_categories, mCat.bcaid()), 'selected')#>#mCat.category()#</option>
-                  </cfloop>
-                </select>
               </div>
             </div>
             <div class='row mt-5'>
@@ -195,7 +202,7 @@
       <div class='modal-content bg-nmg'>
         <div class='modal-header'>
           <h5 class='modal-title' id='helpModalLabel'>Blog Entry Help</h5>
-          <button type='button' class='btn btn-nmg' data-bs-dismiss='modal' aria-label='Close'><i class='fas fa-times'></i></button>
+          <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
         </div>
         <div class='modal-body'>
           <div class='container-fluid'>

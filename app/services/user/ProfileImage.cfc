@@ -3,6 +3,8 @@ component accessors=true {
   property name='usid'       type='numeric';
   property name='form_field' type='string'  default='profile_image';
 
+  variables.thumb_size = 256;
+
   public ProfileImage function init(required numeric usid) {
     variables.usid = arguments.usid;
     variables.utility = application.utility;
@@ -85,8 +87,17 @@ component accessors=true {
     try {
       cffile(action: 'upload', filefield: form_field, destination: tmp_dir(), result: 'result', nameconflict: 'overwrite');
       if (result.fileWasSaved) {
+        var path = result.serverDirectory & '\' & result.serverfile;
+        if (!isImageFile(path)) {
+          fileDelete(path);
+          errors().append('File is not a valid image. Please pick another.');
+          return false;
+        }
         ensure_folder();
-        FileCopy(result.serverDirectory & '\' & result.serverfile, path_to_file());
+        var img = ImageRead(path);
+        img.scaleTofit(variables.thumb_size, variables.thumb_size);
+        cfimage(action: 'write', quality: quality, overwrite: 'true', source: img, destination: path);
+        FileCopy(path, path_to_file());
         utility.fileCopyS3(path_to_file(), remote_src());
         return true;
       }

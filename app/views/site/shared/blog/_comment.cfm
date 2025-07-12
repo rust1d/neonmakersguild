@@ -13,7 +13,7 @@
         </div>
         <cfif locals.mComment.image_cnt()>
           <cfset locals.mCI = locals.mComment.CommentImages().first() />
-          <div class='rounded-4 position-relative mt-2'>
+          <div class='comment-images rounded-4 position-relative mt-2'>
             <a data-lightbox='comments-#locals.mCI.beiid()#' data-title='#locals.mCI.filename()#' href='#locals.mCI.image_src()#' title='#locals.mCI.filename()#'>
               <img data-pkid=#locals.mCI.encoded_key()# class='comment-thumbnail rounded-4' src='#locals.mCI.image_src()#' />
             </a>

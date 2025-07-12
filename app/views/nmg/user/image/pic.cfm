@@ -1,20 +1,28 @@
 <cfset include_js('assets/js/image/profile.js') />
 
 <cfoutput>
+  #router.include('shared/user/image/_crop_modal', { aspect: false })#
+
   <cfif mUser.profile_image().exists()>
     <div class='row mb-3'>
       <div class='col-auto'>
-        <div class='position-relative'>
+        <div class='position-relative d-inline-block'>
           <img class='img-thumbnail' id='profile_image' src='#mUser.profile_image().src()#' />
-          <button type='button' data-bs-target='##profile_modal' data-bs-toggle='modal' class='profile-upload-btn btn btn-sm btn-nmg btn-floating btn-pic fal fa-camera'></button>
+          <button type='button' data-bs-target='##profile_modal' data-bs-toggle='modal' class='btn btn-icon bottom-right btn-nmg btn-outline-dark'>
+            <i class='fa-solid fa-photo-film'></i>
+          </button>
         </div>
       </div>
     </div>
   <cfelse>
     <div class='row mb-3'>
       <div class='col-12'>
-        <button type='button' data-bs-target='##profile_modal' data-bs-toggle='modal' class='position-relative profile-upload-btn btn btn-sm btn-nmg btn-floating btn-pic fal fa-camera'></button>
-        <small class='text-muted'>Add a profile photo</small>
+        <div class='position-relative d-inline-block'>
+          <img class='img-thumbnail' id='profile_image' src='#mUser.profile_image().src()#' />
+          <button type='button' data-bs-target='##profile_modal' data-bs-toggle='modal' class='btn btn-icon bottom-right btn-nmg btn-outline-dark'>
+            <i class='fa-solid fa-camera'></i>
+          </button>
+        </div>
       </div>
     </div>
   </cfif>
@@ -35,7 +43,7 @@
                     <div class='col-12'>
                       <a class='btn btn-nmg mr-3 position-relative'>
                         <span>Upload Photo <i class='fa-solid fa-fw fa-upload'></i></span>
-                        <input class='h-100 w-100 position-absolute' type='file' id='profile_input' value='Choose a file' accept='image/*'>
+                        <input class='h-100 w-100 position-absolute top-0 start-0 opacity-0' type='file' id='profile_input' value='Choose a file' accept='image/*'>
                       </a>
                       <a class='btn btn-nmg mr-3 position-relative' id='profile_remove' >
                         <span>Remove Profile Photo <i class='fa-solid fa-fw fa-trash'></i></span>
@@ -60,7 +68,7 @@
                     </cfif>
                   </div>
                 </div>
-                <div class='image-cropper profile-crop-wrapper d-none'>
+                <div class='profile-crop-wrapper d-none'>
                   <div id='upload_profile'></div>
                 </div>
               </div>

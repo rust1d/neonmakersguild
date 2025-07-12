@@ -1,9 +1,24 @@
 $(function () {
-  var $uploader = $('#upload_profile').croppie({
-    viewport: { width: 290, height: 290, type: 'square' },
-    enableExif: true,
-    enableOrientation: true
-  });
+  let cropper;
+  let originalImage;
+
+  const cropModal = document.getElementById('cropModal');
+  const $cropModal = new bootstrap.Modal(cropModal);
+
+  read_image = function(obj, onSuccess) {
+    const formData = new FormData();
+    formData.append('uiid', $(obj).data('uiid'));
+    $.post({
+      url: '/xhr.cfm?p=user/image/pic64',
+      cache: false,
+      data: formData,
+      dataType: 'json',
+      contentType: false,
+      processData: false,
+      error: function(err) { console.error(err) },
+      success: onSuccess
+    });
+  }
 
   delete_image = function() {
     const formData = new FormData();
@@ -41,55 +56,47 @@ $(function () {
     });
   }
 
-  show_picker = function() {
-    $('.image-picker').toggleClass('d-none', false);
-    $('.image-cropper').toggleClass('d-none', true);
-    $('#modal_buttons').toggleClass('d-none', true);
+  setZoom = function() {
+    if (!cropper) return;
+    cropper.setCropBoxData({ width: 256, height: 256 });
+    cropper.setDragMode('none');
+    const imageData = cropper.getImageData();
+    const minZoom = imageData.width / imageData.naturalWidth;
+    $('#zoomSlider')
+      .attr('min', minZoom)
+      .attr('max', 3)
+      .val(cropper.getData().scaleX || minZoom);
   }
 
-  show_cropper = function() {
-    $('.image-picker').toggleClass('d-none', true);
-    $('.image-cropper').toggleClass('d-none', false);
-    $('#modal_buttons').toggleClass('d-none', false);
-  }
+  show_modal = function(src) {
+    $('#thumbnail_crop').html(`<img id='crop_image' src='${src}' class='img-fluid' />`);
 
-  read_image = function(obj, onSuccess) {
-    const formData = new FormData();
-    formData.append('uiid', $(obj).data('uiid'));
-    $.post({
-      url: '/xhr.cfm?p=user/image/pic64',
-      cache: false,
-      data: formData,
-      dataType: 'json',
-      contentType: false,
-      processData: false,
-      error: function(err) { console.log(err) },
-      success: onSuccess
+    cropModal.addEventListener('shown.bs.modal', function onShown() {
+      cropModal.removeEventListener('shown.bs.modal', onShown);
+      const image = document.getElementById('crop_image');
+      cropper = new Cropper(image, {
+        viewMode: 1,
+        autoCropArea: 1,
+        aspectRatio: 1,
+        movable: true,
+        zoomable: true,
+        scalable: true,
+        rotatable: true,
+        responsive: true,
+        background: false,
+        ready: setZoom
+      });
     });
+    $('#profile_modal').modal('hide');
+    $cropModal.show();
   }
 
-  read_file = function(input) {
-    if (input.files && input.files[0]) {
-      var reader = new FileReader();
-      reader.onload = function(ev) {
-        show_cropper();
-        $uploader.croppie('bind', { url: ev.target.result });
-      }
-      reader.readAsDataURL(input.files[0]);
-    } else {
-      alert('Your browser does not support the HTML5 FileReader API');
-    }
-  }
-
-  refresh_cropper = function() {
-    $uploader.croppie('refresh');
-  }
-
-  upload_file = function(resp) {
-    var input = $('#profile_input')[0] || { files: [] };
+  upload_file = function(blob) {
     const formData = new FormData();
-    formData.append('profile_image', uri_to_blob(resp), 'crop.jpg');
-    if (input.files.length) formData.append('ui_filename', input.files[0]);
+    formData.append('profile_image', blob, 'crop.jpg');
+    const input = $('#profile_input')[0];
+    if (input?.files?.length) formData.append('ui_filename', input.files[0]);
+
     $.post({
       url: '/xhr.cfm?p=user/image/upload',
       cache: false,
@@ -97,36 +104,68 @@ $(function () {
       dataType: 'json',
       contentType: false,
       processData: false,
-      complete: function() {  },
       error: function(err) { console.error(err) },
       success: function(results) {
-        if (input.files.length) {
-          input.value = null; // CLEAR FILE
+        if (results?.data?.thumbnail) {
+          $('#profile_image').attr('src', results.data.thumbnail);
           $('#image_roll').prepend(`<img src='${results.data.thumbnail}' data-uiid='${results.data.ui_uiid}' />`);
         }
-        $('#profile_image').attr('src', resp);
         if (results.messages.length) $('#flash-messages').replaceWith(results.messages);
-        $('#profile_modal').modal('hide');
+        $cropModal.hide();
         location.reload();
       }
     });
   }
 
-  $('#profile_input').on('change', function() { read_file(this) });
+  $('#btnAspectFree').on('click', function() {
+    if (!cropper) return;
+    cropper.setAspectRatio(NaN);
+    $('#btnAspectGroup .btn').removeClass('active');
+    $(this).addClass('active');
+  });
+
+  $('#btnAspectSquare').on('click', function() {
+    if (!cropper) return;
+    cropper.setAspectRatio(1);
+    $('#btnAspectGroup .btn').removeClass('active');
+    $(this).addClass('active');
+  });
+
+  $('#btnAspect43').on('click', function() {
+    if (!cropper) return;
+    cropper.setAspectRatio(4 / 3);
+    $('#btnAspectGroup .btn').removeClass('active');
+    $(this).addClass('active');
+  });
+
+  $('#btnCrop').on('click', function() {
+    if (!cropper) return;
+    cropper.getCroppedCanvas({ width: 256, height: 256 }).toBlob(upload_file, 'image/jpeg');
+  });
+
+  $('#btnCancel').on('click', function() {
+    $cropModal.hide();
+  });
+
+  $('#btnRotateLeft').on('click', function() {
+    if (!cropper) return;
+    // cropper.clear();
+    cropper.rotate(-90);
+    // cropper.crop();
+    // cropper.setAspectRatio(1);
+  });
+
+  $('#btnRotateRight').on('click', function() {
+    if (!cropper) return;
+    cropper.rotate(90);
+  });
+
+  $('button[name=btnDelete]').on('click', delete_image);
 
   $('#image_roll').on('click', 'img', function() {
     read_image(this, function(data) {
-      show_cropper();
-      $uploader.croppie('bind', { url: data.data });
+      show_modal(data.data);
     });
-  });
-
-  $('#profile_modal').on('hidden.bs.modal', show_picker);
-  $('#profile_modal').on('shown.bs.modal', refresh_cropper);
-  $('#btnCancel').on('click', show_picker);
-
-  $('#btnSave').on('click', function(ev) {
-    $uploader.croppie('result', { type: 'canvas', size: 'viewport' }).then(upload_file);
   });
 
   $('#image_roll_more').on('click', function() {
@@ -135,19 +174,22 @@ $(function () {
     if ($imgs.length < 7) $(this).fadeOut();
   });
 
-  $('.image-menu-btn').on('click', function(e) {
-    var uiid = $(this).closest('span').data('uiid');
-    $('#image_delete').data('uiid', uiid);
-  });
+  $('#profile_input').on('change', function() {
+    const file = this.files[0];
+    if (!file) return;
 
-  $('button[name=btnEdit]').on('click', function() {
-    read_image($(this).closest('span'), function(data) {
-      $('#profile_modal').modal('show');
-      $uploader.croppie('bind', { url: data.data });
-    });
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      show_modal(ev.target.result);
+    }
+    reader.readAsDataURL(file);
   });
-
-  $('button[name=btnDelete]').on('click', delete_image);
 
   $('#profile_remove').on('click', delete_profile);
+
+  $('#zoomSlider').on('input', function() {
+    if (!cropper) return;
+    const zoom = parseFloat(this.value);
+    cropper.zoomTo(zoom);
+  });
 });

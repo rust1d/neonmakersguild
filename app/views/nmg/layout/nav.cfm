@@ -18,7 +18,7 @@
             <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Members</a>
             <ul class='dropdown-menu'>
               <cfif !session.user.loggedIn()><li><a class='dropdown-item' href='/join'>Join</a></li></cfif>
-              <li><a class='dropdown-item' href='/stream'>Wall of Neon</a></li>
+              <li><a class='dropdown-item' href='/stream'>The Wall of Neon</a></li>
               <cfif session.user.loggedIn()><li><a class='dropdown-item' href='#session.user.seo_link()#'>My Page</a></li></cfif>
               <li><a class='dropdown-item' href='/members'>NMG Members</a></li>
               <li><a class='dropdown-item' href='/page/bylaws'>NMG Bylaws</a></li>

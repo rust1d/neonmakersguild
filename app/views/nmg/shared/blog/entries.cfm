@@ -3,7 +3,7 @@
 <cfoutput>
   <cfloop array='#locals.results.rows#' item='locals.mBE' index='locals.idx'>
     <div class='col-12 content-card'>
-      #router.include('shared/blog/post', { mBE: locals.mBE, fold: !locals.results.pagination.first || locals.idx gt 2 })#
+      #router.include('shared/blog/post', { mBE: locals.mBE, section: locals.section, comment_target: 'post' })#
     </div>
     <cfif locals.idx!=locals.results.rows.len()>
       <div class='col-12'>

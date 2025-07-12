@@ -1,6 +1,7 @@
 component {
-  public ImageGrid function init(required array images, struct params={}) {
+  public ImageGrid function init(required array images, required string section, struct params={}) {
     variables.images = arguments.images;
+    variables.section = arguments.section;
     variables.params = arguments.params;
     param variables.params.image_class = '';
     param variables.params.row_class = '';
@@ -43,7 +44,7 @@ component {
   private string function img(required UserImages mUI, string src) {
     param arguments.src = mUI.thumbnail_src();
     var beiid = utility.encode(mUI.beiid());
-    var data = "<img data-type='#type#' data-beiid='#beiid#' src='#arguments.src#' title='#mUI.caption()#' class='#variables.params.image_class#' />"; // data-uiid='#mUI.encoded_key()#'
+    var data = "<img data-section='#section#' data-type='#type#' data-beiid='#beiid#' src='#arguments.src#' title='#mUI.caption()#' class='#variables.params.image_class#' />"; // data-uiid='#mUI.encoded_key()#'
     if (mUI.stored('remaining')) {
       data = '<div class="position-relative">#data#<span class="remaining">+#mUI.fetch('remaining')#</span></div>';
     }

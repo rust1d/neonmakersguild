@@ -7,7 +7,7 @@ $(function() {
     $div.find('.message').hide();
     tinymce.get("edit_message").destroy();
     $('#edit_popin').appendTo($div).removeClass('d-none');
-    frm.edit_message.value = $div.find('.message').text();
+    frm.edit_message.value = $div.find('.message').html();
     init_tinyforum(frm.edit_message);
     frm.fmid.value = this.dataset.key;
   });
