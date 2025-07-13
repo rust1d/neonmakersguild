@@ -12,14 +12,27 @@
     <div class='card'>
       <h5 class='card-header bg-nmg'>Edit User Profile</h5>
       <div class='card-body'>
-        <div class='row'>
-          <div class='col-md-12'>
+        <div class='row mb-3'>
+          <div class='col-sm-auto'>
             <cfset router.include('user/image/pic') />
           </div>
+          <div class='col'>
+            <div class='fs-3'>
+              #mUser.user()#
+              <cfif mUser.usid() LT 8><sup><i class='fa-solid fa-fw fa-person-burst text-warning' title='NMG Founder'></i></sup></cfif>
+              <cfif mUser.permissions() GT 0><sup><i class='fa-solid fa-fw fa-burst text-warning' title='Site Admin'></i></sup></cfif>
+            </div>
+            <!--- <div>
+              <a class='fs-6' href='#router.href('user/security')#'>
+                <i class='fa-solid fa-user-shield me-1'></i>
+                Change Password
+              </a>
+            </div> --->
+          </div>
         </div>
-        <h3>Public Info</h3>
-        <p class='smaller'>This information is viewable on your public member profile.</p>
-        <div class='row g-3'>
+        <h4 class='mb-1'>Public Info</h4>
+        <p class='smaller text-muted'>This information is viewable on your public member profile.</p>
+        <div class='row g-3 mb-3'>
           <div class='col-md-6'>
             <label class='form-label' for='up_firstname'>First name</label>
             <input type='text' class='form-control' name='up_firstname' id='up_firstname' value='#encodeForHTML(mProfile.firstname())#' maxlength='50' />
@@ -28,28 +41,45 @@
             <label class='form-label' for='up_lastname'>Last name</label>
             <input type='text' class='form-control' name='up_lastname' id='up_lastname' value='#encodeForHTML(mProfile.lastname())#' maxlength='50' />
           </div>
-          <div class='col-md-12'>
+          <div class='col-12'>
             <label class='form-label' for='up_location'>Location</label>
             <input type='text' class='form-control' id='up_location' name='up_location' value='#encodeForHTML(mProfile.location())#' maxlength='100' />
           </div>
           <div class='col-12'>
-            <label class='form-label' for='imagesearch'>Image Search</label>
-            <div class='input-group input-group-sm'>
-              <span class='input-group-text btn-nmg'><i class='fa fa-search'></i></span>
-              <input type='text' class='form-control' id='imagesearch' name='imagesearch' placeholder='type to search images...' maxlength='20' data-usid='#mUserBlog.encoded_key()#' />
-            </div>
-            <div id='imageselect' class='row g-1 mt-1'>
-              <div class='col-3 col-md-2 col-xl-1'><img class='w-100 img-thumbnail' src='#application.urls.cdn#/assets/images/profile_placeholder.png' /></div>
-            </div>
-            <small class='text-muted'>Click thumbnail to insert image into bio.</small>
-          </div>
-          <div class='col-md-12'>
             <label class='form-label' for='up_bio'>Bio</label>
             <textarea class='tiny-mce form-control' rows='15' name='up_bio' id='up_bio'>#encodeForHTML(mProfile.bio())#</textarea>
           </div>
+          <div class='col-12'>
+            <div id='imageselect' class='pb-2'>
+              <div class='image-tile'>
+                <img class='img-thumbnail w-100' src='#application.urls.cdn#/assets/images/profile_placeholder.png' />
+              </div>
+            </div>
+            <div class='row mt-2'>
+              <div class='col-12 col-lg-5 col-xl-4'>
+                <div class='input-group input-group-sm'>
+                  <label class='input-group-text btn-nmg' for='imagesearch'>Image Search</label>
+                  <input type='text' class='form-control' id='imagesearch' name='imagesearch' placeholder='search by filename' maxlength='20' data-usid='#mUserBlog.encoded_key()#' />
+                  <span class='input-group-text btn-nmg'><i class='fa fa-search'></i></span>
+                </div>
+              </div>
+              <div class='col text-muted smaller'>
+                Click to insert into bio.
+              </div>
+            </div>
+          </div>
+          <!--- <div class='col-12'>
+            <label class='form-label' for='imagesearch'>Image Search</label>
+            <span class='form-text'>Search for an image to insert into your bio.</span>
+            <div class='input-group input-group-sm'>
+              <span class='input-group-text'>Image Search</span>
+              <span class='input-group-text btn-nmg'><i class='fa fa-search'></i></span>
+              <input type='text' class='form-control' id='imagesearch' name='imagesearch' placeholder='type to search images...' maxlength='20' data-usid='#mUserBlog.encoded_key()#' />
+            </div>
+          </div> --->
         </div>
-        <h3>Private Info</h3>
-        <p class='smaller'>This information is only viewable by admins.</p>
+        <h4 class='mb-1'>Private Info</h4>
+        <p class='smaller text-muted'>This information is only viewable by admins.</p>
         <div class='row g-3'>
           <div class='col-12 col-md-6'>
             <label class='form-label' for='up_address1'>Address 1</label>

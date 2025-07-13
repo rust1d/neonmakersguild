@@ -15,15 +15,21 @@
         <div class='col-12'>
           #mHero.body_cdn()#
         </div>
+        <div class='col-12 text-center'>
+          <span class='btn btn-outline-info'>
+            <a href='/members'>View the full NMG Member List</a>
+          </span>
+        </div>
       </div>
     </cfif>
   </cfif>
+
 
   <cfif mBEs.len()>
     <div class='row g-3'>
       <cfloop array='#mBEs#' item='mBE' index='idx'>
         <div class='col-12 content-card p-0'>
-          #router.include('shared/blog/summary', { mBE: mBE, section: section })#
+          #router.include('shared/blog/summary', { mBE: mBE, section: section, comment_target: 'post' })#
         </div>
       </cfloop>
       <cfif !pagination.one_page>

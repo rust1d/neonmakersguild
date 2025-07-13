@@ -33,16 +33,15 @@
       flash.cferror(err);
     }
   }
+  mByLaws = mBlog.page_by_alias('bylaws');
 </cfscript>
 
 <script>
   function onSubmit(token) {
-    var frm = document.getElementById('membership-form')
+    var frm = document.getElementById('membership-form');
     if (frm.reportValidity()) frm.submit();
+    if (!frm.bylaws.checked())
   }
-  $(function() {
-    $('#legal').append('')
-  })
 </script>
 
 <cfoutput>
@@ -97,10 +96,12 @@
       </div>
       <h5 class='card-header bg-nmg'>Membership T-Shirt</h5>
       <div class='card-body'>
-        <p class='smaller'>An official Neon Maker's Guild T-Shirt is included with your membership.</p>
+        <p class='smaller'>
+          An official Neon Maker's Guild T-Shirt is included with your membership.
+          Please provide a shipping address. <cite>This will not be made public or shown on your member profile.</cite>
+        </p>
         <div class='row g-3'>
           <div class='col-12 col-lg-6 mb-3'>
-            <p class='smaller'>Please provide a shipping address. This will not be shown on your member profile.</p>
             <div class='row'>
               <div class='col-12 mb-3'>
                 <label class='form-label' for='mr_address1'>Address 1</label>
@@ -136,10 +137,7 @@
             </div>
           </div>
           <div class='col-12 col-lg-6 mb-3'>
-            <p class='smaller'>
-              Please enter the size you would like below.
-            </p>
-            <label class='form-label' for='mr_promo'>T-Shirt Size</label>
+            <label class='form-label' for='mr_promo'>Select your T-Shirt Size</label>
             <select name='mr_promo' id='mr_promo' class='form-select'>
               <option>Not Provided</option>
               <cfloop list='Small (34-36),Medium (38-40),Large (42-44),X-Large (46-48),2X-Large (50-52),3X-Large (54-56)' item='size'>
@@ -151,14 +149,22 @@
                 T-shirts are Gildan, unisex 100% ring-spun, pre-shrunk cotton. Use the following size chart:
               </p>
               <table class='table table-sm'>
-                <tr><th>SIZE</th><th>INCHES</th><th>CHEST</th><th>SLEEVE LENGTH</th></tr>
-                <tr><td>Small</td><td class='font-monospace'>28</td><td class='font-monospace'>34 - 37</td><td class='font-monospace'>15 ¾</td></tr>
-                <tr><td>Medium</td><td class='font-monospace'>29 ¼</td><td class='font-monospace'>38 - 41</td><td class='font-monospace'>17</td></tr>
-                <tr><td>Large</td><td class='font-monospace'>30 ¼</td><td class='font-monospace'>42 - 45</td><td class='font-monospace'>18 ¼</td></tr>
-                <tr><td>X-Large</td><td class='font-monospace'>31 ¼</td><td class='font-monospace'>46 - 49</td><td class='font-monospace'>19 ½</td></tr>
-                <tr><td>2X-Large</td><td class='font-monospace'>32 ½</td><td class='font-monospace'>50 - 53</td><td class='font-monospace'>20 ¾</td></tr>
-                <tr><td>3X-Large</td><td class='font-monospace'>33 ½</td><td class='font-monospace'>54 - 57</td><td class='font-monospace'>22</td></tr>
-                <tr><th>SIZE</th><th>CENTIMETERS</th><th>CHEST</th><th>SLEEVE LENGTH</th></tr>
+                <thead>
+                  <tr class='table-warning smaller'>
+                    <th>Size</th><th>INCHES</th><th>Chest</th><th>Sleeve length</th>
+                  </tr>
+                </thead>
+                <tr><td>Small</td><td class='font-monospace'>28</td><td class='font-monospace'>34 - 37</td><td class='font-monospace'>15 &frac34;</td></tr>
+                <tr><td>Medium</td><td class='font-monospace'>29 &frac14;</td><td class='font-monospace'>38 - 41</td><td class='font-monospace'>17</td></tr>
+                <tr><td>Large</td><td class='font-monospace'>30 &frac14;</td><td class='font-monospace'>42 - 45</td><td class='font-monospace'>18 &frac14;</td></tr>
+                <tr><td>X-Large</td><td class='font-monospace'>31 &frac14;</td><td class='font-monospace'>46 - 49</td><td class='font-monospace'>19 &frac12;</td></tr>
+                <tr><td>2X-Large</td><td class='font-monospace'>32 &frac12;</td><td class='font-monospace'>50 - 53</td><td class='font-monospace'>20 &frac34;</td></tr>
+                <tr><td>3X-Large</td><td class='font-monospace'>33 &frac12;</td><td class='font-monospace'>54 - 57</td><td class='font-monospace'>22</td></tr>
+                <thead>
+                  <tr class='table-warning smaller'>
+                    <th>Size</th><th>CENTIMETERS</th><th>Chest</th><th>Sleeve length</th>
+                  </tr>
+                </thead>
                 <tr><td>Small</td><td class='font-monospace'>71</td><td class='font-monospace'>86.4 - 94</td><td class='font-monospace'>40</td></tr>
                 <tr><td>Medium</td><td class='font-monospace'>74.3</td><td class='font-monospace'>96.5 - 104</td><td class='font-monospace'>43.2</td></tr>
                 <tr><td>Large</td><td class='font-monospace'>76.8</td><td class='font-monospace'>106.7 - 114.3</td><td class='font-monospace'>46.4</td></tr>
@@ -175,7 +181,7 @@
       </div>
     </form>
   </div>
-  <div class='mt-1 smaller muted text-center'>
+  <div class='mt-1 smaller text-muted text-center'>
     Protected by reCAPTCHA &bull;
     <a href='https://policies.google.com/privacy' target='_blank'>Privacy</a> &bull;
     <a href='https://policies.google.com/terms' target='_blank'>Terms</a>

@@ -217,7 +217,7 @@
               <div class='col'>
                 <div class='ms-2 smaller px-3 mt-1'>
                   <a href='#mMessage.seo_link()#'>#mMessage.posted()#</a>
-                  <cfif len(mMessage.history())>&bull; <small class='fst-italic muted' title='#mMessage.edited()#'>edited</small></cfif>
+                  <cfif len(mMessage.history())>&bull; <small class='fst-italic text-muted' title='#mMessage.edited()#'>edited</small></cfif>
                   <cfif session.user.loggedIn() && mMessage.usid()==session.user.usid() && mMessage.editable()>
                     &bull; <a class='message-edit' data-fmid='#mMessage.fmid()#' data-key='#mMessage.encoded_key()#' title='editable for 24 hours'><i class='fa-solid fa-fw fa-pencil'></i></a>
                     &bull; <a class='message-delete' data-fmid='#mMessage.fmid()#' data-key='#mMessage.encoded_key()#' title='deletable for 24 hours'><i class='fa-solid fa-fw fa-trash'></i></a>

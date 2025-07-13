@@ -6,6 +6,7 @@ component extends=BaseModel accessors=true {
   property name='bli_title'        type='string'   sqltype='varchar';
   property name='bli_description'  type='string'   sqltype='varchar';
   property name='bli_clicks'       type='numeric'  sqltype='integer';
+  property name='bli_added'        type='date';
   property name='bli_dla'          type='date';
 
   belongs_to(name: 'UserBlog', class: 'Users', key: 'bli_blog', relation: 'us_usid');
@@ -70,7 +71,7 @@ component extends=BaseModel accessors=true {
   }
 
   public boolean function recent() {
-    return bli_dla.add('m', 1) > now();
+    return bli_added.add('m', 1) > now();
   }
 
   public string function social_type() {

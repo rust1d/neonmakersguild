@@ -94,6 +94,16 @@ a:hover {
   background-color: var(--nmg-bg-alt);
 }
 
+#profile_image {
+  width: 16rem;
+  height: 16rem;
+}
+
+.profile-crop-wrapper {
+  width: 300px;
+  height: 300px;
+}
+
 .profile-thumbnail {
   max-width: 64px;
   min-width: 48px;
@@ -102,8 +112,8 @@ a:hover {
 }
 
 .profile-view-img {
-  min-width: 128px;
-  min-height: 128px;
+  width: 11rem;
+  height: 11rem;
 }
 
 .forum-thumbnail {
@@ -235,21 +245,74 @@ a:hover {
   z-index: -1;
 }
 
-.centered-logo-line {
+#imageselect {
   display: flex;
-  justify-content: center;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 0.33rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+#imageselect::after {
+  content: '';
+  display: block;
+  width: 40px;
+  flex-shrink: 0;
+  background: linear-gradient(to right, transparent, #ccc);
+}
+
+#imageselect .image-tile {
+  flex: 0 0 auto;
+  width: 5rem;
+}
+
+.navbar-nmg .nav-dropdown {
+  background-color: var(--nmg-bg-light);
+  min-width: 275px;
+  border: none;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+}
+.navbar-nmg .dropdown-menu.nav-dropdown {
+  outline: 1px solid red;
+}
+@media (max-width: 520px) {
+  .drop-right {
+    position: static;
+  }
+  .navbar-nmg .drop-right .nav-dropdown {
+    top: calc(100% - 0.5rem);
+    right: .75rem !important;
+    left: auto !important;
+  }
+}
+
+.profile-button-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.profile-caret {
+  border: 2px solid white;
+  padding-top: 2px;
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background-color: var(--nmg-color);
+  display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 2rem;
-  color: var(--nmg-color);
-}
-
-#profile_image {
-  width: 168px;
-  height: 168px;
-}
-
-.profile-crop-wrapper {
-  width: 300px;
-  height: 300px;
+  justify-content: center;
+  font-size: 0.5rem;
 }

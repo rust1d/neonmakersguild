@@ -4,20 +4,21 @@
 
 <cfoutput>
   <div class='row g-3 justify-content-center'>
-    <div class='col-1'>
+    <div class='col-auto'>
       <a href='#locals.mBE.User().seo_link()#'>
         <img class='profile-thumbnail img-fluid rounded' src='#locals.mBE.User().profile_image().src()#' />
       </a>
     </div>
-    <div class='col-10 text-center'>
-      <div class='post-title fs-5 mx-2'>
+    <div class='col position-relative'>
+      <div class='post-title fs-5'>
         <a class='post' data-target='#locals.comment_target#' data-section='#locals.section#' data-benid='#locals.mBE.encoded_key()#' href='#locals.mBE.seo_link()#'>
           #locals.mBE.title()#
         </a>
+        #router.include('shared/blog/_promote', locals)#
       </div>
       #router.include('shared/blog/_byline', locals)#
     </div>
-    <div class='col-1'>
+    <div class='col-auto'>
       <div class='text-end'>
         <cfif session.user.admin() && locals.mBE.promotable()>
           <cfif locals.mBE.is_promoted()>

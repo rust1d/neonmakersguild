@@ -15,27 +15,27 @@
   <div class='row g-3'>
     <div class='col-12 content-card p-2'>
       <div class='row g-3'>
-        <div class='col-md-auto'>
-          <img class='img-fluid img-thumbnail w-100' src='#mUser.profile_image().src()#' />
+        <div class='col-5 col-sm-auto'>
+          <img class='img-thumbnail w-100' src='#mUser.profile_image().src()#' />
         </div>
-        <div class='col-md position-relative'>
+        <div class='col position-relative'>
           <div class='fs-3'>
             #mUser.user()#
             <cfif mUser.usid() LT 8><sup><i class='fa-solid fa-fw fa-person-burst text-warning' title='NMG Founder'></i></sup></cfif>
             <cfif mUser.permissions() GT 0><sup><i class='fa-solid fa-fw fa-burst text-warning' title='Site Admin'></i></sup></cfif>
           </div>
-          <div class='mt-1'>
-            #mUser.UserProfile().name()#
-            &bull;
-            #mUser.UserProfile().location()#
-          </div>
-          <div class='mt-1 fs-6'>Joined #utility.ordinalDate(mUser.added())#</div>
-          <div class='mt-1 fs-6'>Last seen #utility.ordinalDate(mUser.dll())# <cfif mUser.dll().diff('h', now()) LT 24>#mUser.dll().format('h:nn tt')#</cfif></div>
+          <div class='mt-1 fs-5'>#mUser.UserProfile().name()#</div>
+          <div class='mt-1'>#mUser.UserProfile().location()#</div>
+          <div class='mt-1 small'>Joined #utility.ordinalDate(mUser.added())#</div>
+          <div class='mt-1 smaller'>Last seen #mUser.dll().format('yyyy-mm-dd')# <cfif mUser.dll().diff('h', now()) LT 24>#mUser.dll().format('h:nn tt')#</cfif></div>
           <div class='mt-2'>
             <cfloop array='#mUserBlog.owner().profile_links()#' item='mLink'>
               <span class='me-2'>#mLink.icon_link('fa-lg')#</span>
             </cfloop>
           </div>
+        </div>
+        <div class='col-12'>
+
         </div>
       </div>
     </div>
