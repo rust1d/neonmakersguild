@@ -18,23 +18,6 @@
       </div>
       #router.include('shared/blog/_byline', locals)#
     </div>
-    <div class='col-auto'>
-      <div class='text-end'>
-        <cfif session.user.admin() && locals.mBE.promotable()>
-          <cfif locals.mBE.is_promoted()>
-            <button name='btnPromote' data-pkid='#locals.mBE.encoded_key()#' class='btn btn-icon btn-icon-sm active' title='Click to remove from front page'>
-              <i class='fa-solid fa-star'></i>
-            </button>
-          <cfelse>
-            <button name='btnPromote' data-pkid='#locals.mBE.encoded_key()#' class='btn btn-icon btn-icon-sm btn-nmg' title='Click to promote to front page'>
-              <i class='fa-solid fa-fw fa-star' title='Front Page #locals.mBE.promoted()#'></i>
-            </button>
-          </cfif>
-        <cfelseif isDate(locals.mBE.ben_promoted())>
-          <i class='fa-solid fa-fw fa-star text-warning' title='Front Page #locals.mBE.promoted()#'></i>
-        </cfif>
-      </div>
-    </div>
 
     <div class='col-12'>
       <div class='post-body' data-benid='#locals.mBE.encoded_key()#'>

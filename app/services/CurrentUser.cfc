@@ -57,15 +57,13 @@ component accessors=true {
 
   public BaseModel function model() {
     if (isNull(request._user_model)) {
-      if (isNull(get_class())) request.router.redirect('login/login');
-      // session.return_to = '';
-      // writedump(session);abort;
       request._user_model = new 'app.models.#get_class()#'().find(get_pkid());
     }
     return request._user_model;
   }
 
   public any function onMissingMethod(required string missingMethodName, required struct missingMethodArguments) {
+    if (isNull(get_class())) throw('Function `#missingMethodName#` called on null user model');
     return invoke(model(), missingMethodName, missingMethodArguments);
   }
 

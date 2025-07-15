@@ -8,6 +8,7 @@ CREATE PROCEDURE users_search(
   IN _email    VARCHAR(50),
   IN _deleted  TINYINT(1),
   IN _pastdue  INT(11),
+  IN _exclude  INT(11),
   IN _term     VARCHAR(25),
   IN _paging   VARCHAR(50)
 )
@@ -28,6 +29,7 @@ BEGIN
            (_pastdue > 0 AND datediff(now(), nextrenewal(us_renewal)) BETWEEN 0 AND _pastdue) OR
            (_pastdue < 0 AND datediff(nextrenewal(us_renewal), now()) BETWEEN 1 AND -_pastdue)
          )
+     AND (_exclude IS NULL OR us_usid <> _exclude)
      AND (_term IS NULL OR
            us_user = _term OR
            up_firstname REGEXP _term OR

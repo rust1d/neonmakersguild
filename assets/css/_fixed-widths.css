@@ -152,3 +152,12 @@
 .w-98 { width: 98% !important; }
 .w-99 { width: 99% !important; }
 /* .w-100 { width: 100% !important; } */
+
+.w-4rem { width: 4rem; }
+.w-5rem { width: 5rem; }
+.w-6rem { min-width: 6rem; }
+.w-10rem { width: 10rem; }
+.w-12rem { width: 12rem; }
+.w-15rem { width: 15rem; }
+.w-20rem { width: 20rem; }
+.w-25rem { width: 25rem; }

@@ -83,6 +83,16 @@ component extends=BaseModel accessors=true {
     return paged_search(sproc, arguments);
   }
 
+  public array function recently_posting(struct params) {
+    if (arguments.keyExists('params')) arguments = arguments.params;
+    param arguments.limit = 10;
+    var sproc = new StoredProc(procedure: 'users_recently_posting', datasource: datasource());
+    sproc.addParam(cfsqltype: 'integer', value: arguments.limit);
+    sproc.addProcResult(name: 'qry', resultset: 1);
+    var qry = sproc.execute().getProcResultSets().qry;
+    return this.wrap(qry);
+  }
+
   public query function search(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;
     if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
@@ -93,6 +103,7 @@ component extends=BaseModel accessors=true {
     sproc.addParam(cfsqltype: 'varchar', value: arguments.get('us_email'),      null: !arguments.keyExists('us_email'));
     sproc.addParam(cfsqltype: 'tinyint', value: arguments.get('isdeleted'),     null: !arguments.keyExists('isdeleted'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('days_past_due'), null: !arguments.keyExists('days_past_due'));
+    sproc.addParam(cfsqltype: 'tinyint', value: arguments.get('exclude'),       null: !arguments.keyExists('exclude'));
     sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),          null: !arguments.keyExists('term'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 

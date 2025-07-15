@@ -13,10 +13,10 @@
         <span class='navbar-toggler-icon'></span>
       </button>
       <div class='collapse navbar-collapse' id='navbarNavDropdown'>
-        <ul class='navbar-nav justify-content-evenly'>
+        <ul class='navbar-nav flex-grow-1 justify-content-evenly'>
           <li class='nav-item'><a class='nav-link' href='/stream'>Member Stream</a></li>
+          <li class='nav-item d-none d-lg-inline'><a class='nav-link' href='/members'>Members</a></li>
           <li class='nav-item'><a class='nav-link' href='/forums'>Forums</a></li>
-
           <li class='nav-item dropdown drop-right'>
             <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Learn</a>
             <div class='dropdown-menu nav-dropdown mt-1 py-3 px-1'>
@@ -30,8 +30,11 @@
               <a class='dropdown-item round-icon' href='/about'><i class='fa-solid fa-circle-info'></i> About NMG</a>
             </div>
           </li>
+          <cfif session.user.loggedIn()>
+            <li class='nav-item d-none d-md-inline'><a class='nav-link' href='#session.user.seo_link()#'>My Page</a></li>
+          </cfif>
         </ul>
-        <ul class='navbar-nav ms-auto'>
+        <ul class='navbar-nav'>
           <cfif session.user.loggedIn()>
             <li class='nav-item dropdown position-relative'>
               <a class='nav-link p-0 d-flex align-items-center' href='##' id='profileDropdown' role='button' data-bs-toggle='dropdown' aria-expanded='false'>

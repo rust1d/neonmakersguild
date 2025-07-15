@@ -405,19 +405,23 @@ component {
     return arraynew(1).append(data, true); // CONVERTS BACK TO REAL JAVA ARRAY
   }
 
-  public any function simple_cache(required string key, required any closer) {
-    if (key.listLen(':')==2) {
-      arguments.mins = key.listLast(':');
-      arguments.key = key.listFirst(':');
+  public any function simple_cache(required string key, required any closer, boolean global=false) { // GLOBAL DETERMINES SCOPE: APP OR SESSION
+    // if (application.isDevelopment) return arguments.closer(); // NOT USED ON DEV
+
+    if (arguments.key.listLen(':')==2) {
+      arguments.mins = arguments.key.listLast(':');
+      arguments.key = arguments.key.listFirst(':');
     }
     param arguments.mins = 15;
-    var cacheID = key & session.sessionID;
+    var cacheID = (arguments.global ? application.applicationname : session.sessionID) & arguments.key;
     var data = cacheGet(cacheID);
     if (!isNull(data)) return data;
-    data = closer();
-    cachePut(cacheID, data, createTimeSpan(0, 0, mins, 0));
+
+    data = arguments.closer();
+    cachePut(cacheID, data, createTimeSpan(0, 0, arguments.mins, 0));
     return data;
   }
+
 
   public array function slice(required array data, required numeric size) {
     if (data.len()<=size) return data;

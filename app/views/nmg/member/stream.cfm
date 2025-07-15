@@ -3,25 +3,38 @@
   section = 'stream';
   pagination = request.pagination.last;
   mHero = mBlog.textblock_by_label('stream-hero');
+  mRecentUsers = new app.models.Users().recently_posting(limit: 10);
 </cfscript>
 
 <cfset include_js('assets/js/blog/modals.js') />
 
 <cfoutput>
   <cfif pagination.page lt 2>
-    <cfset mHero = mBlog.textblock_by_label('stream-hero') />
-    <cfif mHero.persisted()>
-      <div class='row g-3 mb-3'>
-        <div class='col-12'>
+    <div id='recent_activity' class='row g-3 mb-3'>
+      <cfset mHero = mBlog.textblock_by_label('stream-hero') />
+      <cfif mHero.persisted()>
+        <div class='col-12 content-card'>
           #mHero.body_cdn()#
         </div>
-        <div class='col-12 text-center'>
-          <span class='btn btn-outline-info'>
-            <a href='/members'>View the full NMG Member List</a>
-          </span>
+      </cfif>
+      <div class='col-12 content-card font-montserrat p-1'>
+        <div class='text-center smaller mb-1'>Recently Active Members</div>
+        <div class='row'>
+          <div class='col-12'>
+            <div id='member-roll' class='d-flex flex-nowrap gap-1 overflow-auto'>
+              <cfloop array='#mRecentUsers#' item='mUser'>
+                <a href='#mUser.seo_link()#' class='d-block w-100'>
+                  <img src='#mUser.profile_image().src()#' class='img-thumbnail' />
+                </a>
+              </cfloop>
+              <a href='/members' class='d-block position-relative w-100'>
+                <img src='/assets/images/memberlist.jpg' class='img-thumbnail opacity-75' />
+              </a>
+            </div>
+          </div>
         </div>
       </div>
-    </cfif>
+    </div>
   </cfif>
 
 

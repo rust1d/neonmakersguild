@@ -6,7 +6,7 @@
 </cfscript>
 
 <cfoutput>
-  <cfif results.pagination.first>
+  <cfif results.pagination.first && session.user.loggedOut()>
     <cfset mHero = mBlog.textblock_by_label('home-hero') />
     <cfif mHero.persisted()>
       <div class='row mt-3'>

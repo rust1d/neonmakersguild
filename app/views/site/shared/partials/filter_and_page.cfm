@@ -1,15 +1,16 @@
 <cfscript>
   param locals.footer = false;
+  param locals.placeholder = 'search...';
 </cfscript>
 
 <cfoutput>
   <cfif locals.keyExists('pagination')>
-    <div class='col small'>
-      <cfif locals.footer>
+    <cfif locals.footer>
+      <div class='col small'>
         <cfif locals.pagination.total gt locals.pagination.page_size>#locals.pagination.start# - #locals.pagination.end# of </cfif>
         #utility.plural_label(locals.pagination.total, 'record')#
-      </cfif>
-    </div>
+      </div>
+    </cfif>
     <cfif !locals.footer>
       <cfif locals.pagination.keyExists('tag')>
         <div class='col-auto'>
@@ -32,14 +33,14 @@
           <input type='hidden' name='sort' id='filter_sort' value='#locals.pagination.get('sort')#' />
           <input type='hidden' name='filter_term' id='filter_term' value='#locals.pagination.get('term')#' />
           <div class='input-group input-group-sm'>
-            <input type='text' class='form-control' id='term' name='term' placeholder='search...' maxlength='20' aria-label='Search' required />
+            <input type='text' class='form-control' id='term' name='term' placeholder='#locals.placeholder#' maxlength='25' aria-label='Search' required />
             <button class='btn btn-sm btn-nmg' type='submit'><i class='fa fa-search'></i></button>
           </div>
         </form>
       </div>
     </cfif>
 
-    <cfif !locals.footer || !locals.pagination.one_page>
+    <cfif !locals.footer && !locals.pagination.one_page>
       <div class='col-auto'>
         <div class='input-group input-group-sm'>
           <cfif locals.pagination.first>

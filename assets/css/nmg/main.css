@@ -16,9 +16,11 @@ a:hover {
 }
 
 .bg-nmg-light {
-  background-color: var(--nmg-bg-light)!important;
+  background-color: var(--nmg-bg-light) !important;
 }
-
+.bg-nmg-dark {
+  background-color: var(--nmg-black)!important;
+}
 .border-nmg {
   border-color: var(--nmg-border) !important;
 }
@@ -274,9 +276,7 @@ a:hover {
   border: none;
   box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
 }
-.navbar-nmg .dropdown-menu.nav-dropdown {
-  outline: 1px solid red;
-}
+
 @media (max-width: 520px) {
   .drop-right {
     position: static;

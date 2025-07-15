@@ -94,6 +94,30 @@ const is_img_url = function(src) {
   return isValidUrl && isImageExt;
 }
 
+function is_in_viewport(el) {
+  let rect = el.getBoundingClientRect();
+  return (rect.top < window.innerHeight + 100 && rect.bottom > -100);
+}
+
+
+const lazy_imager = function(selector) {
+  let $container = $(selector);
+  function lazyLoadImages() {
+    $container.find('img.lazy-img').each(function() {
+      let $img = $(this);
+      if ($img.data('src') && is_in_viewport(this)) {
+        $img.on('load', function() { $img.addClass('loaded') });
+        $img.attr('src', $img.data('src'));
+        $img.removeAttr('data-src');
+      }
+    })
+  }
+  lazyLoadImages();
+  $(window).on('scroll resize', lazyLoadImages);
+  return { refresh: lazyLoadImages };
+}
+
+
 const open_image_picker = function(add_image_callback, multiple='') {
   const $fileInput = $(`<input type='file' class='d-none' accept='image/*' ${multiple} />`);
   $fileInput.on('change', function(ev) {
