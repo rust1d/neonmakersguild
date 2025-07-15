@@ -1,10 +1,11 @@
 <cfscript>
   param locals.aspect = true;
+  param locals.modal_size = 'fullscreen';
 </cfscript>
 
 <cfoutput>
   <div class='modal fade' id='cropModal' tabindex='-1' aria-labelledby='cropModalLabel' aria-hidden='true'>
-    <div class='modal-dialog modal-fullscreen'>
+    <div class='modal-dialog modal-#locals.modal_size#'>
       <div class='modal-content d-flex flex-column'>
         <div class='modal-header'>
           <h5 class='modal-title' id='cropModalLabel'>Crop Image</h5>

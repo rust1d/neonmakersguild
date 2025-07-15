@@ -1,7 +1,7 @@
 <cfset include_js('assets/js/image/profile.js') />
 
 <cfoutput>
-  #router.include('shared/user/image/_crop_modal', { aspect: false })#
+  #router.include('shared/user/image/_crop_modal', { aspect: false, modal_size: 'lg' })#
 
   <cfif mUser.profile_image().exists()>
     <div class='row mb-3'>

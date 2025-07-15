@@ -96,7 +96,7 @@ component accessors=true {
         ensure_folder();
         var img = ImageRead(path);
         img.scaleTofit(variables.thumb_size, variables.thumb_size);
-        cfimage(action: 'write', quality: quality, overwrite: 'true', source: img, destination: path);
+        cfimage(action: 'write', quality: .80, overwrite: 'true', source: img, destination: path);
         FileCopy(path, path_to_file());
         utility.fileCopyS3(path_to_file(), remote_src());
         return true;

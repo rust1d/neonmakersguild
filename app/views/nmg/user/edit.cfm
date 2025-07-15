@@ -22,12 +22,6 @@
               <cfif mUser.usid() LT 8><sup><i class='fa-solid fa-fw fa-person-burst text-warning' title='NMG Founder'></i></sup></cfif>
               <cfif mUser.permissions() GT 0><sup><i class='fa-solid fa-fw fa-burst text-warning' title='Site Admin'></i></sup></cfif>
             </div>
-            <!--- <div>
-              <a class='fs-6' href='#router.href('user/security')#'>
-                <i class='fa-solid fa-user-shield me-1'></i>
-                Change Password
-              </a>
-            </div> --->
           </div>
         </div>
         <h4 class='mb-1'>Public Info</h4>
@@ -68,15 +62,6 @@
               </div>
             </div>
           </div>
-          <!--- <div class='col-12'>
-            <label class='form-label' for='imagesearch'>Image Search</label>
-            <span class='form-text'>Search for an image to insert into your bio.</span>
-            <div class='input-group input-group-sm'>
-              <span class='input-group-text'>Image Search</span>
-              <span class='input-group-text btn-nmg'><i class='fa fa-search'></i></span>
-              <input type='text' class='form-control' id='imagesearch' name='imagesearch' placeholder='type to search images...' maxlength='20' data-usid='#mUserBlog.encoded_key()#' />
-            </div>
-          </div> --->
         </div>
         <h4 class='mb-1'>Private Info</h4>
         <p class='smaller text-muted'>This information is only viewable by admins.</p>

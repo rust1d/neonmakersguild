@@ -5,6 +5,7 @@ $(function () {
   const cropModal = document.getElementById('cropModal');
   const $cropModal = new bootstrap.Modal(cropModal);
 
+  // LOADS EXISTING FROM IMG ROLL
   read_image = function(obj, onSuccess) {
     const formData = new FormData();
     formData.append('uiid', $(obj).data('uiid'));
@@ -95,7 +96,8 @@ $(function () {
     const formData = new FormData();
     formData.append('profile_image', blob, 'crop.jpg');
     const input = $('#profile_input')[0];
-    if (input?.files?.length) formData.append('ui_filename', input.files[0]);
+    // NO LONGER SAVING AS USERIMAGE
+    // if (input?.files?.length) formData.append('ui_filename', input.files[0]);
 
     $.post({
       url: '/xhr.cfm?p=user/image/upload',
@@ -108,11 +110,13 @@ $(function () {
       success: function(results) {
         if (results?.data?.thumbnail) {
           $('#profile_image').attr('src', results.data.thumbnail);
-          $('#image_roll').prepend(`<img src='${results.data.thumbnail}' data-uiid='${results.data.ui_uiid}' />`);
+          // $('#image_roll').prepend(`<img src='${results.data.thumbnail}' data-uiid='${results.data.ui_uiid}' />`);
         }
-        if (results.messages.length) $('#flash-messages').replaceWith(results.messages);
+        if (results.messages.length) {
+          $('#flash-messages').html(results.messages);
+        }
+        // location.reload();
         $cropModal.hide();
-        location.reload();
       }
     });
   }
@@ -149,10 +153,7 @@ $(function () {
 
   $('#btnRotateLeft').on('click', function() {
     if (!cropper) return;
-    // cropper.clear();
     cropper.rotate(-90);
-    // cropper.crop();
-    // cropper.setAspectRatio(1);
   });
 
   $('#btnRotateRight').on('click', function() {

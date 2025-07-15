@@ -83,6 +83,16 @@ component extends=BaseModel accessors=true {
     return paged_search(sproc, arguments);
   }
 
+  public array function recently_joining(struct params) {
+    if (arguments.keyExists('params')) arguments = arguments.params;
+    param arguments.limit = 5;
+    var sproc = new StoredProc(procedure: 'users_recently_joining', datasource: datasource());
+    sproc.addParam(cfsqltype: 'integer', value: arguments.limit);
+    sproc.addProcResult(name: 'qry', resultset: 1);
+    var qry = sproc.execute().getProcResultSets().qry;
+    return this.wrap(qry);
+  }
+
   public array function recently_posting(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;
     param arguments.limit = 10;

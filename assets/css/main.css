@@ -440,6 +440,14 @@ figure.image figcaption {
   border-radius: var(--bs-border-radius) !important;
 }
 
+.post-body iframe {
+  max-width: 100%;
+  height: auto;
+  margin: auto;
+  aspect-ratio: 16 / 9;
+  display: block;
+}
+
 .post-comment-bar {
   font-size: 1rem;
   font-family: "Segoe UI Historic";
@@ -687,7 +695,7 @@ i.roundy {
 #member-list .title-clamp {
   font-size: clamp(0.75rem, 2vw, 1rem);
 }
-#member-list img.lazy-img {
+img.lazy-img {
   display: block;
   width: 100%;
   height: auto;
@@ -696,21 +704,21 @@ i.roundy {
   transition: filter 0.4s ease-out, opacity 0.4s ease-out;
   opacity: 0;
 }
-#member-list img.lazy-img.loaded {
+img.lazy-img.loaded {
   filter: blur(0);
   opacity: 1;
 }
-#member-list img.lazy-img:not(.fade-in-blur) {
+img.lazy-img:not(.fade-in-blur) {
   filter: none;
   opacity: 1;
 }
 
-#member-list .member-tiles {
+.member-tiles {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 6px;
 }
-#member-list .member-tile {
+.member-tiles .member-tile {
   border-color: var(--nmg-border);
   background-color: var(--nmg-bg-alt);
   max-width: 300px;
