@@ -406,7 +406,7 @@ component {
   }
 
   public any function simple_cache(required string key, required any closer, boolean global=false) { // GLOBAL DETERMINES SCOPE: APP OR SESSION
-    // if (application.isDevelopment) return arguments.closer(); // NOT USED ON DEV
+    if (application.isDevelopment) return arguments.closer(); // NOT USED ON DEV
 
     if (arguments.key.listLen(':')==2) {
       arguments.mins = arguments.key.listLast(':');

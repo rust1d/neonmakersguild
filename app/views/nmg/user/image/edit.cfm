@@ -1,7 +1,3 @@
-<cfscript>
-  mBlog = mUser.blog();
-</cfscript>
-
 <cfoutput>
-  #router.include('shared/user/image/edit')#
+  #router.include('shared/user/image/edit', { mBlog: mUserBlog })#;
 </cfoutput>

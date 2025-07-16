@@ -16,7 +16,11 @@ BEGIN
 
   SELECT SQL_CALC_FOUND_ROWS *
     FROM (
-           SELECT 'post' AS act_source, LOWER(CONCAT(us_user, '/', ben_alias)) AS act_seolink, ben_benid AS act_pkid, ben_benid AS act_fkid, ben_title AS act_title, ben_body AS act_words, ben_dla AS act_dla
+           SELECT 'post' AS act_source, LOWER(CONCAT('/post/', us_user, '/', ben_alias)) AS act_seolink,
+                  us_usid AS act_ownid, us_user AS act_owner,
+                  ben_benid AS act_pkid, ben_benid AS act_fkid,
+                  ben_title AS act_title, ben_body AS act_words, ben_dla AS act_dla,
+                  DATE(ben_dla) AS act_date, TIME_FORMAT(ben_dla, '%h:%i %p') AS act_time
              FROM blogentries
                   INNER JOIN users ON us_usid = ben_blog
             WHERE ben_usid = _usid
@@ -31,7 +35,11 @@ BEGIN
 
             UNION
 
-           SELECT 'comment' AS act_source, LOWER(CONCAT(us_user, '/', ben_alias)) AS act_seolink, bco_bcoid AS act_pkid, bco_benid AS act_fkid, ben_title AS act_title, bco_comment AS act_words, bco_dla AS act_dla
+           SELECT 'comment' AS act_source, LOWER(CONCAT('/post/', us_user, '/', ben_alias)) AS act_seolink,
+                  us_usid AS act_ownid, us_user AS act_owner,
+                  bco_bcoid AS act_pkid, bco_benid AS act_fkid,
+                  ben_title AS act_title, bco_comment AS act_words, bco_dla AS act_dla,
+                  DATE(bco_dla) AS act_date, TIME_FORMAT(bco_dla, '%h:%i %p') AS act_time
              FROM blogcomments
                  INNER JOIN blogentries ON ben_benid = bco_benid
                  INNER JOIN users ON us_usid = ben_blog
@@ -43,9 +51,14 @@ BEGIN
 
            UNION
 
-           SELECT 'thread' AS act_source, CONCAT(fo_alias, '/', ft_ftid, '/', ft_alias) AS act_seolink, ft_ftid AS act_pkid, ft_foid AS act_fkid, fo_name AS act_title, ft_subject AS act_words, ft_dla AS act_dla
+           SELECT 'thread' AS act_source, CONCAT('/forum/', fo_alias, '/', ft_ftid, '/', ft_alias) AS act_seolink,
+                  us_usid AS act_ownid, us_user AS act_owner,
+                  ft_ftid AS act_pkid, ft_foid AS act_fkid,
+                  fo_name AS act_title, ft_subject AS act_words, ft_dla AS act_dla,
+                  DATE(ft_dla) AS act_date, TIME_FORMAT(ft_dla, '%h:%i %p') AS act_time
              FROM forumthreads
                  INNER JOIN forums ON fo_foid = ft_foid AND fo_admin = 0
+                 INNER JOIN users ON us_usid = ft_usid
            WHERE ft_usid = _usid
              AND ft_deleted IS NULL
              AND CASE WHEN _term IS NULL
@@ -55,10 +68,15 @@ BEGIN
 
            UNION
 
-           SELECT 'message' AS act_source, CONCAT(fo_alias, '/', ft_ftid, '/', ft_alias) AS act_seolink, fm_fmid AS act_pkid, fm_ftid AS act_fkid, ft_subject AS act_title, fm_body AS act_words, fm_dla AS act_dla
+           SELECT 'message' AS act_source, CONCAT('/forum/', fo_alias, '/', ft_ftid, '/', ft_alias) AS act_seolink,
+                  us_usid AS act_ownid, us_user AS act_owner,
+                  fm_fmid AS act_pkid, fm_ftid AS act_fkid,
+                  ft_subject AS act_title, fm_body AS act_words, fm_dla AS act_dla,
+                  DATE(fm_dla) AS act_date, TIME_FORMAT(fm_dla, '%h:%i %p') AS act_time
              FROM forummessages
                  INNER JOIN forumthreads ON ft_ftid = fm_ftid
                  INNER JOIN forums ON fo_foid = ft_foid AND fo_admin = 0
+                 INNER JOIN users ON us_usid = ft_usid
            WHERE fm_usid = _usid
              AND fm_deleted IS NULL
              AND CASE WHEN _term IS NULL

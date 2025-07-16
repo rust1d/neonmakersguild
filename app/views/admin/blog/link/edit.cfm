@@ -1,19 +1,29 @@
-<cfscript>
-  mBlog = new app.services.user.Blog(1);
-</cfscript>
-
 <cfoutput>
-  #router.include('shared/user/link/edit')#
+  #router.include('shared/user/link/edit', { mBlog: mBlog })#
 
   <div class='alert-info border rounded mt-3 p-3'>
-    Link Types:
-    <ul>
-      <li><i class='fa-solid fa-fw fa-square-arrow-up-right'></i> <b>bookmark</b> - Displays as a link your member profile sidebar.</li>
-      <li><i class='fa-solid fa-fw fa-school'></i> <b>Resource-Class</b> - Displays in the Class section of the resource page.</li>
-      <li><i class='fa-solid fa-fw fa-link'></i> <b>Resource-Other</b> - Displays in the Other section of the resource page</li>
-      <li><i class='fa-solid fa-fw fa-truck-field'></i> <b>Resource-Supplier</b> - Displays in the Supplier section of the resource page</li>
-      <li><i class='fa-solid fa-thumbs-up'></i> <b>social media</b> - Displays as an icon in your member profile.</li>
-      <li><i class='fa-solid fa-globe'></i> <b>website</b> - Displays as an icon in your member profile. Your primary website.</li>
-    </ul>
+    <div class='fw-semibold'>Link Types:</div>
+
+    <div class='border-bottom my-2'>
+      <i class='roundy d-inline-flex mt-0 me-2 fa-brands fa-fw fa-untappd'></i>
+      <span class='fw-semibold w-200px d-inline-block'>social media</span>
+      Displays as an icon in the website footer.
+    </div>
+
+    <div class='border-bottom my-2'>
+      <i class='roundy d-inline-flex mt-0 me-2 fa-solid fa-fw fa-school'></i>
+      <span class='fw-semibold w-200px d-inline-block'>Resource-Class</span>
+      Displays in the Neon Classes section on the Learn Menu.
+    </div>
+    <div class='border-bottom my-2'>
+      <i class='roundy d-inline-flex mt-0 me-2 fa-solid fa-fw fa-link'></i>
+      <span class='fw-semibold w-200px d-inline-block'>Resource-Other</span>
+      Displays in the General Resources section on the Learn Menu.
+    </div>
+    <div class='border-bottom my-2'>
+      <i class='roundy d-inline-flex mt-0 me-2 fa-solid fa-fw fa-truck-field'></i>
+      <span class='fw-semibold w-200px d-inline-block'>Resource-Supplier</span>
+      Displays in the Suppliers section on the Learn Menu.
+    </div>
   </div>
 </cfoutput>

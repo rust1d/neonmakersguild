@@ -6,12 +6,11 @@
 <cfoutput>
   <cfif locals.keyExists('pagination')>
     <cfif locals.footer>
-      <div class='col small'>
+      <div class='col-auto small'>
         <cfif locals.pagination.total gt locals.pagination.page_size>#locals.pagination.start# - #locals.pagination.end# of </cfif>
         #utility.plural_label(locals.pagination.total, 'record')#
       </div>
-    </cfif>
-    <cfif !locals.footer>
+    <cfelse>
       <cfif locals.pagination.keyExists('tag')>
         <div class='col-auto'>
           <button id='btnClearTag' onclick='window.location=window.location.href' class='border btn btn-sm btn-nmg border-nmg rounded p-1'>
@@ -38,39 +37,39 @@
           </div>
         </form>
       </div>
-    </cfif>
 
-    <cfif !locals.footer && !locals.pagination.one_page>
-      <div class='col-auto'>
-        <div class='input-group input-group-sm'>
-          <cfif locals.pagination.first>
-            <button class='btn btn-nmg' disabled><i class='fa-solid fa-fw fa-xl fa-caret-left'></i></button>
-          <cfelse>
-            <a class='btn btn-nmg' href='#utility.page_url_prev(locals.pagination)#'><i class='fa-solid fa-fw fa-xl fa-caret-left'></i></a>
-          </cfif>
-          <cfif locals.pagination.pages lt 3>
-            <span class='input-group-text btn-nmg'>Page #locals.pagination.page# of #locals.pagination.pages#</span>
-          <cfelse>
-            <button class='btn btn-nmg dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-expanded='false'>Page #locals.pagination.page# of #locals.pagination.pages#</button>
-            <ul class='dropdown-menu dropdown-menu-end bg-light'>
-              <li>
-                <div class='dropdown-item'>
-                  <div class='input-group input-group-sm pager'>
-                    <div class='input-group-text'>Page</div>
-                    <input type='number' class='form-control' name='set_page' min='1' max='#locals.pagination.pages#' value='#locals.pagination.page#' />
-                    <button class='btn btn-nmg' type='button' name='btnPage'>Go</button>
+      <cfif !locals.pagination.one_page>
+        <div class='col-auto'>
+          <div class='input-group input-group-sm'>
+            <cfif locals.pagination.first>
+              <button class='btn btn-nmg' disabled><i class='fa-solid fa-fw fa-xl fa-caret-left'></i></button>
+            <cfelse>
+              <a class='btn btn-nmg' href='#utility.page_url_prev(locals.pagination)#'><i class='fa-solid fa-fw fa-xl fa-caret-left'></i></a>
+            </cfif>
+            <cfif locals.pagination.pages lt 3>
+              <span class='input-group-text btn-nmg'>Page #locals.pagination.page# of #locals.pagination.pages#</span>
+            <cfelse>
+              <button class='btn btn-nmg dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-expanded='false'>Page #locals.pagination.page# of #locals.pagination.pages#</button>
+              <ul class='dropdown-menu dropdown-menu-end bg-light'>
+                <li>
+                  <div class='dropdown-item'>
+                    <div class='input-group input-group-sm pager'>
+                      <div class='input-group-text'>Page</div>
+                      <input type='number' class='form-control' name='set_page' min='1' max='#locals.pagination.pages#' value='#locals.pagination.page#' />
+                      <button class='btn btn-nmg' type='button' name='btnPage'>Go</button>
+                    </div>
                   </div>
-                </div>
-              </li>
-            </ul>
-          </cfif>
-          <cfif locals.pagination.last>
-            <button class='btn btn-nmg' disabled><i class='fa-solid fa-fw fa-xl fa-caret-right'></i></button>
-          <cfelse>
-            <a class='btn btn-nmg' href='#utility.page_url_next(locals.pagination)#'><i class='fa-solid fa-fw fa-xl fa-caret-right'></i></a>
-          </cfif>
+                </li>
+              </ul>
+            </cfif>
+            <cfif locals.pagination.last>
+              <button class='btn btn-nmg' disabled><i class='fa-solid fa-fw fa-xl fa-caret-right'></i></button>
+            <cfelse>
+              <a class='btn btn-nmg' href='#utility.page_url_next(locals.pagination)#'><i class='fa-solid fa-fw fa-xl fa-caret-right'></i></a>
+            </cfif>
+          </div>
         </div>
-      </div>
+      </cfif>
     </cfif>
   </cfif>
 </cfoutput>

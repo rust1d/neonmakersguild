@@ -85,7 +85,7 @@ a:hover {
   color: var(--nmg-color-alt);
 }
 
-.form-control {
+.form-control, .form-select {
   background-color: var(--nmg-bg-light);
   color: var(--nmg-black);
   border-color: var(--nmg-border);
@@ -316,3 +316,65 @@ a:hover {
   justify-content: center;
   font-size: 0.5rem;
 }
+
+.member-nav .nav-link {
+  height: 3rem;
+  line-height: 3rem;
+  padding: 0 0 0 1rem;
+  font-size: 1rem;
+  width: 75px;
+  font-weight: 600;
+  color: var(--nmg-muted);
+}
+.member-nav .nav-link.active {
+  font-weight: 600;
+}
+.member-nav .nav-link:hover:not(.active):not(.disabled) {
+  background-color: var(--nmg-bg-alt);
+  border-radius: 0.375rem;
+  border-bottom: none;
+}
+
+.activity-card {
+  font-size: 1rem;
+}
+.activity-card a {
+  font-family: montserrat;
+  color: var(--nmg-blue);
+  font-weight: 500;
+}
+.activity-card img {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--bs-border-radius) !important;
+  object-fit: cover;
+}
+.activity-card .activity-date {
+  font-size: .8rem;
+}
+.activity-card .activity-header {
+  font-size: .9rem;
+}
+.activity-card .activity-detail {
+  font-size: .8rem;
+  line-height: 1rem;
+}
+
+
+/*
+.masonry {
+  column-width: 180px;
+  column-gap: 0.25rem;
+  background-color: var(--nmg-bg-light);
+}
+
+.masonry-tile {
+  break-inside: avoid;
+  margin-bottom: 0.25rem;
+  overflow: hidden;
+}
+
+.masonry-tile img {
+  border: var(--bs-border-width) var(--bs-border-style) var(--nmg-bg-alt);
+  border-radius: var(--bs-border-radius) !important;
+} */

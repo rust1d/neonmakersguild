@@ -27,6 +27,11 @@ component accessors=true {
     return upload();
   }
 
+  public ProfileImage function setId(required numeric usid) {
+    variables.usid = arguments.usid;
+    return this;
+  }
+
   public string function src() {
     return exists() ? image_src() : placeholder_src();
   }

@@ -14,9 +14,9 @@
 <cfoutput>
   <div class='row g-3'>
     <div class='col-12 content-card p-2'>
-      <div class='row g-3'>
-        <div class='col-5 col-sm-auto'>
-          <img class='img-thumbnail w-100' src='#mUser.profile_image().src()#' />
+      <div class='row g-3 justify-content-center'>
+        <div class='col-auto'>
+          <img class='img-thumbnail img-fluid member-view-img' src='#mUser.profile_image().src()#' />
         </div>
         <div class='col position-relative'>
           <div class='fs-3'>
@@ -29,29 +29,24 @@
           <div class='mt-1 small'>Joined #utility.ordinalDate(mUser.added())#</div>
           <div class='mt-1 smaller'>Last seen #mUser.dll().format('yyyy-mm-dd')# <cfif mUser.dll().diff('h', now()) LT 24>#mUser.dll().format('h:nn tt')#</cfif></div>
           <div class='mt-2'>
+            #router.include('member/_about')#
+            <!--- ALL LINKS ON MAIN BAR --->
+            #router.include('member/_links')#
+            <!--- SOCIAL LINKS ON MAIN BAR --->
             <cfloop array='#mUserBlog.owner().profile_links()#' item='mLink'>
-              <span class='me-2'>#mLink.icon_link('fa-lg')#</span>
+              <span class='me-1'>#mLink.icon_link('fa-lg')#</span>
             </cfloop>
           </div>
         </div>
-        <div class='col-12'>
-
-        </div>
       </div>
     </div>
-    <div class='col-12 content-card p-2'>
-      <nav class='nav nav-underline nav-fill member-nav'>
+    <div class='col-12 content-card p-1'>
+      <nav class='nav nav-underline member-nav ps-1'>
         <a class='nav-link #ifin(url.tab=='posts', 'active')# #ifin(counts.post_cnt==0, 'disabled')#' href='#mUser.seo_link()#'>
-          Posts #ifin(url.tab!='posts', "<span class='smaller'>[#counts.post_cnt#]</span>")#
-        </a>
-        <a class='nav-link #ifin(url.tab=='about', 'active')#' href='#mUser.seo_link()#/about'>
-          About
+          Posts
         </a>
         <a class='nav-link #ifin(url.tab=='images', 'active')#' href='#mUser.seo_link()#/images'>
           Images
-        </a>
-        <a class='nav-link #ifin(url.tab=='links', 'active')#' href='#mUser.seo_link()#/links'>
-          Link Tree
         </a>
         <a class='nav-link #ifin(url.tab=='activity', 'active')#' href='#mUser.seo_link()#/activity'>
           Activity
@@ -60,4 +55,5 @@
     </div>
     #router.include('member/#url.tab#')#
   </div>
+
 </cfoutput>
