@@ -360,6 +360,18 @@ a:hover {
   line-height: 1rem;
 }
 
+#imageDropdown {
+  z-index: 1620;
+}
+#imageDropdown .dropdown-menu {
+  width: 500px;
+}
+@media (max-width: 575.98px) {
+  #imageDropdown .dropdown-menu {
+    width: 330px;
+  }
+}
+
 
 /*
 .masonry {

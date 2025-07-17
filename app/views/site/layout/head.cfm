@@ -42,6 +42,7 @@
   <link rel='stylesheet' href='#application.urls.root#/assets/css/passtrength.css' />
 
   <script src='#application.urls.root#/assets/js/jquery/jquery.passtrength.js'></script>
+  <script src='#application.urls.root#/assets/js/jquery/jquery.bs-show-hide.js'></script>
   <script src='#application.urls.root#/assets/js/bs_needs_validation.js'></script>
   <script src='#application.urls.root#/assets/js/main.js?ck=#application.cache_key#'></script>
   <script src='#application.urls.root#/assets/js/tiny.js?ck=#application.cache_key#'></script>

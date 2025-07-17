@@ -28,6 +28,9 @@
 }
 
 .grecaptcha-badge { visibility: hidden; }
+.tox-statusbar__help-text { visibility: hidden; font-size: .5rem!important; margin: unset!important; padding-top: .25rem!important; }
+.tox-statusbar__branding { font-size: .35rem!important; }
+.tox-statusbar__branding svg { height: .35rem; width: auto; }
 
 body {
   margin-bottom: 3rem;
@@ -112,6 +115,19 @@ h1, h2, h3, h4, h5, h6 {
 
 .btn-close-delete:hover {
   opacity: 1 !important;
+}
+
+.btn-faux-field {
+  background-color: var(--nmg-bg-light);
+  color: var(--nmg-black);
+  opacity: .6;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem 1rem;
+}
+.btn-faux-field:hover {
+  background-color: var(--nmg-bg-alt);
+  opacity: .8;
 }
 
 form label.required:after {

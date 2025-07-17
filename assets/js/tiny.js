@@ -4,28 +4,23 @@ $(function() {
   let toolbar_groups = {
     aligning: {
       icon: 'align-center',
-      tooltip: 'Alignment',
-      items: 'alignleft aligncenter alignright alignjustify alignnone'
+      items: 'alignleft | aligncenter | alignright | alignjustify | alignnone | indent | outdent'
     },
     editing: {
       icon: 'edit-block',
-      tooltip: 'Edit',
-      items: 'selectall | cut copy paste pastetext removeformat remove'
+      items: 'selectall | cut | copy | paste | pastetext | removeformat | remove'
     },
     font: {
-      icon: 'change-case',
-      tooltip: 'Font, Size, Color',
-      items: 'fontfamily fontsize forecolor backcolor'
+      icon: 'typography',
+      items: 'fontfamily fontsize | forecolor backcolor'
     },
     lists: {
-      icon: 'list-bull-circle',
-      tooltip: 'Lists',
-      items: 'numlist bullist | indent outdent'
+      icon: 'unordered-list',
+      items: 'numlist bullist'
     },
     styling: {
       icon: 'paragraph',
-      tooltip: 'Styling',
-      items: 'blocks | bold italic | blockquote | underline strikethrough | subscript superscript'
+      items: 'blocks | bold | italic | blockquote | underline | strikethrough | subscript | superscript'
     }
   }
 
@@ -43,7 +38,7 @@ $(function() {
     styling: {
       icon: 'paragraph',
       tooltip: 'Styling',
-      items: 'blocks | bold italic | blockquote | underline strikethrough | subscript superscript'
+      items: 'blocks | bold italic | blockquote | underline | strikethrough | subscript | superscript'
     }
   }
 
@@ -124,11 +119,11 @@ $(function() {
   let tiny_forum = {
     license_key: 'gpl',
     promotion: false,
-    menubar: 'edit insert view format table help',
+    menubar: false,
     plugins: 'autolink autosave code fullscreen help link lists media preview visualblocks visualchars wordcount',
-    toolbar: 'fullscreen | undo redo | editing | styling | font | aligning | lists | link unlink | customImageBtn | media',
+    toolbar: 'fullscreen | undo redo | editing | styling | font | aligning | lists | link unlink customImageBtn media',
     toolbar_groups: toolbar_groups,
-    font_family_formats: 'Select Font=system-ui;Andale Mono=andale mono,times; Arial Black=arial black,avant garde; Arial=arial,helvetica,sans-serif; Arimo=arimo; Book Antiqua=book antiqua,palatino; Comic Sans MS=comic sans ms,sans-serif; Courier New=courier new,courier; Georgia=georgia,palatino; Helvetica=helvetica; Impact=impact,chicago; Montserrat=montserrat; Permanent Marker=permanent marker; Poppins=poppins; Roboto=roboto; Symbol=symbol; Tahoma=tahoma,arial,helvetica,sans-serif; Terminal=terminal,monaco; Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva; Webdings=webdings; Wingdings=wingdings,zapf dingbats;',
+    font_family_formats: 'Select Font=system-ui; Arial=arial,helvetica,sans-serif; Courier New=courier new,courier; Georgia=georgia,palatino; Helvetica=helvetica; Impact=impact; monospace=Menlo,Monaco,monospace; Montserrat=montserrat; Permanent Marker=permanent marker; Poppins=poppins; Roboto=roboto; Segoe=Segoe UI; Tahoma=tahoma,arial; Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva;',
     toolbar_mode: 'floating',
     skin_url: '/assets/css/nmg',
     relative_urls : false,
@@ -152,8 +147,8 @@ $(function() {
           $drop.data('roll', editor.targetElm.dataset.roll || 'photo_roll');
           const $btn = $(editor.getContainer()).find('button[data-mce-name=customimagebtn]').last();
           const offset = $btn.offset();
-          $drop.css({ top: offset.top + $btn.outerHeight(), left: offset.left });
-          bootstrap.Dropdown.getOrCreateInstance($drop[0]).show();
+          const top = offset.top + $btn.outerHeight()
+          $drop.css({ top: `${top}px` }).addClass('show').find('.dropdown-menu').addClass('show');
         }
       });
       editor.on('drop', function(ev) {

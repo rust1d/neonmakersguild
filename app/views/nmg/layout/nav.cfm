@@ -46,11 +46,11 @@
                 </div>
               </a>
               <div class='dropdown-menu dropdown-menu-end nav-dropdown mt-1 py-3 px-1' aria-labelledby='profileDropdown'>
-                <a class='dropdown-item round-icon' href='#session.user.seo_link()#'><i class='fa-solid fa-person-dots-from-line'></i> My Page</a>
-                <a class='dropdown-item round-icon' href='#router.href('user/entry/list')#'><i class='fa-solid fa-pen-to-square'></i> Post History</a>
-                <a class='dropdown-item round-icon' href='#router.href('user/image/list')#'><i class='fa-solid fa-photo-film'></i> My Images</a>
-                <a class='dropdown-item round-icon' href='#router.href('user/link/list')#'><i class='fa-solid fa-icons'></i> My Link Tree</a>
-                <a class='dropdown-item round-icon' href='#router.href('user/edit')#'><i class='fa-solid fa-user-gear'></i> Edit Profile</a>
+                <a class='dropdown-item round-icon' href='#session.user.seo_link()#'><i class='fa-solid fa-person-dots-from-line'></i> View My NMG Page</a>
+                <a class='dropdown-item round-icon' href='#router.href('user/entry/list')#'><i class='fa-solid fa-pen-to-square'></i> Post Manager</a>
+                <a class='dropdown-item round-icon' href='#router.href('user/image/list')#'><i class='fa-solid fa-photo-film'></i> Image Manager</a>
+                <a class='dropdown-item round-icon' href='#router.href('user/link/list')#'><i class='fa-solid fa-icons'></i> Link Manager</a>
+                <a class='dropdown-item round-icon' href='#router.href('user/edit')#'><i class='fa-solid fa-user-gear'></i> Account Profile</a>
                 <a class='dropdown-item round-icon' href='#router.href('user/security')#'><i class='fa-solid fa-user-shield'></i> Account Security</a>
                 <cfif session.user.get_admin()>
                   <a class='dropdown-item round-icon' href='#router.href(page: '', ref: 'admin')#'><i class='fa-solid fa-screwdriver-wrench'></i> View Admin Site</a>

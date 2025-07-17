@@ -368,8 +368,8 @@ button::-moz-focus-inner {
   color: #203030;
 }
 .tox .tox-button--naked[disabled] {
-  background-color: #3f5e5e;
-  border-color: #3f5e5e;
+  background-color: #e0eeee;
+  border-color: #e0eeee;
   box-shadow: none;
   color: rgba(32, 48, 48, 0.5);
 }
@@ -2939,7 +2939,7 @@ body.tox-dialog__disable-scroll {
   position: relative;
 }
 .tox .tox-tooltip__body {
-  background-color: #3f5e5e;
+  background-color: #e0eeee;
   border-radius: 3px;
   box-shadow: 0 2px 4px rgba(32, 48, 48, 0.3);
   color: rgba(32, 48, 48, 0.75);
@@ -2955,14 +2955,14 @@ body.tox-dialog__disable-scroll {
 .tox .tox-tooltip--down .tox-tooltip__arrow {
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  border-top: 8px solid #3f5e5e;
+  border-top: 8px solid #e0eeee;
   bottom: 0;
   left: 50%;
   position: absolute;
   transform: translateX(-50%);
 }
 .tox .tox-tooltip--up .tox-tooltip__arrow {
-  border-bottom: 8px solid #3f5e5e;
+  border-bottom: 8px solid #e0eeee;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
   left: 50%;
@@ -2972,7 +2972,7 @@ body.tox-dialog__disable-scroll {
 }
 .tox .tox-tooltip--right .tox-tooltip__arrow {
   border-bottom: 8px solid transparent;
-  border-left: 8px solid #3f5e5e;
+  border-left: 8px solid #e0eeee;
   border-top: 8px solid transparent;
   position: absolute;
   right: 0;
@@ -2981,7 +2981,7 @@ body.tox-dialog__disable-scroll {
 }
 .tox .tox-tooltip--left .tox-tooltip__arrow {
   border-bottom: 8px solid transparent;
-  border-right: 8px solid #3f5e5e;
+  border-right: 8px solid #e0eeee;
   border-top: 8px solid transparent;
   left: 0;
   position: absolute;
