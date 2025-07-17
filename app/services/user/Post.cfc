@@ -1,16 +1,18 @@
 component {
-  public BlogEntry function create(required Blog mUserBlog) {
-    variables.mBE = mUserBlog.entry_find_or_create(0);
+  public BlogEntries function create(required Users mUser) {
+    variables.mUser = arguments.mUser;
+    variables.mBE = mUser.blog().entry_find_or_create(0);
     if (form.keyExists('btnLater')) form.ben_released = false;
     param form.ben_released = true;
     param form.ben_comments = true;
+    param form.beiids = '';
     form.ben_posted = post_date();
     mBE.set(form);
     if (mBE.safe_save()) {
       save_images();
       save_captions();
       mBE.BlogEntryImages(reset: true);
-      flash.success('Your entry was saved.');
+      request.flash.success('Your entry was saved.');
     }
     return mBE;
   }
@@ -51,7 +53,7 @@ component {
         var mBEI = mBE.BlogEntryImages(detect: { bei_beiid: beiid });
         if (!isNull(mBEI)) {
           mBEI.destroy();
-          flash.success('#mBEI.UserImage().filename()# removed from post.');
+          request.flash.success('#mBEI.UserImage().filename()# removed from post.');
         }
       }
     }

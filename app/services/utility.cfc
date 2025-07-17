@@ -211,6 +211,10 @@ component {
     return isValid('telephone', data);
   }
 
+  public boolean function isPost() {
+    return bool(cgi.request_method=='post');
+  }
+
   public struct function json_content() {
     return DeserializeJSON(getHTTPRequestData().content);
   }

@@ -4,7 +4,7 @@ component extends=jSoup accessors=true {
   property name='ben_usid'          type='numeric'  sqltype='integer';
   property name='ben_posted'        type='date'     sqltype='timestamp';
   property name='ben_title'         type='string'   sqltype='varchar';
-  property name='ben_alias'         type='string'   sqltype='varchar';
+  property name='ben_alias'         type='string'   sqltype='varchar'    default='';
   property name='ben_image'         type='string'   sqltype='varchar';
   property name='ben_body'          type='string'   sqltype='varchar'    html;
   property name='ben_morebody'      type='string'   sqltype='varchar'    default='';

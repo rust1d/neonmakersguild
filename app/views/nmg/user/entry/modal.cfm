@@ -1,8 +1,3 @@
-<cfscript>
-
-
-</cfscript>
-
 <cfset include_js('assets/js/admin/blog/pop_post.js') />
 <cfset include_js('assets/js/forums/images.js') />
 <cfset router.include('shared/partials/image_dropdown') />
@@ -26,8 +21,9 @@
           <button type='button' class='btn-close smaller' data-bs-dismiss='modal'></button>
         </div>
         <div class='modal-body'>
-          <form method='post' id='post_form' class='needs-validation' novalidate enctype='multipart/form-data'>
+          <form method='post' action='#router.href('user/entry/edit')#' id='post_form' class='needs-validation' novalidate enctype='multipart/form-data'>
             <input type='file' id='filePicker' accept='image/*' multiple class='d-none' />
+            <input type='hidden' name='post_form' value='1' />
             <div class='mb-3'>
               <input type='text' class='form-control' name='ben_title' placeholder='Give your post a title...' maxlength='100' required />
             </div>
@@ -64,8 +60,8 @@
                     <div id='schedule_options' class='mt-2 pt-2 border-top' style='display: none;'>
                       <label for='ben_date' class='form-label'>Release Date</label>
                       <div class='input-group input-group-sm max-w-300px'>
-                        <input type='date' class='form-control' name='ben_date' id='ben_date' value='' maxlength='10' placeholder='YYYY-MM-DD' pattern='\d{4}-\d{2}-\d{2}' required />
-                        <input type='time' class='form-control' name='ben_time' id='ben_time' value='16:20' maxlength='5' pattern='[0-9]{2}:[0-9]{2}' required />
+                        <input type='date' class='form-control' name='ben_date' id='ben_date' value='#now().format('yyyy-mm-dd')#' maxlength='10' placeholder='YYYY-MM-DD' pattern='\d{4}-\d{2}-\d{2}' required />
+                        <input type='time' class='form-control' name='ben_time' id='ben_time' value='#now().format('HH:nn')#' maxlength='5' pattern='[0-9]{2}:[0-9]{2}' required />
                       </div>
                       <div class='form-text mt-2'>
                         Select a date and time in the future to publish your post.
