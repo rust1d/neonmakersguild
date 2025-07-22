@@ -842,3 +842,27 @@ img.lazy-img:not(.fade-in-blur) {
 @media (min-width: 700px) and (max-width: 799px)   { #member-roll > *:nth-child(n + 7):nth-child(-n + 10)  { display: none !important; } }
 @media (min-width: 800px) and (max-width: 899px)   { #member-roll > *:nth-child(n + 8):nth-child(-n + 10)  { display: none !important; } }
 @media (min-width: 900px) and (max-width: 999px)   { #member-roll > *:nth-child(n + 9):nth-child(-n + 10)  { display: none !important; } }
+
+
+.blinking { animation: blink 1s step-start infinite; opacity: 1; color: black; }
+@keyframes blink { 50% { opacity: 0; } }
+
+@keyframes redNeonPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 6px #ff6666,
+      0 0 12px #ff9999,
+      0 0 18px #ffcccc;
+  }
+  50% {
+    box-shadow:
+      0 0 12px #ff6666,
+      0 0 18px #ff9999,
+      0 0 24px #ffcccc;
+  }
+}
+
+.neon-red {
+  animation: redNeonPulse 2s ease-in-out infinite;
+}

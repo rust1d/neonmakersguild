@@ -72,10 +72,20 @@ component extends=jSoup accessors=true {
     return persisted() && ben_blog!=1;
   }
 
+  public boolean function repost() {
+    if (persisted()) return true;
+    var qry = search(ben_usid: variables.ben_usid, maxrows: 1)
+    if (qry.len()==0) return false;
+    var twice = now().diff('n', qry.ben_added) < 1 && qry.ben_title == variables.ben_title;
+    if (twice) load_db(qry);
+    return twice;
+  }
+
+
   public query function search(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;
     if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
-    var sproc = new StoredProc(procedure: 'blogentries_search', datasource: datasource());
+    var sproc = new StoredProc(procedure: 'blogentries_search', datasource: datasource(), cachedWithin: CreateTimeSpan(0,0,1,0));
     sproc.addParam(cfsqltype: 'integer',   value: arguments.get('ben_benid'),    null: !arguments.keyExists('ben_benid'));
     sproc.addParam(cfsqltype: 'integer',   value: arguments.get('ben_blog'),     null: !arguments.keyExists('ben_blog'));
     sproc.addParam(cfsqltype: 'integer',   value: arguments.get('ben_usid'),     null: !arguments.keyExists('ben_usid'));
@@ -93,7 +103,7 @@ component extends=jSoup accessors=true {
   public array function stream(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;
     if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;
-    var sproc = new StoredProc(procedure: 'blogentries_stream', datasource: datasource());
+    var sproc = new StoredProc(procedure: 'blogentries_stream', datasource: datasource(), cachedWithin: CreateTimeSpan(0,0,1,0));
     sproc.addParam(cfsqltype: 'integer',   value: arguments.get('days'),  null: !arguments.keyExists('days'));
     sproc.addParam(cfsqltype: 'integer',   value: arguments.get('count'), null: !arguments.keyExists('count'));
     sproc.addParam(cfsqltype: 'varchar',   value: arguments.get('term'),  null: !arguments.keyExists('term'));

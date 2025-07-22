@@ -28,7 +28,6 @@
     #SerializeJson(locals.mLink.social_domains())#
   </script>
 
-
   <form role='form' method='post' enctype='multipart/form-data'>
     <div class='card'>
       <h5 class='card-header bg-nmg'>#mode# Link</h5>

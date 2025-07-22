@@ -1,6 +1,5 @@
 <cfscript>
-  results = { rows: new app.models.BlogEntries().where(ben_blog: mUser.usid(), ben_released: true, maxrows: 5) };
-  results.pagination = request.pagination.last;
+  results = mUserBlog.entries(utility.paged_term_params(ben_released: true, maxrows: 5));
   section = 'user';
 </cfscript>
 

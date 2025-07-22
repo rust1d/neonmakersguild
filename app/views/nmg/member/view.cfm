@@ -6,9 +6,9 @@
   counts = mUser.counts();
 
   param url.tab = 'posts';
-  tabs = 'posts,about,images,links,activity';
+  tabs = 'posts,images,activity';
   if (!tabs.listFind(url.tab)) url.tab = 'posts';
-  if (url.tab=='posts' && counts.post_cnt==0) url.tab = 'about';
+  if (url.tab=='posts' && counts.post_cnt==0) url.tab = 'images';
 </cfscript>
 
 <cfoutput>
@@ -40,6 +40,13 @@
         </div>
       </div>
     </div>
+
+    <cfif session.user.isUser(usid)> <!--- PAGE OWNER --->
+      <div class='col-12 content-card'>
+        <cfset router.include('user/entry/modal') />
+      </div>
+    </cfif>
+
     <div class='col-12 content-card p-1'>
       <nav class='nav nav-underline member-nav ps-1'>
         <a class='nav-link #ifin(url.tab=='posts', 'active')# #ifin(counts.post_cnt==0, 'disabled')#' href='#mUser.seo_link()#'>

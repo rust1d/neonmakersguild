@@ -4,17 +4,15 @@
 <cfset router.include('shared/partials/process_overlay') />
 
 <cfoutput>
-  <div class='content-card mb-2'>
-    <div class='d-flex justify-content-start border rounded'>
-      <img class='forum-thumbnail rounded rounded-end-0' src='#session.user.profile_image().src()#' />
-      <a  class='btn btn-faux-field text-start rounded-start-0' data-bs-toggle='modal' data-bs-target='##post_modal'>
-        <i class='fa-regular fa-pen-to-square me-2'></i> What are you bending today?
-      </a>
-    </div>
+  <div class='d-flex justify-content-start border rounded neon-red'>
+    <img class='forum-thumbnail rounded rounded-end-0' src='#session.user.profile_image().src()#' />
+    <a  class='btn btn-faux-field text-start rounded-start-0' data-bs-toggle='modal' data-bs-target='##post_modal'>
+      <i class='fa-regular fa-pen-to-square me-2'></i><span class='nmg-black blinking me-0'>&##x2502;</span>Create a post to share with the guild, #session.user.UserProfile().firstname()#.
+    </a>
   </div>
 
   <div class='modal fade' id='post_modal' tabindex='-1'>
-    <div class='modal-dialog modal-dialog-scrollable modal-fullscreen-sm-down modal-lg'>
+    <div class='modal-dialog modal-dialog-scrollable modal-fullscreen-md-down modal-xl'>
       <div id='modal_entry' class='modal-content'>
         <div class='modal-header px-3 p-2'>
           <h5 class='modal-title smaller'>Create Post</h5>
@@ -25,10 +23,10 @@
             <input type='file' id='filePicker' accept='image/*' multiple class='d-none' />
             <input type='hidden' name='post_form' value='1' />
             <div class='mb-3'>
-              <input type='text' class='form-control' name='ben_title' placeholder='Give your post a title...' maxlength='100' required />
+              <input type='text' class='form-control' id='ben_title' name='ben_title' placeholder='Give your post a title...' maxlength='100' required />
             </div>
             <div class='mb-3'>
-              <textarea class='tiny-forum form-control' name='ben_body' rows='8' id='ben_body'></textarea>
+              <textarea class='tiny-forum form-control' id='ben_body' name='ben_body' rows='8'></textarea>
             </div>
             <div id='photo_roll' class='row g-1 mb-2 position-relative' data-sortable>
               <button type='button' id='btnEditCaptions' class='btn btn-sm btn-nmg w-120px'>Edit all</button>
@@ -49,11 +47,11 @@
                 <div class='col-md-6'>
                   <div class='content-card'>
                     <div class='d-flex justify-content-between align-items-center'>
-                      <label class='form-label fw-semibold mb-0 flex-grow-1 pe-3' for='schedule'>Scheduling options</label>
+                      <label class='form-label fw-semibold mb-0 flex-grow-1 pe-3' for='ben_schedule'>Scheduling options</label>
                       <div class='d-flex align-items-center gap-2'>
-                        <label class='form-label mb-0' for='schedule'>Set date and time</label>
+                        <label class='form-label mb-0' for='ben_schedule'>Set date and time</label>
                         <div class='form-check form-switch mb-0'>
-                          <input class='form-check-input' type='checkbox' id='schedule' name='schedule' value='yes'>
+                          <input class='form-check-input' type='checkbox' id='ben_schedule' name='ben_schedule' value='1'>
                         </div>
                       </div>
                     </div>

@@ -120,6 +120,7 @@ $(function() {
     license_key: 'gpl',
     promotion: false,
     menubar: false,
+    resize: true,
     plugins: 'autolink autosave code fullscreen help link lists media preview visualblocks visualchars wordcount',
     toolbar: 'fullscreen | undo redo | editing | styling | font | aligning | lists | link unlink customImageBtn media',
     toolbar_groups: toolbar_groups,

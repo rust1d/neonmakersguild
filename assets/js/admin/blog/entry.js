@@ -24,25 +24,6 @@ $(function () {
     $(this).parent().find('img').animate({ height: 0, opacity: 0 }, 400, ()=>{ $(this).parent().remove() });
   });
 
-  $('#btnAddCategory').on('click', function() {
-    var $cat = $('#bca_category');
-    var data = $cat.val().trim();
-    $cat.val('');
-    if (!data.length) return $cat.focus();
-    var matches = $("#ben_categories").find('option').filter((row,obj) => obj.text.localeCompare(data, undefined, { sensitivity: 'accent' })==0);
-    if (matches.length) {
-      matches[0].selected = true;
-      $cat.val('');
-      return;
-    }
-    $("#ben_categories").prepend(`<option value='${data}' selected>${data}</option>`);
-  });
-
-  $('#ben_title').on('blur', function() {
-    var ben_alias = this.form.ben_alias;
-    if (ben_alias.dataset.mode=='Add' || ben_alias.value.length==0) ben_alias.value = slugger(this.value);
-  });
-
   $('#helpModal').on('shown.bs.modal', function(ev) {
     $(`#${ev.relatedTarget.name}`)[0].scrollIntoView();
   });

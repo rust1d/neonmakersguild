@@ -74,7 +74,7 @@ $(function() {
       complete: function() {  },
       error: function(err) { console.error(err) },
       success: function(results) {
-        $('#thumbnail_src').attr('src', cropper.getCroppedCanvas().toDataURL());
+        $('#thumbnail_src').attr('src', results.data.src); // cropper.getCroppedCanvas().toDataURL()
         if (results.messages.length) $('#flash-messages').replaceWith(results.messages);
         $cropModal.hide();
       }

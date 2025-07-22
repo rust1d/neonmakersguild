@@ -34,8 +34,19 @@ component extends=BaseModel accessors=true {
 
   public struct function thumbnail_update() {
     try {
-      cffile(action: 'upload', filefield: 'thumbnail', destination: local_path() & thumbnail_name(), result: 'result', nameconflict: 'overwrite');
-      utility.fileCopyS3(local_path() & thumbnail_name(), remote_src() & thumbnail_name());
+      cffile(action: 'upload', filefield: 'thumbnail', destination: tmp_dir(), result: 'result', nameconflict: 'overwrite');
+      if (result.fileWasSaved) {
+        var path = result.serverDirectory & '\' & result.serverfile;
+        if (!isImageFile(path)) {
+          fileDelete(path);
+          errors().append('File is not a valid image. Please pick another.');
+          return false;
+        }
+        var img = ImageRead(path);
+        cfimage(action: 'write', quality: .8, overwrite: 'true', source: make_thumbnail(img), destination: local_path() & thumbnail_name());
+        utility.fileCopyS3(local_path() & thumbnail_name(), remote_src() & thumbnail_name());
+      }
+      result['src'] = thumbnail_src() & '?' & now().format('HHnnss');
       return result;
     } catch (any err) {
       return err;
@@ -90,7 +101,7 @@ component extends=BaseModel accessors=true {
     }
     var quality = utility.compression(info.height, info.width, variables.upload_result.filesize);
     cfimage(action: 'write', quality: quality, overwrite: 'true', source: img, destination: local_path() & image_name());
-    cfimage(action: 'write', quality: quality, overwrite: 'true', source: make_thumbnail(img), destination: local_path() & thumbnail_name());
+    cfimage(action: 'write', quality: .8, overwrite: 'true', source: make_thumbnail(img), destination: local_path() & thumbnail_name());
     utility.fileCopyS3(local_path() & image_name(), remote_src() & image_name());
     utility.fileCopyS3(local_path() & thumbnail_name(), remote_src() & thumbnail_name());
     info.append(GetFileInfo(local_path() & image_name()));
@@ -136,9 +147,8 @@ component extends=BaseModel accessors=true {
           fileSize:        GetFileInfo(path).size
         }
       } else {
-        var tmpDir = application.paths.root & 'tmp';
         setting requesttimeout=90 showdebugoutput='no'; // IMAGE PROCESSING TAKES EXTRA TIME
-        cffile(action: 'upload', filefield: variables.filefield, destination: tmpDir, result: 'variables.upload_result', nameconflict: 'overwrite');
+        cffile(action: 'upload', filefield: variables.filefield, destination: tmp_dir(), result: 'variables.upload_result', nameconflict: 'overwrite');
         if (!upload_result.fileWasSaved) {
           return errors().append('Could not upload #variables.upload_result.clientFile#.');
         }
@@ -158,6 +168,10 @@ component extends=BaseModel accessors=true {
     if (!isNull(variables.file_rename)) {
       _setval('filename', variables.file_rename);
     }
+  }
+
+  private string function tmp_dir() {
+    return application.paths.root & 'tmp';
   }
 
   private string function thumbnail_name() {

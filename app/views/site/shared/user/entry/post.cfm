@@ -1,87 +1,15 @@
 <cfscript>
   param mUserBlog = mBlog;
-
   variables.dest = (mUserBlog.id()==1 && session.site.admin()) ? 'blog' : 'user';
 
-  function field_filter(required string pre) {
-    var match = arguments.pre;
-    return form.fieldnames.listToArray().filter(fld => fld.left(match.len())==match);
-  }
-
-  function save_captions(required BlogEntries mBE) {
-    for (var fld in field_filter('bei_caption_')) {
-      var enc = fld.listToArray('_').pop();
-      var beiid = utility.decode(enc); // pop off last el, should be id
-      if (beiid) {
-        var mBEI = mBE.BlogEntryImages(detect: { bei_beiid: beiid });
-        if (!isNull(mBEI)) {
-          mBEI.set(bei_caption: form[fld]).safe_save();
-        }
-      }
-    }
-  }
-
-  function save_images(required BlogEntries mBE) {
-    // PROCESS DELETIONS
-    for (var enc in form.beiids) {
-      var beiid = utility.decode(enc);
-      if (beiid) {
-        var mBEI = mBE.BlogEntryImages(detect: { bei_beiid: beiid });
-        if (!isNull(mBEI)) {
-          mBEI.destroy();
-          flash.success('#mBEI.UserImage().filename()# removed from post.');
-        }
-      }
-    }
-    // PROCESS INSERTS
-    for (var fld in field_filter('img_')) {
-      mUI = mUser.UserImages(build: { filefield: fld });
-      if (mUI.safe_save()) {
-        var params = {
-          bei_benid:  mBE.benid(),
-          bei_uiid:  mUI.uiid()
-        }
-        // SAVE CAPTION
-        if (form.keyExists('cap_#fld#')) params.bei_caption = form['cap_#fld#'];
-        mBE.BlogEntryImages(build: params).safe_save();
-      }
-    }
-  }
-
   if (form.keyExists('btnSubmit')) {
-    param form.ben_categories = '';
-    param form.ben_released = false;
-    param form.ben_comments = false;
-    form.ben_posted = ParseDateTime(form.ben_date & ' ' & form.ben_time);
-
-    categories = [];
-    for (category in form.ben_categories) {
-      if (isNumeric(category)) {
-        categories.append(category);
-      } else {
-        qry = mBlog.category_search(bca_category: category);
-        if (qry.len()) {
-          categories.append(qry.bca_bcaid);
-        } else {
-          mCategory = mUserBlog.category_build({ bca_category: category });
-          if (mUserBlog.category_save(mCategory)) categories.append(mCategory.bcaid());
-        }
-      }
-    }
-
-    mEntry.set(form);
-    if (mEntry.safe_save()) {
-      save_images(mEntry);
-      save_captions(mEntry);
-      mBEI = mEntry.BlogEntryImages(reset: true);
-      mEntry.BlogEntryCategories(replace: categories.toList());
-      flash.success('Your entry was saved.');
+    mEntry = new app.services.user.Post().create(mUser);
+    if (mEntry.persisted()) {
       if (variables.dest=='blog') router.redirect('blog/entry/list'); // ADMIN
       router.go(mEntry.seo_link());
     }
   }
 
-  param form.ben_categories = mEntry.BlogEntryCategories().map(row => row.bec_bcaid()).toList();
   mode = mEntry.new_record() ? 'Add' : 'Edit';
 </cfscript>
 
@@ -92,7 +20,6 @@
 
 <cfoutput>
   <form role='form' method='post' id='blogform' class='needs-validation' novalidate enctype='multipart/form-data'>
-    <input type='hidden' name='ben_alias' id='ben_alias' value='#mEntry.alias()#' data-mode='#mode#' maxlength='100' />
     <input type='hidden' name='beiids' />
     <input type='file' id='filePicker' accept='image/*' multiple class='d-none' />
 
@@ -110,13 +37,11 @@
           <div class='card-body'>
             <div class='row g-3'>
               <div class='col-12'>
-                <label class='form-label fs-5 required' for='ben_title'>Post Title</label>
-                <a name='help_title' class='ms-2 blended-icon' data-bs-toggle='modal' data-bs-target='##helpModal'><i class='fas fa-circle-question'></i></a>
+                <label class='form-label required' for='ben_title'>Post Title</label>
                 <input type='text' class='form-control form-control-lg' name='ben_title' id='ben_title' value='#htmlEditFormat(mEntry.title())#' maxlength='100' required />
               </div>
               <div class='col-12'>
-                <label class='form-label fs-5 required mb-0' for='ben_body'>Post Body</label>
-                <a name='help_body' class='ms-2 blended-icon' data-bs-toggle='modal' data-bs-target='##helpModal'><i class='fas fa-circle-question'></i></a>
+                <label class='form-label required' for='ben_body'>Post Body</label>
                 <textarea class='tiny-forum form-control' name='ben_body' rows='15' id='ben_body'>#htmlEditFormat(mEntry.body())#</textarea>
               </div>
               <div class='col-12'>
@@ -133,8 +58,7 @@
                 </div>
               </div>
               <div class='col-12 col-lg-9'>
-                <label class='form-label fs-5 mb-0' for='ben_morebody'>Post Summary</label>
-                <a name='help_summary' class='ms-2 blended-icon' data-bs-toggle='modal' data-bs-target='##helpModal'><i class='fas fa-circle-question'></i></a>
+                <label class='form-label' for='ben_morebody'>Post Summary</label>
                 <textarea class='form-control' name='ben_morebody' rows='3' id='ben_morebody'>#htmlEditFormat(mEntry.morebody())#</textarea>
                 <div class='form-text smaller'>
                   A short paragraph summarizing your blog post. This is displayed in the member stream. If you do not enter one, it will be generated.

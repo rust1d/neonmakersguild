@@ -40,7 +40,7 @@ component extends=BaseModel accessors=true {
   }
 
   public string function icon(string size = 'fa-2x') {
-    if (isNull(variables.bli_url)) return 'fa-solid fa-question';
+    if (isNull(variables.bli_url)) return "<i class='#size# #icons().bookmark#'></i>";
     var type = social_type().lcase();
     var icon = type.len() ? 'fa-brands fa-#type#' : icons().get(bli_type ?: 'bookmark') ?: 'fa-solid fa-question';
     return "<i class='#size# #icon#'></i>";

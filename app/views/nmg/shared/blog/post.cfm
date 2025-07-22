@@ -32,15 +32,12 @@
     </cfif>
   </div>
   <div class='row g-3 post-comment-bar border-top mt-3'>
-    <div class='col-4'>
-
-    </div>
-    <div class='col-4 text-center'>
+    <div class='col-6 text-center'>
       <a class='post' data-target='#locals.comment_target#' data-section='#locals.section#' data-benid='#locals.mBE.encoded_key()#' href='#locals.mBE.seo_link()###comments'>
-        <i class='fa-regular fa-comment flip-x'></i> Comment
+        <i class='fa-regular fa-comment flip-x me-2'></i> Comment
       </a>
     </div>
-    <div class='col-4 text-end'>
+    <div class='col-6 text-center'>
       <div class='comment-counter'>
         <a class='post' data-target='#locals.comment_target#' data-section='#locals.section#' data-benid='#locals.mBE.encoded_key()#' href='#locals.mBE.seo_link()###comments'>
           #request.utility.updatable_counter(locals.mBE.comment_cnt(), locals.mBE.encoded_key(), request.utility.plural(locals.mBE.comment_cnt(), 'comment'))#

@@ -1,7 +1,7 @@
 <cfscript>
   params = utility.paged_term_params({ isdeleted: 0, maxrows: 400, exclude: 1 });
   cache_key = 'ml-' & utility.hashCC(params.term ?: '');
-  cache_results = utility.simple_cache('#cache_key#:60', function() {
+  cache_results = utility.simple_cache('#cache_key#:300', function() {
     var mdl = new app.models.Users();
     return {
       models: mdl.where(params),

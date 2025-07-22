@@ -1,7 +1,11 @@
 $(function () {
   const frm = $('#blogform')[0];
 
-  $('#schedule').on('change', function() {
+  $('#post_modal').on('shown.bs.modal', function () {
+    $('#ben_title').trigger('focus');
+  });
+
+  $('#ben_schedule').on('change', function() {
     $('#schedule_options').slideToggle();
   });
 
@@ -14,13 +18,6 @@ $(function () {
     $('#modal_entry').show_bs();
     $('#modal_captions').hide_bs();
   });
-
-  // SAVE TO LOCAL STORAGE?
-  // $('#btnCancel').on('click', function() {
-  //   if (!confirm('Are you sure you want to cancel this blog post?')) return;
-  //   const rtn = this.dataset.list || 'blog/entry/list';
-  //   window.location = `?p=${rtn}`;
-  // });
 
   $('[data-sortable]').each(function() {
     new Sortable(this, {

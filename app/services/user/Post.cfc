@@ -8,11 +8,15 @@ component {
     param form.beiids = '';
     form.ben_posted = post_date();
     mBE.set(form);
+    if (mBE.repost()) { // TEST FOR SAME POST IN 1 MINUTE
+      application.flash.warning('Double post caught.');
+      return mBE;
+    }
     if (mBE.safe_save()) {
       save_images();
       save_captions();
       mBE.BlogEntryImages(reset: true);
-      request.flash.success('Your entry was saved.');
+      application.flash.success('Your entry was saved.');
     }
     return mBE;
   }
@@ -25,11 +29,14 @@ component {
   }
 
   private date function post_date() {
+    param form.ben_schedule = 0;
+    if (form.ben_schedule==0) return now();
     try {
-      return ParseDateTime(form.ben_date & ' ' & form.ben_time);
+      if (isDate(form.ben_date & ' ' & form.ben_time)) return ParseDateTime(form.ben_date & ' ' & form.ben_time);
+      if (isDate(form.ben_date)) return ParseDateTime(form.ben_date & ' 23:59:59');
     } catch (any err) {
-      return now();
     }
+    return now();
   }
 
   private void function save_captions() {
@@ -53,7 +60,7 @@ component {
         var mBEI = mBE.BlogEntryImages(detect: { bei_beiid: beiid });
         if (!isNull(mBEI)) {
           mBEI.destroy();
-          request.flash.success('#mBEI.UserImage().filename()# removed from post.');
+          application.flash.success('#mBEI.UserImage().filename()# removed from post.');
         }
       }
     }

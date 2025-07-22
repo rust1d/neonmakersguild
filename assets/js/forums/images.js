@@ -24,7 +24,7 @@ function current_images($roll) {
 }
 
 function show_edit_all($roll) {
-  $('#btnEditCaptions').toggleClass('displayed', current_images($roll).length>1);
+  $('#btnEditCaptions').toggleClass('displayed', current_images($roll).length>1); // SHOW WHEN 2 OR MORE - SINGLE IMAGE HAS POST AS CAPTION
 }
 
 $(function() {

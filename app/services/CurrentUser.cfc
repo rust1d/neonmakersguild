@@ -55,6 +55,10 @@ component accessors=true {
     return !isA(arguments.typeof)
   }
 
+  public boolean function isUser(required numeric usid) {
+    return loggedIn() && arguments.usid==variables._pkid;
+  }
+
   public BaseModel function model() {
     if (isNull(request._user_model)) {
       request._user_model = new 'app.models.#get_class()#'().find(get_pkid());
