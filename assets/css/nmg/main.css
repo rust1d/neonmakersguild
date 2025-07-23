@@ -127,6 +127,12 @@ a:hover {
   border-color: var(--nmg-border);
 }
 
+.forum-thumbnail-sm {
+  width: 32px;
+  height: 32px;
+  border-color: var(--nmg-border);
+}
+
 .thread-thumbnail {
   width: 128px;
   height: 128px;

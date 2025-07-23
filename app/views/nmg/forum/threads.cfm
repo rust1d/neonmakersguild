@@ -119,7 +119,7 @@
                   <input type='file' id='filePicker' accept='image/*' multiple class='d-none' />
                   <div class='row g-3'>
                     <div class='12'>
-                      <input type='text' class='form-control form-control-lg mt-2' name='ft_subject' id='ft_subject' value='' maxlength='100' placeholder='Start new thread...' required />
+                      <input type='text' class='form-control mt-2 neon-red' name='ft_subject' id='ft_subject' value='' maxlength='100' placeholder='Start new thread...' required />
                     </div>
                     <div class='col-12 message-field' style='display:none'>
                       <textarea class='form-control tiny-forum' rows='8' name='fm_body' id='fm_body' data-roll='photo_roll'></textarea>
@@ -154,23 +154,60 @@
             <cfset mLastUser = new app.models.Users({ us_usid: row.lus_usid, us_user: row.lus_user}) />
 
             <hr class='my-3' />
-            <div class='row'>
-              <div class='col-auto'>
-                <a href='#mUser.seo_link()#'>
-                  <img class='forum-thumbnail' src='#mUser.profile_image().src()#' />
-                </a>
-              </div>
-              <div class='col #ifin(mThread.deleted(), 'text-decoration-line-through')#'>
-                <div class='smaller'>
-                  <a href='#mUser.seo_link()#'>#mUser.user()#</a>
-                  &bull;
-                  <a href='#mThread.seo_link()#'>#mThread.posted()#</a>
-                  &bull;
-                  #utility.plural_label(mThread.messages(), 'Post')#
-                  &bull;
-                  #utility.plural_label(mThread.views(), 'View')#
+
+            <div class='d-flex align-items-center gap-2'>
+              <a href='#mUser.seo_link()#'>
+                <img class='forum-thumbnail' src='#mUser.profile_image().src()#' />
+              </a>
+              <div class='w-100'>
+                <a class='fw-semibold' href='#mThread.seo_link()#'>#mThread.subject()#</a>
+                <div class='d-flex justify-content-between align-items-center w-100'>
+                  <div class='smaller'>
+                    <a href='#mUser.seo_link()#'>#mUser.user()#</a>
+                    &bull;
+                    <a href='#mThread.seo_link()#'>#mThread.posted()#</a>
+                    <br>
+                    #utility.plural_label(mThread.messages(), 'Post')#
+                    &bull;
+                    #utility.plural_label(mThread.views(), 'View')#
+                  </div>
+                  <div class='d-flex align-items-center gap-2'>
+                    <div class='smaller'>
+                      <a href='#mLastUser.seo_link()#'>#mLastUser.user()#</a>
+                      &bull;
+                      <a href='#mMessage.seo_link()#'>#mMessage.posted()#</a>
+                      <br>
+                      <a href='#mMessage.seo_link()#' class='small'>#mMessage.more()#</a>
+                    </div>
+                    <a href='#mLastUser.seo_link()#'>
+                      <img class='forum-thumbnail-sm' src='#mLastUser.profile_image().src()#' />
+                    </a>
+                  </div>
                 </div>
-                <a href='#mThread.seo_link()#'>#mThread.subject()#</a>
+              </div>
+            </div>
+
+
+<!---
+            <div class='row'>
+              <div class='col #ifin(mThread.deleted(), 'text-decoration-line-through')#'>
+                <div class='d-flex align-items-start gap-2'>
+                  <a href='#mUser.seo_link()#'>
+                    <img class='forum-thumbnail' src='#mUser.profile_image().src()#' />
+                  </a>
+                  <div>
+                    <a href='#mThread.seo_link()#'>#mThread.subject()#</a>
+                    <div class='smaller'>
+                      <a href='#mUser.seo_link()#'>#mUser.user()#</a>
+                      &bull;
+                      <a href='#mThread.seo_link()#'>#mThread.posted()#</a>
+                      &bull;
+                      #utility.plural_label(mThread.messages(), 'Post')#
+                      &bull;
+                      #utility.plural_label(mThread.views(), 'View')#
+                    </div>
+                  </div>
+                </div>
               </div>
               <div class='col-4 text-end #ifin(mMessage.deleted(), 'text-decoration-line-through')#'>
                 <div class='smaller'>
@@ -185,7 +222,7 @@
                   <img class='forum-thumbnail' src='#mLastUser.profile_image().src()#' />
                 </a>
               </div>
-            </div>
+            </div> --->
           </cfloop>
         </div>
         <div class='card-footer bg-nmg'>

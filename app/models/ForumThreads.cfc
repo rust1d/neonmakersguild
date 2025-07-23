@@ -56,7 +56,11 @@ component extends=BaseModel accessors=true {
   }
 
   public string function posted() {
-    return isNull(variables.ft_added) ? '' : utility.ordinalDate(ft_added) & ft_added.format(' @ HH:nn');
+    if (new_record()) return '';
+    return utility.recentDate(variables.ft_added);
+    // var data = utility.ordinalDate(variables.ft_added);
+    // if (utility.days_passed(variables.ft_added)<=3) data &= variables.ft_added.format(' @ HH:nn');
+    // return data;
   }
 
   public query function search(struct params) {

@@ -4,19 +4,26 @@
 
 <cfoutput>
   <div class='row g-3 justify-content-center'>
-    <div class='col-auto'>
+    <div class='d-none d-sm-block col-sm-auto'>
       <a href='#locals.mBE.User().seo_link()#'>
         <img class='profile-thumbnail img-fluid rounded' src='#locals.mBE.User().profile_image().src()#' />
       </a>
     </div>
     <div class='col position-relative'>
-      <div class='post-title fs-5'>
+      <div class='post-title fw-semibold'>
         <a class='post' data-target='#locals.comment_target#' data-section='#locals.section#' data-benid='#locals.mBE.encoded_key()#' href='#locals.mBE.seo_link()#'>
           #locals.mBE.title()#
         </a>
         #router.include('shared/blog/_promote', locals)#
       </div>
-      #router.include('shared/blog/_byline', locals)#
+      <div class='d-flex align-items-center gap-2'>
+        <div class='d-xs-inline d-sm-none'>
+          <a href='#locals.mBE.User().seo_link()#'>
+            <img class='profile-thumbnail-xs img-fluid rounded' src='#locals.mBE.User().profile_image().src()#' />
+          </a>
+        </div>
+        #router.include('shared/blog/_byline', locals)#
+      </div>
     </div>
 
     <div class='col-12'>

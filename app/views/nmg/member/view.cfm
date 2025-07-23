@@ -15,8 +15,8 @@
   <div class='row g-3'>
     <div class='col-12 content-card p-2'>
       <div class='row g-3 justify-content-center'>
-        <div class='col-auto'>
-          <img class='img-thumbnail img-fluid member-view-img' src='#mUser.profile_image().src()#' />
+        <div class='flex-25-250'>
+          <img class='img-thumbnail img-fluid' src='#mUser.profile_image().src()#' />
         </div>
         <div class='col position-relative'>
           <div class='fs-3'>

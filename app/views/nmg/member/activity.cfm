@@ -30,7 +30,7 @@
           <img src='#sProfImg.setId(act_ownid).src()#' class='flex-shrink-0' alt=''>
           <div class='flex-grow-1'>
             <div class='activity-header'>
-              <span class='activity-date me-3'>#act_dla.format('h:nn tt')#</span>
+              <span class='activity-date me-1 me-sm-3'>#act_dla.format('h:nn tt')#</span>
               <span class='fw-semibold'>#mUser.user()#</span>
               <cfif act_source=='post'>
                 added a new post <a class='activity-link stretched-link' href='#act_seolink#'>#act_title#</a>.

@@ -3,7 +3,7 @@
 
 <main class='content'>
   <section class='container-fluid'>
-    <div class="container-lg px-3">
+    <div class='container-lg p-0 px-sm-3'>
       <cfset router.include() />
     </div>
   </section>

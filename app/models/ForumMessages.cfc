@@ -61,7 +61,13 @@ component extends=jsoup accessors=true {
   }
 
   public string function posted() {
-    return isNull(variables.fm_added) ? '' : utility.ordinalDate(fm_added) & fm_added.format(' @ HH:nn');
+    if (new_record()) return '';
+    return utility.recentDate(variables.fm_added, 10);
+    // var data = utility.ordinalDate(variables.fm_added);
+    // if (utility.days_passed(variables.fm_added)<=3) {
+    //   data &= variables.fm_added.format(' @ HH:nn');
+    // }
+    return data;
   }
 
   public boolean function repost() {

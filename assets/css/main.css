@@ -442,10 +442,6 @@ figure.image figcaption {
   font-size: 0.8rem;
 }
 
-/* .post-title {
-  font-size: 1.25rem;
-} */
-
 .post-byline {
   font-size: 0.9rem;
 }
@@ -772,6 +768,11 @@ img.lazy-img:not(.fade-in-blur) {
 
 .member-view-img {
   width: 16rem;
+}
+
+.flex-25-250 {
+  flex: 0 1 25%;
+  max-width: 250px;
 }
 
 .member-about, .member-links {

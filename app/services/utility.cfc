@@ -80,6 +80,10 @@ component {
     return .95;
   }
 
+  public numeric function days_passed(required date data) {
+    return now().diff('d', data);
+  }
+
   public string function decode(string data = '') {
     if (data.len()==0 || (data.len() MOD 2)!=0) return 0;
     var chrs = len(data) / 2;
@@ -241,7 +245,7 @@ component {
   public string function ordinalDate(required string data) {
     if (!isDate(data)) return data;
     var suff = listToArray('st,nd,rd,th,th,th,th,th,th,th,th,th,th,th,th,th,th,th,th,th,st,nd,rd,th,th,th,th,th,th,th,st');
-    return "#data.format('mmmm d')##suff[day(data)]# #data.format('yyyy')#";
+    return "#data.format('mmm d')##suff[day(data)]# #data.format('yyyy')#";
   }
 
   public string function ordinalNumber(required numeric data) {
@@ -362,6 +366,16 @@ component {
     var sproc = new StoredProc(procedure = 'states_get', datasource=application.dsn);
     sproc.addProcResult(name='qry', resultset=1);
     return sproc.execute().getProcResultSets().qry;
+  }
+
+  public string function recentDate(required string data, numeric past_days=5) {
+    if (!isDate(data)) return data;
+    var suff = listToArray('st,nd,rd,th,th,th,th,th,th,th,th,th,th,th,th,th,th,th,th,th,st,nd,rd,th,th,th,th,th,th,th,st')[day(data)];
+    var mmmd = data.format('mmm d') & suff;
+    if (days_passed(data) <= past_days) {
+      return mmmd & data.format(' HH:nn');
+    }
+    return mmmd & data.format(' yy');
   }
 
   public boolean function safe_save(required BaseModel mModel) {
