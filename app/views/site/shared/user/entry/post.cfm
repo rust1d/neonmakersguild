@@ -3,7 +3,7 @@
   variables.dest = (mUserBlog.id()==1 && session.site.admin()) ? 'blog' : 'user';
 
   if (form.keyExists('btnSubmit')) {
-    mEntry = new app.services.user.Post().create(mUser);
+    mEntry = new app.services.user.Post().create(mUser, router.decode('benid'));
     if (mEntry.persisted()) {
       if (variables.dest=='blog') router.redirect('blog/entry/list'); // ADMIN
       router.go(mEntry.seo_link());
@@ -76,14 +76,14 @@
                   </div>
                   <div class='col-12'>
                     <div class='form-check form-switch form-check-sm'>
-                      <input class='form-check-input toggle-switch' type='checkbox' role='switch' id='ben_released' name='ben_released' value='yes' #ifin(mEntry.released(), 'checked')# switch />
+                      <input class='form-check-input toggle-switch' type='checkbox' role='switch' id='ben_released' name='ben_released' value='1' #ifin(mEntry.released(), 'checked')# switch />
                       <label class='form-check-label' for='ben_released'>Post Released</label>
                     </div>
                     <div class='form-text smaller'>Post is not displayed unless selected</div>
                   </div>
                   <div class='col-12'>
                     <div class='form-check form-switch'>
-                      <input class='form-check-input toggle-switch' type='checkbox' role='switch' id='ben_comments' name='ben_comments' value='yes' #ifin(mEntry.comments(), 'checked')# switch />
+                      <input class='form-check-input toggle-switch' type='checkbox' role='switch' id='ben_comments' name='ben_comments' value='1' #ifin(mEntry.comments(), 'checked')# switch />
                       <label class='form-check-label' for='ben_comments'>Allow Comments</label>
                     </div>
                     <div class='form-text smaller'>Comments are not allowed unless selected</div>

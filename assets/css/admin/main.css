@@ -76,6 +76,11 @@ figure.image figcaption {
   background-color: #0c1a19;
 }
 
+#imageselect .image-tile {
+  flex: 0 0 auto;
+  width: 5rem;
+}
+
 .navbar-nmg {
   background-color: #0c1a19;
 }

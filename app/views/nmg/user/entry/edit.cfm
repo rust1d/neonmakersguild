@@ -1,5 +1,5 @@
 <cfscript>
-  if (utility.isPost() && form.keyExists('post_form')) {
+  if (utility.isPost() && form.keyExists('post_form')) { // ADDING FROM THE POPUP MODAL -- btnPublish or btnLater
     mEntry = new app.services.user.Post().create(mUser);
     benid = mEntry.new_record() ? 0 : mEntry.benid();
   } else {

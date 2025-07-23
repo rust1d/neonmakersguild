@@ -1,10 +1,10 @@
 component {
-  public BlogEntries function create(required Users mUser) {
+  public BlogEntries function create(required Users mUser, numeric benid=0) {
     variables.mUser = arguments.mUser;
-    variables.mBE = mUser.blog().entry_find_or_create(0);
+    variables.mBE = mUser.blog().entry_find_or_create(arguments.benid);
     if (form.keyExists('btnLater')) form.ben_released = false;
-    param form.ben_released = true;
-    param form.ben_comments = true;
+    param form.ben_released = false;
+    param form.ben_comments = false;
     param form.beiids = '';
     form.ben_posted = post_date();
     mBE.set(form);
@@ -42,7 +42,7 @@ component {
   private void function save_captions() {
     for (var fld in field_filter('bei_caption_')) {
       var enc = fld.listToArray('_').pop();
-      var beiid = utility.decode(enc); // pop off last el, should be id
+      var beiid = request.utility.decode(enc); // pop off last el, should be id
       if (beiid) {
         var mBEI = mBE.BlogEntryImages(detect: { bei_beiid: beiid });
         if (!isNull(mBEI)) {
@@ -55,7 +55,7 @@ component {
   private void function save_images() {
     // PROCESS DELETIONS
     for (var enc in form.beiids) {
-      var beiid = utility.decode(enc);
+      var beiid = request.utility.decode(enc);
       if (beiid) {
         var mBEI = mBE.BlogEntryImages(detect: { bei_beiid: beiid });
         if (!isNull(mBEI)) {
