@@ -63,11 +63,12 @@ component extends=jsoup accessors=true {
   public string function posted() {
     if (new_record()) return '';
     return utility.recentDate(variables.fm_added, 10);
-    // var data = utility.ordinalDate(variables.fm_added);
-    // if (utility.days_passed(variables.fm_added)<=3) {
-    //   data &= variables.fm_added.format(' @ HH:nn');
-    // }
-    return data;
+  }
+
+  public string function posted_short() {
+    if (new_record()) return '';
+    if (utility.days_passed(variables.fm_added) <= 1) return variables.fm_added.format('HH:nn');
+    return variables.fm_added.format('mm/dd/yy');
   }
 
   public boolean function repost() {

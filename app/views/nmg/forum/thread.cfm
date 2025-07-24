@@ -189,120 +189,141 @@
                 </a>
               </cfif>
             </div>
-
-            #router.include('shared/partials/filter_and_page', { pagination: pagination })#
+            <cfif session.user.loggedIn()>
+              #router.include('shared/partials/filter_and_page', { pagination: pagination })#
+            </cfif>
           </div>
         </div>
-        <form method='post' class='needs-validation' novalidate autocomplete='off' enctype='multipart/form-data'>
-          <input type='hidden' name='fmid' />
-          <input type='hidden' name='fiids' />
+        <div class='card-body pt-2'>
+          <form method='post' class='needs-validation' novalidate autocomplete='off' enctype='multipart/form-data'>
+            <input type='hidden' name='fmid' />
+            <input type='hidden' name='fiids' />
+            <input type='file' id='filePicker' accept='image/*' multiple class='d-none' />
 
-          <input type='file' id='filePicker' accept='image/*' multiple class='d-none' />
+            <cfloop array='#arrList#' item='row' index='idx'>
+              <cfset mMessage = new app.models.ForumMessages(row) />
+              <cfset mUser = new app.models.Users(row) />
+              <cfset mUserProfile = new app.models.UserProfile(row) />
 
-          <cfloop array='#arrList#' item='row' index='idx'>
-            <cfset mMessage = new app.models.ForumMessages(row) />
-            <cfset mUser = new app.models.Users(row) />
-            <cfset mUserProfile = new app.models.UserProfile(row) />
+              <div class='d-none d-sm-block mx-2 my-2 smaller text-end'>
+                <a href='#mMessage.seo_link()#'>#mMessage.posted()#</a>
+                <cfif len(mMessage.history())>&bull; <small class='fst-italic text-muted' title='#mMessage.edited()#'>edited</small></cfif>
+                <cfif session.user.loggedIn() && mMessage.usid()==session.user.usid()>
+                  &bull; <a class='message-edit' data-fmid='#mMessage.fmid()#' data-key='#mMessage.encoded_key()#' title='editable for 24 hours'><i class='fa-solid fa-fw fa-pencil'></i></a>
+                  &bull; <a class='message-delete' data-fmid='#mMessage.fmid()#' data-key='#mMessage.encoded_key()#' title='deletable for 24 hours'><i class='fa-solid fa-fw fa-trash'></i></a>
+                </cfif>
+                &bull; Post ###idx#
+              </div>
 
-            <div class='row g-0 bg-nmg border-top border-nmg'>
-              <div class='col-auto text-center'>
-                <div class='pt-4 thread-user'>
+              <div class='d-block d-sm-none'>
+                <div class='my-2 smaller'>
                   <a href='#mUser.seo_link()#'>
-                    <img class='thread-thumbnail img-thumbnail rounded' src='#mUser.profile_image().src()#' alt='' />
+                    <img class='resp-thumbnail-lg me-2' src='#mUser.profile_image().src()#' alt='' />
+                  </a>
+                  <a href='#mUser.seo_link()#'>#mUser.user()#</a>
+                  &bull;
+                  #mUserProfile.location()#
+                  <cfif session.user.loggedIn() && mMessage.usid()==session.user.usid()>
+                    &bull; <a class='message-edit' data-fmid='#mMessage.fmid()#' data-key='#mMessage.encoded_key()#' title='editable for 24 hours'><i class='fa-solid fa-fw fa-pencil'></i></a>
+                    &bull; <a class='message-delete' data-fmid='#mMessage.fmid()#' data-key='#mMessage.encoded_key()#' title='deletable for 24 hours'><i class='fa-solid fa-fw fa-trash'></i></a>
+                  </cfif>
+                  <span class='float-end text-end'>
+                    Post ###idx#<br>
+                    <a href='#mMessage.seo_link()#'>#mMessage.posted()#</a>
+                  </span>
+                </div>
+              </div>
+
+              <div class='row g-2'>
+                <div class='d-none d-sm-block col-auto text-center'>
+                  <a href='#mUser.seo_link()#'>
+                    <img class='resp-thumbnail-lg' src='#mUser.profile_image().src()#' alt='' />
                   </a>
                   <div class='smallest'><a href='#mUser.seo_link()#'>#mUser.user()#</a></div>
                   <div class='smallest'>#mUserProfile.location()#</div>
                 </div>
-              </div>
-              <div class='col'>
-                <div class='ms-2 smaller px-3 mt-1'>
-                  <a href='#mMessage.seo_link()#'>#mMessage.posted()#</a>
-                  <cfif len(mMessage.history())>&bull; <small class='fst-italic text-muted' title='#mMessage.edited()#'>edited</small></cfif>
-                  <cfif session.user.loggedIn() && mMessage.usid()==session.user.usid() && mMessage.editable()>
-                    &bull; <a class='message-edit' data-fmid='#mMessage.fmid()#' data-key='#mMessage.encoded_key()#' title='editable for 24 hours'><i class='fa-solid fa-fw fa-pencil'></i></a>
-                    &bull; <a class='message-delete' data-fmid='#mMessage.fmid()#' data-key='#mMessage.encoded_key()#' title='deletable for 24 hours'><i class='fa-solid fa-fw fa-trash'></i></a>
-                  </cfif>
-                  <span class='float-end me-3'>Post ###idx#</span>
-                </div>
-                <div id='message-#mMessage.encoded_key()#' class='me-2 mb-2'>
-                  <div class='message border bg-nmg-light p-3 thread-message #ifin(mMessage.deleted(), 'text-decoration-line-through')#'>
-                    <div class='body'>
-                      <cfif mMessage.deleted() && !session.user.admin()>
-                        <span class='fst-italic smaller'>#mMessage.deleted_label()#</span>
-                      <cfelse>
-                        #mMessage.body()#
-                      </cfif>
+                <div class='col'>
+                  <div id='message-#mMessage.encoded_key()#' class=''>
+                    <div class='message border bg-nmg-light p-3 thread-message #ifin(mMessage.deleted(), 'text-decoration-line-through')#'>
+                      <div class='body'>
+                        <cfif mMessage.deleted() && !session.user.admin()>
+                          <span class='fst-italic smaller'>#mMessage.deleted_label()#</span>
+                        <cfelse>
+                          #mMessage.body()#
+                        </cfif>
+                      </div>
                     </div>
+                    <cfif row.fm_image_cnt GT 0>
+                      <div class='message-roll row g-2 mt-1'>
+                        <cfloop array='#mMessage.ForumImages()#' item='mFI'>
+                          <div class='col-3 col-xl-2 position-relative'>
+                            <a data-lightbox='message-#mMessage.fmid()#' data-title='#mFI.filename()#' href='#mFI.image_src()#' title='#mFI.filename()#'>
+                              <img data-pkid=#mFI.encoded_key()# class='w-100 img-thumbnail' src='#mFI.thumbnail_src()#' />
+                            </a>
+                          </div>
+                        </cfloop>
+                      </div>
+                    </cfif>
                   </div>
-                  <cfif row.fm_image_cnt GT 0>
-                    <div class='message-roll row g-2 mt-1'>
-                      <cfloop array='#mMessage.ForumImages()#' item='mFI'>
-                        <div class='col-3 col-xl-2 position-relative'>
-                          <a data-lightbox='message-#mMessage.fmid()#' data-title='#mFI.filename()#' href='#mFI.image_src()#' title='#mFI.filename()#'>
-                            <img data-pkid=#mFI.encoded_key()# class='w-100 img-thumbnail' src='#mFI.thumbnail_src()#' />
-                          </a>
-                        </div>
-                      </cfloop>
-                    </div>
-                  </cfif>
                 </div>
               </div>
-            </div>
-          </cfloop>
-          <cfif session.user.loggedIn()>
-            <div class='row g-0 bg-nmg border-top border-nmg'>
-              <div class='col-auto text-center'>
-                <div class='pt-2 thread-user'>
-                  <img class='thread-thumbnail img-thumbnail rounded' src='#session.user.profile_image().src()#' />
-                  <div><a href='#session.user.seo_link()#'>#session.user.user()#</a></div>
-                  <div class='smaller'>#session.user.UserProfile().location()#</div>
-                </div>
+
+              <hr class='my-3' />
+            </cfloop>
+            <cfif session.user.loggedIn()>
+              <div class='d-block d-sm-none my-2 smaller'>
+                <a href='#session.user.seo_link()#'>
+                  <img class='resp-thumbnail-lg me-2' src='#session.user.profile_image().src()#' alt='' />
+                </a>
+                <a href='#session.user.seo_link()#'>#session.user.user()#</a>
+                &bull;
+                #session.user.UserProfile().location()#
               </div>
-              <div class='col'>
-                <div class='border bg-nmg-light me-2 my-2 p-3 thread-message'>
-                  <div class='row g-3'>
-                    <div class='col-12'>
-                      <textarea class='form-control tiny-forum' rows='8' name='fm_body' id='fm_body' data-roll='photo_roll'></textarea>
-                    </div>
-                    <div class='col-12'>
-                      <div id='photo_roll' class='row g-1 mb-2'></div>
-                    </div>
+
+              <div class='row g-2 justify-content-end'>
+                <div class='d-none d-sm-block col-auto text-center'>
+                  <img class='resp-thumbnail' src='#session.user.profile_image().src()#' />
+                  <div class='smallest'><a href='#session.user.seo_link()#'>#session.user.user()#</a></div>
+                  <div class='smallest'>#session.user.UserProfile().location()#</div>
+                </div>
+                <div class='col'>
+                  <div class='mb-2'>
+                    <textarea class='form-control tiny-forum' rows='8' name='fm_body' id='fm_body' data-roll='photo_roll'></textarea>
+                  </div>
+                  <div id='photo_roll' class='row g-1 mb-2'></div>
+                  <div class='row'>
                     <cfif mForumSubscript.new_record()>
-                      <div class='col-12'>
-                        <div class='form-check form-switch float-end' title='Receive an email when someone posts in this thread.'>
+                      <div class='col'>
+                        <div class='form-check form-switch' title='Receive an email when someone posts in this thread.'>
                           <input class='form-check-input' type='checkbox' id='ft_subscribe' name='ft_subscribe' value='1' #ifin(mThreadSubscript.persisted(), 'checked')# />
-                          <label class='form-check-label' for='ft_subscribe'>Subscribe to this thread</label>
+                          <label class='form-check-label smaller' for='ft_subscribe'>Subscribe to this thread</label>
                         </div>
                       </div>
                     </cfif>
-                    <div class='col-12 text-center'>
+                    <div class='col-auto'>
                       <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-sm btn-nmg'>Post Reply</button>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div id='edit_popin' class='row g-2 d-none'>
-              <div class='col-12'>
-                <button type='submit' name='btnMessageDelete' id='btnMessageDelete' class='d-none'>Delete</button>
-                <textarea class='form-control tiny-forum' rows='4' name='edit_message' id='edit_message' data-roll='edit_roll'></textarea>
+              <div id='edit_popin' class='row g-2 d-none'>
+                <div class='col-12'>
+                  <button type='submit' name='btnMessageDelete' id='btnMessageDelete' class='d-none'>Delete</button>
+                  <textarea class='form-control tiny-forum' rows='4' name='edit_message' id='edit_message' data-roll='edit_roll'></textarea>
+                </div>
+                <div class='col-12'>
+                  <div id='edit_roll' class='row g-1 mb-2'></div>
+                </div>
+                <div class='col-12 text-center'>
+                  <button type='submit' name='btnMessageEdit' id='btnMessageEdit' class='btn btn-sm btn-nmg'>Save</button>
+                  <a id='message-revert' class='btn btn-sm btn-nmg-cancel'>Cancel</a>
+                </div>
               </div>
-              <div class='col-12'>
-                <div id='edit_roll' class='row g-1 mb-2'></div>
-              </div>
-              <div class='col-12 text-center'>
-                <button type='submit' name='btnMessageEdit' id='btnMessageEdit' class='btn btn-sm btn-nmg'>Save</button>
-                <a id='message-revert' class='btn btn-sm btn-nmg-cancel'>Cancel</a>
-              </div>
-            </div>
-          </cfif>
-        </form>
+            </cfif>
+          </form>
+        </div>
         <div class='card-footer'>
-          <div class='row'>
-            <div class='col-2'>
-              Messages #mThread.messages()#
-            </div>
-          </div>
+          Messages #mThread.messages()#
         </div>
       </div>
     </div>

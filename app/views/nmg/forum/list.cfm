@@ -14,7 +14,6 @@
     </cfif>
     <cfloop array='#arrList#' item='row'>
       <cftry>
-
       <cfset mForum = new app.models.Forums(row) />
       <cfset mThread = new app.models.ForumThreads(row) />
       <cfset mMessage = new app.models.ForumMessages(row) />
@@ -51,7 +50,7 @@
                     </div>
                     <div class='col-auto'>
                       <a href='#mUser.seo_link()#'>
-                        <img class='forum-thumbnail' src='#mUser.profile_image().src()#' />
+                        <img class='resp-thumbnail' src='#mUser.profile_image().src()#' />
                       </a>
                     </div>
                   </div>
@@ -67,7 +66,7 @@
                   <div class='d-flex align-items-center gap-2'>
                     <div class='d-xs-inline d-sm-none'>
                       <a href='#mUser.seo_link()#'>
-                        <img class='profile-thumbnail-xs img-fluid rounded' src='#mUser.profile_image().src()#' />
+                        <img class='resp-thumbnail' src='#mUser.profile_image().src()#' />
                       </a>
                     </div>
                     <div class='smaller'>
@@ -82,39 +81,11 @@
                 </div>
               </cfif>
             </div>
-            <!--- <div class='row'>
-              <div class='col-2 text-center'>
-                Threads <br/> #mForum.threads()#
-              </div>
-              <div class='col-2 text-center'>
-                Messages <br/> #mForum.messages()#
-              </div>
-              <div class='col-8 text-end'>
-                <cfif !isNull(mForum.last_fmid()) && !mMessage.deleted()>
-                  <div class='row'>
-                    <div class='col text-end'>
-                      <div class='small'>
-                        <a href='#mUser.seo_link()#'>#mUser.user()#</a>
-                        &bull;
-                        <a href='#mMessage.seo_link()#' class='small'>#mMessage.posted()#</a>
-                      </div>
-                      <a href='#mMessage.seo_link()#'>#mThread.subject()#</a>
-                    </div>
-                    <div class='col-auto'>
-                      <a href='#mUser.seo_link()#'>
-                        <img class='forum-thumbnail' src='#mUser.profile_image().src()#' />
-                      </a>
-                    </div>
-                  </div>
-                </cfif>
-              </div>
-            </div> --->
           </div>
         </div>
       </div>
       <cfcatch any='err'>
-        <!--- <cfdump var='#row#' />
-        <cfdump var="#err#" /> --->
+        <marquee>#utility.errorString(err)#</marquee>
       </cfcatch>
     </cftry>
     </cfloop>

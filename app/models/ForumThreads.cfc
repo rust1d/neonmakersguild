@@ -58,9 +58,12 @@ component extends=BaseModel accessors=true {
   public string function posted() {
     if (new_record()) return '';
     return utility.recentDate(variables.ft_added);
-    // var data = utility.ordinalDate(variables.ft_added);
-    // if (utility.days_passed(variables.ft_added)<=3) data &= variables.ft_added.format(' @ HH:nn');
-    // return data;
+  }
+
+  public string function posted_short() {
+    if (new_record()) return '';
+    if (utility.days_passed(variables.ft_added) <= 1) return variables.ft_added.format('HH:nn');
+    return variables.ft_added.format('mm/dd/yy');
   }
 
   public query function search(struct params) {

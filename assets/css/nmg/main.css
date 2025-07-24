@@ -106,21 +106,6 @@ a:hover {
   height: 300px;
 }
 
-.profile-thumbnail {
-  max-width: 64px;
-  min-width: 48px;
-  width: 100%;
-  height: auto;
-}
-.profile-thumbnail-xs {
-  width: 24px;
-  height: 24px;
-}
-.profile-view-img {
-  width: 11rem;
-  height: 11rem;
-}
-
 .forum-thumbnail {
   width: 48px;
   height: 48px;
@@ -137,10 +122,6 @@ a:hover {
   width: 128px;
   height: 128px;
   border-color: var(--nmg-border);
-}
-
-.thread-user {
-  min-width: 156px;
 }
 
 .thread-message {
@@ -381,21 +362,31 @@ a:hover {
   }
 }
 
-
-/*
-.masonry {
-  column-width: 180px;
-  column-gap: 0.25rem;
-  background-color: var(--nmg-bg-light);
-}
-
-.masonry-tile {
-  break-inside: avoid;
-  margin-bottom: 0.25rem;
-  overflow: hidden;
-}
-
-.masonry-tile img {
-  border: var(--bs-border-width) var(--bs-border-style) var(--nmg-bg-alt);
+.resp-thumbnail, .resp-thumbnail-lg {
+  max-width: 64px;
+  min-width: 48px;
   border-radius: var(--bs-border-radius) !important;
-} */
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 575.98px) {
+  .resp-thumbnail, .resp-thumbnail-lg {
+    max-width: 40px;
+    min-width: 40px;
+  }
+}
+
+@media (max-width: 487.98px) {
+  .resp-thumbnail {
+    max-width: 32px;
+    min-width: 32px;
+  }
+}
+
+@media (max-width: 419.98px) {
+  .resp-thumbnail {
+    max-width: 24px;
+    min-width: 24px;
+  }
+}

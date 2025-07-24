@@ -27,6 +27,16 @@
   padding: 0;
 }
 
+@media (max-width: 399.98px) {
+  .d-xxs-none         { display: none !important; }
+  .d-xxs-inline       { display: inline !important; }
+  .d-xxs-inline-block { display: inline-block !important; }
+  .d-xxs-block        { display: block !important; }
+  .d-xxs-flex         { display: flex !important; }
+  .d-xxs-inline-flex  { display: inline-flex !important; }
+  .d-xxs-grid         { display: grid !important; }
+}
+
 .grecaptcha-badge { visibility: hidden; }
 .tox-statusbar__help-text { visibility: hidden; font-size: .5rem!important; margin: unset!important; padding-top: .25rem!important; }
 .tox-statusbar__branding { font-size: .35rem!important; }

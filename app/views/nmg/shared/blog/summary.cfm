@@ -12,7 +12,7 @@
         <div class='row g-2'>
           <div class='d-none d-sm-block col-sm-auto'>
             <a href='#locals.mBE.User().seo_link()#'>
-              <img class='profile-thumbnail img-fluid rounded' src='#locals.mBE.User().profile_image().src()#' />
+              <img class='resp-thumbnail' src='#locals.mBE.User().profile_image().src()#' />
             </a>
           </div>
           <div class='col position-relative'>
@@ -25,7 +25,7 @@
             <div class='d-flex align-items-center gap-2'>
               <div class='d-xs-inline d-sm-none'>
                 <a href='#locals.mBE.User().seo_link()#'>
-                  <img class='profile-thumbnail-xs img-fluid rounded' src='#locals.mBE.User().profile_image().src()#' />
+                  <img class='resp-thumbnail' src='#locals.mBE.User().profile_image().src()#' />
                 </a>
               </div>
               #router.include('shared/blog/_byline', locals)#

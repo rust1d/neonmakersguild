@@ -105,44 +105,42 @@
                 </a>
               </cfif>
             </div>
-            #router.include('shared/partials/filter_and_page', { pagination: pagination })#
+            <cfif session.user.loggedIn()>
+              #router.include('shared/partials/filter_and_page', { pagination: pagination })#
+            </cfif>
           </div>
         </div>
         <div class='card-body'>
           <cfif session.user.loggedIn()>
-            <div class='row mb-3'>
-              <div class='col-auto'>
-                <img class='forum-thumbnail' src='#session.user.profile_image().src()#' />
+            <form method='post' class='needs-validation' novalidate autocomplete='off' enctype='multipart/form-data'>
+              <input type='file' id='filePicker' accept='image/*' multiple class='d-none' />
+              <div class='row g-3 align-items-end align-items-sm-center mb-2'>
+                <div class='col-auto'>
+                  <img class='resp-thumbnail-lg' src='#session.user.profile_image().src()#' />
+                </div>
+                <div class='col'>
+                  <input type='text' class='form-control neon-red my-auto' name='ft_subject' id='ft_subject' value='' maxlength='100' placeholder='Start new thread...' required />
+                </div>
               </div>
-              <div class='col'>
-                <form method='post' class='needs-validation' novalidate autocomplete='off' enctype='multipart/form-data'>
-                  <input type='file' id='filePicker' accept='image/*' multiple class='d-none' />
-                  <div class='row g-3'>
-                    <div class='12'>
-                      <input type='text' class='form-control mt-2 neon-red' name='ft_subject' id='ft_subject' value='' maxlength='100' placeholder='Start new thread...' required />
-                    </div>
-                    <div class='col-12 message-field' style='display:none'>
-                      <textarea class='form-control tiny-forum' rows='8' name='fm_body' id='fm_body' data-roll='photo_roll'></textarea>
-                    </div>
-                    <div class='col-12 message-field' style='display:none'>
-                      <div id='photo_roll' class='row g-1 mb-2'></div>
-                    </div>
-                    <cfif mSubscription.new_record()>
-                      <div class='col-12 message-field' style='display:none'>
-                        <div class='form-check form-switch float-end' title='Receive an email when someone posts in this thread.'>
-                          <input class='form-check-input' type='checkbox' id='ft_subscribe' name='ft_subscribe' value='1' />
-                          <label class='form-check-label' for='ft_subscribe'>Subscribe to this thread</label>
-                        </div>
-                      </div>
-                    </cfif>
-                    <div class='col-12 message-field text-center' style='display:none'>
-                      <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-sm btn-nmg'>Save</button>
-                      <a href='#router.url()#' class='btn btn-sm btn-nmg-cancel'>Cancel</a>
-                    </div>
+              <div class='message-field' style='display:none'>
+                <textarea class='form-control tiny-forum' rows='8' name='fm_body' id='fm_body' data-roll='photo_roll'></textarea>
+              </div>
+              <div class='message-field my-2' style='display:none'>
+                <div id='photo_roll' class='row g-1'></div>
+              </div>
+              <cfif mSubscription.new_record()>
+                <div class='message-field' style='display:none'>
+                  <div class='form-check form-switch float-end' title='Receive an email when someone posts in this thread.'>
+                    <input class='form-check-input' type='checkbox' id='ft_subscribe' name='ft_subscribe' value='1' />
+                    <label class='form-check-label' for='ft_subscribe'>Subscribe to this thread</label>
                   </div>
-                </form>
+                </div>
+              </cfif>
+              <div class='message-field text-center' style='display:none'>
+                <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-sm btn-nmg'>Save</button>
+                <a href='#router.url()#' class='btn btn-sm btn-nmg-cancel'>Cancel</a>
               </div>
-            </div>
+            </form>
           </cfif>
           <cfif arrList.len()==0>
             <div class='small'>"There is no heavier burden than an unfulfilled potential." - Charles Schulz</div>
@@ -155,74 +153,42 @@
 
             <hr class='my-3' />
 
-            <div class='d-flex align-items-center gap-2'>
-              <a href='#mUser.seo_link()#'>
-                <img class='forum-thumbnail' src='#mUser.profile_image().src()#' />
+            <div class='fw-semibold me-3'>
+              <a href='#mThread.seo_link()#'>
+                #mThread.subject()#
               </a>
-              <div class='w-100'>
-                <a class='fw-semibold' href='#mThread.seo_link()#'>#mThread.subject()#</a>
-                <div class='d-flex justify-content-between align-items-center w-100'>
-                  <div class='smaller'>
-                    <a href='#mUser.seo_link()#'>#mUser.user()#</a>
-                    &bull;
-                    <a href='#mThread.seo_link()#'>#mThread.posted()#</a>
-                    <br>
-                    #utility.plural_label(mThread.messages(), 'Post')#
-                    &bull;
-                    #utility.plural_label(mThread.views(), 'View')#
-                  </div>
-                  <div class='d-flex align-items-center gap-2'>
-                    <div class='smaller'>
-                      <a href='#mLastUser.seo_link()#'>#mLastUser.user()#</a>
-                      &bull;
-                      <a href='#mMessage.seo_link()#'>#mMessage.posted()#</a>
-                      <br>
-                      <a href='#mMessage.seo_link()#' class='small'>#mMessage.more()#</a>
-                    </div>
-                    <a href='#mLastUser.seo_link()#'>
-                      <img class='forum-thumbnail-sm' src='#mLastUser.profile_image().src()#' />
-                    </a>
-                  </div>
-                </div>
-              </div>
             </div>
-
-
-<!---
-            <div class='row'>
-              <div class='col #ifin(mThread.deleted(), 'text-decoration-line-through')#'>
-                <div class='d-flex align-items-start gap-2'>
-                  <a href='#mUser.seo_link()#'>
-                    <img class='forum-thumbnail' src='#mUser.profile_image().src()#' />
-                  </a>
-                  <div>
-                    <a href='#mThread.seo_link()#'>#mThread.subject()#</a>
-                    <div class='smaller'>
-                      <a href='#mUser.seo_link()#'>#mUser.user()#</a>
-                      &bull;
-                      <a href='#mThread.seo_link()#'>#mThread.posted()#</a>
-                      &bull;
-                      #utility.plural_label(mThread.messages(), 'Post')#
-                      &bull;
-                      #utility.plural_label(mThread.views(), 'View')#
-                    </div>
-                  </div>
+            <div class='d-flex justify-content-between align-items-center w-100'>
+              <div class='d-flex align-items-center gap-2'>
+                <a href='#mUser.seo_link()#' class='d-inline d-xxs-none'>
+                  <img class='resp-thumbnail' src='#mUser.profile_image().src()#' />
+                </a>
+                <div class='smaller'>
+                  <a href='#mUser.seo_link()#'>#mUser.user()#</a>
+                  &bull;
+                  <a href='#mThread.seo_link()#'>#mThread.posted()#</a>
+                  <br>
+                  #utility.plural_label(mThread.messages(), 'Post')#
+                  &bull;
+                  #utility.plural_label(mThread.views(), 'View')#
                 </div>
               </div>
-              <div class='col-4 text-end #ifin(mMessage.deleted(), 'text-decoration-line-through')#'>
+              <div class='d-flex align-items-center gap-2'>
                 <div class='smaller'>
                   <a href='#mLastUser.seo_link()#'>#mLastUser.user()#</a>
                   &bull;
-                  <a href='#mMessage.seo_link()#' class='small'>#mMessage.posted()#</a>
+                  <a href='#mMessage.seo_link()#'>
+                    <span class='d-inline d-xxs-none'>#mMessage.posted()#</span>
+                    <span class='d-none d-xxs-inline'>#mMessage.posted_short()#</span>
+                  </a>
+                  <br>
+                  <a href='#mMessage.seo_link()#' class='small'>#mMessage.more()#</a>
                 </div>
-                <a href='#mMessage.seo_link()#' class='small'>#mMessage.more()#</a>
-              </div>
-              <div class='col-auto'>
-                <a href='#mLastUser.seo_link()#'>
-                  <img class='forum-thumbnail' src='#mLastUser.profile_image().src()#' />
+                <a href='#mLastUser.seo_link()#' class='d-inline d-xxs-none'>
+                  <img class='resp-thumbnail' src='#mLastUser.profile_image().src()#' />
                 </a>
               </div>
-            </div> --->
+            </div>
           </cfloop>
         </div>
         <div class='card-footer bg-nmg'>
