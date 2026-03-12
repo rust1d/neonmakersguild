@@ -440,6 +440,10 @@ component {
     return data;
   }
 
+  public void function simple_cache_expire(required string key, boolean global=false) { // GLOBAL DETERMINES SCOPE: APP OR SESSION
+    var cacheID = (arguments.global ? application.applicationname : session.sessionID) & arguments.key.listFirst(':');
+    cacheRemove(cacheID);
+  }
 
   public array function slice(required array data, required numeric size) {
     if (data.len()<=size) return data;

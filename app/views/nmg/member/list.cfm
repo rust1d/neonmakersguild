@@ -9,6 +9,7 @@
       pagination: mdl.pagination()
     }
   }, true);
+  if (!cache_results.models.len() && !len(params.get('term'))) utility.simple_cache_expire(cache_key, true);
   mUsers = cache_results.models;
   pagination = cache_results.pagination;
   view = session.user.view();

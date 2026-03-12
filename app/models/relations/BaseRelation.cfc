@@ -16,7 +16,7 @@ component accessors=true {
     variables.relation = params.get('through') ?: params.get('relation');
     variables.type = params.get('type');
     variables.where = params.get('where') ?: {};
-    variables.preloaded = variables.type=='belongs_to' && (params.get('preloaded') ?: false);
+    variables.preloaded = listFind('belongs_to,has_one', variables.type) && (params.get('preloaded') ?: false);
 
     return this;
   }

@@ -16,6 +16,14 @@ component extends=BaseModel accessors=true {
     return preserveNulls(sproc.execute().getProcResultSets().qry);
   }
 
+  public numeric function delete_batch(required array ssids) {
+    if (!ssids.len()) return 0;
+    var sproc = new StoredProc(procedure: 'subscriptions_delete_batch', datasource: datasource());
+    sproc.addParam(cfsqltype: 'varchar', value: ssids.toList());
+    sproc.addProcResult(name: 'qry', resultset: 1);
+    return sproc.execute().getProcResultSets().qry.delete_count;
+  }
+
   public numeric function delete_by_user(required numeric usid) {
     var sproc = new StoredProc(procedure: 'subscriptions_delete_user', datasource: datasource());
     sproc.addParam(cfsqltype: 'integer', value: arguments.usid);

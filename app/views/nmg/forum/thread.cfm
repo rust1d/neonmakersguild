@@ -113,6 +113,13 @@
   pagination = mdl.pagination();
   if (pagination.first) mThread.view();
 
+  // Pre-load all forum images for this thread in one query
+  threadImages = {};
+  for (var fi in new app.models.ForumImages().where(fi_ftid: mThread.ftid())) {
+    if (!threadImages.keyExists(fi.fmid())) threadImages[fi.fmid()] = [];
+    threadImages[fi.fmid()].append(fi);
+  }
+
   mBlock = mBlog.textblock_by_label('forum-' & mForum.alias());
 </cfscript>
 
@@ -253,9 +260,9 @@
                         </cfif>
                       </div>
                     </div>
-                    <cfif row.fm_image_cnt GT 0>
+                    <cfif row.fm_image_cnt GT 0 AND threadImages.keyExists(mMessage.fmid())>
                       <div class='message-roll row g-2 mt-1'>
-                        <cfloop array='#mMessage.ForumImages()#' item='mFI'>
+                        <cfloop array='#threadImages[mMessage.fmid()]#' item='mFI'>
                           <div class='col-3 col-xl-2 position-relative'>
                             <a data-lightbox='message-#mMessage.fmid()#' data-title='#mFI.filename()#' href='#mFI.image_src()#' title='#mFI.filename()#'>
                               <img data-pkid=#mFI.encoded_key()# class='w-100 img-thumbnail' src='#mFI.thumbnail_src()#' />

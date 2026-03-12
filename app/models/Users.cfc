@@ -11,7 +11,7 @@ component extends=BaseModel accessors=true {
   property name='us_dll'          type='date';
   property name='password'        type='string';
 
-  has_one(class: 'UserProfile',     key: 'us_usid',  relation: 'up_usid');
+  has_one(class: 'UserProfile',     key: 'us_usid',  relation: 'up_usid',  preloaded: true);
   has_many(class: 'UserImages',     key: 'us_usid',  relation: 'ui_usid');
   has_many(class: 'BlogComments',   key: 'us_usid',  relation: 'bco_usid');
   has_many(class: 'BlogEntries',    key: 'us_usid',  relation: 'ben_usid');

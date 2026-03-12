@@ -549,7 +549,7 @@ component {
     return add_relation(arguments);
   }
 
-  private BaseRelation function has_one(required string class, required string key, required string relation, string type = GetFunctionCalledName()) {
+  private BaseRelation function has_one(required string class, required string key, required string relation, string type = GetFunctionCalledName(), boolean preloaded = false) {
     return add_relation(arguments);
   }
 
