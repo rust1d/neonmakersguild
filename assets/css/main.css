@@ -52,7 +52,7 @@ body {
 }
 
 a {
-  text-decoration: none;
+  text-decoration: solid underline #90999944 2px;
 }
 
 .font-montserrat {

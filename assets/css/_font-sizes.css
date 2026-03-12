@@ -1,4 +1,5 @@
-.fs-1 { font-size: calc(1.35rem + .8vw) !important;}
+.fs-xl {font-size: 2.2em!important}
+.fs-1 { font-size: calc(1.65rem + .8vw) !important;}
 .fs-2 { font-size: calc(1.3rem + .3vw) !important;}
 .fs-3 { font-size: calc(1.25rem + .2vw) !important;}
 .fs-4 { font-size: calc(1.1rem + .5vw) !important;}
@@ -6,6 +7,10 @@
 .fs-6 { font-size: calc(1.0rem + .1vw) !important;}
 .fs-7 { font-size: calc(.85rem + .3vw) !important;}
 .fs-8 { font-size: calc(.75rem + .3vw) !important;}
+.fs-9 { font-size: calc(.65rem + .3vw) !important;}
+.text-small {font-size: 85% !important;}
+.text-smaller {font-size: 75% !important;}
+.text-xsmall { font-size: 60% !important; }
 
 
 @media (min-width: 576px) {
@@ -17,6 +22,7 @@
   .fs-sm-6 { font-size: calc(.95rem + .2vw) !important;}
   .fs-sm-7 { font-size: calc(.80rem + .4vw) !important;}
   .fs-sm-8 { font-size: calc(.70rem + .4vw) !important;}
+  .fs-sm-9 { font-size: calc(.60rem + .4vw) !important;}
 }
 
 @media (min-width: 768px) {
@@ -28,6 +34,7 @@
   .fs-md-6 { font-size: calc(1rem + .1vw) !important;}
   .fs-md-7 { font-size: calc(.80rem + .3vw) !important;}
   .fs-md-8 { font-size: calc(.70rem + .3vw) !important;}
+  .fs-md-9 { font-size: calc(.60rem + .3vw) !important;}
 }
 
 @media (min-width: 992px) {
@@ -39,6 +46,7 @@
   .fs-lg-6 { font-size: calc(1rem + .15vw) !important; }
   .fs-lg-7 { font-size: calc(.85rem + .15vw) !important;}
   .fs-lg-8 { font-size: calc(.75rem + .15vw) !important;}
+  .fs-lg-9 { font-size: calc(.65rem + .15vw) !important;}
 }
 
 @media (min-width: 1200px) {
@@ -50,6 +58,7 @@
   .fs-xl-6 { font-size: calc(1.1rem + .2vw) !important;}
   .fs-xl-7 { font-size: calc(1rem + .1vw) !important;}
   .fs-xl-8 { font-size: calc(.80rem + .1vw) !important;}
+  .fs-xl-9 { font-size: calc(.70rem + .1vw) !important;}
 }
 
 @media (min-width: 1400px) {
@@ -61,4 +70,5 @@
   .fs-xxl-6 { font-size: calc(1.125rem + .3vw) !important;}
   .fs-xxl-7 { font-size: calc(1rem + .2vw) !important;}
   .fs-xxl-8 { font-size: calc(.90rem + .1vw) !important;}
+  .fs-xxl-9 { font-size: calc(.80rem + .1vw) !important;}
 }

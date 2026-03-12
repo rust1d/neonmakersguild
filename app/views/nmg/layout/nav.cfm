@@ -20,6 +20,7 @@
           <li class='nav-item dropdown drop-right'>
             <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Learn</a>
             <div class='dropdown-menu nav-dropdown mt-1 py-3 px-1'>
+              <a class='dropdown-item round-icon' href='/calendar'><i class='fa-solid fa-calendar'></i> Calendar</a>
               <a class='dropdown-item round-icon' href='/resources/library'><i class='fa-solid fa-book'></i> Library</a>
               <a class='dropdown-item round-icon' href='/resources/classes'><i class='fa-solid fa-people-line'></i> Neon Classes</a>
               <a class='dropdown-item round-icon' href='/resources/other'><i class='fa-solid fa-toolbox'></i> General Resources</a>

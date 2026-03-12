@@ -1,4 +1,5 @@
 <cfscript>
+  setting showdebugoutput='no' requesttimeout=180;
   params = utility.paged_term_params({ isdeleted: 0, maxrows: 400, exclude: 1 });
   cache_key = 'ml-' & utility.hashCC(params.term ?: '');
   cache_results = utility.simple_cache('#cache_key#:300', function() {

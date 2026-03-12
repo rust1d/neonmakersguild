@@ -128,17 +128,19 @@
               <div class='message-field my-2' style='display:none'>
                 <div id='photo_roll' class='row g-1'></div>
               </div>
-              <cfif mSubscription.new_record()>
-                <div class='message-field' style='display:none'>
-                  <div class='form-check form-switch float-end' title='Receive an email when someone posts in this thread.'>
-                    <input class='form-check-input' type='checkbox' id='ft_subscribe' name='ft_subscribe' value='1' />
-                    <label class='form-check-label' for='ft_subscribe'>Subscribe to this thread</label>
+              <div class='row'>
+                <cfif mSubscription.new_record()>
+                  <div class='col message-field' style='display:none'>
+                    <div class='form-check form-switch' title='Receive an email when someone posts in this thread.'>
+                      <input class='form-check-input' type='checkbox' id='ft_subscribe' name='ft_subscribe' value='1' />
+                      <label class='form-check-label smaller' for='ft_subscribe'>Subscribe to this thread</label>
+                    </div>
                   </div>
+                </cfif>
+                <div class='col-auto message-field' style='display:none'>
+                  <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-sm btn-nmg'>Post Thread</button>
+                  <button type='button' name='btnCancel' id='btnCancel' class='btn btn-sm btn-nmg-cancel'>Close</a>
                 </div>
-              </cfif>
-              <div class='message-field text-center' style='display:none'>
-                <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-sm btn-nmg'>Save</button>
-                <a href='#router.url()#' class='btn btn-sm btn-nmg-cancel'>Cancel</a>
               </div>
             </form>
           </cfif>

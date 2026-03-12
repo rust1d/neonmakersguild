@@ -82,12 +82,12 @@ component accessors = true {
     variables.mailer = new mail(argumentcollection: application.secrets.smtp);
     variables.mailer.setFrom(getFrom());
     variables.mailer.setTo(getTo());
-    // variables.mailer.setFailTo(getFailTo());
     variables.mailer.setCc(getCc());
     variables.mailer.setBcc(getBcc());
     variables.mailer.setSubject(getSubject());
     variables.mailer.setType(getType());
     variables.mailer.setSpoolenable(getSpoolenable());
+    variables.mailer.addParam(name: 'Content-Transfer-Encoding', value: 'quoted-printable');
     generate_body();
     variables.mailer.setBody(getBody());
     add_file_params();
