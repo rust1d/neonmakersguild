@@ -26,16 +26,16 @@
     </cfif>
 
     <cfif pagination.page EQ 1>
-      <div class='col-12 content-card font-montserrat p-1'>
-        <div class='text-center smaller mb-1'>Recently Active Members</div>
-        <div id='member-roll' class='d-flex flex-nowrap gap-1 overflow-auto'>
+      <div class='col-12 content-card font-montserrat p-2'>
+        <div class='text-center text-muted small text-uppercase fw-semibold mb-2 ls-wide'>Recently Active Members</div>
+        <div id='member-roll' class='d-flex flex-nowrap gap-2 overflow-auto justify-content-center'>
           <cfloop array='#mRecentUsers#' item='mUser'>
-            <a href='#mUser.seo_link()#' class='d-block w-100'>
-              <img src='#mUser.profile_image().src()#' class='img-thumbnail' />
+            <a href='#mUser.seo_link()#' class='d-block text-center flex-shrink-0' title='#mUser.display_name()#'>
+              <img src='#mUser.profile_image().src()#' class='avatar-circle' />
             </a>
           </cfloop>
-          <a href='/members' class='d-block position-relative w-100'>
-            <img src='/assets/images/memberlist.jpg' class='img-thumbnail opacity-75' />
+          <a href='/members' class='d-block text-center flex-shrink-0' title='All Members'>
+            <img src='/assets/images/memberlist.jpg' class='avatar-circle opacity-75' />
           </a>
         </div>
       </div>

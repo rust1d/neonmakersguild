@@ -628,7 +628,8 @@ component {
     }
     for (relation in relations()) {
       if (relation.getPreloaded() && isNull(relation.getChildren())) {
-        relation.load(this, new 'app.models.#relation.getClass()#'(params, true));
+        var mChild = new 'app.models.#relation.getClass()#'(params, true);
+        if (mChild.persisted()) relation.load(this, mChild);
       }
     }
   }

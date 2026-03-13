@@ -115,7 +115,7 @@
 
   // Pre-load all forum images for this thread in one query
   threadImages = {};
-  for (var fi in new app.models.ForumImages().where(fi_ftid: mThread.ftid())) {
+  for (fi in new app.models.ForumImages().where(fi_ftid: mThread.ftid())) {
     if (!threadImages.keyExists(fi.fmid())) threadImages[fi.fmid()] = [];
     threadImages[fi.fmid()].append(fi);
   }

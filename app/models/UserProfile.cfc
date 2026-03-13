@@ -30,6 +30,6 @@ component extends=BaseModel accessors=true {
   }
 
   public string function name() {
-    return trim(up_firstname & ' ' & up_lastname);
+    return trim(variables.up_firstname & ' ' & variables.up_lastname);
   }
 }
