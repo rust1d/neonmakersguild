@@ -4,18 +4,34 @@
 <cfset router.include('shared/partials/process_overlay') />
 
 <cfoutput>
-  <div class='d-flex justify-content-start border rounded neon-red'>
-    <img class='forum-thumbnail rounded rounded-end-0' src='#session.user.profile_image().src()#' />
-    <a  class='btn btn-faux-field text-start rounded-start-0' data-bs-toggle='modal' data-bs-target='##post_modal'>
-      <i class='fa-regular fa-pen-to-square me-2'></i><span class='nmg-black blinking me-0'>&##x2502;</span>Create a post to share with the guild, #session.user.UserProfile().firstname()#.
-    </a>
+  <div class='neon-red rounded d-flex align-items-center'>
+    <img class='avatar-circle flex-shrink-0 ms-3' src='#session.user.profile_image().src()#' />
+    <div class='d-flex flex-column flex-grow-1 p-2 gap-2 justify-content-center'>
+      <a class='btn btn-faux-field rounded-pill' data-bs-toggle='modal' data-bs-target='##post_modal'>
+        <span class='blinking me-1'>&##x2502;</span>What are you working on, #session.user.UserProfile().firstname()#?
+      </a>
+      <div class='d-flex gap-2 justify-content-center'>
+        <a class='btn btn-sm btn-outline-secondary rounded-pill px-3' data-bs-toggle='modal' data-bs-target='##post_modal'>
+          <i class='fa-regular fa-image me-1'></i>Photo
+        </a>
+        <a class='btn btn-sm btn-outline-secondary rounded-pill px-3' data-bs-toggle='modal' data-bs-target='##post_modal'>
+          <i class='fa-regular fa-pen-to-square me-1'></i>Story
+        </a>
+      </div>
+    </div>
   </div>
 
   <div class='modal fade' id='post_modal' tabindex='-1'>
     <div class='modal-dialog modal-dialog-scrollable modal-fullscreen-md-down modal-xl'>
       <div id='modal_entry' class='modal-content'>
         <div class='modal-header px-3 p-2'>
-          <h5 class='modal-title smaller'>Create Post</h5>
+          <div class='d-flex align-items-center gap-2'>
+            <img class='avatar-circle' style='width:36px;min-width:36px' src='#session.user.profile_image().src()#' />
+            <div>
+              <h5 class='modal-title smaller mb-0'>Create Post</h5>
+              <small class='text-muted'>#session.user.UserProfile().name()#</small>
+            </div>
+          </div>
           <button type='button' class='btn-close smaller' data-bs-dismiss='modal'></button>
         </div>
         <div class='modal-body'>
@@ -23,7 +39,7 @@
             <input type='file' id='filePicker' accept='image/*' multiple class='d-none' />
             <input type='hidden' name='post_form' value='1' />
             <div class='mb-3'>
-              <input type='text' class='form-control' id='ben_title' name='ben_title' placeholder='Give your post a title...' maxlength='100' required />
+              <input type='text' class='form-control form-control-lg border-0 border-bottom rounded-0 ps-2 fw-semibold' id='ben_title' name='ben_title' placeholder='Give your post a title...' maxlength='100' required />
             </div>
             <div class='mb-3'>
               <textarea class='tiny-forum form-control' id='ben_body' name='ben_body' rows='8'></textarea>
@@ -72,8 +88,10 @@
           </form>
         </div>
         <div class='modal-footer'>
-          <button type='submit' form='post_form' name='btnLater' class='btn btn-nmg' title='save but do not release'>Finish Later</button>
-          <button type='submit' form='post_form' name='btnPublish' class='btn btn-nmg' title='save and release'>Publish</button>
+          <button type='submit' form='post_form' name='btnLater' class='btn btn-outline-secondary rounded-pill px-4' title='save but do not release'>Finish Later</button>
+          <button type='submit' form='post_form' name='btnPublish' class='btn btn-nmg neon-glow rounded-pill px-4 fw-semibold' title='save and release'>
+            <i class='fa-regular fa-paper-plane me-1'></i>Publish
+          </button>
         </div>
       </div>
       <div id='modal_captions' class='modal-content d-none'>

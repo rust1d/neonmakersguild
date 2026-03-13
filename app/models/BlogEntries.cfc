@@ -23,7 +23,7 @@ component extends=jSoup accessors=true {
   has_many(name: 'BlogEntryImages',      class: 'BlogEntryImages',      key: 'ben_benid',  relation: 'bei_benid');
   has_many_through(class: 'UserImages',  through: 'BlogEntryImages');
   has_many(name: 'BlogEntryCategories',  class: 'BlogEntryCategories',  key: 'ben_benid',  relation: 'bec_benid');
-  belongs_to(name: 'User',               class: 'Users',                key: 'ben_usid',   relation: 'us_usid');
+  belongs_to(name: 'User',               class: 'Users',                key: 'ben_usid',   relation: 'us_usid',  preloaded: true);
   belongs_to(name: 'UserBlog',           class: 'Users',                key: 'ben_blog',   relation: 'us_usid');
 
   public array function category_links() {

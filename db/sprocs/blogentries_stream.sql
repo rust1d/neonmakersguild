@@ -16,7 +16,9 @@ BEGIN
   SET _count = IFNULL(_days, 5);
 
   SELECT SQL_CALC_FOUND_ROWS blogstream.*,
-         (SELECT COUNT(*) FROM blogcomments WHERE bco_benid=ben_benid AND bco_beiid=0) AS ben_comment_cnt
+         u.*, up.*,
+         IFNULL(cc.comment_cnt, 0) AS ben_comment_cnt,
+         (SELECT GROUP_CONCAT(bei_beiid) FROM blogentryimages WHERE bei_benid=ben_benid ORDER BY bei_beiid) AS ben_beiids
      FROM (SELECT @lastUser:=0, @lastSeq:=0) AS vars,
           (
             SELECT blogentries.*, us_user AS ben_blogname,
@@ -36,6 +38,9 @@ BEGIN
                    )
              ORDER BY ben_blog, ben_posted DESC
           ) AS blogstream
+          INNER JOIN users u ON u.us_usid = ben_usid
+          LEFT JOIN userprofile up ON up.up_usid = u.us_usid
+          LEFT JOIN (SELECT bco_benid, COUNT(*) AS comment_cnt FROM blogcomments WHERE bco_beiid=0 GROUP BY bco_benid) cc ON cc.bco_benid = ben_benid
           WHERE seq <= _count
    ORDER BY IFNULL(ben_promoted, ben_posted) DESC, ben_benid DESC
      LIMIT _limit OFFSET _offset;

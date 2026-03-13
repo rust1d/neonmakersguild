@@ -370,12 +370,11 @@ figure.image figcaption {
   min-height: 0 !important;
 }
 
-.content-card {
-  padding: 1rem;
-  border-radius: var(--bs-border-radius);
-  background-color: var(--nmg-bg-light);
-  /* border: var(--bs-border-width) var(--bs-border-style) var(--nmg-border); */
-  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+/* reusable hover lift for any card-like element */
+.hover-lift { transition: box-shadow 0.2s, transform 0.2s; }
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.12);
 }
 
 .breadcrumb-card {
@@ -876,4 +875,24 @@ img.lazy-img:not(.fade-in-blur) {
 
 .neon-red {
   animation: redNeonPulse 2s ease-in-out infinite;
+}
+
+@keyframes neonPulse {
+  0%, 100% {
+    box-shadow: 0 0 6px var(--nmg-color), 0 0 12px var(--nmg-color-alt);
+  }
+  50% {
+    box-shadow: 0 0 12px var(--nmg-color), 0 0 20px var(--nmg-color-alt);
+  }
+}
+.neon-glow {
+  animation: neonPulse 2s ease-in-out infinite;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-in-up {
+  animation: fadeInUp 0.4s ease-out both;
 }

@@ -188,8 +188,16 @@ $(function() {
     tinymce.init({ ...tiny_forum, ...params });
   }
 
-  $('textarea.tiny-forum').each(function() {
+  // Init tiny-forum textareas NOT inside modals immediately
+  $('textarea.tiny-forum').not('.modal textarea.tiny-forum').each(function() {
     init_tinyforum(this);
+  });
+
+  // Defer tiny-forum inside modals until modal is shown
+  $('.modal').on('shown.bs.modal', function() {
+    $(this).find('textarea.tiny-forum').each(function() {
+      if (!tinymce.get(this.id)) init_tinyforum(this);
+    });
   });
 
   $(document).on('mousedown', function(ev) {

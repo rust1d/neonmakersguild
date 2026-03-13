@@ -362,6 +362,32 @@ a:hover {
   }
 }
 
+.content-card {
+  padding: 1rem;
+  border-radius: var(--bs-border-radius);
+  background-color: var(--nmg-bg-light);
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  border-left: 3px solid transparent;
+  transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+}
+.content-card.hover-lift:hover {
+  border-left-color: var(--nmg-color);
+}
+
+.avatar-circle {
+  width: 80px;
+  min-width: 80px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--nmg-color);
+  transition: border-color 0.2s;
+}
+.avatar-circle:hover {
+  border-color: var(--nmg-color-alt);
+  box-shadow: 0 0 8px var(--nmg-color), 0 0 16px var(--nmg-color-alt);
+}
+
 .resp-thumbnail, .resp-thumbnail-lg {
   max-width: 64px;
   min-width: 48px;
