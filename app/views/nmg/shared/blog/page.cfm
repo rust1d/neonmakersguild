@@ -4,9 +4,9 @@
 
 <cfoutput>
   <div class='row g-3'>
-    <div class='col-12 text-center content-card'>
-      <div class='fs-2'><a href='#locals.mPage.seo_link()#'>#locals.mPage.title()#</a></div>
-      <small>#locals.mPage.category_links().toList(' &bull; ')#</small>
+    <div class='col-12 text-center content-card bg-nmg-dark text-white py-4'>
+      <div class='fs-2 text-marker'><a href='#locals.mPage.seo_link()#' class='text-white text-decoration-none'>#locals.mPage.title()#</a></div>
+      <div class='small text-white-50'>#locals.mPage.category_links().toList(' &bull; ')#</div>
     </div>
     <div class='col-12 content-card'>
       #locals.mPage.body_cdn()#

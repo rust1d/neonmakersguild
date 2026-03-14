@@ -22,28 +22,26 @@
         #mBlock.body_cdn()#
       </div>
     </cfif>
-    <div class='col-12 col-md-10 col-lg-8'>
+    <div class='col-12 col-sm-8 col-md-6 col-lg-4'>
       <form method='post'>
-        <div class='card'>
-          <h5 class='card-header'>Login Recovery</h5>
-          <div class='card-body'>
-            <div class='row g-3'>
-              <div class='col-12'>
-                <div class='input-group'>
-                  <span class='input-group-text btn-nmg'><i class='fas fa-person-dots-from-line'></i><i class='fas fa-slash-forward'></i><i class='fa-solid fa-fw fa-at'></i></span>
-                  <input type='text' class='form-control' name='contact' id='contact' maxlength='50' placeholder='username or email' required />
-                </div>
-              </div>
-              <div class='col-12'>
-                <div class='text-center'>
-                  <button type='submit' name='btnSend' class='btn btn-nmg'>Send Email</button>
-                  <a href='/login' class='btn btn-nmg-cancel'>Cancel</a>
-                </div>
+        <div class='content-card shadow-sm text-center'>
+          <div class='fs-3 text-marker mb-3'>Login Recovery</div>
+          <div class='row g-3'>
+            <div class='col-12'>
+              <div class='input-group'>
+                <span class='input-group-text btn-nmg'><i class='fas fa-person-dots-from-line'></i><i class='fas fa-slash-forward'></i><i class='fa-solid fa-fw fa-at'></i></span>
+                <input type='text' class='form-control' name='contact' id='contact' maxlength='50' placeholder='username or email' required />
               </div>
             </div>
+            <div class='col-12'>
+              <button type='submit' name='btnSend' class='btn btn-nmg w-100'>Send Email</button>
+            </div>
+            <div class='col-12'>
+              <a href='/login' class='small text-muted'>Back to Login</a>
+            </div>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   </div>
 </cfoutput>

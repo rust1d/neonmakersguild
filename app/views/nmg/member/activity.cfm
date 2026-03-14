@@ -55,47 +55,4 @@
     </div>
   </div>
 
-    <!--- <table class='table table-borderless bg-nmg-light'>
-      <thead>
-        <tr>
-          <td class='w-120px'></td>
-          <td class='w-50'></td>
-          <td></td>
-        </tr>
-      </thead>
-      <tbody>
-        <cfloop query='#qryActivity#' group='act_date'>
-          <tr><td colspan='3'>#act_date#</td></tr>
-          <cfoutput>
-            <tr class='position-relative align-middle'>
-              <td class='smaller w-120px'>
-                #act_dla.format('yyyy-mm-dd')#
-              </td>
-              <cfif act_source=='post'>
-                <td>
-                  #mUser.user()# added a new post "<a class='stretched-link' href='/post/#act_seolink#'>#act_title#</a>".
-                </td>
-                <td class='small'>#preview(act_words)#</td>
-              <cfelseif act_source=='comment'>
-                <td>
-                  #mUser.user()# commented on post "#act_title#".
-                </td>
-                <td class='small'>#preview(act_words)#</td>
-              <cfelseif act_source=='thread'>
-                <td >
-                  #mUser.user()# started a thread in "<a class='stretched-link' href='/forum/#act_seolink.listFirst('/')#'>#act_title#</a>".
-                </td>
-                <td class='small'><a href='/forum/#act_seolink#'>#act_words#</a></td>
-              <cfelseif act_source=='message'>
-                <td>
-                  #mUser.user()# replied in thread "<a class='stretched-link' href='/forum/#act_seolink####act_pkid#'>#act_title#</a>".
-                </td>
-                <td class='small'>#preview(act_words)#</td>
-              </cfif>
-            </tr>
-          </cfoutput>
-        </cfloop>
-      </tbody>
-    </table> --->
-
 </cfoutput>

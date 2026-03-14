@@ -360,13 +360,16 @@ a:hover {
   font-weight: 500;
 }
 .activity-card img {
-  width: 60px;
-  height: 60px;
-  border-radius: var(--bs-border-radius) !important;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
   object-fit: cover;
+  border: 2px solid var(--nmg-color);
 }
 .activity-card .activity-date {
   font-size: .8rem;
+  font-family: 'Permanent Marker';
+  color: var(--nmg-color);
 }
 .activity-card .activity-header {
   font-size: .9rem;

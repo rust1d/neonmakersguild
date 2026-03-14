@@ -51,7 +51,6 @@
         Fields marked with <span class='btn btn-warning btn-sm p-1 px-2 mx-1'><i class='fa-solid fa-shield-heart'></i></span>
         will not be made public or shown on your member profile.
       </div>
-      <div class='col-12 fs-5 fw-semibold py-2'>Membership Form </div>
       <div class='col-md-6'>
         <label class='form-label required' for='mr_user'>Desired Username</label>
         <input type='text' class='form-control' id='mr_user' name='mr_user' value='#mMR.user()#' minlength='4' maxlength='16' required pattern='^[a-zA-Z]+[0-9A-Za-z_-]+$' title='16 Characters. Must start with a letter and can contain numbers, periods, underscores or dashes.' />
@@ -102,7 +101,7 @@
         <textarea class='form-control' rows='6' name='mr_history' id='mr_history'>#mMR.history()#</textarea>
       </div>
 
-      <div class='col-12 fs-5 mt-4 fw-semibold py-2'>NMG Member T-Shirt</div>
+      <div class='col-12 fs-5 mt-4 fw-semibold py-2 text-marker'>NMG Member T-Shirt</div>
 
       <div class='col-12 smaller'>
         An official Neon Maker's Guild T-Shirt is included with your membership. Please provide a shipping address.
@@ -201,7 +200,7 @@
       </div>
 
       <div class='col-12 text-center'>
-        <button type='submit' name='btnSubmit' class='btn btn-nmg g-recaptcha' data-sitekey='6LeaIakfAAAAAFfh-JbzqJOJlqyI6JlFIKbkZNjZ' data-callback='onSubmit' data-action='submit'>Send Form</button>
+        <button type='submit' name='btnSubmit' class='btn btn-nmg btn-lg neon-glow g-recaptcha' data-sitekey='6LeaIakfAAAAAFfh-JbzqJOJlqyI6JlFIKbkZNjZ' data-callback='onSubmit' data-action='submit'><i class='fa-solid fa-paper-plane me-2'></i>Send Form</button>
       </div>
     </div>
   </form>
