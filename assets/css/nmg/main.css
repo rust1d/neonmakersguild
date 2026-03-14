@@ -285,6 +285,33 @@ a:hover {
   flex: 0 0 auto;
   width: 5rem;
 }
+#imageselect .image-tile img {
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+/* TinyMCE dialog button overrides */
+.tox .tox-button {
+  border-radius: 50rem !important;
+}
+.tox .tox-button:not(.tox-button--secondary) {
+  background-color: var(--nmg-bg-alt) !important;
+  border-color: var(--nmg-border) !important;
+  color: var(--nmg-black) !important;
+}
+.tox .tox-button:not(.tox-button--secondary):hover {
+  background-color: var(--nmg-border) !important;
+  color: var(--nmg-bg-alt) !important;
+}
+.tox .tox-button--secondary {
+  background-color: transparent !important;
+  border-color: var(--nmg-border) !important;
+  color: var(--nmg-color) !important;
+}
+.tox .tox-button--secondary:hover {
+  background-color: var(--nmg-border) !important;
+  color: var(--nmg-bg-alt) !important;
+}
 
 .navbar-nmg .nav-dropdown {
   background-color: var(--nmg-bg-light);
@@ -486,9 +513,9 @@ a:hover {
 
 .content-card .post-body {
   overflow: hidden;
-  max-height: 14rem;
-  -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+  max-height: 22rem;
+  -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
 }
 
 .post-comment-bar {

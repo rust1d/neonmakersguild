@@ -29,13 +29,13 @@
     <cfif pagination.page EQ 1>
       <div class='col-12 content-card font-montserrat p-2 bg-nmg-dark rounded'>
         <div class='text-center text-light small text-uppercase fw-semibold mb-2 ls-wide'>Recently Active Members</div>
-        <div id='member-roll' class='d-flex flex-nowrap gap-2 overflow-visible justify-content-center p-3'>
+        <div id='member-roll' class='d-flex flex-nowrap gap-lg-1 gap-xl-2 gap-2 justify-content-center px-3 py-2 overflow-clip'>
           <cfloop array='#mRecentUsers#' item='mUser'>
-            <a href='#mUser.seo_link()#' class='d-block text-center flex-shrink-0' title='#mUser.UserProfile().name()#'>
+            <a href='#mUser.seo_link()#' class='d-block text-center' title='#mUser.UserProfile().name()#'>
               <img src='#mUser.profile_image().src()#' class='avatar-circle' />
             </a>
           </cfloop>
-          <a href='/members' class='d-block text-center flex-shrink-0' title='All Members'>
+          <a href='/members' class='d-block text-center' title='All Members'>
             <img src='/assets/images/memberlist.jpg' class='avatar-circle opacity-75' />
           </a>
         </div>

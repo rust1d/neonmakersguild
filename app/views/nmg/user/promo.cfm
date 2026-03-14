@@ -9,8 +9,10 @@
 
 <cfoutput>
   <form method='post'>
-    <div class='card'>
-      <h5 class='card-header bg-nmg'>Membership T-Shirt</h5>
+    <div class='card border-0 shadow-sm'>
+      <div class='card-header bg-nmg-dark p-3'>
+        <div class='fs-4 text-marker text-white'>Membership T-Shirt</div>
+      </div>
       <div class='card-body'>
         <p class='smaller'>
           All members get an official Neon Maker's Guild T-Shirt for signing up.

@@ -42,6 +42,7 @@
 
           param form.ft_subscribe = 0;
           if (form.ft_subscribe==1) mThread.subscription(session.user.usid()).subscribe();
+          location(mThread.seo_link(), false);
         }
       }
     }
@@ -151,21 +152,21 @@
             <cfset mUser = new app.models.Users(row) />
             <cfset mLastUser = new app.models.Users({ us_usid: row.lus_usid, us_user: row.lus_user}) />
 
-            <div class='content-card hover-lift mt-3'>
+            <div class='content-card hover-lift mt-3 position-relative'>
               <div class='fw-semibold'>
-                <a href='#mThread.seo_link()#'>
+                <a href='#mThread.seo_link()#' class='stretched-link'>
                   #mThread.subject()#
                 </a>
               </div>
               <div class='d-flex justify-content-between align-items-center mt-1'>
                 <div class='d-flex align-items-center gap-2'>
-                  <a href='#mUser.seo_link()#' class='d-inline d-xxs-none'>
+                  <a href='#mUser.seo_link()#' class='d-inline d-xxs-none position-relative' style='z-index:2'>
                     <img class='avatar-circle' style='width:32px;min-width:32px' src='#mUser.profile_image().src()#' />
                   </a>
                   <div class='smaller'>
-                    <a href='#mUser.seo_link()#'>#mUser.user()#</a>
+                    <a href='#mUser.seo_link()#' class='position-relative' style='z-index:2'>#mUser.user()#</a>
                     &bull;
-                    <a href='#mThread.seo_link()#'>#mThread.posted()#</a>
+                    #mThread.posted()#
                     <br>
                     #utility.plural_label(mThread.messages(), 'Post')#
                     &bull;
@@ -174,16 +175,13 @@
                 </div>
                 <div class='d-flex align-items-center gap-2'>
                   <div class='smaller text-end'>
-                    <a href='#mLastUser.seo_link()#'>#mLastUser.user()#</a>
+                    <a href='#mLastUser.seo_link()#' class='position-relative' style='z-index:2'>#mLastUser.user()#</a>
                     &bull;
-                    <a href='#mMessage.seo_link()#'>
-                      <span class='d-inline d-xxs-none'>#mMessage.posted()#</span>
-                      <span class='d-none d-xxs-inline'>#mMessage.posted_short()#</span>
-                    </a>
+                    #mMessage.posted()#
                     <br>
-                    <a href='#mMessage.seo_link()#' class='small'>#mMessage.more()#</a>
+                    <span class='small'>#mMessage.more()#</span>
                   </div>
-                  <a href='#mLastUser.seo_link()#' class='d-inline d-xxs-none'>
+                  <a href='#mLastUser.seo_link()#' class='d-inline d-xxs-none position-relative' style='z-index:2'>
                     <img class='avatar-circle' style='width:32px;min-width:32px' src='#mLastUser.profile_image().src()#' />
                   </a>
                 </div>

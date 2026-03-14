@@ -24,11 +24,14 @@
 </cfscript>
 
 <cfoutput>
+  <div class='content-card bg-nmg-dark text-center p-3 mb-3'>
+    <div class='fs-2 text-marker text-white'>Manage Subscriptions</div>
+  </div>
   <cfif mSubscriptions.isEmpty()>
     <p>You have no active subscriptions.</p>
   <cfelse>
     <form method='post'>
-      <p>Select the subscriptions to delete:</p>
+      <p>Select the subscriptions you would like to remove:</p>
       <cfloop array='#mSubscriptions#' item='mSubscription'>
         <div class='input-group mb-3'>
           <div class='input-group-text'>

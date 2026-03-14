@@ -29,8 +29,10 @@
   <div class='row g-3 justify-content-center'>
     <div class='col-12 col-md-10 col-lg-8'>
       <form method='post'>
-        <div class='card'>
-          <h5 class='card-header bg-nmg'>Account Security</h5>
+        <div class='card border-0 shadow-sm'>
+          <div class='card-header bg-nmg-dark p-3'>
+            <div class='fs-4 text-marker text-white'>Account Security</div>
+          </div>
           <div class='card-body'>
             <div class='row g-3'>
               <div class='col-12'>
