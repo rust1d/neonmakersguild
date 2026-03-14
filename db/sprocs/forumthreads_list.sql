@@ -31,7 +31,7 @@ BEGIN
    ORDER BY ft_dla DESC, ft_ftid DESC
    LIMIT _limit OFFSET _offset;
 
-  call pagination(FOUND_ROWS(), _limit, _offset, null);
+  call pagination(FOUND_ROWS(), _limit, _offset, _term);
 END;;
 
 delimiter ;

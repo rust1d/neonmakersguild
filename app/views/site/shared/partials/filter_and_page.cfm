@@ -13,14 +13,14 @@
     <cfelse>
       <cfif locals.pagination.keyExists('tag')>
         <div class='col-auto'>
-          <button id='btnClearTag' onclick='window.location=window.location.href' class='border btn btn-sm btn-nmg border-nmg rounded p-1'>
+          <button id='btnClearTag' onclick='window.location=window.location.pathname' class='border btn btn-sm btn-nmg border-nmg rounded p-1'>
             #locals.pagination.tag# &nbsp; <i class='fas fa-times'></i>
           </button>
         </div>
       </cfif>
       <cfif locals.pagination.term.len()>
         <div class='col-auto'>
-          <button id='btnClearTerm' onclick='window.location=window.location.href' class='border btn btn-sm btn-nmg border-nmg rounded p-1'>
+          <button id='btnClearTerm' onclick='window.location=window.location.pathname' class='border btn btn-sm btn-nmg border-nmg rounded p-1'>
             #locals.pagination.term# &nbsp; <i class='fas fa-times'></i>
           </button>
         </div>

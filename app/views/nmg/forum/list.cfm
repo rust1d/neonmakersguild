@@ -20,67 +20,51 @@
       <cfset mUser = new app.models.Users(row) />
 
       <div class='col-12'>
-        <div class='card #ifin(mForum.private(),'card-private')# #ifin(mForum.admin(),'card-admin')#'>
-          <div class='card-header fs-5'>
+        <div class='content-card hover-lift #ifin(mForum.private(),'card-private')# #ifin(mForum.admin(),'card-admin')#'>
+          <div class='fs-5 fw-bold mb-1'>
             <a href='#mForum.seo_link()#'>#mForum.name()#</a>
-            <cfif mForum.private()><span class='float-end badge btn-nmg-cancel p-2'>Members Only</span></cfif>
-            <cfif mForum.admin()><span class='float-end badge btn-nmg p-2'>Admins Only</span></cfif>
+            <cfif mForum.private()><span class='badge btn-nmg-cancel p-2 ms-2 small'>Members Only</span></cfif>
+            <cfif mForum.admin()><span class='badge btn-nmg p-2 ms-2 small'>Admins Only</span></cfif>
           </div>
-          <div class='card-body'>
+          <div class='mb-2'>
             <a href='#mForum.seo_link()#'>#mForum.description()#</a>
           </div>
-          <div class='card-footer'>
-            <div class='row g-0 d-none d-sm-flex'>
-              <div class='col-2 text-center small'>
-                Threads <br/> #mForum.threads()#
-              </div>
-              <div class='col-2 text-center small'>
-                Messages <br/> #mForum.messages()#
-              </div>
-              <div class='col-8 text-end'>
-                <cfif !isNull(mForum.last_fmid()) && !mMessage.deleted()>
-                  <div class='row'>
-                    <div class='col text-end'>
-                      <div class='small'>
-                        <a href='#mUser.seo_link()#'>#mUser.user()#</a>
-                        &bull;
-                        <a href='#mMessage.seo_link()#' class='small'>#mMessage.posted()#</a>
-                      </div>
-                      <a href='#mMessage.seo_link()#'>#mThread.subject()#</a>
-                    </div>
-                    <div class='col-auto'>
-                      <a href='#mUser.seo_link()#'>
-                        <img class='resp-thumbnail' src='#mUser.profile_image().src()#' />
-                      </a>
-                    </div>
-                  </div>
-                </cfif>
-              </div>
-            </div>
-            <div class='row d-flex d-sm-none'>
-              <cfif !isNull(mForum.last_fmid()) && !mMessage.deleted()>
-                <div class='small'>
+          <div class='d-none d-sm-flex align-items-center gap-3 small text-muted border-top pt-2'>
+            <span>Threads #mForum.threads()#</span>
+            <span>Messages #mForum.messages()#</span>
+            <cfif !isNull(mForum.last_fmid()) && !mMessage.deleted()>
+              <span class='ms-auto d-flex align-items-center gap-2'>
+                <span>
                   <a href='#mMessage.seo_link()#'>#mThread.subject()#</a>
-                </div>
-                <div class='d-flex justify-content-between align-items-center w-100'>
-                  <div class='d-flex align-items-center gap-2'>
-                    <div class='d-xs-inline d-sm-none'>
-                      <a href='#mUser.seo_link()#'>
-                        <img class='resp-thumbnail' src='#mUser.profile_image().src()#' />
-                      </a>
-                    </div>
-                    <div class='smaller'>
-                      <a href='#mUser.seo_link()#'>#mUser.user()#</a>
-                      &bull;
-                      <a href='#mMessage.seo_link()#' class='small'>#mMessage.posted()#</a>
-                    </div>
-                  </div>
+                  <span class='smaller d-block'>
+                    <a href='#mUser.seo_link()#'>#mUser.user()#</a> &bull; <a href='#mMessage.seo_link()#'>#mMessage.posted()#</a>
+                  </span>
+                </span>
+                <a href='#mUser.seo_link()#'>
+                  <img class='avatar-circle' style='width:36px;min-width:36px' src='#mUser.profile_image().src()#' />
+                </a>
+              </span>
+            </cfif>
+          </div>
+          <div class='d-flex d-sm-none flex-column gap-1 border-top pt-2'>
+            <cfif !isNull(mForum.last_fmid()) && !mMessage.deleted()>
+              <div class='small'>
+                <a href='#mMessage.seo_link()#'>#mThread.subject()#</a>
+              </div>
+              <div class='d-flex justify-content-between align-items-center'>
+                <div class='d-flex align-items-center gap-2'>
+                  <a href='#mUser.seo_link()#'>
+                    <img class='avatar-circle' style='width:28px;min-width:28px' src='#mUser.profile_image().src()#' />
+                  </a>
                   <div class='smaller'>
-                    Threads #mForum.threads()# | Messages #mForum.messages()#
+                    <a href='#mUser.seo_link()#'>#mUser.user()#</a> &bull; <a href='#mMessage.seo_link()#'>#mMessage.posted()#</a>
                   </div>
                 </div>
-              </cfif>
-            </div>
+                <div class='smaller text-muted'>
+                  #mForum.threads()#T | #mForum.messages()#M
+                </div>
+              </div>
+            </cfif>
           </div>
         </div>
       </div>

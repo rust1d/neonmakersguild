@@ -225,7 +225,7 @@
               <div class='d-block d-sm-none'>
                 <div class='my-2 smaller'>
                   <a href='#mUser.seo_link()#'>
-                    <img class='resp-thumbnail-lg me-2' src='#mUser.profile_image().src()#' alt='' />
+                    <img class='avatar-circle me-2' style='width:36px;min-width:36px' src='#mUser.profile_image().src()#' alt='' />
                   </a>
                   <a href='#mUser.seo_link()#'>#mUser.user()#</a>
                   &bull;
@@ -244,14 +244,14 @@
               <div class='row g-2'>
                 <div class='d-none d-sm-block col-auto text-center'>
                   <a href='#mUser.seo_link()#'>
-                    <img class='resp-thumbnail-lg' src='#mUser.profile_image().src()#' alt='' />
+                    <img class='avatar-circle' style='width:48px;min-width:48px' src='#mUser.profile_image().src()#' alt='' />
                   </a>
-                  <div class='smallest'><a href='#mUser.seo_link()#'>#mUser.user()#</a></div>
+                  <div class='smallest mt-1'><a href='#mUser.seo_link()#'>#mUser.user()#</a></div>
                   <div class='smallest'>#mUserProfile.location()#</div>
                 </div>
                 <div class='col'>
                   <div id='message-#mMessage.encoded_key()#' class=''>
-                    <div class='message border bg-nmg-light p-3 thread-message #ifin(mMessage.deleted(), 'text-decoration-line-through')#'>
+                    <div class='message content-card thread-message #ifin(mMessage.deleted(), 'text-decoration-line-through')#'>
                       <div class='body'>
                         <cfif mMessage.deleted() && !session.user.admin()>
                           <span class='fst-italic smaller'>#mMessage.deleted_label()#</span>
@@ -280,7 +280,7 @@
             <cfif session.user.loggedIn()>
               <div class='d-block d-sm-none my-2 smaller'>
                 <a href='#session.user.seo_link()#'>
-                  <img class='resp-thumbnail-lg me-2' src='#session.user.profile_image().src()#' alt='' />
+                  <img class='avatar-circle me-2' style='width:36px;min-width:36px' src='#session.user.profile_image().src()#' alt='' />
                 </a>
                 <a href='#session.user.seo_link()#'>#session.user.user()#</a>
                 &bull;
@@ -289,8 +289,8 @@
 
               <div class='row g-2 justify-content-end'>
                 <div class='d-none d-sm-block col-auto text-center'>
-                  <img class='resp-thumbnail' src='#session.user.profile_image().src()#' />
-                  <div class='smallest'><a href='#session.user.seo_link()#'>#session.user.user()#</a></div>
+                  <img class='avatar-circle' style='width:48px;min-width:48px' src='#session.user.profile_image().src()#' />
+                  <div class='smallest mt-1'><a href='#session.user.seo_link()#'>#session.user.user()#</a></div>
                   <div class='smallest'>#session.user.UserProfile().location()#</div>
                 </div>
                 <div class='col'>

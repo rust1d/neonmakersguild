@@ -116,7 +116,7 @@
               <input type='file' id='filePicker' accept='image/*' multiple class='d-none' />
               <div class='row g-3 align-items-end align-items-sm-center mb-2'>
                 <div class='col-auto'>
-                  <img class='resp-thumbnail-lg' src='#session.user.profile_image().src()#' />
+                  <img class='avatar-circle' style='width:48px;min-width:48px' src='#session.user.profile_image().src()#' />
                 </div>
                 <div class='col'>
                   <input type='text' class='form-control neon-red my-auto' name='ft_subject' id='ft_subject' value='' maxlength='100' placeholder='Start new thread...' required />
@@ -145,7 +145,7 @@
             </form>
           </cfif>
           <cfif arrList.len()==0>
-            <div class='small'>"There is no heavier burden than an unfulfilled potential." - Charles Schulz</div>
+            <div class='text-center text-muted fst-italic py-3'>"There is no heavier burden than an unfulfilled potential." <span class='d-block small mt-1'>- Charles Schulz</span></div>
           </cfif>
           <cfloop array='#arrList#' item='row'>
             <cfset mThread = new app.models.ForumThreads(row) />
@@ -153,42 +153,42 @@
             <cfset mUser = new app.models.Users(row) />
             <cfset mLastUser = new app.models.Users({ us_usid: row.lus_usid, us_user: row.lus_user}) />
 
-            <hr class='my-3' />
-
-            <div class='fw-semibold me-3'>
-              <a href='#mThread.seo_link()#'>
-                #mThread.subject()#
-              </a>
-            </div>
-            <div class='d-flex justify-content-between align-items-center w-100'>
-              <div class='d-flex align-items-center gap-2'>
-                <a href='#mUser.seo_link()#' class='d-inline d-xxs-none'>
-                  <img class='resp-thumbnail' src='#mUser.profile_image().src()#' />
+            <div class='content-card hover-lift mt-3'>
+              <div class='fw-semibold'>
+                <a href='#mThread.seo_link()#'>
+                  #mThread.subject()#
                 </a>
-                <div class='smaller'>
-                  <a href='#mUser.seo_link()#'>#mUser.user()#</a>
-                  &bull;
-                  <a href='#mThread.seo_link()#'>#mThread.posted()#</a>
-                  <br>
-                  #utility.plural_label(mThread.messages(), 'Post')#
-                  &bull;
-                  #utility.plural_label(mThread.views(), 'View')#
-                </div>
               </div>
-              <div class='d-flex align-items-center gap-2'>
-                <div class='smaller'>
-                  <a href='#mLastUser.seo_link()#'>#mLastUser.user()#</a>
-                  &bull;
-                  <a href='#mMessage.seo_link()#'>
-                    <span class='d-inline d-xxs-none'>#mMessage.posted()#</span>
-                    <span class='d-none d-xxs-inline'>#mMessage.posted_short()#</span>
+              <div class='d-flex justify-content-between align-items-center mt-1'>
+                <div class='d-flex align-items-center gap-2'>
+                  <a href='#mUser.seo_link()#' class='d-inline d-xxs-none'>
+                    <img class='avatar-circle' style='width:32px;min-width:32px' src='#mUser.profile_image().src()#' />
                   </a>
-                  <br>
-                  <a href='#mMessage.seo_link()#' class='small'>#mMessage.more()#</a>
+                  <div class='smaller'>
+                    <a href='#mUser.seo_link()#'>#mUser.user()#</a>
+                    &bull;
+                    <a href='#mThread.seo_link()#'>#mThread.posted()#</a>
+                    <br>
+                    #utility.plural_label(mThread.messages(), 'Post')#
+                    &bull;
+                    #utility.plural_label(mThread.views(), 'View')#
+                  </div>
                 </div>
-                <a href='#mLastUser.seo_link()#' class='d-inline d-xxs-none'>
-                  <img class='resp-thumbnail' src='#mLastUser.profile_image().src()#' />
-                </a>
+                <div class='d-flex align-items-center gap-2'>
+                  <div class='smaller text-end'>
+                    <a href='#mLastUser.seo_link()#'>#mLastUser.user()#</a>
+                    &bull;
+                    <a href='#mMessage.seo_link()#'>
+                      <span class='d-inline d-xxs-none'>#mMessage.posted()#</span>
+                      <span class='d-none d-xxs-inline'>#mMessage.posted_short()#</span>
+                    </a>
+                    <br>
+                    <a href='#mMessage.seo_link()#' class='small'>#mMessage.more()#</a>
+                  </div>
+                  <a href='#mLastUser.seo_link()#' class='d-inline d-xxs-none'>
+                    <img class='avatar-circle' style='width:32px;min-width:32px' src='#mLastUser.profile_image().src()#' />
+                  </a>
+                </div>
               </div>
             </div>
           </cfloop>
