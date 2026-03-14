@@ -95,14 +95,14 @@
             <div class='col-auto'>
               <cfif session.user.loggedIn()>
                 <cfif mSubscription.persisted()>
-                  <button type='button' class='btn btn-sm btn-nmg-cancel' name='btnSubscribe' value='0' onclick='postButton(this)'><i class='fas fa-at'></i> Unsubscribe</button>
+                  <button type='button' class='btn btn-sm btn-outline-nmg rounded-pill px-3' name='btnSubscribe' value='0' onclick='postButton(this)'><i class='fas fa-at'></i> Unsubscribe</button>
                 <cfelse>
-                  <button type='button' class='btn btn-sm btn-nmg' name='btnSubscribe' value='1' onclick='postButton(this)' title='Receive an email when someone posts in this forum.'>
+                  <button type='button' class='btn btn-sm btn-nmg rounded-pill px-3' name='btnSubscribe' value='1' onclick='postButton(this)' title='Receive an email when someone posts in this forum.'>
                     <i class='fas fa-at'></i> Subscribe to this forum
                   </button>
                 </cfif>
               <cfelse>
-                <a href='/login' class='btn btn-sm btn-nmg' title='Login'>
+                <a href='/login' class='btn btn-sm btn-nmg rounded-pill px-3' title='Login'>
                   <i class='fas fa-person-dots-from-line'></i> Login to post
                 </a>
               </cfif>
@@ -136,8 +136,8 @@
                   </div>
                 </cfif>
                 <div class='col-auto message-field' style='display:none'>
-                  <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-sm btn-nmg'>Post Thread</button>
-                  <button type='button' name='btnCancel' id='btnCancel' class='btn btn-sm btn-nmg-cancel'>Close</a>
+                  <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-sm btn-nmg rounded-pill px-3'>Post Thread</button>
+                  <button type='button' name='btnCancel' id='btnCancel' class='btn btn-sm btn-outline-nmg rounded-pill px-3'>Close</a>
                 </div>
               </div>
             </form>

@@ -36,7 +36,7 @@
               </div>
             </div>
             <div class='col-12'>
-              <button type='submit' name='btnLogin' class='btn btn-nmg w-100'>Login</button>
+              <button type='submit' name='btnLogin' class='btn btn-nmg rounded-pill w-100'>Login</button>
             </div>
             <div class='col-12'>
               <a class='small text-muted' href='#router.href('login/forgot')#'>Forgot Login?</a>

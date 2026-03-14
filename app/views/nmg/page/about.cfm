@@ -43,7 +43,7 @@
 
     <div class='d-flex flex-wrap justify-content-center gap-2 my-3'>
       <cfloop array='#mFounders#' item='mUser'>
-        <a href='#mUser.seo_link()#' class='btn btn-sm btn-nmg'>
+        <a href='#mUser.seo_link()#' class='btn btn-sm btn-nmg rounded-pill'>
           #mUser.UserProfile().name()#
         </a>
       </cfloop>

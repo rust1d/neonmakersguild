@@ -33,7 +33,7 @@
                   Once processed, we'll send out your NMG bumpersticker as a thank you for your support.
                 </p>
                 <hr>
-                <a href='#application.urls.paypalme#' class='btn btn-nmg mr-3' target='_blank' title='#utility.plural_label(mUser.past_due_days(), 'day')# past due'>Make Payment</a>
+                <a href='#application.urls.paypalme#' class='btn btn-nmg rounded-pill px-3 me-3' target='_blank' title='#utility.plural_label(mUser.past_due_days(), 'day')# past due'>Make Payment</a>
                 <cfif mUser.grace_period_remaining()>
                   <button class='btn btn-cancel' name='btnSkip' type='submit'>
                     Or skip this for now

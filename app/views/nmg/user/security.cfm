@@ -41,8 +41,8 @@
                 <input type='password' class='form-control' name='passagain' id='passagain' placeholder='now try to type it again...' required />
               </div>
               <div class='col-12 text-center'>
-                <button type='submit' name='btnSave' class='btn btn-nmg'>Update</button>
-                <a href='#session.user.get_home()#' class='btn btn-nmg-cancel'>Cancel</a>
+                <button type='submit' name='btnSave' class='btn btn-nmg rounded-pill px-3'>Update</button>
+                <a href='#session.user.get_home()#' class='btn btn-outline-nmg rounded-pill px-3'>Cancel</a>
               </div>
             </div>
           </div>

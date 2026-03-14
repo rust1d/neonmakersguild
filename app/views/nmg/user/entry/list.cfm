@@ -11,7 +11,7 @@
       <div class='d-flex justify-content-between align-items-center mb-3'>
         <div class='fs-5 fw-semibold'>Post Manager</div>
         <div>
-          <a href='#router.href('user/entry/edit')#' class='btn btn-sm btn-nmg me-2'><i class='fa-solid fa-fw fa-plus'></i> New Post</a>
+          <a href='#router.href('user/entry/edit')#' class='btn btn-sm btn-nmg rounded-pill px-3 me-2'><i class='fa-solid fa-fw fa-plus'></i> New Post</a>
         </div>
         #router.include('shared/partials/filter_and_page', { pagination: results.pagination })#
       </div>
@@ -42,8 +42,8 @@
               </div>
             </div>
             <div>
-              <a href='#router.hrefenc(page: 'user/entry/edit', benid: mEntry.benid())#' class='btn btn-sm btn-outline-secondary'>
-                <i class='fa-solid fa-pencil'></i>
+              <a href='#router.hrefenc(page: 'user/entry/edit', benid: mEntry.benid())#' class='btn btn-sm btn-nmg rounded-circle px-2'>
+                <i class='fa-solid fa-fw fa-pencil'></i>
               </a>
             </div>
           </div>

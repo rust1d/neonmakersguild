@@ -54,6 +54,7 @@ component {
       session.user = new app.services.CurrentUser();
       session.site = new app.services.CurrentSite('nmg');
       session.return_to = '';
+      new app.services.login.LoginCookie().login();
     }
   }
 
@@ -124,6 +125,7 @@ component {
     if (url.keyExists('ref') && session.site.get_site()!=url.ref) {
       session.site = new app.services.CurrentSite();
     } else if (url.keyExists('logout') && session.user.loggedIn()) {
+      new app.services.login.LoginCookie().destroy();
       this.onSessionStart();
     }
   }

@@ -2,7 +2,7 @@
   <div class='row g-0 mx-0'>
     <div class='d-none d-sm-inline col-sm-auto me-2'>
       <a href='#locals.mComment.User().seo_link()#'>
-        <img class='forum-thumbnail rounded' src='#locals.mComment.User().profile_image().src()#' />
+        <img class='avatar-circle' style='width:40px;min-width:40px' src='#locals.mComment.User().profile_image().src()#' />
       </a>
     </div>
     <div class='col mt-0'>

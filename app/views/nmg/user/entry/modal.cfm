@@ -11,18 +11,18 @@
         <span class='blinking me-1'>&##x2502;</span>What are you working on, #session.user.UserProfile().firstname()#?
       </a>
       <div class='d-flex gap-2 justify-content-center'>
-        <a class='btn btn-sm btn-outline-secondary rounded-pill px-3' data-bs-toggle='modal' data-bs-target='##post_modal'>
+        <a class='btn btn-sm btn-nmg rounded-pill px-3' data-bs-toggle='modal' data-bs-target='##post_modal'>
           <i class='fa-regular fa-image me-1'></i>Photo
         </a>
-        <a class='btn btn-sm btn-outline-secondary rounded-pill px-3' data-bs-toggle='modal' data-bs-target='##post_modal'>
+        <a class='btn btn-sm btn-nmg rounded-pill px-3' data-bs-toggle='modal' data-bs-target='##post_modal'>
           <i class='fa-regular fa-pen-to-square me-1'></i>Story
         </a>
       </div>
     </div>
   </div>
 
-  <div class='modal fade' id='post_modal' tabindex='-1'>
-    <div class='modal-dialog modal-dialog-scrollable modal-fullscreen-md-down modal-xl'>
+  <div class='modal fade' id='post_modal' data-bs-backdrop='static' tabindex='-1'>
+    <div class='modal-dialog modal-dialog-scrollable modal-fullscreen-lg-down modal-xl'>
       <div id='modal_entry' class='modal-content'>
         <div class='modal-header px-3 p-2'>
           <div class='d-flex align-items-center gap-2'>
@@ -45,7 +45,7 @@
               <textarea class='tiny-forum form-control' id='ben_body' name='ben_body' rows='8'></textarea>
             </div>
             <div id='photo_roll' class='row g-1 mb-2 position-relative' data-sortable>
-              <button type='button' id='btnEditCaptions' class='btn btn-sm btn-nmg w-120px'>Edit all</button>
+              <button type='button' id='btnEditCaptions' class='btn btn-sm btn-nmg rounded-pill px-3 w-120px'>Edit all</button>
             </div>
             <div class='smaller'>
               <div class='row g-3'>
@@ -88,7 +88,7 @@
           </form>
         </div>
         <div class='modal-footer'>
-          <button type='submit' form='post_form' name='btnLater' class='btn btn-outline-secondary rounded-pill px-4' title='save but do not release'>Finish Later</button>
+          <button type='submit' form='post_form' name='btnLater' class='btn btn-outline-nmg rounded-pill px-4' title='save but do not release'>Finish Later</button>
           <button type='submit' form='post_form' name='btnPublish' class='btn btn-nmg neon-glow rounded-pill px-4 fw-semibold' title='save and release'>
             <i class='fa-regular fa-paper-plane me-1'></i>Publish
           </button>
@@ -102,7 +102,7 @@
           <div id='captions' class='row g-3'></div>
         </div>
         <div class='modal-footer'>
-          <button type='button' id='btnSaveCaptions' class='btn btn-nmg'>Done</button>
+          <button type='button' id='btnSaveCaptions' class='btn btn-nmg rounded-pill px-3'>Done</button>
         </div>
       </div>
     </div>

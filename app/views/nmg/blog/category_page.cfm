@@ -5,20 +5,20 @@
 
 <cfoutput>
   <div class='row g-3'>
-    <div class='col-12 text-center rounded-pill p-3 bg-nmg-light'>
-      <div class='fs-2'><a href='#mCategory.seo_link('page')#'>#mCategory.category()#</a></div>
-      <small>Pages by Category</small>
+    <div class='col-12 content-card bg-nmg-dark text-center p-3'>
+      <div class='fs-2 text-marker text-white'>#mCategory.category()#</div>
+      <small class='text-white-50'>Pages by Category</small>
     </div>
     <cfloop array='#mPages#' item='mPage' index='idx'>
       <div class='col-12'>
-        <div class='row rounded-pill p-3 bg-nmg-light'>
-          <div class='col-12 fs-2 text-center text-page-head mb-3'>
-            <a href='#mPage.seo_link()#'>#mPage.title()#</a>
+        <a href='#mPage.seo_link()#' class='text-decoration-none'>
+          <div class='content-card hover-lift p-3 text-center'>
+            <div class='fs-4 text-marker mb-2'>#mPage.title()#</div>
+            <div class='text-uppercase text-secondary'>
+              <small>#mPage.category_links().toList(' &bull; ')#</small>
+            </div>
           </div>
-          <div class='col-12 text-center text-uppercase'>
-            <small>#mPage.category_links().toList(' &bull; ')#</small>
-          </div>
-        </div>
+        </a>
       </div>
     </cfloop>
   </div>

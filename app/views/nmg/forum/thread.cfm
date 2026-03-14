@@ -175,8 +175,8 @@
               <input type='text' class='form-control form-control-lg mt-2' name='ft_subject' id='ft_subject' value='#mThread.subject()#' maxlength='100' required />
             </div>
             <div class='text-center'>
-              <button type='submit' name='btnThreadEdit' id='btnThreadEdit' class='btn btn-sm btn-nmg'>Save</button>
-              <a id='thread-revert' class='btn btn-sm btn-nmg-cancel'>Cancel</a>
+              <button type='submit' name='btnThreadEdit' id='btnThreadEdit' class='btn btn-sm btn-nmg rounded-pill px-3'>Save</button>
+              <a id='thread-revert' class='btn btn-sm btn-outline-nmg rounded-pill px-3'>Cancel</a>
             </div>
           </form>
         </div>
@@ -191,14 +191,14 @@
                 <cfif mForumSubscript.persisted()>
                   <span class='badge bg-warning'>You are subscribed to this forum.</span>
                 <cfelseif mThreadSubscript.persisted()>
-                  <button type='button' class='btn btn-sm btn-nmg-cancel' name='btnSubscribe' value='0' onclick='postButton(this)'><i class='fas fa-at'></i> Unsubscribe</button>
+                  <button type='button' class='btn btn-sm btn-outline-nmg rounded-pill px-3' name='btnSubscribe' value='0' onclick='postButton(this)'><i class='fas fa-at'></i> Unsubscribe</button>
                 <cfelse>
-                  <button type='button' class='btn btn-sm btn-nmg' name='btnSubscribe' value='1' onclick='postButton(this)' title='Receive an email when someone posts in this thread.'>
+                  <button type='button' class='btn btn-sm btn-nmg rounded-pill px-3' name='btnSubscribe' value='1' onclick='postButton(this)' title='Receive an email when someone posts in this thread.'>
                     <i class='fas fa-at'></i> Subscribe to this thread
                   </button>
                 </cfif>
               <cfelse>
-                <a href='/login' class='btn btn-sm btn-nmg' title='Login'>
+                <a href='/login' class='btn btn-sm btn-nmg rounded-pill px-3' title='Login'>
                   <i class='fas fa-person-dots-from-line'></i> Login to post
                 </a>
               </cfif>
@@ -315,7 +315,7 @@
                       </div>
                     </cfif>
                     <div class='col-auto'>
-                      <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-sm btn-nmg'>Post Reply</button>
+                      <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-sm btn-nmg rounded-pill px-3'>Post Reply</button>
                     </div>
                   </div>
                 </div>
@@ -329,8 +329,8 @@
                   <div id='edit_roll' class='row g-1 mb-2'></div>
                 </div>
                 <div class='col-12 text-center'>
-                  <button type='submit' name='btnMessageEdit' id='btnMessageEdit' class='btn btn-sm btn-nmg'>Save</button>
-                  <a id='message-revert' class='btn btn-sm btn-nmg-cancel'>Cancel</a>
+                  <button type='submit' name='btnMessageEdit' id='btnMessageEdit' class='btn btn-sm btn-nmg rounded-pill px-3'>Save</button>
+                  <a id='message-revert' class='btn btn-sm btn-outline-nmg rounded-pill px-3'>Cancel</a>
                 </div>
               </div>
             </cfif>

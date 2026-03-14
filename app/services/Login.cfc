@@ -25,6 +25,7 @@ component accessors=true {
   // PRIVATE
 
   private void function sessionize_user(required Users mUser) {
+    new app.services.login.LoginCookie().create(mUser.usid());
     session.user.set_pkid(mUser.usid());
     session.user.set_class('Users');
     session.user.set_home(mUser.seo_link());

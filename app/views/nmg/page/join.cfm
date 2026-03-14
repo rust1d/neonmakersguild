@@ -45,8 +45,7 @@
 
 <cfoutput>
   <form method='post' id='membership-form'>
-
-    <div class='row g-2 mt-2 content-card pt-0'>
+    <div class='row g-2 content-card pt-0'>
       <div class='col-12 alert alert-info p-1 mb-0 text-center smaller fst-italic fw-semibold'>
         Fields marked with <span class='btn btn-warning btn-sm p-1 px-2 mx-1'><i class='fa-solid fa-shield-heart'></i></span>
         will not be made public or shown on your member profile.

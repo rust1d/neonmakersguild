@@ -8,14 +8,14 @@
       <div class='d-flex justify-content-between align-items-center mb-3'>
         <div class='fs-5 fw-semibold'>Link Manager</div>
         <div>
-          <a href='#router.href('user/link/edit')#' class='btn btn-sm btn-nmg me-2'><i class='fa-solid fa-fw fa-plus'></i> New Link</a>
+          <a href='#router.href('user/link/edit')#' class='btn btn-sm btn-nmg rounded-pill px-3 me-2'><i class='fa-solid fa-fw fa-plus'></i> New Link</a>
         </div>
         #router.include('shared/partials/filter_and_page', { pagination: results.pagination })#
       </div>
       <table class='table table-sm table-nmg'>
         <thead>
           <tr class='align-middle smaller'>
-            <th scope='col'><a href='#router.href('user/link/edit')#' class='btn btn-sm btn-nmg'><i class='fa-solid fa-fw fa-plus'></i></a></th>
+            <th scope='col'><a href='#router.href('user/link/edit')#' class='btn btn-sm btn-nmg rounded-circle px-2'><i class='fa-solid fa-fw fa-plus'></i></a></th>
             <th scope='col'>Type</th>
             <th scope='col'>Title</th>
             <th scope='col' class='d-none d-md-table-cell'>Url</th>
@@ -26,7 +26,7 @@
           <cfloop array='#results.rows#' item='mLink'>
             <tr>
               <th scope='row' nowrap>
-                <a href='#router.hrefenc(page: 'user/link/edit', bliid: mLink.bliid())#' class='btn btn-sm btn-nmg'>
+                <a href='#router.hrefenc(page: 'user/link/edit', bliid: mLink.bliid())#' class='btn btn-sm btn-nmg rounded-circle px-2'>
                   <i class='fa-solid fa-fw fa-pencil'></i>
                 </a>
               </th>

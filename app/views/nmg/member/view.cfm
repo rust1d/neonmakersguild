@@ -6,14 +6,14 @@
   counts = mUser.counts();
 
   param url.tab = 'posts';
-  tabs = 'posts,images,activity';
+  tabs = 'posts,images,activity,about';
   if (!tabs.listFind(url.tab)) url.tab = 'posts';
   if (url.tab=='posts' && counts.post_cnt==0) url.tab = 'images';
 </cfscript>
 
 <cfoutput>
   <div class='row g-3'>
-    <div class='col-12 content-card bg-nmg-dark text-white p-0 overflow-hidden'>
+    <div class='col-12 content-card bg-nmg-dark text-white p-0'>
       <div class='row g-0'>
         <div class='flex-25-250 p-3'>
           <img class='avatar-circle w-100' style='min-width:unset' src='#mUser.profile_image().src()#' />
@@ -58,6 +58,11 @@
         <a class='nav-link #ifin(url.tab=='activity', 'active')#' href='#mUser.seo_link()#/activity'>
           Activity
         </a>
+        <cfif mUser.UserProfile().bio().len()>
+          <a class='nav-link #ifin(url.tab=='about', 'active')#' href='#mUser.seo_link()#/about'>
+            About
+          </a>
+        </cfif>
       </nav>
     </div>
     #router.include('member/#url.tab#')#

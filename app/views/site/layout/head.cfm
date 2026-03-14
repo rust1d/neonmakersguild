@@ -12,26 +12,25 @@
   <link rel='apple-touch-icon' sizes='180x180' href='/apple-touch-icon.png' />
   <link rel='icon' type='image/png' sizes='32x32' href='/favicon-32x32.png' />
   <link rel='icon' type='image/png' sizes='16x16' href='/favicon-16x16.png' />
-  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css' integrity='sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH' crossorigin='anonymous' />
+  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css' integrity='sha256-2FMn2Zx6PuH5tdBQDRNwrOo60ts5wWPC9R8jK67b3t4=' crossorigin='anonymous' />
   <link rel='preconnect' href='https://fonts.googleapis.com' crossorigin />
   <link rel='preconnect' href='https://fonts.gstatic.com' />
   <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Montserrat:wght@400;500&family=Permanent+Marker&display=swap' />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet" integrity="sha512-cyzxRvewl+FOKTtpBzYjW6x6IAYUCZy3sGP40hn+DQkqeluGRCax7qztK2ImL64SA+C7kVWdLI6wvdlStawhyw==" crossorigin="anonymous" />
-  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css' integrity='sha512-ZKX+BvQihRJPA8CROKBhDNvoc2aDMOdAlcm7TUQY+35XYtrd3yh95QOOhsPDQY9QnKE0Wqag9y38OIgEvb88cA==' crossorigin />
+  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/lightbox2@2.12.0/dist/css/lightbox.min.css' integrity='sha256-WoT007zANaSefDI9onrduF7cCgBXLxfz4ppR13BMh14=' crossorigin='anonymous' />
 
-  <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js' integrity='sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz' crossorigin='anonymous'></script>
+  <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js' integrity='sha256-5P1JGBOIxI7FBAvT/mb1fCnI5n/NhQKzNUuW7Hq0fMc=' crossorigin='anonymous'></script>
   <script src='https://code.jquery.com/jquery-3.7.1.min.js' integrity='sha384-1H217gwSVyLSIfaLxHbE7dRb3v4mYCKbpQvzx0cegeju1MVsGrX5xXxAvs/HgeFs' crossorigin='anonymous'></script>
-  <script src='https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js'></script>
   <script src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js'></script>
-  <script src='https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js'></script>
+  <script src='https://cdn.jsdelivr.net/npm/jquery-validation@1.22.1/dist/jquery.validate.min.js' integrity='sha256-1IuP7k/g+d98/r5+D1I2X2w+xhBVJJ+shT7D1kXXiYs=' crossorigin='anonymous'></script>
   <script src='https://cdn.jsdelivr.net/npm/exif-js'></script>
   <script src='https://www.google.com/recaptcha/api.js?render=6LeaIakfAAAAAFfh-JbzqJOJlqyI6JlFIKbkZNjZ'></script>
   <script src='https://cdn.jsdelivr.net/npm/tinymce@7.9.1/tinymce.min.js' integrity='sha256-p7g47P/YXCwLEUxcBoAvFHbM0Ae1ZVfAsqFLAXU8j+Q=' crossorigin='anonymous'></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js" integrity="sha512-6lplKUSl86rUVprDIjiW8DuOniNX8UDoRATqZSds/7t6zCQZfaCe3e5zcGaQwxa8Kpn5RTM9Fvl3X2lLV4grPQ==" crossorigin="anonymous"></script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js' integrity='sha512-k2GFCTbp9rQU412BStrcD/rlwv1PYec9SNrkbQlo6RZCf75l6KcC3UwDY8H5n5hl4v77IDtIPwOk9Dqjs/mMBQ==' crossorigin></script>
-  <script src="https://kit.fontawesome.com/e3031fb88c.js" crossorigin="anonymous"></script><!--- v6 --->
-  <script src='https://cdn.jsdelivr.net/npm/bs5-lightbox@1.8.0/dist/index.bundle.min.js'></script>
-  <script src='https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js' crossorigin='anonymous'></script>
+  <script src='https://cdn.jsdelivr.net/npm/lightbox2@2.12.0/dist/js/lightbox.min.js' integrity='sha256-wCsf3UahXWU4dEdmi8Otmys8tHY41MDCECc7gscAbms=' crossorigin='anonymous'></script>
+  <script src="https://kit.fontawesome.com/e3031fb88c.js" crossorigin="anonymous"></script>
+  <script src='https://cdn.jsdelivr.net/npm/bs5-lightbox@1.8.5/dist/index.bundle.min.js' integrity='sha256-wBVT6m5bc14zQfKS8VaFxRBxmovsFNGP3mAxmll9p7Y=' crossorigin='anonymous'></script>
+  <script src='https://cdn.jsdelivr.net/npm/sortablejs@1.15.7/Sortable.min.js' integrity='sha256-v0JBvHP+9/EcWaKDpp/oBRzdMcbY/1orm6IZ54Mfz3Y=' crossorigin='anonymous'></script>
 
   <link rel='stylesheet' href='#application.urls.root#/assets/css/main.css?ck=#application.cache_key#' type='text/css' />
   <link rel='stylesheet' href='#application.urls.root#/assets/css/#session.site.get_site()#/main.css?ck=#application.cache_key#' type='text/css' />

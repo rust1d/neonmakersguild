@@ -6,7 +6,7 @@
   <cfif session.user.loggedIn()>
     <div class='d-flex align-items-start'>
       <a href='#session.user.seo_link()#' class='me-2'>
-        <img class='forum-thumbnail rounded' src='#session.user.profile_image().src()#' />
+        <img class='avatar-circle' style='width:40px;min-width:40px' src='#session.user.profile_image().src()#' />
       </a>
       <div class='flex-grow-1'>
         <div class='comment-input-group border rounded bg-nmg-light w-100' id='#locals.id#'>

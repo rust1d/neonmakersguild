@@ -98,8 +98,8 @@
 
         <div class='row my-3'>
           <div class='col text-center'>
-            <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-nmg'>Save Profile</button>
-            <a href='#session.user.get_home()#' class='btn btn-nmg-cancel'>Cancel</a>
+            <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-nmg rounded-pill px-3'>Save Profile</button>
+            <a href='#session.user.get_home()#' class='btn btn-outline-nmg rounded-pill px-3'>Cancel</a>
           </div>
         </div>
       </div>

@@ -23,7 +23,7 @@
       <div class='d-flex justify-content-between align-items-center mb-3'>
         <div class='fs-5 fw-semibold'>Image Manager</div>
         <div>
-          <a href='#router.href('user/image/edit')#' class='btn btn-sm btn-nmg me-2'><i class='fa-solid fa-fw fa-plus'></i> New Image</a>
+          <a href='#router.href('user/image/edit')#' class='btn btn-sm btn-nmg rounded-pill px-3 me-2'><i class='fa-solid fa-fw fa-plus'></i> New Image</a>
         </div>
         #router.include('shared/partials/filter_and_page', { pagination: results.pagination })#
       </div>
@@ -35,7 +35,7 @@
               <img class='lazy-img fade-in-blur img-fluid rounded' data-src='#mImage.thumbnail_src()#' />
             </a>
             <cfif session.user.isUser(mImage.usid())>
-              <i class='fa-solid fa-fw fa-pencil btn btn-nmg btn-outline-dark btn-floating btn-floating-br btn-pic' data-uuid='#mImage.encoded_key()#'></i>
+              <i class='fa-solid fa-fw fa-pencil btn btn-sm btn-nmg rounded-circle px-2 btn-floating btn-floating-br btn-pic' data-uuid='#mImage.encoded_key()#'></i>
             </cfif>
           </div>
         </cfloop>

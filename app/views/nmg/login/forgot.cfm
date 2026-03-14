@@ -34,7 +34,7 @@
               </div>
             </div>
             <div class='col-12'>
-              <button type='submit' name='btnSend' class='btn btn-nmg w-100'>Send Email</button>
+              <button type='submit' name='btnSend' class='btn btn-nmg rounded-pill w-100'>Send Email</button>
             </div>
             <div class='col-12'>
               <a href='/login' class='small text-muted'>Back to Login</a>

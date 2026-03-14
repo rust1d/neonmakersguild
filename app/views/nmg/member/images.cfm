@@ -28,8 +28,8 @@
   <div id='image_list' class='col-12 content-card'>
     <cfif session.user.loggedIn()>
       <div class='d-flex justify-content-between align-items-center mb-2'>
-        <div class='fs-5'>Images</div>
-        <a class='smaller' href='#router.href('user/image/edit')#'>Upload New Images</a>
+        <div class='fs-5 text-marker'>Images</div>
+        <a class='btn btn-sm btn-nmg rounded-pill px-3' href='#router.href('user/image/edit')#'><i class='fa-solid fa-upload me-1'></i> Upload</a>
       </div>
     </cfif>
     <div class='member-tiles'>
@@ -39,7 +39,7 @@
             <img class='lazy-img fade-in-blur img-fluid rounded' data-src='#mImage.thumbnail_src()#' />
           </a>
           <cfif session.user.isUser(mImage.usid())>
-            <i class='fa-solid fa-fw fa-pencil btn btn-nmg btn-outline-dark btn-floating btn-floating-br btn-pic' data-uuid='#mImage.encoded_key()#'></i>
+            <i class='fa-solid fa-fw fa-pencil btn btn-sm btn-nmg rounded-circle px-2 btn-floating btn-floating-br btn-pic' data-uuid='#mImage.encoded_key()#'></i>
           </cfif>
         </div>
       </cfloop>

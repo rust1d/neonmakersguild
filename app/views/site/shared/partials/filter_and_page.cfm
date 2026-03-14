@@ -6,7 +6,7 @@
 <cfoutput>
   <cfif locals.keyExists('pagination')>
     <cfif locals.footer>
-      <div class='col-auto small'>
+      <div class='col-auto small text-white-50'>
         <cfif locals.pagination.total gt locals.pagination.page_size>#locals.pagination.start# - #locals.pagination.end# of </cfif>
         #utility.plural_label(locals.pagination.total, 'record')#
       </div>

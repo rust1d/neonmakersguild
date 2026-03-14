@@ -99,10 +99,11 @@ h1, h2, h3, h4, h5, h6 {
 .btn-pic {
   width: 30px;
   height: 30px;
-  text-align: center;
-  padding: 6px 0;
-  line-height: 1.428571429;
-  border-radius: var(--bs-border-radius) !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 50% !important;
 }
 
 .btn-floating {
@@ -825,9 +826,9 @@ img.lazy-img:not(.fade-in-blur) {
   font-size: 1rem;
   border-radius: var(--bs-border-radius) !important;
 }
-.member-about-body, .member-links-body {
+.member-links-body {
   max-height: 66vh;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 .member-about-body img {
   max-width: 300px;
