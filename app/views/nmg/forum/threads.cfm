@@ -79,16 +79,18 @@
       </nav>
     </div>
     <div class='col-12'>
-      <div class='fs-4'>
-        <a href='#mForum.seo_link()#'>#mForum.name()#</a>
-      </div>
-      <div>
-        #mForum.description()#
+      <div class='content-card bg-nmg-dark text-white'>
+        <div class='fs-4 text-marker'>
+          <a href='#mForum.seo_link()#' class='text-white text-decoration-none'>#mForum.name()#</a>
+        </div>
+        <div class='small text-white-50'>
+          #mForum.description()#
+        </div>
       </div>
     </div>
     <div class='col-12'>
-      <div class='card'>
-        <div class='card-header'>
+      <div class='card border-0 shadow-sm'>
+        <div class='card-header bg-white'>
           <div class='row align-items-center'>
             <div class='col-auto'>
               <cfif session.user.loggedIn()>
@@ -114,13 +116,9 @@
           <cfif session.user.loggedIn()>
             <form method='post' class='needs-validation' novalidate autocomplete='off' enctype='multipart/form-data'>
               <input type='file' id='filePicker' accept='image/*' multiple class='d-none' />
-              <div class='row g-3 align-items-end align-items-sm-center mb-2'>
-                <div class='col-auto'>
-                  <img class='avatar-circle' style='width:48px;min-width:48px' src='#session.user.profile_image().src()#' />
-                </div>
-                <div class='col'>
-                  <input type='text' class='form-control neon-red my-auto' name='ft_subject' id='ft_subject' value='' maxlength='100' placeholder='Start new thread...' required />
-                </div>
+              <div class='neon-red rounded d-flex align-items-center gap-3 p-2 mb-2'>
+                <img class='avatar-circle flex-shrink-0' style='width:48px;min-width:48px' src='#session.user.profile_image().src()#' />
+                <input type='text' class='form-control border-0 bg-transparent my-auto' name='ft_subject' id='ft_subject' value='' maxlength='100' placeholder='Start new thread, #session.user.UserProfile().firstname()#...' required />
               </div>
               <div class='message-field' style='display:none'>
                 <textarea class='form-control tiny-forum' rows='8' name='fm_body' id='fm_body' data-roll='photo_roll'></textarea>
@@ -193,7 +191,7 @@
             </div>
           </cfloop>
         </div>
-        <div class='card-footer bg-nmg'>
+        <div class='card-footer bg-nmg-dark'>
           <div class='row align-items-center'>
             #router.include('shared/partials/filter_and_page', { pagination: pagination, footer: true })#
           </div>

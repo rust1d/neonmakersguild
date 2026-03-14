@@ -145,18 +145,25 @@
       </nav>
     </div>
     <div class='col-12'>
-      <div id='thread_subject' class='content-card'>
-        <div class='fs-4 #ifin(mThread.deleted(), 'text-decoration-line-through')#'>
-          <a href='#mThread.seo_link()#'>#mThread.subject()#</a>
-        </div>
-        <div class='smaller'>
-          <a href='#mThread.User().seo_link()#'>#mThread.User().user()#</a>
-          &bull;
-          <a href='#mThread.seo_link()#'>#mThread.posted()#</a>
-          <cfif session.user.loggedIn() && mThread.usid()==session.user.usid() && mThread.editable()>
-            &bull; <a class='thread-edit' data-ftid='#mThread.ftid()#' data-key='#mThread.encoded_key()#' title='editable for 24 hours'><i class='fa-solid fa-fw fa-pencil'></i></a>
-            &bull; <a class='thread-delete' data-ftid='#mThread.ftid()#' data-key='#mThread.encoded_key()#' title='deletable for 24 hours'><i class='fa-solid fa-fw fa-trash'></i></a>
-          </cfif>
+      <div id='thread_subject' class='content-card bg-nmg-dark text-white'>
+        <div class='d-flex align-items-center gap-3'>
+          <a href='#mThread.User().seo_link()#'>
+            <img class='avatar-circle' style='width:48px;min-width:48px' src='#mThread.User().profile_image().src()#' />
+          </a>
+          <div>
+            <div class='fs-4 text-marker #ifin(mThread.deleted(), 'text-decoration-line-through')#'>
+              <a href='#mThread.seo_link()#' class='text-white text-decoration-none'>#mThread.subject()#</a>
+            </div>
+            <div class='smaller text-white-50'>
+              <a href='#mThread.User().seo_link()#' class='text-white-50'>#mThread.User().user()#</a>
+              &bull;
+              <a href='#mThread.seo_link()#' class='text-white-50'>#mThread.posted()#</a>
+              <cfif session.user.loggedIn() && mThread.usid()==session.user.usid() && mThread.editable()>
+                &bull; <a class='thread-edit text-white-50' data-ftid='#mThread.ftid()#' data-key='#mThread.encoded_key()#' title='editable for 24 hours'><i class='fa-solid fa-fw fa-pencil'></i></a>
+                &bull; <a class='thread-delete text-white-50' data-ftid='#mThread.ftid()#' data-key='#mThread.encoded_key()#' title='deletable for 24 hours'><i class='fa-solid fa-fw fa-trash'></i></a>
+              </cfif>
+            </div>
+          </div>
         </div>
       </div>
       <cfif session.user.loggedIn() && mThread.usid()==session.user.usid() && mThread.editable()>
@@ -176,8 +183,8 @@
       </cfif>
     </div>
     <div class='col-12'>
-      <div class='card'>
-        <div class='card-header'>
+      <div class='card border-0 shadow-sm'>
+        <div class='card-header bg-white'>
           <div class='row align-items-center'>
             <div class='col-auto'>
               <cfif session.user.loggedIn()>
@@ -329,8 +336,10 @@
             </cfif>
           </form>
         </div>
-        <div class='card-footer'>
-          Messages #mThread.messages()#
+        <div class='card-footer bg-nmg-dark text-white-50 small'>
+          <i class='fa-regular fa-comments me-1'></i> #utility.plural_label(mThread.messages(), 'Message')#
+          &bull;
+          <i class='fa-regular fa-eye me-1'></i> #utility.plural_label(mThread.views(), 'View')#
         </div>
       </div>
     </div>

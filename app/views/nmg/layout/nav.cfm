@@ -7,15 +7,15 @@
     <div class='container-lg'>
       <a class='navbar-brand d-flex align-items-center me-1' href='#router.href()#'>
         <img src='#application.urls.cdn#/assets/images/logo-256.png' alt='#session.site.title()# Logo' class='d-inline-block align-text-top' />
-        <span class='mx-2 d-none d-md-inline fs-6'>#session.site.title()#</span>
+        <span class='mx-2 d-none d-xl-inline fs-6'>#session.site.title()#</span>
       </a>
       <button class='navbar-toggler' type='button' data-bs-toggle='collapse' data-bs-target='##navbarNavDropdown' aria-controls='navbarNavDropdown' aria-expanded='false' aria-label='Toggle navigation'>
         <span class='navbar-toggler-icon'></span>
       </button>
       <div class='collapse navbar-collapse' id='navbarNavDropdown'>
         <ul class='navbar-nav flex-grow-1 justify-content-evenly'>
-          <li class='nav-item'><a class='nav-link' href='/stream'>Member Stream</a></li>
-          <li class='nav-item d-none d-lg-inline'><a class='nav-link' href='/members'>Members</a></li>
+          <li class='nav-item'><a class='nav-link' href='/stream'><span class='d-none d-md-inline'>Member </span>Stream</a></li>
+          <li class='nav-item'><a class='nav-link' href='/members'>Members</a></li>
           <li class='nav-item'><a class='nav-link' href='/forums'>Forums</a></li>
           <li class='nav-item dropdown drop-right'>
             <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Learn</a>

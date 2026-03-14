@@ -610,10 +610,15 @@ i.roundy {
   border: var(--bs-border-width) var(--bs-border-style) var(--nmg-color-alt) !important;
   color: var(--nmg-black);
 }
-
 .btn-icon-link:hover {
-  border-color: var(-nmg-color-alt);
+  border-color: var(--nmg-color-alt);
   color: var(--nmg-color-alt);
+}
+.bg-nmg-dark .btn-icon-link {
+  color: var(--nmg-color-alt);
+}
+.bg-nmg-dark .btn-icon-link:hover {
+  color: #fff;
 }
 
 /* JIGGLE DOTS */
@@ -733,6 +738,16 @@ i.roundy {
   border: var(--bs-border-width) var(--bs-border-style) var(--nmg-border);
   border-radius: var(--bs-border-radius) !important;
   box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+}
+.member-tiles .member-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.12);
+  border-color: var(--nmg-color);
+  background-color: #fff;
+}
+.member-tiles .member-tile a:hover {
+  color: var(--nmg-black);
 }
 
 img.lazy-img {
@@ -769,10 +784,24 @@ img.lazy-img:not(.fade-in-blur) {
   border: var(--bs-border-width) var(--bs-border-style) var(--nmg-border);
   border-radius: var(--bs-border-radius) !important;
   box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+}
+#member-list .member-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.12);
+  border-color: var(--nmg-color);
+  background-color: #fff;
+}
+#member-list .member-card a:hover {
+  color: var(--nmg-black);
 }
 #member-list .member-card img {
-  width: 100px;
-  min-width: 100px;
+  width: 80px;
+  min-width: 80px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--nmg-color);
 }
 
 .member-view-img {

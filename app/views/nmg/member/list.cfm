@@ -25,7 +25,7 @@
   <div id='member-list' class='row'>
     <div class='col-12 content-card'>
       <div class='row pb-3 g-2 justify-content-end'>
-        <div class='col-12 col-md fs-5'>NMG Members Directory</div>
+        <div class='col-12 col-md fs-4 text-marker'>NMG Members Directory</div>
         #router.include('shared/partials/filter_and_page', { pagination: pagination, placeholder: 'member search...' })#
         #router.include('shared/partials/viewer')#
       </div>
@@ -43,8 +43,8 @@
                   <div class='fw-semibold fs-5'>
                     <a href='#mUser.seo_link()#' class='text-decoration-none'>#mUser.user()#</a>
                   </div>
-                  <div class='small'>#mUser.UserProfile().name()#</div>
-                  <div class='small'>#mUser.UserProfile().location()#</div>
+                  <div class='small text-dark'>#mUser.UserProfile().name()#</div>
+                  <div class='small text-dark'>#mUser.UserProfile().location()#</div>
                 </div>
               </div>
             </cfloop>
