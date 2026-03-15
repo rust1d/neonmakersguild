@@ -11,33 +11,6 @@
         #utility.plural_label(locals.pagination.total, 'record')#
       </div>
     <cfelse>
-      <cfif locals.pagination.keyExists('tag')>
-        <div class='col-auto'>
-          <button id='btnClearTag' onclick='window.location=window.location.pathname' class='border btn btn-sm btn-nmg border-nmg rounded p-1'>
-            #locals.pagination.tag# &nbsp; <i class='fas fa-times'></i>
-          </button>
-        </div>
-      </cfif>
-      <cfif locals.pagination.term.len()>
-        <div class='col-auto'>
-          <button id='btnClearTerm' onclick='window.location=window.location.pathname' class='border btn btn-sm btn-nmg border-nmg rounded p-1'>
-            #locals.pagination.term# &nbsp; <i class='fas fa-times'></i>
-          </button>
-        </div>
-      </cfif>
-      <div class='col-auto'>
-        <form method='post' class='m-0'>
-          <input type='hidden' name='tag' id='filter_tag' value='#locals.pagination.get('tag')#' />
-          <input type='hidden' name='bcaid' id='filter_bcaid' value='#locals.pagination.get('bcaid')#' />
-          <input type='hidden' name='sort' id='filter_sort' value='#locals.pagination.get('sort')#' />
-          <input type='hidden' name='filter_term' id='filter_term' value='#locals.pagination.get('term')#' />
-          <div class='input-group input-group-sm'>
-            <input type='text' class='form-control' id='term' name='term' placeholder='#locals.placeholder#' maxlength='25' aria-label='Search' required />
-            <button class='btn btn-sm btn-nmg' type='submit'><i class='fa fa-search'></i></button>
-          </div>
-        </form>
-      </div>
-
       <cfif !locals.pagination.one_page>
         <div class='col-auto'>
           <div class='input-group input-group-sm'>
@@ -70,6 +43,34 @@
           </div>
         </div>
       </cfif>
+      <div class='w-100 d-sm-none'></div>
+      <div class='col d-sm-none'></div>
+      <cfif locals.pagination.keyExists('tag')>
+        <div class='col-auto'>
+          <button id='btnClearTag' onclick='window.location=window.location.pathname' class='border btn btn-sm btn-nmg border-nmg rounded p-1'>
+            #locals.pagination.tag# &nbsp; <i class='fas fa-times'></i>
+          </button>
+        </div>
+      </cfif>
+      <cfif locals.pagination.term.len()>
+        <div class='col-auto'>
+          <button id='btnClearTerm' onclick='window.location=window.location.pathname' class='border btn btn-sm btn-nmg border-nmg rounded p-1'>
+            #locals.pagination.term# &nbsp; <i class='fas fa-times'></i>
+          </button>
+        </div>
+      </cfif>
+      <div class='col-auto'>
+        <form method='post' class='m-0'>
+          <input type='hidden' name='tag' id='filter_tag' value='#locals.pagination.get('tag')#' />
+          <input type='hidden' name='bcaid' id='filter_bcaid' value='#locals.pagination.get('bcaid')#' />
+          <input type='hidden' name='sort' id='filter_sort' value='#locals.pagination.get('sort')#' />
+          <input type='hidden' name='filter_term' id='filter_term' value='#locals.pagination.get('term')#' />
+          <div class='input-group input-group-sm'>
+            <input type='text' class='form-control' id='term' name='term' placeholder='#locals.placeholder#' maxlength='25' aria-label='Search' required />
+            <button class='btn btn-sm btn-nmg' type='submit'><i class='fa fa-search'></i></button>
+          </div>
+        </form>
+      </div>
     </cfif>
   </cfif>
 </cfoutput>

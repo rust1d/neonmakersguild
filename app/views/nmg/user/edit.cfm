@@ -8,11 +8,13 @@
 <cfset include_js('assets/js/image/select.js') />
 
 <cfoutput>
+  <div class='row g-3'>
+    <div class='col-12 text-center content-card bg-nmg-dark text-white py-4'>
+      <div class='fs-2 text-marker'>Edit User Profile</div>
+    </div>
+    <div class='col-12'>
   <form method='post'>
     <div class='card border-0 shadow-sm'>
-      <div class='card-header bg-nmg-dark p-3'>
-        <div class='fs-4 text-marker text-white'>Edit User Profile</div>
-      </div>
       <div class='card-body'>
         <div class='row mb-3'>
           <div class='col-sm-auto'>
@@ -107,4 +109,6 @@
       </div>
     </div>
   </form>
+    </div>
+  </div>
 </cfoutput>

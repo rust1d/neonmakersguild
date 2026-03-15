@@ -4,15 +4,16 @@
 
 <cfoutput>
   <div class='row g-3'>
+    <div class='col-12 text-center content-card bg-nmg-dark text-white py-4'>
+      <div class='fs-2 text-marker'>Post Manager</div>
+    </div>
     <div class='col-12 content-card'>
       <cfset router.include('user/entry/modal') />
     </div>
     <div class='col-12 content-card'>
-      <div class='d-flex justify-content-between align-items-center mb-3'>
-        <div class='fs-5 fw-semibold'>Post Manager</div>
+      <div class='row g-2 justify-content-end align-items-center pb-3'>
         #router.include('shared/partials/filter_and_page', { pagination: results.pagination })#
       </div>
-
       <div class='list-group list-group-flush'>
         <cfloop array='#results.rows#' item='mEntry'>
           <div class='list-group-item px-3 py-2 d-flex gap-3 align-items-center'>

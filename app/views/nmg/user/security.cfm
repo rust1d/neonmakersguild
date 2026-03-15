@@ -27,12 +27,12 @@
 
 <cfoutput>
   <div class='row g-3 justify-content-center'>
+    <div class='col-12 text-center content-card bg-nmg-dark text-white py-4'>
+      <div class='fs-2 text-marker'>Account Security</div>
+    </div>
     <div class='col-12 col-md-10 col-lg-8'>
       <form method='post'>
         <div class='card border-0 shadow-sm'>
-          <div class='card-header bg-nmg-dark p-3'>
-            <div class='fs-4 text-marker text-white'>Account Security</div>
-          </div>
           <div class='card-body'>
             <div class='row g-3'>
               <div class='col-12'>

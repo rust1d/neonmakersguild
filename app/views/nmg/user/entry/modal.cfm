@@ -4,20 +4,21 @@
 <cfset router.include('shared/partials/process_overlay') />
 
 <cfoutput>
-  <div class='neon-red rounded d-flex align-items-center'>
-    <img class='avatar-circle flex-shrink-0 ms-3' src='#session.user.profile_image().src()#' />
-    <div class='d-flex flex-column flex-grow-1 p-2 gap-2 justify-content-center'>
-      <a class='btn btn-faux-field rounded-pill' data-bs-toggle='modal' data-bs-target='##post_modal'>
+  <div class='neon-red rounded'>
+    <div class='d-flex align-items-center p-2 gap-2'>
+      <img class='avatar-circle flex-shrink-0 d-none d-sm-block ms-1' src='#session.user.profile_image().src()#' />
+      <img class='avatar-circle flex-shrink-0 d-block d-sm-none ms-1' style='width:40px;min-width:40px' src='#session.user.profile_image().src()#' />
+      <a class='btn btn-faux-field rounded-pill flex-grow-1' data-bs-toggle='modal' data-bs-target='##post_modal'>
         <span class='blinking me-1'>&##x2502;</span>What are you working on, #session.user.UserProfile().firstname()#?
       </a>
-      <div class='d-flex gap-2 justify-content-center'>
-        <a class='btn btn-sm btn-nmg rounded-pill px-3' data-bs-toggle='modal' data-bs-target='##post_modal'>
-          <i class='fa-regular fa-image me-1'></i>Photo
-        </a>
-        <a class='btn btn-sm btn-nmg rounded-pill px-3' data-bs-toggle='modal' data-bs-target='##post_modal'>
-          <i class='fa-regular fa-pen-to-square me-1'></i>Story
-        </a>
-      </div>
+    </div>
+    <div class='d-flex gap-2 justify-content-center pb-2'>
+      <a class='btn btn-sm btn-nmg rounded-pill px-3' data-bs-toggle='modal' data-bs-target='##post_modal'>
+        <i class='fa-regular fa-image me-1'></i>Photo
+      </a>
+      <a class='btn btn-sm btn-nmg rounded-pill px-3' data-bs-toggle='modal' data-bs-target='##post_modal'>
+        <i class='fa-regular fa-pen-to-square me-1'></i>Story
+      </a>
     </div>
   </div>
 

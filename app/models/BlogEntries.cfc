@@ -81,7 +81,6 @@ component extends=jSoup accessors=true {
     return twice;
   }
 
-
   public query function search(struct params) {
     if (arguments.keyExists('params')) arguments = arguments.params;
     if (!isNumeric(arguments.get('maxrows'))) arguments.maxrows = -1;

@@ -67,6 +67,19 @@ component {
     mMailer.send();
   }
 
+  public void function SendMention(required Users mUser, required string from_user, required string thread_subject, required string link) {
+    var mMailer = new app.services.email.Emailer(
+      to: arguments.mUser.email(),
+      subject: arguments.from_user & ' mentioned you on NeonMakersGuild.org',
+      template: 'mention.cfm',
+      firstname: arguments.mUser.UserProfile().firstname(),
+      from_user: arguments.from_user,
+      thread_subject: arguments.thread_subject,
+      link: application.urls.root & arguments.link
+    );
+    mMailer.send();
+  }
+
   // PRIVATE
 
   private string function email_to(required Users mUser) {

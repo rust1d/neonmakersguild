@@ -506,6 +506,91 @@ figure.image figcaption {
   width: 1.5rem;
 }
 
+.nav-drop-wrap { position: relative; display: flex; align-items: center; }
+.nav-drop-link { position: relative; display: flex; align-items: center; cursor: pointer; }
+.nav-drop-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: -10px;
+  width: 340px;
+  background: var(--nmg-black);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  z-index: 200;
+  overflow: hidden;
+}
+.nav-dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  color: #fff;
+}
+.nav-notify-body { max-height: 400px; overflow-y: auto; }
+.nav-notify-item {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  align-items: flex-start;
+  text-decoration: none;
+  color: rgba(255,255,255,0.7);
+  transition: background 0.15s;
+}
+.nav-notify-item:last-child { border-bottom: none; }
+.nav-notify-item:hover { background: rgba(255,255,255,0.05); color: #fff; text-decoration: none; }
+.nav-notify-item.unread { background: rgba(90,197,195,0.08); border-left: 3px solid var(--nmg-color); }
+.nav-notify-content { flex: 1; min-width: 0; }
+.nav-notify-text { font-size: 0.82rem; line-height: 1.3; }
+.nav-notify-time { font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 2px; }
+.nav-drop-footer {
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.nav-drop-footer a { color: var(--nmg-color); }
+.kebab-btn {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+.kebab-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+
+@media (max-width: 576px) {
+  .nav-drop-panel {
+    position: fixed;
+    top: 56px;
+    left: 0.5rem;
+    right: 0.5rem;
+    width: auto;
+    border-radius: 0 0 8px 8px;
+  }
+}
+
+.nav-notify-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  background: var(--nmg-color);
+  border-radius: 8px;
+  position: absolute;
+  bottom: 2px;
+  right: -6px;
+}
+
 .navbar-nmg .round-icon {
   position: relative;
   padding-left: 3.5rem;

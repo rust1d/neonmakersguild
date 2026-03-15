@@ -110,6 +110,44 @@ component extends=jsoup accessors=true {
   // PRIVATE
 
   private void function post_insert(required boolean success) {
-    if (success) new app.models.Subscriptions().alert(ss_fkey: fm_ftid, ss_table: 'ForumThreads');
+    if (arguments.success) {
+      new app.models.Subscriptions().alert(ss_fkey: variables.fm_ftid, ss_table: 'ForumThreads');
+      parse_mentions();
+    }
+  }
+
+  private void function parse_mentions() {
+    var body = variables.fm_body ?: '';
+    var matches = body.reMatch('@[a-zA-Z][a-zA-Z0-9_-]+');
+    var notifier = new app.models.UserNotifications();
+    var thread = this.ForumThread();
+
+    for (var mention in matches) {
+      var username = mention.mid(2, mention.len() - 1);
+      var mUsers = new app.models.Users().where(us_user: username);
+      if (mUsers.len() == 1) {
+        var mMentioned = mUsers[1];
+        if (mMentioned.usid() == variables.fm_usid) continue;
+        notifier.notify(
+          usid: mMentioned.usid(),
+          type: 'mention',
+          message: session.user.user() & ' mentioned you in ' & thread.subject(),
+          data: {
+            from_usid: variables.fm_usid,
+            from_user: session.user.user(),
+            ref_id: variables.fm_fmid,
+            link: seo_link()
+          }
+        );
+        try {
+          new app.services.email.UserEmailer().SendMention(
+            mUser: mMentioned,
+            from_user: session.user.user(),
+            thread_subject: thread.subject(),
+            link: seo_link()
+          );
+        } catch (any e) {}
+      }
+    }
   }
 }

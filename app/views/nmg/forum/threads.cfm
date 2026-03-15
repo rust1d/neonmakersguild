@@ -91,20 +91,20 @@
     </div>
     <div class='col-12'>
       <div class='card border-0 shadow-sm'>
-        <div class='card-header bg-white'>
-          <div class='row align-items-center'>
+        <div class='card-header bg-white px-2 px-sm-3'>
+          <div class='row g-1 g-sm-2 align-items-center justify-content-between'>
             <div class='col-auto'>
               <cfif session.user.loggedIn()>
                 <cfif mSubscription.persisted()>
-                  <button type='button' class='btn btn-sm btn-outline-nmg rounded-pill px-3' name='btnSubscribe' value='0' onclick='postButton(this)'><i class='fas fa-at'></i> Unsubscribe</button>
+                  <button type='button' class='btn btn-sm btn-outline-nmg rounded-pill px-3' name='btnSubscribe' value='0' onclick='postButton(this)'><i class='fas fa-at me-1'></i>Unsubscribe</button>
                 <cfelse>
                   <button type='button' class='btn btn-sm btn-nmg rounded-pill px-3' name='btnSubscribe' value='1' onclick='postButton(this)' title='Receive an email when someone posts in this forum.'>
-                    <i class='fas fa-at'></i> Subscribe to this forum
+                    <i class='fas fa-at me-1'></i>Subscribe
                   </button>
                 </cfif>
               <cfelse>
                 <a href='/login' class='btn btn-sm btn-nmg rounded-pill px-3' title='Login'>
-                  <i class='fas fa-person-dots-from-line'></i> Login to post
+                  <i class='fas fa-person-dots-from-line me-1'></i>Login
                 </a>
               </cfif>
             </div>
@@ -117,8 +117,9 @@
           <cfif session.user.loggedIn()>
             <form method='post' class='needs-validation' novalidate autocomplete='off' enctype='multipart/form-data'>
               <input type='file' id='filePicker' accept='image/*' multiple class='d-none' />
-              <div class='neon-red rounded d-flex align-items-center gap-3 p-2 mb-2'>
-                <img class='avatar-circle flex-shrink-0' style='width:48px;min-width:48px' src='#session.user.profile_image().src()#' />
+              <div class='neon-red rounded d-flex align-items-center gap-2 gap-sm-3 p-2 mb-2'>
+                <img class='avatar-circle flex-shrink-0 d-none d-sm-block' style='width:48px;min-width:48px' src='#session.user.profile_image().src()#' />
+                <img class='avatar-circle flex-shrink-0 d-block d-sm-none' style='width:32px;min-width:32px' src='#session.user.profile_image().src()#' />
                 <input type='text' class='form-control border-0 bg-transparent my-auto' name='ft_subject' id='ft_subject' value='' maxlength='100' placeholder='Start new thread, #session.user.UserProfile().firstname()#...' required />
               </div>
               <div class='message-field' style='display:none'>
@@ -160,7 +161,7 @@
               </div>
               <div class='d-flex justify-content-between align-items-center mt-1'>
                 <div class='d-flex align-items-center gap-2'>
-                  <a href='#mUser.seo_link()#' class='d-inline d-xxs-none position-relative' style='z-index:2'>
+                  <a href='#mUser.seo_link()#' class='d-none d-sm-inline position-relative' style='z-index:2'>
                     <img class='avatar-circle' style='width:32px;min-width:32px' src='#mUser.profile_image().src()#' />
                   </a>
                   <div class='smaller'>
@@ -173,7 +174,7 @@
                     #utility.plural_label(mThread.views(), 'View')#
                   </div>
                 </div>
-                <div class='d-flex align-items-center gap-2'>
+                <div class='d-none d-sm-flex align-items-center gap-2'>
                   <div class='smaller text-end'>
                     <a href='#mLastUser.seo_link()#' class='position-relative' style='z-index:2'>#mLastUser.user()#</a>
                     &bull;
@@ -181,7 +182,7 @@
                     <br>
                     <span class='small'>#mMessage.more()#</span>
                   </div>
-                  <a href='#mLastUser.seo_link()#' class='d-inline d-xxs-none position-relative' style='z-index:2'>
+                  <a href='#mLastUser.seo_link()#' class='position-relative' style='z-index:2'>
                     <img class='avatar-circle' style='width:32px;min-width:32px' src='#mLastUser.profile_image().src()#' />
                   </a>
                 </div>

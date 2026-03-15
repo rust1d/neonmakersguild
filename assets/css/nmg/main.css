@@ -125,8 +125,11 @@ a:hover {
 }
 
 .thread-message {
-  min-height: 156px;
+  min-height: 80px;
   border-radius: var(--bs-border-radius) !important;
+}
+@media (min-width: 576px) {
+  .thread-message { min-height: 156px; }
 }
 
 .clipped {
@@ -137,6 +140,11 @@ a:hover {
 
 .navbar-nmg {
   background-color: var(--nmg-bg-alt);
+}
+@media (max-width: 414px) {
+  .navbar-nmg .nav-link { font-size: 0.7rem; padding-left: 0.15rem; padding-right: 0.15rem; }
+  .navbar-nmg .navbar-brand { margin-right: 0; }
+  .navbar-nmg .navbar-brand img { width: 24px; height: 24px; }
 }
 
 .navbar-nmg .navbar-nav > li > ul {
@@ -316,6 +324,7 @@ a:hover {
 .navbar-nmg .nav-dropdown {
   background-color: var(--nmg-bg-light);
   min-width: 275px;
+  max-width: calc(100vw - 1rem);
   border: none;
   box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
 }
@@ -419,12 +428,15 @@ a:hover {
 }
 
 .content-card {
-  padding: 1rem;
+  padding: 0.5rem;
   border-radius: var(--bs-border-radius);
   background-color: var(--nmg-bg-light);
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
   border-left: 3px solid transparent;
   transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+}
+@media (min-width: 576px) {
+  .content-card { padding: 1rem; }
 }
 .content-card.hover-lift:hover {
   border-left-color: var(--nmg-color);
@@ -439,6 +451,11 @@ a:hover {
   border: 2px solid var(--nmg-color);
   transition: border-color 0.2s;
 }
+@media (max-width: 575.98px) {
+  #member-roll .avatar-circle { width: 48px; min-width: 48px; }
+  #member-roll a:nth-child(n+6):not(:last-child) { display: none; }
+}
+
 .avatar-circle:hover {
   border-color: var(--nmg-color-alt);
   box-shadow: 0 0 8px var(--nmg-color), 0 0 16px var(--nmg-color-alt);

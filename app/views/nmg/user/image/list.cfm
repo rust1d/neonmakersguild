@@ -19,15 +19,16 @@
 
 <cfoutput>
   <div class='row g-3'>
+    <div class='col-12 text-center content-card bg-nmg-dark text-white py-4'>
+      <div class='fs-2 text-marker'>Image Manager</div>
+    </div>
     <div id='image_list' class='col-12 content-card'>
-      <div class='d-flex justify-content-between align-items-center mb-3'>
-        <div class='fs-5 fw-semibold'>Image Manager</div>
-        <div>
-          <a href='#router.href('user/image/edit')#' class='btn btn-sm btn-nmg rounded-pill px-3 me-2'><i class='fa-solid fa-fw fa-plus'></i> New Image</a>
+      <div class='row g-2 justify-content-end align-items-center pb-3'>
+        <div class='col-auto me-auto'>
+          <a href='#router.href('user/image/edit')#' class='btn btn-sm btn-nmg rounded-pill px-3'><i class='fa-solid fa-fw fa-plus'></i> New Image</a>
         </div>
         #router.include('shared/partials/filter_and_page', { pagination: results.pagination })#
       </div>
-
       <div class='member-tiles'>
         <cfloop array='#results.rows#' item='mImage'>
           <div class='member-tile position-relative' title='#mImage.filename()# #mImage.dimensions()# &bull; #mImage.size_mb()#'>

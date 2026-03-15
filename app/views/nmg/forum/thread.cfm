@@ -146,9 +146,12 @@
     </div>
     <div class='col-12'>
       <div id='thread_subject' class='content-card bg-nmg-dark text-white'>
-        <div class='d-flex align-items-center gap-3'>
-          <a href='#mThread.User().seo_link()#'>
+        <div class='d-flex align-items-center gap-2 gap-sm-3'>
+          <a href='#mThread.User().seo_link()#' class='d-none d-sm-block'>
             <img class='avatar-circle' style='width:48px;min-width:48px' src='#mThread.User().profile_image().src()#' />
+          </a>
+          <a href='#mThread.User().seo_link()#' class='d-block d-sm-none'>
+            <img class='avatar-circle' style='width:32px;min-width:32px' src='#mThread.User().profile_image().src()#' />
           </a>
           <div>
             <div class='fs-4 text-marker #ifin(mThread.deleted(), 'text-decoration-line-through')#'>
@@ -184,7 +187,7 @@
     </div>
     <div class='col-12'>
       <div class='card border-0 shadow-sm'>
-        <div class='card-header bg-white'>
+        <div class='card-header bg-white px-2 px-sm-3'>
           <div class='row align-items-center'>
             <div class='col-auto'>
               <cfif session.user.loggedIn()>
@@ -194,7 +197,7 @@
                   <button type='button' class='btn btn-sm btn-outline-nmg rounded-pill px-3' name='btnSubscribe' value='0' onclick='postButton(this)'><i class='fas fa-at'></i> Unsubscribe</button>
                 <cfelse>
                   <button type='button' class='btn btn-sm btn-nmg rounded-pill px-3' name='btnSubscribe' value='1' onclick='postButton(this)' title='Receive an email when someone posts in this thread.'>
-                    <i class='fas fa-at'></i> Subscribe to this thread
+                    <i class='fas fa-at'></i> Subscribe to thread
                   </button>
                 </cfif>
               <cfelse>
@@ -208,7 +211,7 @@
             </cfif>
           </div>
         </div>
-        <div class='card-body pt-2'>
+        <div class='card-body pt-2 px-2 px-sm-3'>
           <form method='post' class='needs-validation' novalidate autocomplete='off' enctype='multipart/form-data'>
             <input type='hidden' name='fmid' />
             <input type='hidden' name='fiids' />
@@ -248,7 +251,7 @@
                 </div>
               </div>
 
-              <div class='row g-2'>
+              <div class='row g-0 g-sm-2'>
                 <div class='d-none d-sm-block col-auto text-center'>
                   <a href='#mUser.seo_link()#'>
                     <img class='avatar-circle' style='width:48px;min-width:48px' src='#mUser.profile_image().src()#' alt='' />
@@ -270,7 +273,7 @@
                     <cfif row.fm_image_cnt GT 0 AND threadImages.keyExists(mMessage.fmid())>
                       <div class='message-roll row g-2 mt-1'>
                         <cfloop array='#threadImages[mMessage.fmid()]#' item='mFI'>
-                          <div class='col-3 col-xl-2 position-relative'>
+                          <div class='col-4 col-sm-3 col-xl-2 position-relative'>
                             <a data-lightbox='message-#mMessage.fmid()#' data-title='#mFI.filename()#' href='#mFI.image_src()#' title='#mFI.filename()#'>
                               <img data-pkid=#mFI.encoded_key()# class='w-100 img-thumbnail' src='#mFI.thumbnail_src()#' />
                             </a>
@@ -294,7 +297,7 @@
                 #session.user.UserProfile().location()#
               </div>
 
-              <div class='row g-2 justify-content-end'>
+              <div class='row g-0 g-sm-2 justify-content-end'>
                 <div class='d-none d-sm-block col-auto text-center'>
                   <img class='avatar-circle' style='width:48px;min-width:48px' src='#session.user.profile_image().src()#' />
                   <div class='smallest mt-1'><a href='#session.user.seo_link()#'>#session.user.user()#</a></div>
