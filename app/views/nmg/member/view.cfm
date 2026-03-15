@@ -6,7 +6,7 @@
   counts = mUser.counts();
 
   param url.tab = 'posts';
-  tabs = 'posts,images,activity,about';
+  tabs = 'posts,images,events,activity,about';
   if (!tabs.listFind(url.tab)) url.tab = 'posts';
   if (url.tab=='posts' && counts.post_cnt==0) url.tab = 'images';
 </cfscript>
@@ -54,6 +54,9 @@
         </a>
         <a class='nav-link #ifin(url.tab=='images', 'active')#' href='#mUser.seo_link()#/images'>
           Images
+        </a>
+        <a class='nav-link #ifin(url.tab=='events', 'active')#' href='#mUser.seo_link()#/events'>
+          Events
         </a>
         <a class='nav-link #ifin(url.tab=='activity', 'active')#' href='#mUser.seo_link()#/activity'>
           Activity

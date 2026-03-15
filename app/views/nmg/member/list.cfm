@@ -24,7 +24,7 @@
 <cfoutput>
   <div id='member-list' class='row'>
     <div class='col-12 content-card'>
-      <div class='row pb-3 g-2 justify-content-end'>
+      <div class='row pb-3 g-2 justify-content-end align-items-center'>
         <div class='col-12 col-md fs-4 text-marker'>NMG Members Directory</div>
         #router.include('shared/partials/filter_and_page', { pagination: pagination, placeholder: 'member search...' })#
         #router.include('shared/partials/viewer')#
@@ -33,15 +33,13 @@
         <cfif view=='list'>
           <div class='member-cards'>
             <cfloop array='#mUsers#' item='mUser'>
-              <div class='member-card d-flex align-items-start gap-2'>
+              <div class='member-card d-flex align-items-start gap-2 position-relative'>
                 <div class='flex-shrink-0'>
-                  <a href='#mUser.seo_link()#'>
-                    <img class='lazy-img fade-in-blur' data-src='#mUser.profile_image().src()#' alt='#mUser.user()#' />
-                  </a>
+                  <img class='lazy-img fade-in-blur' data-src='#mUser.profile_image().src()#' alt='#mUser.user()#' />
                 </div>
                 <div class='flex-grow-1 ps-2'>
                   <div class='fw-semibold fs-5'>
-                    <a href='#mUser.seo_link()#' class='text-decoration-none'>#mUser.user()#</a>
+                    <a href='#mUser.seo_link()#' class='text-decoration-none stretched-link'>#mUser.user()#</a>
                   </div>
                   <div class='small text-dark'>#mUser.UserProfile().name()#</div>
                   <div class='small text-dark'>#mUser.UserProfile().location()#</div>

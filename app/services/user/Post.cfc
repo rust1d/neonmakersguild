@@ -2,6 +2,7 @@ component {
   public BlogEntries function create(required Users mUser, numeric benid=0) {
     variables.mUser = arguments.mUser;
     variables.mBE = mUser.blog().entry_find_or_create(arguments.benid);
+    if (form.keyExists('btnPublish')) form.ben_released = true;
     if (form.keyExists('btnLater')) form.ben_released = false;
     param form.ben_released = false;
     param form.ben_comments = false;

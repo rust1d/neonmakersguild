@@ -26,7 +26,7 @@
         </div>
       </cfif>
       <div class='col-auto'>
-        <form method='post'>
+        <form method='post' class='m-0'>
           <input type='hidden' name='tag' id='filter_tag' value='#locals.pagination.get('tag')#' />
           <input type='hidden' name='bcaid' id='filter_bcaid' value='#locals.pagination.get('bcaid')#' />
           <input type='hidden' name='sort' id='filter_sort' value='#locals.pagination.get('sort')#' />

@@ -10,7 +10,7 @@ component extends=jSoup accessors=true {
   property name='ben_morebody'      type='string'   sqltype='varchar'    default='';
   property name='ben_comments'      type='boolean'  sqltype='tinyint'    default='false';
   property name='ben_views'         type='numeric'  sqltype='integer'    default='0';
-  property name='ben_released'      type='boolean'  sqltype='tinyint'    default='false';
+  property name='ben_released'      type='boolean'  sqltype='tinyint'    default='true';
   property name='ben_promoted'      type='date'     sqltype='timestamp';
   property name='ben_added'         type='date';
   property name='ben_dla'           type='date';

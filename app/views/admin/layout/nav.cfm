@@ -24,6 +24,7 @@
               <li><a class='dropdown-item' href='#router.href('blog/image/list')#'>Images</a></li>
             </ul>
           </li>
+          <li class='nav-item ms-4'><a class='nav-link' href='#router.href('event/list')#'>Events</a></li>
           <li class='nav-item ms-4'><a class='nav-link' href='#router.href('blog/category/list')#'>Categories</a></li>
           <li class='nav-item ms-4'><a class='nav-link' href='#router.href('blog/tag/list')#'>Tags</a></li>
         </ul>

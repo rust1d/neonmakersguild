@@ -10,9 +10,6 @@
     <div class='col-12 content-card'>
       <div class='d-flex justify-content-between align-items-center mb-3'>
         <div class='fs-5 fw-semibold'>Post Manager</div>
-        <div>
-          <a href='#router.href('user/entry/edit')#' class='btn btn-sm btn-nmg rounded-pill px-3 me-2'><i class='fa-solid fa-fw fa-plus'></i> New Post</a>
-        </div>
         #router.include('shared/partials/filter_and_page', { pagination: results.pagination })#
       </div>
 
@@ -28,9 +25,9 @@
                   <i class='fa-solid fa-star text-warning' title='Front Page'></i>
                 </cfif>
                 <cfif mEntry.released()>
-                  <i class='fa-solid fa-circle-check text-success' title='Released'></i>
+                  <span class='badge bg-success'>Released</span>
                 <cfelse>
-                  <i class='fa-solid fa-circle-minus text-info' title='Released'></i>
+                  <span class='badge bg-info'>Draft</span>
                 </cfif>
               </div>
               <div class='text-muted smaller'>

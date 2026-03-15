@@ -94,7 +94,6 @@
             <div class='row mt-5'>
               <div class='col text-center'>
                 <button type='submit' name='btnSubmit' id='btnSubmit' class='btn btn-nmg'>Save</button>
-                <button type='button' name='btnPreview' id='btnPreview' class='btn btn-nmg'>Preview</button>
                 <button type='button' name='btnCancel' id='btnCancel' data-list='user/entry/list' class='btn btn-nmg-cancel'>Cancel</button>
               </div>
             </div>

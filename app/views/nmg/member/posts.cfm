@@ -1,5 +1,7 @@
 <cfscript>
-  results = mUserBlog.entries(utility.paged_term_params(ben_released: true, maxrows: 5));
+  params = utility.paged_term_params(maxrows: 5);
+  if (!session.user.isUser(mUser.usid())) params.ben_released = true;
+  results = mUserBlog.entries(params);
   section = 'user';
 </cfscript>
 

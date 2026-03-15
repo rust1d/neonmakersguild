@@ -14,6 +14,9 @@
         <a class='post' data-target='#locals.comment_target#' data-section='#locals.section#' data-benid='#locals.mBE.encoded_key()#' href='#locals.mBE.seo_link()#'>
           #locals.mBE.title()#
         </a>
+        <cfif !locals.mBE.released() && session.user.isUser(locals.mBE.usid())>
+          <span class='badge bg-info ms-1'>Draft</span>
+        </cfif>
         #router.include('shared/blog/_promote', locals)#
       </div>
       <div class='d-flex align-items-center gap-2'>
