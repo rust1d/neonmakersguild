@@ -112,8 +112,25 @@ component extends=jsoup accessors=true {
   private void function post_insert(required boolean success) {
     if (arguments.success) {
       new app.models.Subscriptions().alert(ss_fkey: variables.fm_ftid, ss_table: 'ForumThreads');
+      notify_thread_owner();
       parse_mentions();
     }
+  }
+
+  private void function notify_thread_owner() {
+    var thread = this.ForumThread();
+    if (thread.usid() == variables.fm_usid) return;
+    new app.models.UserNotifications().notify(
+      usid: thread.usid(),
+      type: 'reply',
+      message: session.user.user() & ' replied to your thread ' & thread.subject(),
+      data: {
+        from_usid: variables.fm_usid,
+        from_user: session.user.user(),
+        ref_id: variables.fm_fmid,
+        link: seo_link()
+      }
+    );
   }
 
   private void function parse_mentions() {

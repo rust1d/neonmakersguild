@@ -15,13 +15,15 @@ CREATE PROCEDURE userprofile_insert(
   IN _city        varchar(25),
   IN _region      varchar(25),
   IN _postal      varchar(12),
-  IN _country     varchar(2)
+  IN _country     varchar(2),
+  IN _latitude    decimal(10,7),
+  IN _longitude   decimal(10,7)
 )
 BEGIN
   INSERT INTO userprofile (
-    up_usid, up_firstname, up_lastname, up_bio, up_location, up_phone, up_promo, up_address1, up_address2, up_city, up_region, up_postal, up_country, up_dla
+    up_usid, up_firstname, up_lastname, up_bio, up_location, up_phone, up_promo, up_address1, up_address2, up_city, up_region, up_postal, up_country, up_latitude, up_longitude, up_dla
   ) VALUES (
-    _usid, _firstname, _lastname, _bio, _location, _phone, _promo, _address1, _address2, _city, _region, _postal, _country, CURRENT_TIMESTAMP
+    _usid, _firstname, _lastname, _bio, _location, _phone, _promo, _address1, _address2, _city, _region, _postal, _country, _latitude, _longitude, CURRENT_TIMESTAMP
   );
 
   CALL userprofile_get_by_ids(LAST_INSERT_ID());

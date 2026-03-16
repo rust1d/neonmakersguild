@@ -140,6 +140,37 @@ $(function() {
           });
         }
       });
+      editor.ui.registry.addAutocompleter('mentions', {
+        trigger: '@',
+        minChars: 1,
+        fetch: function(pattern) {
+          return new Promise(function(resolve) {
+            $.ajax({
+              url: SERVER.root + '/app/services/user/Lookup.cfc?method=mentions',
+              method: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify({ term: pattern }),
+              dataType: 'json'
+            }).done(function(response) {
+              if (response.success) {
+                resolve(response.data.users.map(function(u) {
+                  return { type: 'autocompleteitem', value: '@' + u.user, text: u.user };
+                }));
+              } else {
+                resolve([]);
+              }
+            }).fail(function() {
+              resolve([]);
+            });
+          });
+        },
+        onAction: function(autocompleteApi, rng, value) {
+          editor.selection.setRng(rng);
+          editor.insertContent('<strong>' + value + '</strong>&nbsp;');
+          autocompleteApi.hide();
+        }
+      });
+
       editor.ui.registry.addButton('customImageBtn', {
         icon: 'camera',
         tooltip: 'Upload Image',

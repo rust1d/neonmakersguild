@@ -54,7 +54,11 @@ component {
       session.user = new app.services.CurrentUser();
       session.site = new app.services.CurrentSite('nmg');
       session.return_to = '';
-      new app.services.login.LoginCookie().login();
+      try {
+        new app.services.login.LoginCookie().login();
+      } catch (database err) {
+        new app.services.login.LoginCookie().login();
+      }
     }
   }
 
@@ -63,7 +67,11 @@ component {
     check_reset_app();
     check_user_logout();
     clean_form();
-    check_redirects();
+    try {
+      check_redirects();
+    } catch (database err) {
+      check_redirects();
+    }
     request.s3Service = get_cloud_service();
     request.router =  new app.services.router('home', session.site.path());
     request.utility = application.utility;
@@ -77,8 +85,11 @@ component {
   };
 
   public void function onError(any exception, string eventName) output='true'  {
-    // writeLog(text: arguments.eventname, type: 'error', file: 'neonmakersguildErrorLog');
-    // writeLog(text: arguments.exception.message, type: 'error', file: 'neonmakersguildErrorLog');
+    if (findNoCase('connection', arguments.exception.message) || findNoCase('max_user_connections', arguments.exception.message)) {
+      try {
+        fileAppend(expandPath('/tmp/db_errors.txt'), now().format('yyyy-mm-dd HH:nn:ss') & ' | ' & arguments.exception.message & ' | ' & cgi.script_name & '?' & cgi.query_string & chr(10));
+      } catch (any e) {}
+    }
 
     if (application.isDevelopment) {
       writeDump(arguments);

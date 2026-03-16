@@ -12,7 +12,7 @@
       <div class='flex-grow-1'>
         <div class='fw-semibold'>#encodeForHTML(locals.mEvent.summary())#</div>
         <div class='small text-muted'>
-          <i class='fa-solid fa-location-dot me-1'></i>#encodeForHTML(locals.mEvent.location())#
+          <i class='fa-solid fa-location-dot me-1'></i><cfif locals.mEvent.location().left(4) == 'http'><a href='#encodeForHTML(locals.mEvent.location())#' target='_blank'>#encodeForHTML(locals.mEvent.location())#</a><cfelse>#encodeForHTML(locals.mEvent.location())#</cfif>
         </div>
         <cfif locals.mEvent.allday()>
           <div class='small text-muted'>

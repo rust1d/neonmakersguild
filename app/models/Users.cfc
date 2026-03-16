@@ -114,6 +114,7 @@ component extends=BaseModel accessors=true {
     sproc.addParam(cfsqltype: 'tinyint', value: arguments.get('isdeleted'),     null: !arguments.keyExists('isdeleted'));
     sproc.addParam(cfsqltype: 'integer', value: arguments.get('days_past_due'), null: !arguments.keyExists('days_past_due'));
     sproc.addParam(cfsqltype: 'tinyint', value: arguments.get('exclude'),       null: !arguments.keyExists('exclude'));
+    sproc.addParam(cfsqltype: 'varchar', value: arguments.get('lookup'),        null: !arguments.keyExists('lookup'));
     sproc.addParam(cfsqltype: 'varchar', value: arguments.get('term'),          null: !arguments.keyExists('term'));
     sproc.addProcResult(name: 'qry', resultset: 1, maxrows: arguments.maxrows);
 

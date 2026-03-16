@@ -55,6 +55,25 @@ component extends=jSoup accessors=true {
 
   // PRIVATE
 
+  private void function post_insert(required boolean success) {
+    if (arguments.success) {
+      var mEntry = this.BlogEntry();
+      if (mEntry.usid() != variables.bco_usid) {
+        new app.models.UserNotifications().notify(
+          usid: mEntry.usid(),
+          type: 'comment',
+          message: session.user.user() & ' commented on your post ' & mEntry.title(),
+          data: {
+            from_usid: variables.bco_usid,
+            from_user: session.user.user(),
+            ref_id: variables.bco_bcoid,
+            link: mEntry.seo_link()
+          }
+        );
+      }
+    }
+  }
+
   private void function pre_update() {
     if (this.comment_changed()) {
       application.flash.warning(this.comment_was());

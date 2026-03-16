@@ -66,5 +66,4 @@ component {
   private struct function new_response() {
     return { 'success': true, 'errors': [], 'data': {} };
   }
-
 }

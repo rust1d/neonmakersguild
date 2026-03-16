@@ -16,7 +16,9 @@ CREATE PROCEDURE userprofile_update(
   IN _city        varchar(25),
   IN _region      varchar(25),
   IN _postal      varchar(12),
-  IN _country     varchar(2)
+  IN _country     varchar(2),
+  IN _latitude    decimal(10,7),
+  IN _longitude   decimal(10,7)
 )
 BEGIN
   UPDATE userprofile
@@ -33,6 +35,8 @@ BEGIN
          up_region    = IFNULL(_region,    up_region),
          up_postal    = IFNULL(_postal,    up_postal),
          up_country   = IFNULL(_country,   up_country),
+         up_latitude  = IFNULL(_latitude,  up_latitude),
+         up_longitude = IFNULL(_longitude, up_longitude),
          up_dla       = CURRENT_TIMESTAMP
    WHERE up_upid = _upid;
 
