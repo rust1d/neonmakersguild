@@ -1,5 +1,6 @@
 <cfscript>
   setting showdebugoutput='no' requesttimeout=180;
+
   params = utility.paged_term_params({ isdeleted: 0, maxrows: 400, exclude: 1 });
   cache_key = 'ml-' & utility.hashCC(params.term ?: '');
   cache_results = utility.simple_cache('#cache_key#:300', function() {
@@ -9,10 +10,12 @@
       pagination: mdl.pagination()
     }
   }, true);
+
   if (!cache_results.models.len() && !len(params.get('term'))) utility.simple_cache_expire(cache_key, true);
+
   mUsers = cache_results.models;
   pagination = cache_results.pagination;
-  view = session.user.view();
+  view = (url.view ?: '') == 'map' ? 'map' : session.user.view();
 </cfscript>
 
 <script>
@@ -27,7 +30,15 @@
       <div class='row pb-3 g-2 justify-content-end align-items-center'>
         <div class='col-12 col-md fs-4 text-marker'>NMG Members Directory</div>
         #router.include('shared/partials/filter_and_page', { pagination: pagination, placeholder: 'member search...' })#
-        #router.include('shared/partials/viewer')#
+        <div class='col-auto'>
+          <form method='post'>
+            <div class='btn-group' role='group'>
+              <button type='#ifin(view=='grid', 'button', 'submit')#' name='btnView' value='grid' class='btn btn-sm btn-nmg' #ifin(view=='grid', 'disabled')# title='Tiles'><i class='fa-solid fa-fw fa-th'></i></button>
+              <button type='#ifin(view=='list', 'button', 'submit')#' name='btnView' value='list' class='btn btn-sm btn-nmg' #ifin(view=='list', 'disabled')# title='Cards'><i class='fa-solid fa-fw fa-list'></i></button>
+              <button type='#ifin(view=='map', 'button', 'submit')#' name='btnView' value='map' class='btn btn-sm btn-nmg' #ifin(view=='map', 'disabled')# title='Map'><i class='fa-solid fa-fw fa-map-location-dot'></i></button>
+            </div>
+          </form>
+        </div>
       </div>
       <div class='title-clamp'>
         <cfif view=='list'>
@@ -47,6 +58,8 @@
               </div>
             </cfloop>
           </div>
+        <cfelseif view=='map'>
+          #router.include('member/map')#
         <cfelse>
           <div class='member-tiles'>
             <cfloop array='#mUsers#' item='mUser'>

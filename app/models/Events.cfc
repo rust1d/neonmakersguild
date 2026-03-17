@@ -15,7 +15,7 @@ component extends=BaseModel accessors=true {
   has_one(name: 'User', class: 'Users', key: 'ev_usid', relation: 'us_usid');
 
   public boolean function editable() {
-    return session.user.admin() || session.user.usid() == variables.ev_usid;
+    return session.user.loggedIn() && (session.user.admin() || session.user.usid() == variables.ev_usid);
   }
 
   public string function start_date() {

@@ -156,14 +156,6 @@ component extends=jsoup accessors=true {
             link: seo_link()
           }
         );
-        try {
-          new app.services.email.UserEmailer().SendMention(
-            mUser: mMentioned,
-            from_user: session.user.user(),
-            thread_subject: thread.subject(),
-            link: seo_link()
-          );
-        } catch (any e) {}
       }
     }
   }

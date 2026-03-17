@@ -16,7 +16,6 @@
         <ul class='navbar-nav flex-grow-1 justify-content-evenly'>
           <li class='nav-item'><a class='nav-link' href='/stream'><span class='d-none d-md-inline'>Member </span>Stream</a></li>
           <li class='nav-item'><a class='nav-link' href='/members'>Members</a></li>
-          <li class='nav-item'><a class='nav-link' href='/map' title='Members Map'><i class='fa-solid fa-map-location-dot'></i><span class='d-none d-md-inline'> Map</span></a></li>
           <li class='nav-item'><a class='nav-link' href='/forums'>Forums</a></li>
           <li class='nav-item dropdown drop-right'>
             <a class='nav-link dropdown-toggle' role='button' data-bs-toggle='dropdown' aria-expanded='false'>Learn</a>
@@ -39,15 +38,50 @@
         </ul>
         <ul class='navbar-nav'>
           <cfif session.user.loggedIn()>
-            <cfset ntCount = new app.models.UserNotifications().unread_count(session.user.usid()) />
+            <cfset ntModel = new app.models.UserNotifications() />
+            <cfset ntCount = ntModel.unread_count(session.user.usid()) />
+            <cfset ntRecent = ntModel.where(un_usid: session.user.usid(), maxrows: 10) />
             <li class='nav-item me-2 d-none d-sm-flex align-items-center'>
               <div class='nav-drop-wrap'>
-                <a href='#router.href("user/notifications")#' class='position-relative nav-drop-link' title='Notifications'>
+                <a href='##' class='position-relative nav-drop-link' id='navNotifyToggle' title='Notifications'>
                   <i class='fa-regular fa-bell fa-lg'></i>
                   <cfif ntCount>
                     <span class='nav-notify-count' id='notificationBadge'>#ntCount#</span>
                   </cfif>
                 </a>
+                <div class='nav-drop-panel d-none' id='navNotifyDropdown'>
+                  <div class='nav-dropdown-header'>
+                    <span class='fw-bold small text-uppercase'>
+                      <i class='fa-regular fa-bell'></i> Notifications
+                    </span>
+                    <div class='dropdown'>
+                      <button class='kebab-btn' data-bs-toggle='dropdown' aria-expanded='false'>
+                        <i class='fa-solid fa-ellipsis-vertical'></i>
+                      </button>
+                      <ul class='dropdown-menu dropdown-menu-end'>
+                        <li><a href='#router.href("user/notifications")#?markread=1' class='dropdown-item'><i class='fa-solid fa-check-double me-2'></i>Mark all read</a></li>
+                        <li><a href='#router.href("user/notifications")#' class='dropdown-item'><i class='fa-solid fa-list me-2'></i>See all notifications</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class='nav-notify-body'>
+                    <cfif ntRecent.len()>
+                      <cfloop array='#ntRecent#' item='ntItem'>
+                        <a href='#ntItem.link().len() ? ntItem.link() : router.href("user/notifications")#' class='nav-notify-item #ifin(!ntItem.read(), "unread")#'>
+                          <div class='nav-notify-content'>
+                            <div class='nav-notify-text'>#encodeForHTML(ntItem.message())#</div>
+                            <div class='nav-notify-time'>#utility.age_format(ntItem.added())#</div>
+                          </div>
+                        </a>
+                      </cfloop>
+                    <cfelse>
+                      <div class='text-muted small text-center py-3'>No notifications</div>
+                    </cfif>
+                  </div>
+                  <div class='nav-drop-footer'>
+                    <a href='#router.href("user/notifications")#' class='small'>See All Notifications</a>
+                  </div>
+                </div>
               </div>
             </li>
             <li class='nav-item dropdown position-relative'>

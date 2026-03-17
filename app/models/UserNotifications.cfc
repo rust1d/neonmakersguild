@@ -5,7 +5,7 @@ component extends=BaseModel accessors=true {
   property name='un_ref_id'  type='numeric'   sqltype='integer';
   property name='un_message' type='string'    sqltype='varchar';
   property name='un_data'    type='string'    sqltype='varchar';
-  property name='un_read'    type='numeric'   sqltype='integer'   default=0;
+  property name='un_read'    type='numeric'   sqltype='integer'   default="0";
   property name='un_added'   type='date';
 
   has_one(name: 'User', class: 'Users', key: 'un_usid', relation: 'us_usid');

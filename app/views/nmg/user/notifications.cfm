@@ -5,6 +5,15 @@
     router.reload();
   }
 
+  if (form.keyExists('btnDelete')) {
+    mDel = new app.models.UserNotifications().find(form.btnDelete);
+    if (!isNull(mDel) && mDel.owned_by(session.user.usid())) {
+      mDel.destroy();
+      flash.success('Notification deleted.');
+    }
+    router.reload();
+  }
+
   mdl = new app.models.UserNotifications();
   mNotifications = mdl.where(utility.paged_term_params({ un_usid: session.user.usid() }));
   pagination = mdl.pagination();
@@ -51,6 +60,20 @@
             <cfif !mNote.read()>
               <span class='badge bg-nmg smallest'>new</span>
             </cfif>
+            <div class='dropdown flex-shrink-0'>
+              <button class='kebab-btn' data-bs-toggle='dropdown' aria-expanded='false'>
+                <i class='fa-solid fa-ellipsis-vertical'></i>
+              </button>
+              <ul class='dropdown-menu dropdown-menu-end'>
+                <li>
+                  <form method='post'>
+                    <button type='submit' name='btnDelete' value='#mNote.unid()#' class='dropdown-item text-danger'>
+                      <i class='fa-solid fa-trash-can me-2'></i>Delete
+                    </button>
+                  </form>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </cfloop>
