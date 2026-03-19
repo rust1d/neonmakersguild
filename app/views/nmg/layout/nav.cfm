@@ -38,15 +38,15 @@
         </ul>
         <ul class='navbar-nav'>
           <cfif session.user.loggedIn()>
-            <cfset ntModel = new app.models.UserNotifications() />
-            <cfset ntCount = ntModel.unread_count(session.user.usid()) />
-            <cfset ntRecent = ntModel.where(un_usid: session.user.usid(), maxrows: 10) />
+            <cfset ntCount = new app.models.UserNotifications().unread_count(session.user.usid()) />
             <li class='nav-item me-2 d-none d-sm-flex align-items-center'>
               <div class='nav-drop-wrap'>
                 <a href='##' class='position-relative nav-drop-link' id='navNotifyToggle' title='Notifications'>
                   <i class='fa-regular fa-bell fa-lg'></i>
                   <cfif ntCount>
                     <span class='nav-notify-count' id='notificationBadge'>#ntCount#</span>
+                  <cfelse>
+                    <span class='nav-notify-count d-none' id='notificationBadge'></span>
                   </cfif>
                 </a>
                 <div class='nav-drop-panel d-none' id='navNotifyDropdown'>
@@ -59,24 +59,17 @@
                         <i class='fa-solid fa-ellipsis-vertical'></i>
                       </button>
                       <ul class='dropdown-menu dropdown-menu-end'>
-                        <li><a href='#router.href("user/notifications")#?markread=1' class='dropdown-item'><i class='fa-solid fa-check-double me-2'></i>Mark all read</a></li>
+                        <li><a href='##' id='btnMarkAllRead' class='dropdown-item'><i class='fa-solid fa-check-double me-2'></i>Mark all read</a></li>
                         <li><a href='#router.href("user/notifications")#' class='dropdown-item'><i class='fa-solid fa-list me-2'></i>See all notifications</a></li>
                       </ul>
                     </div>
                   </div>
-                  <div class='nav-notify-body'>
-                    <cfif ntRecent.len()>
-                      <cfloop array='#ntRecent#' item='ntItem'>
-                        <a href='#ntItem.link().len() ? ntItem.link() : router.href("user/notifications")#' class='nav-notify-item #ifin(!ntItem.read(), "unread")#'>
-                          <div class='nav-notify-content'>
-                            <div class='nav-notify-text'>#encodeForHTML(ntItem.message())#</div>
-                            <div class='nav-notify-time'>#utility.age_format(ntItem.added())#</div>
-                          </div>
-                        </a>
-                      </cfloop>
-                    <cfelse>
-                      <div class='text-muted small text-center py-3'>No notifications</div>
-                    </cfif>
+                  <div class='nav-notify-tabs d-flex small'>
+                    <a href='##' class='nav-notify-tab active flex-fill text-center py-1' data-filter='unread'>Unread</a>
+                    <a href='##' class='nav-notify-tab flex-fill text-center py-1' data-filter='all'>All</a>
+                  </div>
+                  <div class='nav-notify-body' id='navNotifyList'>
+                    <div class='text-muted small text-center py-3'>Loading...</div>
                   </div>
                   <div class='nav-drop-footer'>
                     <a href='#router.href("user/notifications")#' class='small'>See All Notifications</a>
@@ -89,7 +82,9 @@
                 <div class='profile-button-wrapper'>
                   <img src='#session.user.profile_image().src()#' alt='My profile' class='profile-image' />
                   <cfif ntCount>
-                    <span class='nav-notify-count d-sm-none'>#ntCount#</span>
+                    <span class='nav-notify-count d-sm-none' id='notificationBadgeMobile'>#ntCount#</span>
+                  <cfelse>
+                    <span class='nav-notify-count d-sm-none d-none' id='notificationBadgeMobile'></span>
                   </cfif>
                   <span class='profile-caret'>
                     <i class='fa-solid fa-chevron-down'></i>
@@ -98,7 +93,7 @@
               </a>
               <div class='dropdown-menu dropdown-menu-end nav-dropdown mt-1 py-3 px-1' aria-labelledby='profileDropdown'>
                 <a class='dropdown-item round-icon' href='#session.user.seo_link()#'><i class='fa-solid fa-person-dots-from-line'></i> View My NMG Page</a>
-                <a class='dropdown-item round-icon' href='#router.href("user/notifications")#'><i class='fa-regular fa-bell'></i> Notifications<cfif ntCount> <span class='badge bg-danger rounded-pill'>#ntCount#</span></cfif></a>
+                <a class='dropdown-item round-icon' href='#router.href("user/notifications")#'><i class='fa-regular fa-bell'></i> Notifications<cfif ntCount> <span class='badge bg-danger rounded-pill' id='notificationBadgeMenu'>#ntCount#</span><cfelse> <span class='badge bg-danger rounded-pill d-none' id='notificationBadgeMenu'></span></cfif></a>
                 <a class='dropdown-item round-icon' href='#router.href('user/entry/list')#'><i class='fa-solid fa-pen-to-square'></i> Post Manager</a>
                 <a class='dropdown-item round-icon' href='#router.href('user/image/list')#'><i class='fa-solid fa-photo-film'></i> Image Manager</a>
                 <a class='dropdown-item round-icon' href='#router.href('user/link/list')#'><i class='fa-solid fa-icons'></i> Link Manager</a>

@@ -85,7 +85,7 @@
       </div>
     <cfelse>
       <div class='col-12 content-card text-center text-muted p-4'>
-        No notifications.
+        No new notifications.
       </div>
     </cfif>
   </div>

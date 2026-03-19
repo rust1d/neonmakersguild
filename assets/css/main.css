@@ -518,7 +518,7 @@ figure.image figcaption {
   border-radius: 8px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.15);
   z-index: 200;
-  overflow: hidden;
+  overflow: visible;
 }
 .nav-dropdown-header {
   display: flex;
@@ -528,23 +528,42 @@ figure.image figcaption {
   border-bottom: 1px solid rgba(0,0,0,0.1);
   color: var(--bs-dropdown-color);
 }
-.nav-notify-body { max-height: 400px; overflow-y: auto; }
+.nav-notify-tabs {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+.nav-notify-tab {
+  background: none;
+  border: none;
+  text-decoration: none;
+  color: var(--bs-secondary-color);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  cursor: pointer;
+}
+.nav-notify-tab:hover { color: var(--bs-body-color); }
+.nav-notify-tab.active { background: var(--nmg-color); color: #fff; }
+.nav-notify-body { max-height: 400px; overflow-y: auto; min-height: 150px; position: relative; }
+.nav-notify-item:last-child .dropdown-menu { top: auto; bottom: 100%; }
 .nav-notify-item {
   display: flex;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
   border-bottom: 1px solid rgba(0,0,0,0.05);
   align-items: flex-start;
-  text-decoration: none;
-  color: var(--bs-body-color);
-  transition: background 0.15s;
 }
 .nav-notify-item:last-child { border-bottom: none; }
-.nav-notify-item:hover { background: rgba(0,0,0,0.05); color: var(--bs-body-color); text-decoration: none; }
+.nav-notify-item:hover { background: rgba(0,0,0,0.05); }
 .nav-notify-item.unread { background: rgba(90,197,195,0.12); border-left: 3px solid var(--nmg-color); }
-.nav-notify-content { flex: 1; min-width: 0; }
+.nav-notify-content { flex: 1; min-width: 0; text-decoration: none; color: var(--bs-body-color); }
+.nav-notify-content:hover { color: var(--bs-body-color); text-decoration: none; }
 .nav-notify-text { font-size: 0.82rem; line-height: 1.3; }
 .nav-notify-time { font-size: 0.7rem; color: var(--bs-secondary-color); margin-top: 2px; }
+.nav-notify-right { flex-shrink: 0; display: flex; align-items: center; }
 .nav-drop-footer {
   padding: 0.5rem 0.75rem;
   text-align: center;
@@ -558,9 +577,11 @@ figure.image figcaption {
   cursor: pointer;
   padding: 2px 6px;
   border-radius: 4px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
 }
 .kebab-btn:hover { color: var(--bs-body-color); background: rgba(0,0,0,0.05); }
+.dropdown-menu-sm { padding: 4px 0; }
+.dropdown-menu-sm .dropdown-item { padding: 0.25rem 0.75rem; font-size: 0.8rem; }
 
 @media (max-width: 576px) {
   .nav-drop-panel {

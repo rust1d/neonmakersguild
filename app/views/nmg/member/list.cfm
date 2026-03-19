@@ -16,6 +16,42 @@
   mUsers = cache_results.models;
   pagination = cache_results.pagination;
   view = (url.view ?: '') == 'map' ? 'map' : session.user.view();
+
+  // SEO
+  if (view == 'map') {
+    request.layout_title = 'Find Neon Sign Makers Near You | Member Map | ' & session.site.title();
+    request.meta_desc = 'Explore our interactive map of neon sign makers, glass benders, and neon artists worldwide. Find neon professionals near you.';
+  } else {
+    request.layout_title = 'Neon Sign Makers & Artists Directory | ' & session.site.title();
+    request.meta_desc = 'Browse the Neon Makers Guild member directory. Connect with neon sign makers, glass benders, and neon artists from around the world.';
+  }
+</cfscript>
+
+<cfscript>
+  request.layout_head &= '<meta property="og:title" content="#encodeForHTMLAttribute(request.layout_title)#" />'
+    & '<meta property="og:description" content="#encodeForHTMLAttribute(request.meta_desc)#" />'
+    & '<meta property="og:type" content="website" />'
+    & '<meta property="og:url" content="https://neonmakersguild.org/members" />'
+    & '<meta property="og:image" content="#application.urls.cdn#/assets/images/logo-256.png" />'
+    & '<link rel="canonical" href="https://neonmakersguild.org/members" />';
+
+  schemaMemberList = [];
+  for (schemaUser in mUsers) {
+    schemaMemberList.append({
+      '@type': 'Person',
+      'name': schemaUser.UserProfile().name().len() ? schemaUser.UserProfile().name() : schemaUser.user(),
+      'url': 'https://neonmakersguild.org' & schemaUser.seo_link()
+    });
+  }
+  schemaData = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    'name': 'Neon Makers Guild',
+    'url': 'https://neonmakersguild.org',
+    'description': 'Community of neon sign makers, glass benders, and neon artists',
+    'member': schemaMemberList
+  };
+  request.layout_head &= '<script type="application/ld+json">' & serializeJSON(schemaData) & '</script>';
 </cfscript>
 
 <script>

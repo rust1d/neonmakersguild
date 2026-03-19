@@ -5,7 +5,7 @@ component extends=BaseModel accessors=true {
   property name='un_ref_id'  type='numeric'   sqltype='integer';
   property name='un_message' type='string'    sqltype='varchar';
   property name='un_data'    type='string'    sqltype='varchar';
-  property name='un_read'    type='numeric'   sqltype='integer'   default="0";
+  property name='un_read'    type='numeric'   sqltype='integer'   default='0';
   property name='un_added'   type='date';
 
   has_one(name: 'User', class: 'Users', key: 'un_usid', relation: 'us_usid');
@@ -44,19 +44,12 @@ component extends=BaseModel accessors=true {
   }
 
   public void function mark_all_read(required numeric usid) {
-    queryExecute(
-      "UPDATE usernotifications SET un_read = 1 WHERE un_usid = :usid AND un_read = 0",
-      { usid: { value: arguments.usid, cfsqltype: 'integer' } },
-      { datasource: datasource() }
-    );
+    var sproc = new StoredProc(procedure: 'usernotifications_mark_all_read', datasource: datasource());
+    sproc.addParam(cfsqltype: 'integer', value: arguments.usid);
+    sproc.execute();
   }
 
-  public void function notify(
-    required numeric usid,
-    required string type,
-    required string message,
-    struct data = {}
-  ) {
+  public void function notify(required numeric usid, required string type, required string message, struct data = {}) {
     new UserNotifications({
       un_usid: arguments.usid,
       un_type: arguments.type,
